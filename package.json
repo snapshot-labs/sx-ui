@@ -25,7 +25,7 @@
     "scrollmonitor": "^1.2.9",
     "vue": "^3.2.31",
     "vue-router": "^4.0.14",
-    "vue-tippy": "^6.0.0-alpha.52"
+    "vue-tippy": "^6.0.0-alpha.57"
   },
   "devDependencies": {
     "@types/node": "^17.0.23",
