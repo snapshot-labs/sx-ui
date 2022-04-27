@@ -8,7 +8,7 @@
     "lint": "eslint \"./src/*/**/*.{ts,vue,json}\" --fix"
   },
   "dependencies": {
-    "@apollo/client": "^3.5.10",
+    "@apollo/client": "^3.6.0",
     "@argent/get-starknet": "^3.2.1",
     "@braintree/sanitize-url": "^6.0.0",
     "@ensdomains/eth-ens-namehash": "^2.0.15",
