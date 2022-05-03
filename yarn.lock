@@ -34,10 +34,10 @@
     use-sync-external-store "^1.0.0"
     zen-observable-ts "^1.2.0"
 
-"@argent/get-starknet@^3.2.1":
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/@argent/get-starknet/-/get-starknet-3.2.1.tgz#c0e2472bd34c5932086a772cbf2902a1f4b6b113"
-  integrity sha512-4gZYZAr0d8lWJWMOAP2NZPuuUwB9vKMGxzX3gxz8Oc6WrJoMN24/TbkQpwBULxy4qCl4x1L+t9yAoGF5ODkYaA==
+"@argent/get-starknet@^3.3.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@argent/get-starknet/-/get-starknet-3.3.0.tgz#3b6242f44c5c9361985149eac5dc156475a6b3d6"
+  integrity sha512-XnKxU9AVUBCg4IcdiTUhxNrj3v5lQ390zDYIBZY0PnXrELeWbdBJDtUIc2CjH73uPoM9TXdX3a+pJxIAhuQxvA==
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.16.7":
   version "7.16.7"
