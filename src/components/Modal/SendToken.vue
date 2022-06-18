@@ -114,12 +114,9 @@ watch(currentToken, token => {
       />
       <div class="s-base">
         <div v-text="'Token'" class="s-label" />
-        <input
-          placeholder="Select token"
-          class="s-input h-[61px]"
-          :value="currentToken?.contract_name || ''"
-          @click="handlePickerClick"
-        />
+        <button class="s-input text-left h-[61px]" @click="handlePickerClick">
+          {{ currentToken?.contract_name || 'Select token' }}
+        </button>
       </div>
       <div class="grid grid-cols-2 gap-[12px]">
         <SINumber
