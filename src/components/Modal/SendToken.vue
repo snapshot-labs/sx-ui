@@ -2,6 +2,7 @@
 import { reactive, ref, computed, watch, onMounted } from 'vue';
 import { useBalances } from '@/composables/useBalances';
 import spaces from '@/helpers/spaces.json';
+import { nextTick } from 'process';
 
 const props = defineProps({
   open: Boolean
@@ -9,6 +10,7 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
+const searchInput = ref(null);
 const form = reactive({
   to: '',
   token: '',
@@ -25,6 +27,15 @@ onMounted(() => {
 });
 
 const currentToken = computed(() => assetsMap.value?.get(form.token));
+
+function handlePickerClick() {
+  showPicker.value = true;
+  nextTick(() => {
+    if (searchInput.value) {
+      searchInput.value.focus();
+    }
+  });
+}
 
 function handleAmountUpdate(value) {
   form.amount = value;
@@ -75,6 +86,7 @@ watch(currentToken, token => {
           <IH-search class="mr-2" />
           <input
             v-model="searchValue"
+            ref="searchInput"
             type="text"
             placeholder="Search"
             class="flex-auto bg-transparent text-skin-link"
@@ -106,7 +118,7 @@ watch(currentToken, token => {
           placeholder="Select token"
           class="s-input h-[61px]"
           :value="currentToken?.contract_name || ''"
-          @click="showPicker = true"
+          @click="handlePickerClick"
         />
       </div>
       <div class="grid grid-cols-2 gap-[12px]">
