@@ -1,5 +1,6 @@
 <script setup>
 import { reactive, ref, computed, watch } from 'vue';
+import { formatUnits } from '@ethersproject/units';
 import { useBalances } from '@/composables/useBalances';
 import spaces from '@/helpers/spaces.json';
 import { nextTick } from 'process';
@@ -52,6 +53,17 @@ function handleValueUpdate(value) {
     form.amount = '';
   } else if (currentToken.value) {
     form.amount = value / currentToken.value.quote_rate;
+  }
+}
+
+function handleMaxClick() {
+  if (currentToken.value) {
+    handleAmountUpdate(
+      formatUnits(
+        currentToken.value.balance,
+        currentToken.value.contract_decimals
+      )
+    );
   }
 }
 
@@ -127,15 +139,20 @@ watch(currentToken, token => {
         </button>
       </div>
       <div class="grid grid-cols-2 gap-[12px]">
-        <SINumber
-          :value="form.amount"
-          @input="handleAmountUpdate"
-          :definition="{
-            type: 'number',
-            title: 'Amount',
-            examples: ['0']
-          }"
-        />
+        <div class="relative">
+          <SINumber
+            :value="form.amount"
+            @input="handleAmountUpdate"
+            :definition="{
+              type: 'number',
+              title: 'Amount',
+              examples: ['0']
+            }"
+          />
+          <a class="absolute right-[16px] top-[4px]" @click="handleMaxClick"
+            >Max</a
+          >
+        </div>
         <SINumber
           :value="form.value"
           @input="handleValueUpdate"
