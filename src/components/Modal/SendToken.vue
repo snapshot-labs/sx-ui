@@ -1,9 +1,9 @@
 <script setup>
-import { reactive, ref, onMounted } from 'vue';
+import { reactive, ref, computed, watch, onMounted } from 'vue';
 import { useBalances } from '@/composables/useBalances';
 import spaces from '@/helpers/spaces.json';
 
-defineProps({
+const props = defineProps({
   open: Boolean
 });
 
@@ -22,6 +22,41 @@ const { assets, assetsMap, loadBalances } = useBalances();
 
 onMounted(() => {
   loadBalances(spaces.pasta.wallets[0]);
+});
+
+const currentToken = computed(() => assetsMap.value?.get(form.token));
+
+function handleAmountUpdate(value) {
+  form.amount = value;
+
+  if (value === '') {
+    form.value = '';
+  } else if (currentToken.value) {
+    form.value = parseFloat((value * currentToken.value.quote_rate).toFixed(2));
+  }
+}
+
+function handleValueUpdate(value) {
+  form.value = value;
+
+  if (value === '') {
+    form.amount = '';
+  } else if (currentToken.value) {
+    form.amount = value / currentToken.value.quote_rate;
+  }
+}
+
+watch(
+  () => props.open,
+  () => {
+    showPicker.value = false;
+  }
+);
+
+watch(currentToken, token => {
+  if (!token || form.amount === '') return;
+
+  form.value = parseFloat((form.amount * token.quote_rate).toFixed(2));
 });
 </script>
 
@@ -70,12 +105,14 @@ onMounted(() => {
         <input
           placeholder="Select token"
           class="s-input h-[61px]"
-          :value="form.token ? assetsMap.get(form.token).contract_name : ''"
+          :value="currentToken?.contract_name || ''"
           @click="showPicker = true"
         />
       </div>
       <div class="grid grid-cols-2 gap-[12px]">
         <SINumber
+          :value="form.amount"
+          @input="handleAmountUpdate"
           :definition="{
             type: 'number',
             title: 'Amount',
@@ -83,16 +120,14 @@ onMounted(() => {
           }"
         />
         <SINumber
-          :definition="{
-            type: 'number',
-            title: 'USD',
-            examples: ['0']
-          }"
+          :value="form.value"
+          @input="handleValueUpdate"
+          :definition="{ type: 'number', title: 'USD', examples: ['0'] }"
         />
       </div>
     </div>
     <template v-slot:footer v-if="!showPicker">
-      <UiButton class="w-full"> Confirm </UiButton>
+      <UiButton class="w-full">Confirm</UiButton>
     </template>
   </UiModal>
 </template>

@@ -1,23 +1,28 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { computed } from 'vue';
 
 const props = defineProps({
-  modelValue: Number,
+  value: [Number, String],
   definition: Object
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['input']);
 
-const input = ref(props.modelValue || props.definition.default || undefined);
-
-watch(input, () => emit('update:modelValue', parseFloat(input.value)));
+const inputValue = computed({
+  get() {
+    return props.value;
+  },
+  set(newValue) {
+    emit('input', newValue);
+  }
+});
 </script>
 
 <template>
   <SBase :definition="definition">
     <input
       type="number"
-      v-model="input"
+      v-model="inputValue"
       class="s-input"
       :placeholder="definition.examples && definition.examples[0]"
     />
