@@ -114,8 +114,17 @@ watch(currentToken, token => {
       />
       <div class="s-base">
         <div v-text="'Token'" class="s-label" />
-        <button class="s-input text-left h-[61px]" @click="handlePickerClick">
-          {{ currentToken?.contract_name || 'Select token' }}
+        <button class="s-input text-left h-[75px]" @click="handlePickerClick">
+          <div class="flex items-center">
+            <Stamp
+              v-if="currentToken"
+              type="token"
+              class="mr-1"
+              :id="currentToken.contract_address"
+              :size="27"
+            />
+            {{ currentToken?.contract_name || 'Select token' }}
+          </div>
         </button>
       </div>
       <div class="grid grid-cols-2 gap-[12px]">
