@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 
 const props = defineProps({
   value: [Number, String],
@@ -8,11 +8,19 @@ const props = defineProps({
 
 const emit = defineEmits(['input']);
 
+const dirty = ref(false);
+
 const inputValue = computed({
   get() {
+    if (!props.value && !dirty.value && props.definition.default) {
+      return props.definition.default;
+    }
+
     return props.value;
   },
   set(newValue) {
+    dirty.value = true;
+
     emit('input', newValue);
   }
 });
