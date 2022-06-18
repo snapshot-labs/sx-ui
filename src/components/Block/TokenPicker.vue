@@ -5,6 +5,7 @@ import { _n } from '@/helpers/utils';
 
 const props = defineProps({
   searchValue: String,
+  loading: Boolean,
   assets: Array
 });
 
@@ -25,7 +26,10 @@ const filteredAssets = computed(() =>
 </script>
 
 <template>
-  <div v-if="filteredAssets.length === 0" class="text-center py-2">
+  <div v-if="loading" class="px-4 py-3 block flex justify-center">
+    <UiLoading />
+  </div>
+  <div v-if="!loading && filteredAssets.length === 0" class="text-center py-2">
     No results
   </div>
   <div

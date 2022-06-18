@@ -3,7 +3,7 @@ import snapshot from '@snapshot-labs/snapshot.js';
 import { formatUnits } from '@ethersproject/units';
 
 const assets: Ref<any[]> = ref([]);
-const loading = ref(false);
+const loading = ref(true);
 
 export function useBalances() {
   async function loadBalances(address) {

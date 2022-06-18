@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, computed, watch, onMounted } from 'vue';
+import { reactive, ref, computed, watch } from 'vue';
 import { useBalances } from '@/composables/useBalances';
 import spaces from '@/helpers/spaces.json';
 import { nextTick } from 'process';
@@ -20,16 +20,14 @@ const form = reactive({
 
 const showPicker = ref(false);
 const searchValue = ref('');
-const { assets, assetsMap, loadBalances } = useBalances();
-
-onMounted(() => {
-  loadBalances(spaces.pasta.wallets[0]);
-});
+const { loading, assets, assetsMap, loadBalances } = useBalances();
 
 const currentToken = computed(() => assetsMap.value?.get(form.token));
 
 function handlePickerClick() {
+  loadBalances(spaces.pasta.wallets[0]);
   showPicker.value = true;
+
   nextTick(() => {
     if (searchInput.value) {
       searchInput.value.focus();
@@ -97,6 +95,7 @@ watch(currentToken, token => {
     <BlockTokenPicker
       v-if="showPicker"
       :assets="assets"
+      :loading="loading"
       :searchValue="searchValue"
       @pick="
         form.token = $event;
