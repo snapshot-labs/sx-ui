@@ -1,5 +1,7 @@
 <script setup>
-import { reactive } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
+import { useBalances } from '@/composables/useBalances';
+import spaces from '@/helpers/spaces.json';
 
 defineProps({
   open: Boolean
@@ -9,9 +11,17 @@ const emit = defineEmits(['close']);
 
 const form = reactive({
   to: '',
-  token: 'eth',
+  token: '',
   amount: '',
   value: ''
+});
+
+const showPicker = ref(false);
+const searchValue = ref('');
+const { assets, assetsMap, loadBalances } = useBalances();
+
+onMounted(() => {
+  loadBalances(spaces.pasta.wallets[0]);
 });
 </script>
 
@@ -19,8 +29,34 @@ const form = reactive({
   <UiModal :open="open" @close="$emit('close')">
     <template v-slot:header>
       <h3 v-text="'Send token'" />
+      <template v-if="showPicker">
+        <a
+          class="absolute left-0 -top-1 p-4 text-color"
+          @click="showPicker = false"
+        >
+          <IH-arrow-narrow-left class="mr-2" />
+        </a>
+        <div class="flex items-center border-t px-2 py-2 mt-3 -mb-3">
+          <IH-search class="mr-2" />
+          <input
+            v-model="searchValue"
+            type="text"
+            placeholder="Search"
+            class="flex-auto bg-transparent text-skin-link"
+          />
+        </div>
+      </template>
     </template>
-    <div class="s-box p-4">
+    <BlockTokenPicker
+      v-if="showPicker"
+      :assets="assets"
+      :searchValue="searchValue"
+      @pick="
+        form.token = $event;
+        showPicker = false;
+      "
+    />
+    <div class="s-box p-4" v-if="!showPicker">
       <SIString
         v-model="form.to"
         :definition="{
@@ -31,9 +67,12 @@ const form = reactive({
       />
       <div class="s-base">
         <div v-text="'Token'" class="s-label" />
-        <select v-model="form.token" class="s-input h-[45px]">
-          <option value="eth">Ethereum</option>
-        </select>
+        <input
+          placeholder="Select token"
+          class="s-input h-[61px]"
+          :value="form.token ? assetsMap.get(form.token).contract_name : ''"
+          @click="showPicker = true"
+        />
       </div>
       <div class="grid grid-cols-2 gap-[12px]">
         <SINumber
@@ -52,7 +91,7 @@ const form = reactive({
         />
       </div>
     </div>
-    <template v-slot:footer>
+    <template v-slot:footer v-if="!showPicker">
       <UiButton class="w-full"> Confirm </UiButton>
     </template>
   </UiModal>
