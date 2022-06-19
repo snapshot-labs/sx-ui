@@ -144,8 +144,8 @@ watch(currentToken, token => {
       <div class="grid grid-cols-2 gap-[12px]">
         <div class="relative">
           <SINumber
-            :value="form.amount"
-            @input="handleAmountUpdate"
+            :modelValue="form.amount"
+            @update:modelValue="handleAmountUpdate"
             :definition="{
               type: 'number',
               title: 'Amount',
@@ -157,8 +157,8 @@ watch(currentToken, token => {
           >
         </div>
         <SINumber
-          :value="form.value"
-          @input="handleValueUpdate"
+          :modelValue="form.value"
+          @update:modelValue="handleValueUpdate"
           :definition="{ type: 'number', title: 'USD', examples: ['0'] }"
         />
       </div>
