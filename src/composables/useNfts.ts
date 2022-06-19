@@ -24,7 +24,7 @@ export function useNfts() {
 
         const image =
           item?.nft_data[0]?.external_data.image ??
-          `https://stamp.fyi/token/${item.contract_address}?s=256`;
+          `https://cdn.stamp.fyi/token/${item.contract_address}?s=256`;
 
         return {
           ...item,
