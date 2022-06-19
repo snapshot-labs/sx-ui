@@ -14,13 +14,15 @@ export function useNfts() {
     nfts.value = results.data.items
       .filter(item => item.type === 'nft' && item.nft_data)
       .map(item => {
-        const id = item.nft_data[0]?.token_id;
+        const tokenId = item.nft_data[0]?.token_id;
         const title =
           item.nft_data[0]?.external_data?.name ??
           item.contract_name ??
           'Untitled';
         const displayTitle =
-          title.match(/(#[0-9]+)$/) || !id ? title : `${title} #${id}`;
+          title.match(/(#[0-9]+)$/) || !tokenId
+            ? title
+            : `${title} #${tokenId}`;
 
         const image =
           item?.nft_data[0]?.external_data.image ??
@@ -28,7 +30,8 @@ export function useNfts() {
 
         return {
           ...item,
-          id,
+          id: `${item.contract_address}:${tokenId || 0}`,
+          tokenId,
           title,
           displayTitle,
           image
@@ -39,7 +42,7 @@ export function useNfts() {
   }
 
   const nftsMap = computed(
-    () => new Map(nfts.value.map(asset => [asset.contract_address, asset]))
+    () => new Map(nfts.value.map(asset => [asset.id, asset]))
   );
 
   return { loading, loaded, nfts, nftsMap, loadNfts };

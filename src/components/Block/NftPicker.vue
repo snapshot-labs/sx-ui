@@ -32,7 +32,7 @@ const filteredNfts = computed(() =>
         :key="i"
         role="button"
         class="block px-3 py-1 mb-3 hover:opacity-80 transition-opacity"
-        @click="emit('pick', nft.contract_address)"
+        @click="emit('pick', nft.id)"
       >
         <NftPreview :item="nft" class="aspect-square rounded" />
         <div class="mt-2 text-sm">{{ nft.displayTitle }}</div>
