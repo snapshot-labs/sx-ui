@@ -5,7 +5,9 @@ const props = defineProps({
 });
 
 function handleError(e) {
-  e.target.src = `https://cdn.stamp.fyi/token/${props.item.contract_address}?s=256`;
+  const size = props.size ? props.size * 2 : 256;
+
+  e.target.src = `https://cdn.stamp.fyi/token/${props.item.contract_address}?s=${size}`;
 }
 </script>
 
