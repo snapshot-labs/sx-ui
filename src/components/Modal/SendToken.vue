@@ -21,12 +21,15 @@ const form = reactive({
 
 const showPicker = ref(false);
 const searchValue = ref('');
-const { loading, assets, assetsMap, loadBalances } = useBalances();
+const { loading, loaded, assets, assetsMap, loadBalances } = useBalances();
 
 const currentToken = computed(() => assetsMap.value?.get(form.token));
 
 function handlePickerClick() {
-  loadBalances(spaces.pasta.wallets[0]);
+  if (!loaded.value) {
+    loadBalances(spaces.pasta.wallets[0]);
+  }
+
   showPicker.value = true;
 
   nextTick(() => {

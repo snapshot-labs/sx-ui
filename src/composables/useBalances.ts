@@ -4,6 +4,7 @@ import { formatUnits } from '@ethersproject/units';
 
 const assets: Ref<any[]> = ref([]);
 const loading = ref(true);
+const loaded = ref(false);
 
 export function useBalances() {
   async function loadBalances(address) {
@@ -25,11 +26,12 @@ export function useBalances() {
       )
     ].sort((a, b) => b.quote - a.quote);
     loading.value = false;
+    loaded.value = true;
   }
 
   const assetsMap = computed(
     () => new Map(assets.value.map(asset => [asset.contract_address, asset]))
   );
 
-  return { loading, assets, assetsMap, loadBalances };
+  return { loading, loaded, assets, assetsMap, loadBalances };
 }
