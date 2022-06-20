@@ -31,10 +31,21 @@ const form = reactive({
 function handleSubmit() {
   const tx = clone(form);
   tx.args = Object.values(tx.args);
+
   const iface = new Interface(tx.abi);
-  tx.data = iface.encodeFunctionData(tx.method, tx.args);
-  const decodedTx = JSON.parse(JSON.stringify(iface.parseTransaction(tx)));
-  decodedTx.to = tx.to;
+  const data = iface.encodeFunctionData(tx.method, tx.args);
+
+  const decodedTx = {
+    _type: 'contractCall',
+    to: tx.to,
+    data,
+    value: '0x',
+    _form: {
+      method: tx.method,
+      args: tx.args
+    }
+  };
+
   emit('add', decodedTx);
   emit('close');
 }

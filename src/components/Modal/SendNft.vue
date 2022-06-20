@@ -1,19 +1,24 @@
-<script setup>
-import { reactive, ref, computed, watch, nextTick } from 'vue';
+<script setup lang="ts">
+import { reactive, ref, computed, watch, nextTick, Ref } from 'vue';
+import { Interface } from '@ethersproject/abi';
+import { parseUnits } from '@ethersproject/units';
 import { useNfts } from '@/composables/useNfts';
-import spaces from '@/helpers/spaces.json';
+import erc721 from '@/helpers/abis/erc721.json';
+import erc1155 from '@/helpers/abis/erc1155.json';
+import type { SendNftTransaction } from '@/types';
 
 const props = defineProps({
-  open: Boolean
+  open: Boolean,
+  address: String
 });
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(['add', 'close']);
 
-const searchInput = ref(null);
+const searchInput: Ref<HTMLElement | null> = ref(null);
 const showPicker = ref(false);
 const searchValue = ref('');
 
-const form = reactive({
+const form: { to: string; nft: string; amount: string | number } = reactive({
   to: '',
   nft: '',
   amount: ''
@@ -22,10 +27,16 @@ const form = reactive({
 const { loading, loaded, nfts, nftsMap, loadNfts } = useNfts();
 
 const currentNft = computed(() => nftsMap.value?.get(form.nft));
+const formValid = computed(
+  () =>
+    currentNft.value &&
+    form.to &&
+    (currentNft.value.type !== 'erc1155' || form.amount !== '')
+);
 
 function handlePickerClick() {
   if (!loaded.value) {
-    loadNfts(spaces.pasta.wallets[0]);
+    loadNfts(props.address);
   }
 
   showPicker.value = true;
@@ -35,6 +46,56 @@ function handlePickerClick() {
       searchInput.value.focus();
     }
   });
+}
+
+function handleSubmit() {
+  let data = '';
+
+  const baseAmount = parseUnits(
+    form.amount.toString(),
+    currentNft?.value.contract_decimals
+  );
+
+  if (currentNft.value.type === 'erc1155') {
+    const iface = new Interface(erc1155);
+
+    data = iface.encodeFunctionData('safeTransferFrom', [
+      props.address,
+      form.to,
+      currentNft.value.tokenId,
+      baseAmount,
+      0
+    ]);
+  } else if (currentNft.value.type === 'erc721') {
+    const iface = new Interface(erc721);
+
+    data = iface.encodeFunctionData(
+      'safeTransferFrom(address, address, uint256)',
+      [props.address, form.to, currentNft.value.tokenId]
+    );
+  } else {
+    throw new Error('Unknown NFT type');
+  }
+
+  const decodedTx: SendNftTransaction = {
+    _type: 'sendNft',
+    _form: {
+      recipient: form.to,
+      amount: baseAmount.toString(),
+      nft: {
+        address: currentNft.value.contract_address,
+        id: currentNft.value.tokenId,
+        name: currentNft.value.title,
+        collection: currentNft.value.contract_name
+      }
+    },
+    to: currentNft.value.contract_address,
+    data,
+    value: '0'
+  };
+
+  emit('add', decodedTx);
+  emit('close');
 }
 
 watch(
@@ -103,6 +164,8 @@ watch(
         </button>
       </div>
       <SINumber
+        v-if="currentNft?.type === 'erc1155'"
+        v-model="form.amount"
         :definition="{
           type: 'number',
           title: 'Amount',
@@ -111,7 +174,9 @@ watch(
       />
     </div>
     <template v-slot:footer v-if="!showPicker">
-      <UiButton class="w-full">Confirm</UiButton>
+      <UiButton class="w-full" :disabled="!formValid" @click="handleSubmit">
+        Confirm
+      </UiButton>
     </template>
   </UiModal>
 </template>

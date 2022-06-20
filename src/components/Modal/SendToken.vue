@@ -1,18 +1,25 @@
-<script setup>
-import { reactive, ref, computed, watch } from 'vue';
-import { formatUnits } from '@ethersproject/units';
+<script setup lang="ts">
+import { reactive, ref, computed, watch, nextTick, Ref } from 'vue';
+import { Interface } from '@ethersproject/abi';
+import { formatUnits, parseUnits } from '@ethersproject/units';
 import { useBalances } from '@/composables/useBalances';
-import spaces from '@/helpers/spaces.json';
-import { nextTick } from 'process';
+import erc20 from '@/helpers/abis/erc20.json';
+import type { SendTokenTransaction } from '@/types';
 
 const props = defineProps({
-  open: Boolean
+  open: Boolean,
+  address: String
 });
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(['add', 'close']);
 
-const searchInput = ref(null);
-const form = reactive({
+const searchInput: Ref<HTMLElement | null> = ref(null);
+const form: {
+  to: string;
+  token: string;
+  amount: string | number;
+  value: string | number;
+} = reactive({
   to: '',
   token: '',
   amount: '',
@@ -24,10 +31,13 @@ const searchValue = ref('');
 const { loading, loaded, assets, assetsMap, loadBalances } = useBalances();
 
 const currentToken = computed(() => assetsMap.value?.get(form.token));
+const formValid = computed(
+  () => currentToken.value && form.to && form.amount !== ''
+);
 
 function handlePickerClick() {
   if (!loaded.value) {
-    loadBalances(spaces.pasta.wallets[0]);
+    loadBalances(props.address);
   }
 
   showPicker.value = true;
@@ -70,6 +80,46 @@ function handleMaxClick() {
   }
 }
 
+function handleSubmit() {
+  const baseAmount = parseUnits(
+    form.amount.toString(),
+    currentToken?.value.contract_decimals
+  );
+
+  const isEth =
+    currentToken?.value.contract_address ===
+    '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
+
+  let data = '0x';
+  if (!isEth) {
+    const iface = new Interface(erc20);
+    data = iface.encodeFunctionData(
+      'safeTransferFrom(address, address, uint256)',
+      [props.address, form.to, baseAmount]
+    );
+  }
+
+  const decodedTx: SendTokenTransaction = {
+    _type: 'sendToken',
+    _form: {
+      recipient: form.to,
+      token: {
+        name: currentToken.value.contract_name,
+        decimals: currentToken.value.contract_decimals,
+        symbol: currentToken.value.contract_ticker_symbol,
+        address: currentToken.value.contract_address
+      },
+      amount: baseAmount.toString()
+    },
+    to: isEth ? form.to : currentToken.value.contract_address,
+    data,
+    value: isEth ? baseAmount.toString() : '0'
+  };
+
+  emit('add', decodedTx);
+  emit('close');
+}
+
 watch(
   () => props.open,
   () => {
@@ -78,7 +128,7 @@ watch(
 );
 
 watch(currentToken, token => {
-  if (!token || form.amount === '') return;
+  if (!token || typeof form.amount === 'string') return;
 
   form.value = parseFloat((form.amount * token.quote_rate).toFixed(2));
 });
@@ -164,7 +214,9 @@ watch(currentToken, token => {
       </div>
     </div>
     <template v-slot:footer v-if="!showPicker">
-      <UiButton class="w-full">Confirm</UiButton>
+      <UiButton class="w-full" :disabled="!formValid" @click="handleSubmit">
+        Confirm
+      </UiButton>
     </template>
   </UiModal>
 </template>
