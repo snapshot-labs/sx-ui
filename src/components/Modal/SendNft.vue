@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { reactive, ref, computed, watch, nextTick, Ref } from 'vue';
-import { Interface } from '@ethersproject/abi';
-import { parseUnits } from '@ethersproject/units';
 import { useNfts } from '@/composables/useNfts';
-import erc721 from '@/helpers/abis/erc721.json';
-import erc1155 from '@/helpers/abis/erc1155.json';
-import type { SendNftTransaction } from '@/types';
+import { createSendNftTransaction } from '@/helpers/transactions';
+import { clone } from '@/helpers/utils';
 
 const props = defineProps({
   open: Boolean,
-  address: String
+  address: {
+    type: String,
+    required: true
+  }
 });
 
 const emit = defineEmits(['add', 'close']);
@@ -49,52 +49,13 @@ function handlePickerClick() {
 }
 
 function handleSubmit() {
-  let data = '';
+  const tx = createSendNftTransaction({
+    nft: currentNft.value,
+    address: props.address,
+    form: clone(form)
+  });
 
-  const baseAmount = parseUnits(
-    form.amount.toString(),
-    currentNft?.value.contract_decimals
-  );
-
-  if (currentNft.value.type === 'erc1155') {
-    const iface = new Interface(erc1155);
-
-    data = iface.encodeFunctionData('safeTransferFrom', [
-      props.address,
-      form.to,
-      currentNft.value.tokenId,
-      baseAmount,
-      0
-    ]);
-  } else if (currentNft.value.type === 'erc721') {
-    const iface = new Interface(erc721);
-
-    data = iface.encodeFunctionData(
-      'safeTransferFrom(address, address, uint256)',
-      [props.address, form.to, currentNft.value.tokenId]
-    );
-  } else {
-    throw new Error('Unknown NFT type');
-  }
-
-  const decodedTx: SendNftTransaction = {
-    _type: 'sendNft',
-    _form: {
-      recipient: form.to,
-      amount: baseAmount.toString(),
-      nft: {
-        address: currentNft.value.contract_address,
-        id: currentNft.value.tokenId,
-        name: currentNft.value.title,
-        collection: currentNft.value.contract_name
-      }
-    },
-    to: currentNft.value.contract_address,
-    data,
-    value: '0'
-  };
-
-  emit('add', decodedTx);
+  emit('add', tx);
   emit('close');
 }
 

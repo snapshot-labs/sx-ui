@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { reactive, ref, computed, watch, nextTick, Ref } from 'vue';
-import { Interface } from '@ethersproject/abi';
-import { formatUnits, parseUnits } from '@ethersproject/units';
+import { formatUnits } from '@ethersproject/units';
 import { useBalances } from '@/composables/useBalances';
-import erc20 from '@/helpers/abis/erc20.json';
-import type { SendTokenTransaction } from '@/types';
+import { createSendTokenTransaction } from '@/helpers/transactions';
+import { clone } from '@/helpers/utils';
 
 const props = defineProps({
   open: Boolean,
-  address: String
+  address: {
+    type: String,
+    required: true
+  }
 });
 
 const emit = defineEmits(['add', 'close']);
@@ -81,42 +83,12 @@ function handleMaxClick() {
 }
 
 function handleSubmit() {
-  const baseAmount = parseUnits(
-    form.amount.toString(),
-    currentToken?.value.contract_decimals
-  );
+  const tx = createSendTokenTransaction({
+    token: currentToken.value,
+    form: clone(form)
+  });
 
-  const isEth =
-    currentToken?.value.contract_address ===
-    '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
-
-  let data = '0x';
-  if (!isEth) {
-    const iface = new Interface(erc20);
-    data = iface.encodeFunctionData(
-      'safeTransferFrom(address, address, uint256)',
-      [props.address, form.to, baseAmount]
-    );
-  }
-
-  const decodedTx: SendTokenTransaction = {
-    _type: 'sendToken',
-    _form: {
-      recipient: form.to,
-      token: {
-        name: currentToken.value.contract_name,
-        decimals: currentToken.value.contract_decimals,
-        symbol: currentToken.value.contract_ticker_symbol,
-        address: currentToken.value.contract_address
-      },
-      amount: baseAmount.toString()
-    },
-    to: isEth ? form.to : currentToken.value.contract_address,
-    data,
-    value: isEth ? baseAmount.toString() : '0'
-  };
-
-  emit('add', decodedTx);
+  emit('add', tx);
   emit('close');
 }
 

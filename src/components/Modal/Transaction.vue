@@ -1,9 +1,9 @@
 <script setup>
 import { reactive, ref, watch } from 'vue';
 import { isAddress } from '@ethersproject/address';
-import { Interface } from '@ethersproject/abi';
 import getProvider from '@snapshot-labs/snapshot.js/src/utils/provider';
 import { getABI } from '@/helpers/etherscan';
+import { createContractCallTransaction } from '@/helpers/transactions';
 import { abiToDefinition, clone } from '@/helpers/utils';
 
 defineProps({
@@ -29,24 +29,9 @@ const form = reactive({
 });
 
 function handleSubmit() {
-  const tx = clone(form);
-  tx.args = Object.values(tx.args);
+  const tx = createContractCallTransaction({ form: clone(form) });
 
-  const iface = new Interface(tx.abi);
-  const data = iface.encodeFunctionData(tx.method, tx.args);
-
-  const decodedTx = {
-    _type: 'contractCall',
-    to: tx.to,
-    data,
-    value: '0x',
-    _form: {
-      method: tx.method,
-      args: tx.args
-    }
-  };
-
-  emit('add', decodedTx);
+  emit('add', tx);
   emit('close');
 }
 
