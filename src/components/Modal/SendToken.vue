@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, computed, watch, nextTick, Ref } from 'vue';
+import { reactive, ref, computed, watch, onMounted, nextTick, Ref } from 'vue';
 import { formatUnits } from '@ethersproject/units';
 import { useBalances } from '@/composables/useBalances';
 import { createSendTokenTransaction } from '@/helpers/transactions';
@@ -31,7 +31,7 @@ const form: {
 
 const showPicker = ref(false);
 const searchValue = ref('');
-const { loading, loaded, assets, assetsMap, loadBalances } = useBalances();
+const { loading, assets, assetsMap, loadBalances } = useBalances();
 
 const currentToken = computed(() => {
   const token = assetsMap.value?.get(form.token);
@@ -51,11 +51,11 @@ const formValid = computed(
   () => currentToken.value && form.to && form.amount !== ''
 );
 
-function handlePickerClick() {
-  if (!loaded.value) {
-    loadBalances(props.address);
-  }
+onMounted(() => {
+  loadBalances(props.address);
+});
 
+function handlePickerClick() {
   showPicker.value = true;
 
   nextTick(() => {
