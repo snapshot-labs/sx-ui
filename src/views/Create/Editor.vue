@@ -11,6 +11,7 @@ const id = route.params.id;
 const draft = route.params.key;
 const key = `${id}:${draft}`;
 if (!proposals[key]) proposals[key] = {};
+if (!proposals[key].transactions) proposals[key].transactions = [];
 
 watch(proposals, () => {
   if (!proposals[key]) {
@@ -46,6 +47,9 @@ watch(proposals, () => {
       <Preview :url="proposals[key].discussion" />
     </div>
     <h4 class="eyebrow mb-3">Execution</h4>
-    <BlockExecutionEditable class="mb-4" />
+    <BlockExecutionEditable
+      v-model="proposals[key].transactions"
+      class="mb-4"
+    />
   </Container>
 </template>
