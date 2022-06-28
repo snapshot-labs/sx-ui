@@ -58,7 +58,7 @@ onMounted(() => {
                 proposals[`${id}:${key}`].title,
                 proposals[`${id}:${key}`].body,
                 proposals[`${id}:${key}`].discussion,
-                proposals[`${id}:${key}`].transactions
+                proposals[`${id}:${key}`].execution
               )
             "
             class="leading-3"
@@ -81,7 +81,7 @@ onMounted(() => {
                 proposals[`${id}:${key}`].title,
                 proposals[`${id}:${key}`].body,
                 proposals[`${id}:${key}`].discussion,
-                proposals[`${id}:${key}`].transactions
+                proposals[`${id}:${key}`].execution
               )
             "
             class="rounded-l-none border-l-0 float-left !m-0 !px-3"

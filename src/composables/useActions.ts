@@ -42,10 +42,10 @@ export function useActions() {
     title: string,
     body: string,
     discussion: string,
-    transactions: Transaction[]
+    execution: Transaction[]
   ) {
     if (!web3.value.account) return await forceLogin();
-    const pinned = await pin({ title, body, discussion, transactions });
+    const pinned = await pin({ title, body, discussion, execution });
     if (!pinned || !pinned.cid) return;
     console.log('IPFS', pinned);
     const isStarkNet = web3.value.type === 'argentx';
