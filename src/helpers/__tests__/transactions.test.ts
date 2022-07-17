@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 
 import {
   createSendTokenTransaction,
@@ -7,6 +7,21 @@ import {
 } from '../transactions';
 
 describe('transactions', () => {
+  const oldCrypto = global.crypto;
+
+  beforeAll(() => {
+    // @ts-ignore
+    global.crypto = {
+      randomUUID: () => {
+        return '47cdeeac-94ab-4a3d-b124-2ff8accb877f';
+      }
+    };
+  });
+
+  afterAll(() => {
+    global.crypto = oldCrypto;
+  });
+
   describe('createSendTokenTransaction', () => {
     const ethToken = {
       contract_decimals: 18,
