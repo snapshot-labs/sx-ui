@@ -1276,10 +1276,10 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
   integrity sha512-9NET910DNaIPngYnLLPeg+Ogzqsi9uM4mSboU5y6p8S5DzMTVEsJZrawi+BoDNUVBa2DhJqQYUFvMDfgU062LQ==
 
-"@snapshot-labs/lock@^0.1.91":
-  version "0.1.91"
-  resolved "https://registry.yarnpkg.com/@snapshot-labs/lock/-/lock-0.1.91.tgz#501065e7ff6b1ec07cde425d89bc3f74390b5cd3"
-  integrity sha512-WIjLyZY2fuXT8pz343DDf4Clsk+UqIVNQRVAd/6pT9TX4JMMVKIk/nF/dboGy6C8umY74jTnFy7TPCgWdu9eEw==
+"@snapshot-labs/lock@^0.1.96":
+  version "0.1.96"
+  resolved "https://registry.yarnpkg.com/@snapshot-labs/lock/-/lock-0.1.96.tgz#729902e896422402319a414e985925a2fe791ccb"
+  integrity sha512-YbkpPAebVqMC46avlWysth6C7QK+5+QOVx75vqvh66bAQcNHUB3wY0J11Kno+VAANlr66WFWlSqbwcXNVf73wQ==
   dependencies:
     "@coinbase/wallet-sdk" "^3.0.11"
     "@gnosis.pm/safe-apps-provider" "^0.8.0"
