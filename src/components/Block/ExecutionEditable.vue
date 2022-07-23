@@ -127,15 +127,18 @@ function editTx(id: string) {
       </div>
     </div>
     <div v-if="formattedTxs.length > 0" class="x-block !border-x rounded-lg">
-      <draggable v-model="formattedTxs" item-key="_type">
+      <draggable v-model="formattedTxs" item-key="_type" handle=".handle">
         <template #item="{ element: tx }">
           <div
-            class="border-b last:border-b-0 px-4 py-3 space-x-2 flex items-center justify-between group"
+            class="border-b last:border-b-0 px-4 py-3 space-x-2 flex items-center justify-between"
           >
             <div class="flex items-center max-w-[70%]">
-              <IH-switch-vertical
-                class="mr-2 opacity-50 hidden group-hover:block"
-              />
+              <div
+                v-if="formattedTxs.length > 1"
+                class="handle mr-2 text-white cursor-pointer opacity-50 hover:opacity-100"
+              >
+                <IH-switch-vertical />
+              </div>
               <IH-stop v-if="tx._type === 'sendToken'" />
               <IH-photograph v-else-if="tx._type === 'sendNft'" />
               <IH-chip v-else />
