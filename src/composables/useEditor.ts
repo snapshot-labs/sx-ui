@@ -6,7 +6,10 @@ const proposals = reactive(lsGet('proposals', {}));
 function removeEmpty(proposals) {
   return Object.entries(proposals).reduce(
     (acc, [id, proposal]: [string, any]) => {
-      if (Object.keys(proposal).length < 2 && proposal.execution.length === 0) {
+      const { execution, ...rest } = proposal;
+      const hasFormValues = Object.values(rest).some(val => !!val);
+
+      if (execution.length === 0 && !hasFormValues) {
         return acc;
       }
 
