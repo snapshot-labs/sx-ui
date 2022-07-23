@@ -39,6 +39,7 @@ export type ContractCallTransaction = BaseTransaction & {
     recipient: string;
     method: string;
     args: any;
+    amount?: string;
   };
 };
 
