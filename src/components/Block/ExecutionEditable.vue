@@ -16,7 +16,7 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: Transaction[]): void;
 }>();
 
-const editedTx: Ref<string | null> = ref(null);
+const editedTx: Ref<number | null> = ref(null);
 const modalState: Ref<{
   sendToken?: any;
   sendNft?: any;
@@ -28,37 +28,28 @@ const modalOpen = ref({
   contractCall: false
 });
 
-const txsMap = computed(() =>
-  Object.fromEntries(props.modelValue.map(tx => [tx.id, tx]))
-);
+function getTitle(tx: Transaction) {
+  if (tx._type === 'sendToken') {
+    return `Send <b>${_n(
+      formatUnits(tx._form.amount, tx._form.token.decimals)
+    )}</b> ${tx._form.token.symbol} to <b>${shorten(tx._form.recipient)}</b>`;
+  }
 
-const formattedTxs = computed({
-  get: () =>
-    props.modelValue.map(tx => {
-      let title = '';
-      if (tx._type === 'sendToken') {
-        title = `Send <b>${_n(
-          formatUnits(tx._form.amount, tx._form.token.decimals)
-        )}</b> ${tx._form.token.symbol} to <b>${shorten(
-          tx._form.recipient
-        )}</b>`;
-      } else if (tx._type === 'sendNft') {
-        title = `Send <b>${_n(
-          formatUnits(tx._form.amount, 0)
-        )}</b> NFT to <b>${shorten(tx._form.recipient)}</b>`;
-      } else if (tx._type === 'contractCall') {
-        title = `Contract call to <b>${shorten(tx.to)}</b>`;
-      }
+  if (tx._type === 'sendNft') {
+    return `Send <b>${_n(
+      formatUnits(tx._form.amount, 0)
+    )}</b> NFT to <b>${shorten(tx._form.recipient)}</b>`;
+  }
 
-      return { ...tx, title };
-    }),
+  if (tx._type === 'contractCall') {
+    return `Contract call to <b>${shorten(tx.to)}</b>`;
+  }
+}
+
+const txs = computed({
+  get: () => props.modelValue,
   set: newValue => {
-    const updatedList = newValue.reduce((acc: Transaction[], tx) => {
-      acc.push(txsMap.value[tx.id]);
-      return acc;
-    }, []);
-
-    emit('update:modelValue', updatedList);
+    emit('update:modelValue', newValue);
   }
 });
 
@@ -66,8 +57,7 @@ function addTx(tx: Transaction) {
   const newValue = [...props.modelValue];
 
   if (editedTx.value !== null) {
-    const index = props.modelValue.findIndex(tx => tx.id === editedTx.value);
-    newValue[index] = tx;
+    newValue[editedTx.value] = tx;
   } else {
     newValue.push(tx);
   }
@@ -75,11 +65,11 @@ function addTx(tx: Transaction) {
   emit('update:modelValue', newValue);
 }
 
-function removeTx(id: string) {
-  emit(
-    'update:modelValue',
-    props.modelValue.filter(tx => tx.id !== id)
-  );
+function removeTx(index: number) {
+  emit('update:modelValue', [
+    ...props.modelValue.slice(0, index),
+    ...props.modelValue.slice(index + 1)
+  ]);
 }
 
 function openModal(type: 'sendToken' | 'sendNft' | 'contractCall') {
@@ -88,11 +78,10 @@ function openModal(type: 'sendToken' | 'sendNft' | 'contractCall') {
   modalOpen.value[type] = true;
 }
 
-function editTx(id: string) {
-  const tx = props.modelValue.find(tx => tx.id === id);
-  if (!tx) return;
+function editTx(index: number) {
+  const tx = props.modelValue[index];
 
-  editedTx.value = id;
+  editedTx.value = index;
   modalState.value[tx._type] = tx._form;
   modalOpen.value[tx._type] = true;
 }
@@ -126,15 +115,15 @@ function editTx(id: string) {
         </a>
       </div>
     </div>
-    <div v-if="formattedTxs.length > 0" class="x-block !border-x rounded-lg">
-      <draggable v-model="formattedTxs" item-key="_type" handle=".handle">
-        <template #item="{ element: tx }">
+    <div v-if="txs.length > 0" class="x-block !border-x rounded-lg">
+      <draggable v-model="txs" handle=".handle">
+        <template #item="{ element: tx, index: i }">
           <div
             class="border-b last:border-b-0 px-4 py-3 space-x-2 flex items-center justify-between"
           >
             <div class="flex items-center max-w-[70%]">
               <div
-                v-if="formattedTxs.length > 1"
+                v-if="txs.length > 1"
                 class="handle mr-2 text-white cursor-pointer opacity-50 hover:opacity-100"
               >
                 <IH-switch-vertical />
@@ -142,13 +131,13 @@ function editTx(id: string) {
               <IH-stop v-if="tx._type === 'sendToken'" />
               <IH-photograph v-else-if="tx._type === 'sendNft'" />
               <IH-chip v-else />
-              <div class="ml-2 truncate text-skin-link" v-html="tx.title" />
+              <div class="ml-2 truncate text-skin-link" v-html="getTitle(tx)" />
             </div>
             <div class="flex gap-3">
-              <a @click="editTx(tx.id)">
+              <a @click="editTx(i)">
                 <IH-pencil />
               </a>
-              <a @click="removeTx(tx.id)">
+              <a @click="removeTx(i)">
                 <IH-trash />
               </a>
             </div>

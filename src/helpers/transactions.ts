@@ -35,7 +35,6 @@ export function createSendTokenTransaction({
   }
 
   return {
-    id: crypto.randomUUID(),
     _type: 'sendToken',
     _form: {
       recipient: form.to,
@@ -86,7 +85,6 @@ export function createSendNftTransaction({
   }
 
   return {
-    id: crypto.randomUUID(),
     _type: 'sendNft',
     _form: {
       recipient: form.to,
@@ -113,7 +111,6 @@ export function createContractCallTransaction({
   const data = iface.encodeFunctionData(form.method, args);
 
   return {
-    id: crypto.randomUUID(),
     _type: 'contractCall',
     to: form.to,
     data,

@@ -1,5 +1,4 @@
 export type BaseTransaction = {
-  id: string;
   to: string;
   data: string;
   value: string;
