@@ -140,6 +140,12 @@ export function abiToDefinition(abi) {
   return definition;
 }
 
+export function omit<T extends Record<string, any>>(obj: T, keys: string[]) {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([k]) => !keys.includes(k))
+  );
+}
+
 export function clone(obj) {
   return JSON.parse(JSON.stringify(obj));
 }

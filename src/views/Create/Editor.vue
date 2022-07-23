@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { watch } from 'vue';
 import { useEditor } from '@/composables/useEditor';
 import { useRoute, useRouter } from 'vue-router';
@@ -17,6 +17,10 @@ watch(proposals, () => {
   if (!proposals[key]) {
     router.push({ name: 'editor' });
   }
+});
+
+watch(proposals[key], () => {
+  proposals[key].updatedAt = Date.now();
 });
 </script>
 <template>

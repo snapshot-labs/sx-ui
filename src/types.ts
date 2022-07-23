@@ -1,3 +1,13 @@
+export type Proposal = {
+  title?: string;
+  body?: string;
+  discussion?: string;
+  updatedAt?: number;
+  execution?: Transaction[];
+};
+
+export type Proposals = Record<string, Proposal>;
+
 export type BaseTransaction = {
   to: string;
   data: string;
