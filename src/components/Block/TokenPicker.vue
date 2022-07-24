@@ -24,9 +24,8 @@ const filteredAssets = computed(() =>
         asset.contract_name
           .toLocaleLowerCase()
           .includes(props.searchValue.toLocaleLowerCase()) ||
-        asset.contract_address
-          .toLocaleLowerCase()
-          .includes(props.searchValue.toLocaleLowerCase())
+        asset.contract_address.toLocaleLowerCase() ===
+          props.searchValue.toLocaleLowerCase()
       );
     })
     .sort((a, b) => {
