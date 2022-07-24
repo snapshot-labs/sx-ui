@@ -24,6 +24,7 @@ const props = defineProps({
 const emit = defineEmits(['add', 'close']);
 
 const loading = ref(false);
+const showContractPicker = ref(false);
 const ignoreFormUpdates = ref(true);
 const showAbiInput = ref(false);
 const abiStr = ref('');

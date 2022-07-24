@@ -37,6 +37,7 @@ const form: {
 } = reactive(clone(DEFAULT_FORM_STATE));
 
 const showPicker = ref(false);
+const pickerType: Ref<'token' | 'contact' | null> = ref(null);
 const searchValue = ref('');
 const { loading, assets, assetsMap, loadBalances } = useBalances();
 
@@ -62,8 +63,9 @@ onMounted(() => {
   loadBalances(props.address, props.network);
 });
 
-function handlePickerClick() {
+function handlePickerClick(type: 'token' | 'contact') {
   showPicker.value = true;
+  pickerType.value = type;
 
   nextTick(() => {
     if (searchInput.value) {
@@ -165,28 +167,50 @@ watch(currentToken, token => {
         </div>
       </template>
     </template>
-    <BlockTokenPicker
-      v-if="showPicker"
-      :assets="assets"
-      :loading="loading"
-      :search-value="searchValue"
-      @pick="
-        form.token = $event;
-        showPicker = false;
-      "
-    />
-    <div v-if="!showPicker" class="s-box p-4">
-      <SIString
-        v-model="form.to"
-        :definition="{
-          type: 'string',
-          title: 'Recipient',
-          examples: ['Address or ENS']
-        }"
+    <template v-if="showPicker">
+      <BlockTokenPicker
+        v-if="pickerType === 'token'"
+        :assets="assets"
+        :loading="loading"
+        :search-value="searchValue"
+        @pick="
+          form.token = $event;
+          showPicker = false;
+        "
       />
+      <BlockContactPicker
+        v-else-if="pickerType === 'contact'"
+        :loading="false"
+        :search-value="searchValue"
+        @pick="
+          form.to = $event;
+          showPicker = false;
+        "
+      />
+    </template>
+    <div v-if="!showPicker" class="s-box p-4">
+      <div class="relative">
+        <a
+          class="absolute top-[20px] right-3 z-10"
+          @click="handlePickerClick('contact')"
+          ><IH-identification
+        /></a>
+        <SIString
+          v-model="form.to"
+          class="!pr-7"
+          :definition="{
+            type: 'string',
+            title: 'Recipient',
+            examples: ['Address or ENS']
+          }"
+        />
+      </div>
       <div class="s-base">
         <div class="s-label" v-text="'Token'" />
-        <button class="s-input text-left h-[61px]" @click="handlePickerClick">
+        <button
+          class="s-input text-left h-[61px]"
+          @click="handlePickerClick('token')"
+        >
           <div class="flex items-center">
             <Stamp
               v-if="currentToken"
