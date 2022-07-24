@@ -1,9 +1,9 @@
 export type Proposal = {
-  title?: string;
-  body?: string;
-  discussion?: string;
-  updatedAt?: number;
-  execution?: Transaction[];
+  title: string;
+  body: string;
+  discussion: string;
+  execution: Transaction[];
+  updatedAt: number;
 };
 
 export type Proposals = Record<string, Proposal>;
