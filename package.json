@@ -34,11 +34,11 @@
     "graphql-tag": "^2.12.6",
     "scrollmonitor": "^1.2.9",
     "vue": "^3.2.37",
-    "vue-router": "^4.0.16",
+    "vue-router": "^4.1.2",
     "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
-    "@iconify-json/heroicons-outline": "^1.1.1",
+    "@iconify-json/heroicons-outline": "^1.1.2",
     "@types/node": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.30.7",
     "@typescript-eslint/parser": "^5.30.5",
@@ -60,6 +60,6 @@
     "unplugin-icons": "^0.14.3",
     "unplugin-vue-components": "^0.19.3",
     "vite": "^3.0.2",
-    "vitest": "^0.18.1"
+    "vitest": "^0.19.0"
   }
 }

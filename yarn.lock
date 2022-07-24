@@ -1163,14 +1163,14 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@iconify-json/heroicons-outline@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@iconify-json/heroicons-outline/-/heroicons-outline-1.1.1.tgz#6d2b326750b8faedbb68df3bcc6869cf98d893c8"
-  integrity sha512-Jy/aFbNQdszRxzhBvHB2AVu/IeMcK/YG3qJVf3XeqvBvhcPq/rWFEmo7jshzBclR/wbt9ylcBEUY1qRFcCXS9Q==
+"@iconify-json/heroicons-outline@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@iconify-json/heroicons-outline/-/heroicons-outline-1.1.2.tgz#f88550daa1f0f57f5ba5b5220291a8f7a10b560d"
+  integrity sha512-XsOWcUhdvu3eNURW40hlC2Wrc0cSNWwD+p+UeX57h/qwwDzibIMLeBuqhz9d1FjxHeiM86WQUc4QFB1SK2BGVw==
   dependencies:
-    "@iconify/types" "^1.0.12"
+    "@iconify/types" "*"
 
-"@iconify/types@^1.0.12", "@iconify/types@^1.1.0":
+"@iconify/types@*", "@iconify/types@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@iconify/types/-/types-1.1.0.tgz#dc15fc988b1b3fd558dd140a24ede7e0aac11280"
   integrity sha512-Jh0llaK2LRXQoYsorIH8maClebsnzTcve+7U3rQUSnC11X4jtPnFuyatqFLvMxZ8MLG8dB4zfHsbPfuvxluONw==
@@ -1663,10 +1663,10 @@
     "@vue/compiler-dom" "3.2.37"
     "@vue/shared" "3.2.37"
 
-"@vue/devtools-api@^6.0.0":
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/@vue/devtools-api/-/devtools-api-6.1.0.tgz#5b7945e656bc0f85b1774c9aca1dbe075bead3c0"
-  integrity sha512-1FtbxEEHN70WGJl1b/h8nLmyN+tOHONNsNLvgVEXF/L/vBrRqQZ0kF+dev1YAz3OtxsQ1sV/vPLKwRlq1axrgg==
+"@vue/devtools-api@^6.1.4":
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/@vue/devtools-api/-/devtools-api-6.2.1.tgz#6f2948ff002ec46df01420dfeff91de16c5b4092"
+  integrity sha512-OEgAMeQXvCoJ+1x8WyQuVZzFo0wcyCmUR3baRVLmKBo1LmYZWMlRiXlux5jd0fqVJu6PfDbOrZItVqUEzLobeQ==
 
 "@vue/eslint-config-prettier@^7.0.0":
   version "7.0.0"
@@ -4944,12 +4944,7 @@ load-yaml-file@^0.2.0:
     pify "^4.0.1"
     strip-bom "^3.0.0"
 
-local-pkg@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/local-pkg/-/local-pkg-0.4.1.tgz#e7b0d7aa0b9c498a1110a5ac5b00ba66ef38cfff"
-  integrity sha512-lL87ytIGP2FU5PWwNDo0w3WhIo2gopIAxPg9RxDYF7m4rr5ahuZxP22xnJHIvaLTe4Z9P6uKKY2UHiwyB4pcrw==
-
-local-pkg@^0.4.2:
+local-pkg@^0.4.1, local-pkg@^0.4.2:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/local-pkg/-/local-pkg-0.4.2.tgz#13107310b77e74a0e513147a131a2ba288176c2f"
   integrity sha512-mlERgSPrbxU3BP4qBqAvvwlgW4MTg78iwJdGGnv7kibKjWcJksrG3t6LB5lXI93wXRDvG4NpUgJFmTG4T6rdrg==
@@ -6962,10 +6957,10 @@ verror@1.10.0:
   optionalDependencies:
     fsevents "~2.3.2"
 
-vitest@^0.18.1:
-  version "0.18.1"
-  resolved "https://registry.yarnpkg.com/vitest/-/vitest-0.18.1.tgz#33c5003fc8c4b296801897ae1a3f142f57015574"
-  integrity sha512-4F/1K/Vn4AvJwe7i2YblR02PT5vMKcw9KN4unDq2KD0YcSxX0B/6D6Qu9PJaXwVuxXMFTQ5ovd4+CQaW3bwofA==
+vitest@^0.19.0:
+  version "0.19.0"
+  resolved "https://registry.yarnpkg.com/vitest/-/vitest-0.19.0.tgz#d526bc3ca18b279110de0c2f33004a105bb21059"
+  integrity sha512-nU80Gm95tMchigHpAMukxv1LoWbBGgknX/1MqrXCOoJoJL7/wfq4h2aow61o2jwf5szQrahoNqBqaGb+fYdYrQ==
   dependencies:
     "@types/chai" "^4.3.1"
     "@types/chai-subset" "^1.3.3"
@@ -6995,12 +6990,12 @@ vue-eslint-parser@^8.0.0, vue-eslint-parser@^8.0.1:
     lodash "^4.17.21"
     semver "^7.3.5"
 
-vue-router@^4.0.16:
-  version "4.0.16"
-  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-4.0.16.tgz#9477beeeef36e80e04d041a1738801a55e6e862e"
-  integrity sha512-JcO7cb8QJLBWE+DfxGUL3xUDOae/8nhM1KVdnudadTAORbuxIC/xAydC5Zr/VLHUDQi1ppuTF5/rjBGzgzrJNA==
+vue-router@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-4.1.2.tgz#ae08f63c9610afa6bff6743e8f128b7054d4c9f5"
+  integrity sha512-5BP1qXFncVRwgV/XnqzsKApdMjQPqWIpoUBdL1ynz8HyLxIX/UDAx7Ql2BjmA5CXT/p61JfZvkpiFWFpaqcfag==
   dependencies:
-    "@vue/devtools-api" "^6.0.0"
+    "@vue/devtools-api" "^6.1.4"
 
 vue@^3.2.37:
   version "3.2.37"
