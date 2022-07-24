@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { watch } from 'vue';
-import { useEditor } from '@/composables/useEditor';
+import { watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useEditor } from '@/composables/useEditor';
+import { omit } from '@/helpers/utils';
 
 const router = useRouter();
 const route = useRoute();
@@ -27,7 +28,11 @@ watch(proposals, () => {
   }
 });
 
-watch(proposals[key], () => {
+const proposalData = computed(() =>
+  JSON.stringify(omit(proposals[key], ['updatedAt']))
+);
+
+watch(proposalData, () => {
   proposals[key].updatedAt = Date.now();
 });
 </script>

@@ -24,11 +24,13 @@ export function useEditor() {
   watch(proposals, () => lsSet('proposals', removeEmpty(proposals)));
 
   const drafts = computed(() => {
-    return Object.entries(removeEmpty(proposals)).map(([k, value]) => ({
-      id: k,
-      key: k.split(':')[1],
-      ...value
-    }));
+    return Object.entries(removeEmpty(proposals))
+      .map(([k, value]) => ({
+        id: k,
+        key: k.split(':')[1],
+        ...value
+      }))
+      .sort((a, b) => b.updatedAt - a.updatedAt);
   });
 
   function removeDraft(key: string) {

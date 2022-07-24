@@ -149,6 +149,6 @@ export function omit<T, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {
   >;
 }
 
-export function clone(obj) {
+export function clone<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj));
 }
