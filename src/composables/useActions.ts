@@ -5,6 +5,7 @@ import { useWeb3 } from '@/composables/useWeb3';
 import { useTxStatus } from '@/composables/useTxStatus';
 import { useAccount } from '@/composables/useAccount';
 import { useModal } from '@/composables/useModal';
+import { simulate } from '@/helpers/tenderly';
 import type { Transaction, TransactionData } from '@/types';
 
 export function useActions() {
@@ -53,6 +54,9 @@ export function useActions() {
         operation: '0'
       })
     );
+
+    await simulate(executionData[0]);
+    return true;
 
     const pinned = await pin({
       title,
