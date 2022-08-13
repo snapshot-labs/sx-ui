@@ -1,6 +1,7 @@
 import path from 'path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import GlobalPolyFill from '@esbuild-plugins/node-globals-polyfill';
 import Components from 'unplugin-vue-components/vite';
 import Icons from 'unplugin-icons/vite';
 import IconsResolver from 'unplugin-icons/resolver';
@@ -38,8 +39,18 @@ export default defineConfig({
       }
     })
   ],
+  optimizeDeps: {
+    esbuildOptions: {
+      plugins: [
+        GlobalPolyFill({
+          buffer: true
+        })
+      ]
+    }
+  },
   resolve: {
     alias: {
+      stream: 'rollup-plugin-node-polyfills/polyfills/stream',
       '@': path.resolve(__dirname, './src')
     },
     dedupe: ['@popperjs/core']
