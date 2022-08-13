@@ -41,6 +41,9 @@ export default defineConfig({
   ],
   optimizeDeps: {
     esbuildOptions: {
+      define: {
+        global: 'globalThis'
+      },
       plugins: [
         GlobalPolyFill({
           buffer: true
