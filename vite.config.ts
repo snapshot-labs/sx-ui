@@ -6,6 +6,7 @@ import Components from 'unplugin-vue-components/vite';
 import Icons from 'unplugin-icons/vite';
 import IconsResolver from 'unplugin-icons/resolver';
 import visualizer from 'rollup-plugin-visualizer';
+import rollupNodePolyFill from 'rollup-plugin-node-polyfills';
 
 const ELECTRON = process.env.ELECTRON || false;
 
@@ -41,13 +42,18 @@ export default defineConfig({
   ],
   optimizeDeps: {
     esbuildOptions: {
-      define: {
-        global: 'globalThis'
-      },
       plugins: [
         GlobalPolyFill({
           buffer: true
         })
+      ]
+    }
+  },
+  build: {
+    rollupOptions: {
+      plugins: [
+        // @ts-ignore
+        rollupNodePolyFill()
       ]
     }
   },
