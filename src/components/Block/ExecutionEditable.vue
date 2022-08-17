@@ -120,20 +120,26 @@ function editTx(index: number) {
             <div class="flex items-center max-w-[70%]">
               <div
                 v-if="txs.length > 1"
-                class="handle mr-2 text-white cursor-pointer opacity-50 hover:opacity-100"
+                class="cursor-pointer handle mr-2 text-skin-text hover:text-skin-link"
               >
                 <IH-switch-vertical />
               </div>
-              <IH-stop v-if="tx._type === 'sendToken'" />
-              <IH-photograph v-else-if="tx._type === 'sendNft'" />
-              <IH-chip v-else />
+              <IH-stop v-if="tx._type === 'sendToken'" class="text-skin-link" />
+              <IH-photograph
+                v-else-if="tx._type === 'sendNft'"
+                class="text-skin-link"
+              />
+              <IH-chip v-else class="text-skin-link" />
               <div class="ml-2 truncate text-skin-link" v-html="getTitle(tx)" />
             </div>
-            <div class="flex gap-3">
-              <a @click="editTx(i)">
+            <div class="flex space-x-2">
+              <a class="text-skin-text hover:text-skin-link" @click="editTx(i)">
                 <IH-pencil />
               </a>
-              <a @click="removeTx(i)">
+              <a
+                class="text-skin-text hover:text-skin-link"
+                @click="removeTx(i)"
+              >
                 <IH-trash />
               </a>
             </div>

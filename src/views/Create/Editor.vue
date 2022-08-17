@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { watch, computed } from 'vue';
+import { watch, computed, ref, Ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useEditor } from '@/composables/useEditor';
-import { omit } from '@/helpers/utils';
+import { clone, omit } from '@/helpers/utils';
+import { simulate } from '@/helpers/tenderly';
 
 const router = useRouter();
 const route = useRoute();
@@ -37,6 +38,20 @@ const proposalData = computed(() =>
 watch(proposalData, () => {
   proposals[key].updatedAt = Date.now();
 });
+
+const simulations: Ref<any[]> = ref([]);
+const simulationsLoading: Ref<boolean[]> = ref([]);
+
+async function handleSimulate() {
+  for (let [i, tx] of proposals[key].execution.entries()) {
+    const raw: any = clone(tx);
+    delete raw._form;
+    delete raw._type;
+    simulationsLoading.value[i] = true;
+    simulations.value[i] = (await simulate(tx)) || true;
+    simulationsLoading.value[i] = false;
+  }
+}
 </script>
 <template>
   <Container v-if="proposals[key]" class="pt-5 s-box">
@@ -65,7 +80,16 @@ watch(proposalData, () => {
       />
       <Preview :url="proposals[key].discussion" />
     </div>
-    <h4 class="eyebrow mb-3">Execution</h4>
+    <div class="float-right space-x-2">
+      <a @click="handleSimulate"><IH-play class="inline-block" /></a>
+      <IH-duplicate class="inline-block" />
+    </div>
+    <h4 class="eyebrow mb-3" v-text="'Execution'" />
     <BlockExecutionEditable v-model="proposals[key].execution" class="mb-4" />
+
+    <div v-for="(simulation, i) in simulations" :key="i">
+      {{ simulation._error }}
+      <a :href="simulation._link" target="_blank">Check</a>
+    </div>
   </Container>
 </template>

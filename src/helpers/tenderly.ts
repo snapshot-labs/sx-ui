@@ -10,7 +10,7 @@ export async function simulate(tx) {
     from: space.wallet,
     to: tx.to,
     input: tx.data,
-    gas: 80000,
+    gas: 8000000,
     gas_price: '0',
     value: tx.value,
     save_if_fails: true
@@ -26,10 +26,7 @@ export async function simulate(tx) {
   };
   const res = await fetch(url, init);
   const json = await res.json();
-  console.log('Status', json.simulation.status);
-  console.log(
-    `https://dashboard.tenderly.co/${TENDERLY_USER}/project/simulator/${json.simulation.id}`
-  );
-  console.log('Error', json.transaction.error_message);
+  json._link = `https://dashboard.tenderly.co/${TENDERLY_USER}/project/simulator/${json.simulation.id}`;
+  json._error = json.transaction.error_message;
   return json;
 }
