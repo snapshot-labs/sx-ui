@@ -27,8 +27,13 @@ export const PROPOSAL_QUERY = gql`
 `;
 
 export const PROPOSALS_QUERY = gql`
-  query ($first: Int!) {
-    proposals(first: $first, orderBy: created, orderDirection: desc) {
+  query ($first: Int!, $space: String!) {
+    proposals(
+      first: $first
+      where: { space: $space }
+      orderBy: created
+      orderDirection: desc
+    ) {
       id
       proposal_id
       space
@@ -78,6 +83,9 @@ export const SPACE_QUERY = gql`
       max_voting_period
       proposal_threshold
       quorum
+      strategies
+      authenticators
+      executors
       proposal_count
       vote_count
       created
@@ -97,6 +105,9 @@ export const SPACES_QUERY = gql`
       max_voting_period
       proposal_threshold
       quorum
+      strategies
+      authenticators
+      executors
       proposal_count
       vote_count
       created
