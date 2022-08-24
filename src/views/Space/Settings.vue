@@ -1,8 +1,9 @@
-<script setup>
+<script setup lang="ts">
 import { shorten } from '@/helpers/utils';
 import { AUTHS, STRATEGIES, EXECUTORS } from '@/helpers/constants';
+import { Space } from '@/types';
 
-defineProps({ space: Object });
+defineProps<{ space: Space }>();
 </script>
 
 <template>
