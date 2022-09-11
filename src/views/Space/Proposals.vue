@@ -23,13 +23,15 @@ onMounted(async () => {
 </script>
 
 <template>
-  <Container slim class="space-y-3">
-    <UiLoading v-if="!loaded" class="block px-4 sm:px-0" />
-    <Proposal
-      v-for="(proposal, i) in proposals"
-      v-else
-      :key="i"
-      :proposal="proposal"
-    />
-  </Container>
+  <div>
+    <Label :label="'Proposals'" />
+    <UiLoading v-if="!loaded" class="block px-4 py-3" />
+    <div v-else>
+      <Proposal
+        v-for="(proposal, i) in proposals"
+        :key="i"
+        :proposal="proposal"
+      />
+    </div>
+  </div>
 </template>
