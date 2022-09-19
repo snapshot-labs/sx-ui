@@ -42,6 +42,10 @@ onMounted(async () => {
     <Label :label="'Proposals'" />
     <UiLoading v-if="!loaded" class="block px-4 py-3" />
     <div v-else>
+      <div v-if="!proposals.length" class="px-4 py-3 text-skin-link">
+        <IH-exclamation-circle class="inline-block mr-2" />
+        <span v-text="'There are no proposals here.'" />
+      </div>
       <Proposal
         v-for="(proposal, i) in proposals"
         :key="i"

@@ -96,8 +96,10 @@ defineProps<{ space: Space }>();
         <a
           :href="`https://goerli.voyager.online/contract/${auth}`"
           target="_blank"
+          class="flex"
         >
-          <div class="float-right">
+          <h4 class="flex-auto" v-text="AUTHS[auth]" />
+          <div>
             <Stamp
               :id="auth"
               type="avatar"
@@ -106,7 +108,6 @@ defineProps<{ space: Space }>();
             />
             {{ shorten(auth) }} <IH-external-link class="inline-block" />
           </div>
-          <h4 v-text="AUTHS[auth]" />
         </a>
       </div>
     </div>
@@ -121,8 +122,10 @@ defineProps<{ space: Space }>();
         <a
           :href="`https://goerli.voyager.online/contract/${strategy}`"
           target="_blank"
+          class="flex"
         >
-          <div class="float-right">
+          <h4 class="flex-auto" v-text="STRATEGIES[strategy]" />
+          <div>
             <Stamp
               :id="strategy"
               type="avatar"
@@ -131,7 +134,6 @@ defineProps<{ space: Space }>();
             />
             {{ shorten(strategy) }} <IH-external-link class="inline-block" />
           </div>
-          <h4 v-text="STRATEGIES[strategy]" />
         </a>
       </div>
     </div>
@@ -146,8 +148,13 @@ defineProps<{ space: Space }>();
         <a
           :href="`https://goerli.voyager.online/contract/${executor}`"
           target="_blank"
+          class="flex"
         >
-          <div class="float-right">
+          <h4
+            class="inline-block mr-3 flex-auto"
+            v-text="EXECUTORS[executor]"
+          />
+          <div>
             <Stamp
               :id="executor"
               type="avatar"
@@ -156,7 +163,6 @@ defineProps<{ space: Space }>();
             />
             {{ shorten(executor) }} <IH-external-link class="inline-block" />
           </div>
-          <h4 class="inline-block mr-3" v-text="EXECUTORS[executor]" />
         </a>
       </div>
     </div>

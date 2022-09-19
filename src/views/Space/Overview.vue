@@ -62,6 +62,13 @@ onMounted(async () => {
           :key="i"
           :proposal="proposal"
         />
+        <div v-if="!proposals.length" class="px-4 py-3 text-skin-link">
+          <IH-exclamation-circle class="inline-block mr-2" />
+          <span v-text="'There are no proposals here.'" />
+        </div>
+        <router-link v-else :to="{ name: 'proposals' }" class="px-4 py-2 block">
+          See more
+        </router-link>
       </div>
     </div>
   </div>
