@@ -15,11 +15,7 @@ const space = route.params.space as string;
 const modalOpenVotes = ref(false);
 const modalOpenTimeline = ref(false);
 
-const proposal = computed(() =>
-  proposalsStore.proposals[space]?.proposals.find(
-    proposal => proposal.proposal_id === id
-  )
-);
+const proposal = computed(() => proposalsStore.getProposal(space, id));
 
 const discussion = computed(() => {
   if (!proposal.value?.discussion) return null;
