@@ -30,6 +30,7 @@ export const useSpacesStore = defineStore('spaces', {
         variables: { id }
       });
 
+      if (this.spacesMap.get(id)) return;
       this.spaces.push(data.space);
     }
   }

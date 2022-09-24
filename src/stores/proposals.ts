@@ -14,6 +14,15 @@ export const useProposalsStore = defineStore('proposals', {
   state: () => ({
     proposals: {} as Record<string, SpaceRecord | undefined>
   }),
+  getters: {
+    getProposal: state => {
+      return (spaceId: string, proposalId) => {
+        const proposals = state.proposals[spaceId]?.proposals ?? [];
+
+        return proposals.find(proposal => proposal.proposal_id === proposalId);
+      };
+    }
+  },
   actions: {
     async fetchAll(spaceId: string) {
       if (!this.proposals[spaceId]) {
@@ -51,16 +60,14 @@ export const useProposalsStore = defineStore('proposals', {
       }
 
       const record = toRef(this.proposals, spaceId) as Ref<SpaceRecord>;
-      const alreadyFetched = record.value.proposals.find(
-        proposal => proposal.proposal_id === proposalId
-      );
-      if (alreadyFetched) return;
+      if (this.getProposal(spaceId, proposalId)) return;
 
       const { data } = await apollo.query({
         query: PROPOSAL_QUERY,
         variables: { id: `${spaceId}/${proposalId}` }
       });
 
+      if (this.getProposal(spaceId, proposalId)) return;
       record.value.proposals.push(data.proposal);
     }
   }
