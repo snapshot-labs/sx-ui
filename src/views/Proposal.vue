@@ -90,26 +90,28 @@ onMounted(() => {
         </a>
       </Container>
       <Container>
-        <div class="grid grid-cols-3 gap-2 mb-3">
-          <UiButton
-            class="w-full !text-white !bg-green !border-green"
-            @click="vote(space, proposal.proposal_id, 1)"
-          >
-            <IH-check class="inline-block" />
-          </UiButton>
-          <UiButton
-            class="w-full !text-white !bg-red !border-red"
-            @click="vote(space, proposal.proposal_id, 2)"
-          >
-            <IH-x class="inline-block" />
-          </UiButton>
-          <UiButton
-            class="w-full !text-white !bg-gray-500 !border-gray-500"
-            @click="vote(space, proposal.proposal_id, 3)"
-          >
-            <IH-arrow-right class="inline-block" />
-          </UiButton>
-        </div>
+        <Vote :proposal="proposal">
+          <div class="grid grid-cols-3 gap-2 mb-3">
+            <UiButton
+              class="w-full !text-white !bg-green !border-green"
+              @click="vote(space, proposal.proposal_id, 1)"
+            >
+              <IH-check class="inline-block" />
+            </UiButton>
+            <UiButton
+              class="w-full !text-white !bg-red !border-red"
+              @click="vote(space, proposal.proposal_id, 2)"
+            >
+              <IH-x class="inline-block" />
+            </UiButton>
+            <UiButton
+              class="w-full !text-white !bg-gray-500 !border-gray-500"
+              @click="vote(space, proposal.proposal_id, 3)"
+            >
+              <IH-arrow-right class="inline-block" />
+            </UiButton>
+          </div>
+        </Vote>
         <div>
           <a class="text-skin-text" @click="modalOpenVotes = true">
             {{ _n(proposal.vote_count) }} votes
