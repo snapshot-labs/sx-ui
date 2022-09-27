@@ -51,7 +51,7 @@ watch(open, async () => {
             }"
             :class="`_${vote.choice}`"
           />
-          <Stamp :id="vote.voter" :size="24" class="mr-2" />
+          <Stamp :id="vote.voter.id" :size="24" class="mr-2" />
           <router-link
             :to="{ name: 'user', params: { id: vote.voter } }"
             @click="$emit('close')"

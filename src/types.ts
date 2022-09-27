@@ -19,8 +19,12 @@ export type Space = {
 export type Proposal = {
   id: string;
   proposal_id: number;
-  space: string;
-  author: string;
+  space: {
+    id: string;
+  };
+  author: {
+    id: string;
+  };
   execution_hash: string;
   metadata_uri: string;
   title: string;
