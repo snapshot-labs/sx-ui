@@ -51,6 +51,20 @@ export type User = {
   created: number;
 };
 
+export type Vote = {
+  id: string;
+  voter: {
+    id: string;
+  };
+  space: {
+    id: string;
+  };
+  proposal: number;
+  choice: number;
+  vp: number;
+  created: number;
+};
+
 export type Draft = {
   title: string;
   body: string;
