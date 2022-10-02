@@ -92,6 +92,11 @@ onMounted(() => {
       <Container>
         <Vote :proposal="proposal">
           <template #voted>
+            <h4 class="mb-2">Results</h4>
+            <Results :proposal="proposal" width="full" />
+          </template>
+          <template #ended>
+            <h4 class="mb-2">Results</h4>
             <Results :proposal="proposal" width="full" />
           </template>
           <div class="grid grid-cols-3 gap-2">

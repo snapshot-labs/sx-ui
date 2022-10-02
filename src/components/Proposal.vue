@@ -47,6 +47,9 @@ const modalOpenTimeline = ref(false);
           <template #voted>
             <Results :proposal="proposal" />
           </template>
+          <template #ended>
+            <Results :proposal="proposal" />
+          </template>
           <div class="space-x-2 py-2">
             <UiButton
               class="w-full !text-green !border-green !w-[40px] !h-[40px] !px-0"
