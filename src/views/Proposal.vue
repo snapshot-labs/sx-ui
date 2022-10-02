@@ -91,7 +91,10 @@ onMounted(() => {
       </Container>
       <Container>
         <Vote :proposal="proposal">
-          <div class="grid grid-cols-3 gap-2 mb-3">
+          <template #voted>
+            <Results :proposal="proposal" width="full" />
+          </template>
+          <div class="grid grid-cols-3 gap-2">
             <UiButton
               class="w-full !text-white !bg-green !border-green"
               @click="vote(space, proposal.proposal_id, 1)"
@@ -112,7 +115,7 @@ onMounted(() => {
             </UiButton>
           </div>
         </Vote>
-        <div>
+        <div class="mt-3">
           <a class="text-skin-text" @click="modalOpenVotes = true">
             {{ _n(proposal.vote_count) }} votes
           </a>
