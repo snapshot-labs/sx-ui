@@ -16,8 +16,14 @@ withDefaults(
   <div class="flex items-center h-full">
     <div
       class="rounded-full h-[6px] overflow-hidden"
-      :class="width === 'full' ? 'w-full' : `w-[${width}px]`"
+      :style="{
+        width: width === 'full' ? '100%' : `${width}px`
+      }"
     >
+      <div
+        v-if="proposal.scores_total === 0"
+        class="choice-bg _3 float-left w-full h-full"
+      />
       <div
         v-for="(score, i) in Array(3)"
         :key="i"
