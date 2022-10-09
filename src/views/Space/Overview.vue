@@ -3,12 +3,14 @@ import { onMounted, computed } from 'vue';
 import { useProposalsStore } from '@/stores/proposals';
 import { Space, Proposal as ProposalType } from '@/types';
 
+const PROPOSALS_LIMIT = 4;
+
 const props = defineProps<{ space: Space }>();
 
 const proposalsStore = useProposalsStore();
 
 onMounted(() => {
-  proposalsStore.fetchAll(props.space.id);
+  proposalsStore.fetchSummary(props.space.id, PROPOSALS_LIMIT);
 });
 
 const proposalsRecord = computed(
@@ -66,7 +68,8 @@ const grouped = computed(() => {
     <div>
       <ProposalsList
         title="Active proposals"
-        :loading="!proposalsRecord?.loaded"
+        :loading="!proposalsRecord?.summaryLoaded"
+        :limit="PROPOSALS_LIMIT - 1"
         :proposals="grouped.active"
         :route="{
           name: 'proposals',
@@ -75,7 +78,8 @@ const grouped = computed(() => {
       />
       <ProposalsList
         title="Closed proposals"
-        :loading="!proposalsRecord?.loaded"
+        :loading="!proposalsRecord?.summaryLoaded"
+        :limit="PROPOSALS_LIMIT - 1"
         :proposals="grouped.ended"
         :route="{
           name: 'proposals',
