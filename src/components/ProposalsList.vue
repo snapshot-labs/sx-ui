@@ -5,7 +5,7 @@ import type { Proposal as ProposalType } from '@/types';
 const props = defineProps<{
   title: string;
   loading?: boolean;
-  limit?: number | false;
+  limit?: number | 'off';
   proposals: ProposalType[];
   route?: {
     name: string;
@@ -13,8 +13,8 @@ const props = defineProps<{
   };
 }>();
 
-const limit = computed(() => {
-  if (props.limit === false) return Infinity;
+const currentLimit = computed(() => {
+  if (props.limit === 'off') return Infinity;
 
   return props.limit || 3;
 });
@@ -26,7 +26,7 @@ const limit = computed(() => {
     <UiLoading v-if="loading" class="block px-4 py-3" />
     <div v-else>
       <Proposal
-        v-for="(proposal, i) in proposals.slice(0, limit)"
+        v-for="(proposal, i) in proposals.slice(0, currentLimit)"
         :key="i"
         :proposal="proposal"
       />
@@ -35,7 +35,7 @@ const limit = computed(() => {
         <span v-text="'There are no proposals here.'" />
       </div>
       <router-link
-        v-else-if="route && proposals.length > limit"
+        v-else-if="route && proposals.length > currentLimit"
         :to="{ name: route.name }"
         class="px-4 py-2 block"
       >

@@ -35,7 +35,7 @@ const proposalsRecord = computed(
     </div>
     <ProposalsList
       title="Proposals"
-      :limit="false"
+      limit="off"
       :loading="!proposalsRecord?.loaded"
       :proposals="proposalsRecord?.proposals || []"
     />
