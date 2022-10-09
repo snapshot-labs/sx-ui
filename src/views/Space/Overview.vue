@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, computed } from 'vue';
 import { useProposalsStore } from '@/stores/proposals';
-import { Space } from '@/types';
+import { Space, Proposal as ProposalType } from '@/types';
 
 const props = defineProps<{ space: Space }>();
 
@@ -14,6 +14,22 @@ onMounted(() => {
 const proposalsRecord = computed(
   () => proposalsStore.proposals[props.space.id]
 );
+
+const grouped = computed(() => {
+  const initialValue = {
+    active: [] as ProposalType[],
+    ended: [] as ProposalType[]
+  };
+
+  if (!proposalsRecord.value) return initialValue;
+
+  return proposalsRecord.value.proposals.reduce((v, proposal) => {
+    if (proposal.has_ended) v.ended.push(proposal);
+    else v.active.push(proposal);
+
+    return v;
+  }, initialValue);
+});
 </script>
 
 <template>
@@ -48,25 +64,25 @@ const proposalsRecord = computed(
       </div>
     </div>
     <div>
-      <Label :label="'Active proposals'" />
-      <UiLoading v-if="!proposalsRecord?.loaded" class="block px-4 py-3" />
-      <div v-else>
-        <Proposal
-          v-for="(proposal, i) in proposalsRecord?.proposals"
-          :key="i"
-          :proposal="proposal"
-        />
-        <div
-          v-if="!proposalsRecord?.proposals.length"
-          class="px-4 py-3 text-skin-link"
-        >
-          <IH-exclamation-circle class="inline-block mr-2" />
-          <span v-text="'There are no proposals here.'" />
-        </div>
-        <router-link v-else :to="{ name: 'proposals' }" class="px-4 py-2 block">
-          See more
-        </router-link>
-      </div>
+      <ProposalsList
+        title="Active proposals"
+        :loading="!proposalsRecord?.loaded"
+        :proposals="grouped.active"
+        :route="{
+          name: 'proposals',
+          linkTitle: 'See more'
+        }"
+      />
+      <ProposalsList
+        title="Closed proposals"
+        :loading="!proposalsRecord?.loaded"
+        :proposals="grouped.ended"
+        :route="{
+          name: 'proposals',
+          linkTitle: 'See more'
+        }"
+        class="mt-4"
+      />
     </div>
   </div>
 </template>

@@ -4,6 +4,13 @@ import apollo from '@/helpers/apollo';
 import { PROPOSALS_QUERY, PROPOSAL_QUERY } from '@/helpers/queries';
 import type { Proposal } from '@/types';
 
+function formatProposal(proposal: Omit<Proposal, 'has_ended'>): Proposal {
+  return {
+    ...proposal,
+    has_ended: proposal.max_end * 1000 <= Date.now()
+  };
+}
+
 type SpaceRecord = {
   loading: boolean;
   loaded: boolean;
@@ -46,7 +53,9 @@ export const useProposalsStore = defineStore('proposals', {
         }
       });
 
-      record.value.proposals = data.proposals;
+      record.value.proposals = data.proposals.map(proposal =>
+        formatProposal(proposal)
+      );
       record.value.loaded = true;
       record.value.loading = false;
     },
@@ -68,7 +77,7 @@ export const useProposalsStore = defineStore('proposals', {
       });
 
       if (this.getProposal(spaceId, proposalId)) return;
-      record.value.proposals.push(data.proposal);
+      record.value.proposals.push(formatProposal(data.proposal));
     }
   }
 });
