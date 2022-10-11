@@ -74,8 +74,9 @@ onMounted(() => {
         </div>
 
         <div v-if="discussion">
-          <h4 class="mb-3 eyebrow">
-            <IH-chat-alt class="inline-block mr-2" /> Discussion
+          <h4 class="mb-3 eyebrow flex items-center">
+            <IH-chat-alt class="inline-block mr-2" />
+            <span>Discussion</span>
           </h4>
           <a :href="discussion" target="_blank" class="block mb-5">
             <Preview :url="discussion" />
@@ -85,8 +86,9 @@ onMounted(() => {
         <div>
           <Vote :proposal="proposal">
             <template #voted="{ vote: userVote }">
-              <h4 class="mb-3 eyebrow">
-                <IH-chart-bar class="inline-block mr-2" /> Results
+              <h4 class="mb-3 eyebrow flex items-center">
+                <IH-chart-bar class="inline-block mr-2" />
+                <span>Results</span>
               </h4>
               <Results :proposal="proposal" width="full" />
               <div class="mt-2">
@@ -103,8 +105,9 @@ onMounted(() => {
               </div>
             </template>
             <template #ended>
-              <h4 class="mb-3 eyebrow">
-                <IH-chart-bar class="inline-block mr-2" /> Results
+              <h4 class="mb-3 eyebrow flex items-center">
+                <IH-chart-bar class="inline-block mr-2" />
+                <span>Results</span>
               </h4>
               <Results :proposal="proposal" width="full" />
             </template>
