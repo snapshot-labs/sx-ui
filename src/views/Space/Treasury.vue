@@ -67,7 +67,7 @@ onMounted(() => {
       </a>
     </div>
     <div>
-      <div class="flex pl-4">
+      <div class="flex pl-4 border-b">
         <Link
           :is-active="page === 'tokens'"
           text="Tokens"
