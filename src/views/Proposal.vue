@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref, computed, watch, Ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { sanitizeUrl } from '@braintree/sanitize-url';
 import { useProposalsStore } from '@/stores/proposals';
 import { _rt, _n, shortenAddress, getUrl } from '@/helpers/utils';
 import { useActions } from '@/composables/useActions';
-import type { Metadata } from '@/types';
+import type { Transaction } from '@/types';
 
 const route = useRoute();
 const proposalsStore = useProposalsStore();
@@ -14,8 +14,6 @@ const id = parseInt((route.params.id as string) || '0');
 const space = route.params.space as string;
 const modalOpenVotes = ref(false);
 const modalOpenTimeline = ref(false);
-const metadataLoading = ref(true);
-const metadata: Ref<Metadata | null> = ref(null);
 
 const proposal = computed(() => proposalsStore.getProposal(space, id));
 
@@ -28,32 +26,23 @@ const discussion = computed(() => {
   return output;
 });
 
-const metadataUrl = computed(() => {
-  if (!proposal.value) return null;
+const execution = computed(() => {
+  const rawExecution = proposal.value?.execution;
+  if (!rawExecution) return null;
 
-  return getUrl(proposal.value.metadata_uri);
-});
+  let parsed = null;
+  try {
+    parsed = JSON.parse(rawExecution);
+  } catch (err) {
+    console.log('failed to parse execution');
+  }
 
-async function fetchMetadata() {
-  const res = await fetch(metadataUrl.value);
-  const data = await res.json();
+  if (!parsed || !Array.isArray(parsed)) return null;
 
-  metadata.value = data as Metadata;
-  metadataLoading.value = false;
-}
-
-watch(metadataUrl, () => {
-  if (!metadataUrl.value) return;
-
-  fetchMetadata();
+  return parsed as Transaction[];
 });
 
 onMounted(() => {
-  if (proposal.value) {
-    fetchMetadata();
-    return;
-  }
-
   proposalsStore.fetchProposal(space, id);
 });
 </script>
@@ -87,7 +76,10 @@ onMounted(() => {
                 />
               </span>
             </div>
-            <a :href="sanitizeUrl(metadataUrl)" target="_blank">
+            <a
+              :href="sanitizeUrl(getUrl(proposal.metadata_uri))"
+              target="_blank"
+            >
               <UiButton class="!w-[46px] !h-[46px] !px-[12px]">
                 <IH-dots-horizontal />
               </UiButton>
@@ -107,12 +99,10 @@ onMounted(() => {
             <Preview :url="discussion" />
           </a>
         </div>
-        <div>
+        <div v-if="execution && execution.length > 0">
           <h4 class="mb-3 eyebrow">Execution</h4>
           <div class="mb-4">
-            <UiLoading v-if="metadataLoading" />
-            <BlockExecution v-else-if="metadata" :txs="metadata.execution" />
-            <div v-else>Couldn't fetch execution</div>
+            <BlockExecution :txs="execution" />
           </div>
         </div>
         <div>
