@@ -133,22 +133,15 @@ watch(
       />
     </template>
     <div v-if="!showPicker" class="s-box p-4">
-      <div class="relative">
-        <a
-          class="absolute top-[20px] right-3 z-10"
-          @click="handlePickerClick('contact')"
-          ><IH-identification
-        /></a>
-        <SIString
-          v-model="form.to"
-          class="!pr-7"
-          :definition="{
-            type: 'string',
-            title: 'Recipient',
-            examples: ['Address or ENS']
-          }"
-        />
-      </div>
+      <SIAddress
+        v-model="form.to"
+        :definition="{
+          type: 'string',
+          title: 'Recipient',
+          examples: ['Address or ENS']
+        }"
+        @pick="handlePickerClick('contact')"
+      />
       <div class="s-base">
         <div class="s-label" v-text="'NFT'" />
         <button
