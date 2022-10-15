@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { formatUnits } from '@ethersproject/units';
-import { ETH_CONTRACT } from '@/helpers/constants';
-import { _n, shorten } from '@/helpers/utils';
+import { shorten } from '@/helpers/utils';
 
 const CONTACTS = [
   {
@@ -12,6 +10,10 @@ const CONTACTS = [
   {
     name: 'Definitely not Sekhmet',
     address: '0x537f1896541d28F4c70116EEa602b1B34Da95163'
+  },
+  {
+    name: 'WETH',
+    address: '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6'
   }
 ];
 
