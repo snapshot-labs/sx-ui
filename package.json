@@ -9,7 +9,10 @@
     "lint:nofix": "eslint \"./src/**/*.{ts,vue,json}\"",
     "lint": "yarn lint:nofix --fix",
     "test:unit": "vitest",
-    "electron:start": "electron ."
+    "electron:start": "electron .",
+    "story:dev": "histoire dev",
+    "story:build": "histoire build",
+    "story:preview": "histoire preview"
   },
   "dependencies": {
     "@apollo/client": "^3.6.2",
@@ -41,6 +44,7 @@
     "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
+    "@histoire/plugin-vue": "^0.11.5",
     "@iconify-json/heroicons-outline": "^1.1.2",
     "@types/node": "^18.6.1",
     "@typescript-eslint/eslint-plugin": "^5.30.7",
@@ -52,6 +56,7 @@
     "eslint": "^8.20.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-vue": "^8.7.1",
+    "histoire": "^0.11.5",
     "husky": "^8.0.1",
     "postcss": "^8.4.13",
     "prettier": "^2.7.1",
