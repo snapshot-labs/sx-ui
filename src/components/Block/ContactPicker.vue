@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useAccount } from '@/composables/useAccount';
 import { shorten } from '@/helpers/utils';
 
 const CONTACTS = [
@@ -26,8 +27,22 @@ const emit = defineEmits<{
   (e: 'pick', value: string);
 }>();
 
+const { account } = useAccount();
+
+const allContacts = computed(() => {
+  if (!account) return CONTACTS;
+
+  return [
+    {
+      name: 'You',
+      address: account
+    },
+    ...CONTACTS
+  ];
+});
+
 const filteredContacts = computed(() =>
-  CONTACTS.filter(contact => {
+  allContacts.value.filter(contact => {
     return (
       contact.name
         .toLocaleLowerCase()
