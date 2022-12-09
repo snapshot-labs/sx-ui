@@ -52,8 +52,8 @@ export function useActions() {
 
     const transactions = execution.map((tx: Transaction, i: number) => ({
       ...tx,
-      nonce: i,
-      operation: 0
+      nonce: 0,
+      operation: i
     }));
 
     const pinned = await pin({
