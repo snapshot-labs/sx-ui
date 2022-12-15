@@ -20,7 +20,7 @@ onMounted(() => {
 
   if (!key && route.name) {
     const str = (Math.random() + 1).toString(36).substring(7);
-    router.push({
+    router.replace({
       name: route.name,
       params: { id, key: str }
     });
