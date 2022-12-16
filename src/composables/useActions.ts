@@ -50,10 +50,10 @@ export function useActions() {
     if (!web3.value.account) return await forceLogin();
     if (web3.value.type === 'argentx') throw new Error('ArgentX is not supported');
 
-    const transactions = execution.map((tx: Transaction, i: number) => ({
+    const transactions = execution.map((tx: Transaction) => ({
       ...tx,
       nonce: 0,
-      operation: i
+      operation: 0
     }));
 
     const pinned = await pin({
