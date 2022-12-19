@@ -14,8 +14,8 @@ type SpaceRecord = {
 
 export const useProposalsStore = defineStore('proposals', {
   state: () => ({
-    proposals: {} as Record<string, SpaceRecord | undefined>,
-    summaryProposals: {} as Record<string, SpaceRecord | undefined>
+    proposals: {} as Partial<Record<string, SpaceRecord>>,
+    summaryProposals: {} as Partial<Record<string, SpaceRecord>>
   }),
   getters: {
     getProposal: state => {
