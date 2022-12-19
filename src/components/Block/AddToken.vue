@@ -98,12 +98,10 @@ watch(tokenAddress, async value => {
             <div class="text-sm truncate" v-text="shorten(token.name, 24)" />
           </div>
         </div>
-        <div class="flex flex-col items-end leading-[20px]">
-          <div
-            class="text-skin-link"
-            v-text="_n(formatUnits(token.tokenBalance, token.decimals))"
-          />
-        </div>
+        <div
+          class="text-skin-link self-center"
+          v-text="_n(formatUnits(token.tokenBalance, token.decimals))"
+        />
       </div>
     </div>
   </div>
