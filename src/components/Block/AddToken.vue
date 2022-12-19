@@ -35,6 +35,12 @@ const errors = computed(() =>
   )
 );
 
+function handleConfirmClick() {
+  if (!token.value) return;
+
+  emit('add', token.value);
+}
+
 watch(tokenAddress, async value => {
   if (!isAddress(value)) return;
 
@@ -103,6 +109,6 @@ watch(tokenAddress, async value => {
   </div>
 
   <div class="border-t p-4 text-center">
-    <UiButton class="w-full" :disabled="loading" @click="emit('add', token)">Confirm</UiButton>
+    <UiButton class="w-full" :disabled="loading" @click="handleConfirmClick">Confirm</UiButton>
   </div>
 </template>
