@@ -35,7 +35,7 @@ const form: {
 } = reactive(clone(DEFAULT_FORM_STATE));
 
 const showPicker = ref(false);
-const pickerType: Ref<'token' | 'contact' | null> = ref(null);
+const pickerType: Ref<'token' | 'add-token' | 'contact' | null> = ref(null);
 const searchValue = ref('');
 const { loading, assets, assetsMap, loadBalances } = useBalances();
 
@@ -62,6 +62,15 @@ const formValid = computed(() => currentToken.value && form.to && form.amount !=
 onMounted(() => {
   loadBalances(props.address, props.network);
 });
+
+function handleBackClick() {
+  if (pickerType.value === 'add-token') {
+    pickerType.value = 'token';
+    return;
+  }
+
+  showPicker.value = false;
+}
 
 function handlePickerClick(type: 'token' | 'contact') {
   showPicker.value = true;
@@ -137,12 +146,15 @@ watch(currentToken, token => {
 <template>
   <UiModal :open="open" @close="$emit('close')">
     <template #header>
-      <h3 v-text="'Send token'" />
+      <h3 v-text="pickerType === 'add-token' ? 'Add new token' : 'Send token'" />
       <template v-if="showPicker">
-        <a class="absolute left-0 -top-1 p-4 text-color" @click="showPicker = false">
+        <a class="absolute left-0 -top-1 p-4 text-color" @click="handleBackClick">
           <IH-arrow-narrow-left class="mr-2" />
         </a>
-        <div class="flex items-center border-t px-2 py-3 mt-3 -mb-3">
+        <div
+          v-if="pickerType !== 'add-token'"
+          class="flex items-center border-t px-2 py-3 mt-3 -mb-3"
+        >
           <IH-search class="mx-2" />
           <input
             ref="searchInput"
@@ -164,7 +176,9 @@ watch(currentToken, token => {
           form.token = $event;
           showPicker = false;
         "
+        @add="pickerType = 'add-token'"
       />
+      <BlockAddToken v-if="pickerType === 'add-token'" />
       <BlockContactPicker
         v-else-if="pickerType === 'contact'"
         :loading="false"

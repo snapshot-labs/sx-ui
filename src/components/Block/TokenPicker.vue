@@ -13,6 +13,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'pick', value: string);
+  (e: 'add');
 }>();
 
 const filteredAssets = computed(() =>
@@ -38,7 +39,11 @@ const filteredAssets = computed(() =>
     <UiLoading />
   </div>
   <template v-else>
-    <div v-if="filteredAssets.length === 0" class="text-center py-3" v-text="'No results'" />
+    <div
+      v-if="filteredAssets.length === 0"
+      class="text-center py-3 border-b"
+      v-text="'No results'"
+    />
     <div
       v-for="(asset, i) in filteredAssets"
       :key="i"
@@ -60,6 +65,9 @@ const filteredAssets = computed(() =>
         />
         <div class="text-sm" v-text="`$${_n(asset.price)}`" />
       </div>
+    </div>
+    <div class="text-center py-2">
+      <a @click="emit('add')">Add new token</a>
     </div>
   </template>
 </template>
