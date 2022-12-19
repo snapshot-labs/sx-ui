@@ -1,6 +1,6 @@
 import { Interface } from '@ethersproject/abi';
 import { parseUnits } from '@ethersproject/units';
-import type { Asset } from '@/helpers/alchemy';
+import type { Token } from '@/helpers/alchemy';
 import type { SendTokenTransaction, SendNftTransaction, ContractCallTransaction } from '@/types';
 
 const abis = {
@@ -15,7 +15,7 @@ export function createSendTokenTransaction({
   token,
   form
 }: {
-  token: Asset;
+  token: Token;
   form: any;
 }): SendTokenTransaction {
   const baseAmount = parseUnits(form.amount.toString(), token.decimals);

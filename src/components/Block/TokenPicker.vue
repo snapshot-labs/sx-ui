@@ -3,12 +3,12 @@ import { computed } from 'vue';
 import { formatUnits } from '@ethersproject/units';
 import { ETH_CONTRACT } from '@/helpers/constants';
 import { _n, shorten } from '@/helpers/utils';
-import type { Asset } from '@/helpers/alchemy';
+import type { Token } from '@/helpers/alchemy';
 
 const props = defineProps<{
   searchValue: string;
   loading: boolean;
-  assets: Asset[];
+  assets: Token[];
 }>();
 
 const emit = defineEmits<{
@@ -25,7 +25,7 @@ const filteredAssets = computed(() =>
       );
     })
     .sort((a, b) => {
-      const isEth = (asset: Asset) => asset.contractAddress === ETH_CONTRACT;
+      const isEth = (token: Token) => token.contractAddress === ETH_CONTRACT;
       if (isEth(a)) return -1;
       if (isEth(b)) return 1;
       return 0;

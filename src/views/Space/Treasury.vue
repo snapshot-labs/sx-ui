@@ -6,7 +6,7 @@ import { useNfts } from '@/composables/useNfts';
 import space from '@/helpers/space.json';
 import { _n, shorten, explorerUrl } from '@/helpers/utils';
 import { ETH_CONTRACT } from '@/helpers/constants';
-import type { Asset } from '@/helpers/alchemy';
+import type { Token } from '@/helpers/alchemy';
 import type { Space } from '@/types';
 
 defineProps<{ space: Space }>();
@@ -24,7 +24,7 @@ const totalQuote = computed(() =>
 
 const sortedAssets = computed(() =>
   (assets || []).value.sort((a, b) => {
-    const isEth = (asset: Asset) => asset.contractAddress === ETH_CONTRACT;
+    const isEth = (token: Token) => token.contractAddress === ETH_CONTRACT;
     if (isEth(a)) return -1;
     if (isEth(b)) return 1;
     return 0;

@@ -5,7 +5,7 @@ export type Metadata = {
   name: string;
   symbol: string;
 };
-export type Asset = BalanceData &
+export type Token = BalanceData &
   Metadata & {
     price: number;
     value: number;
@@ -19,4 +19,4 @@ export type GetTokenBalancesResponse = {
 
 export type GetTokensMetadataResponse = Metadata[];
 
-export type GetBalancesResponse = Asset[];
+export type GetBalancesResponse = Token[];
