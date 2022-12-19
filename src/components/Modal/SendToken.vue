@@ -5,6 +5,7 @@ import { useBalances } from '@/composables/useBalances';
 import { createSendTokenTransaction } from '@/helpers/transactions';
 import { ETH_CONTRACT } from '@/helpers/constants';
 import { clone } from '@/helpers/utils';
+import type { Token } from '@/helpers/alchemy';
 import type { Transaction } from '@/types';
 
 const DEFAULT_FORM_STATE = {
@@ -37,10 +38,14 @@ const form: {
 const showPicker = ref(false);
 const pickerType: Ref<'token' | 'add-token' | 'contact' | null> = ref(null);
 const searchValue = ref('');
+const customTokens: Ref<Token[]> = ref([]);
 const { loading, assets, assetsMap, loadBalances } = useBalances();
 
+const allAssets = computed(() => [...assets.value, ...customTokens.value]);
+
 const currentToken = computed(() => {
-  const token = assetsMap.value?.get(form.token);
+  let token = assetsMap.value?.get(form.token);
+  if (!token) token = customTokens.value.find(existing => existing.contractAddress === form.token);
 
   if (!token) {
     return {
@@ -70,6 +75,15 @@ function handleBackClick() {
   }
 
   showPicker.value = false;
+}
+
+function handleAddClick(token: Token) {
+  if (customTokens.value.find(existing => existing.contractAddress === token.contractAddress)) {
+    return;
+  }
+
+  customTokens.value.push(token);
+  pickerType.value = 'token';
 }
 
 function handlePickerClick(type: 'token' | 'contact') {
@@ -169,7 +183,7 @@ watch(currentToken, token => {
     <template v-if="showPicker">
       <BlockTokenPicker
         v-if="pickerType === 'token'"
-        :assets="assets"
+        :assets="allAssets"
         :loading="loading"
         :search-value="searchValue"
         @pick="
@@ -178,7 +192,7 @@ watch(currentToken, token => {
         "
         @add="pickerType = 'add-token'"
       />
-      <BlockAddToken v-if="pickerType === 'add-token'" />
+      <BlockAddToken v-if="pickerType === 'add-token'" @add="handleAddClick" />
       <BlockContactPicker
         v-else-if="pickerType === 'contact'"
         :loading="false"
