@@ -11,11 +11,20 @@ const emit = defineEmits<{
 
 const container: Ref<HTMLElement | null> = ref(null);
 
-const observer = new IntersectionObserver(
+function updateIntersectionObserver() {
+  if (!container.value) return;
+  if (container.value.children.length === 0) return;
+
+  const lastElement = container.value.children[container.value.children.length - 1];
+
+  intersectionObserver.observe(lastElement);
+}
+
+const intersectionObserver = new IntersectionObserver(
   ([entry]) => {
     if (!entry.isIntersecting) return;
 
-    observer.unobserve(entry.target);
+    intersectionObserver.unobserve(entry.target);
     emit('endReached');
   },
   {
@@ -24,28 +33,19 @@ const observer = new IntersectionObserver(
 );
 
 const mutationObserver = new MutationObserver(() => {
-  if (!container.value) return;
-  if (container.value.children.length === 0) return;
-
-  const lastElement = container.value.children[container.value.children.length - 1];
-
-  observer.observe(lastElement);
+  updateIntersectionObserver();
 });
 
 watch(container, v => {
   if (!v) return;
 
   mutationObserver.observe(v, { childList: true });
-
-  if (v.children.length === 0) return;
-
-  const lastElement = v.children[v.children.length - 1];
-  observer.observe(lastElement);
+  updateIntersectionObserver();
 });
 
 onBeforeUnmount(() => {
   mutationObserver.disconnect();
-  observer.disconnect();
+  intersectionObserver.disconnect();
 });
 </script>
 
