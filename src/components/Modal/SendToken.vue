@@ -36,7 +36,7 @@ const form: {
 } = reactive(clone(DEFAULT_FORM_STATE));
 
 const showPicker = ref(false);
-const pickerType: Ref<'token' | 'add-token' | 'contact' | null> = ref(null);
+const pickerType: Ref<'token' | 'contact' | null> = ref(null);
 const searchValue = ref('');
 const customTokens: Ref<Token[]> = ref([]);
 const { loading, assets, assetsMap, loadBalances } = useBalances();
@@ -53,7 +53,8 @@ const currentToken = computed(() => {
       name: 'Ether',
       symbol: 'ETH',
       contractAddress: ETH_CONTRACT,
-      tokenBalance: 0,
+      logo: null,
+      tokenBalance: '0x0',
       price: 0,
       value: 0,
       change: 0
@@ -68,27 +69,19 @@ onMounted(() => {
   loadBalances(props.address, props.network);
 });
 
-function handleBackClick() {
-  if (pickerType.value === 'add-token') {
-    pickerType.value = 'token';
-    return;
-  }
-
-  showPicker.value = false;
-}
-
-function handleAddClick(token: Token) {
+function handleAddCustomToken(token: Token) {
   if (customTokens.value.find(existing => existing.contractAddress === token.contractAddress)) {
     return;
   }
 
   customTokens.value.push(token);
-  pickerType.value = 'token';
 }
 
 function handlePickerClick(type: 'token' | 'contact') {
   showPicker.value = true;
   pickerType.value = type;
+
+  searchValue.value = '';
 
   nextTick(() => {
     if (searchInput.value) {
@@ -160,21 +153,18 @@ watch(currentToken, token => {
 <template>
   <UiModal :open="open" @close="$emit('close')">
     <template #header>
-      <h3 v-text="pickerType === 'add-token' ? 'Add new token' : 'Send token'" />
+      <h3 v-text="'Send token'" />
       <template v-if="showPicker">
-        <a class="absolute left-0 -top-1 p-4 text-color" @click="handleBackClick">
+        <a class="absolute left-0 -top-1 p-4 text-color" @click="showPicker = false">
           <IH-arrow-narrow-left class="mr-2" />
         </a>
-        <div
-          v-if="pickerType !== 'add-token'"
-          class="flex items-center border-t px-2 py-3 mt-3 -mb-3"
-        >
+        <div class="flex items-center border-t px-2 py-3 mt-3 -mb-3">
           <IH-search class="mx-2" />
           <input
             ref="searchInput"
             v-model="searchValue"
             type="text"
-            placeholder="Search"
+            :placeholder="pickerType === 'token' ? 'Search name or paste address' : 'Search'"
             class="flex-auto bg-transparent text-skin-link"
           />
         </div>
@@ -190,9 +180,8 @@ watch(currentToken, token => {
           form.token = $event;
           showPicker = false;
         "
-        @add="pickerType = 'add-token'"
+        @add="handleAddCustomToken"
       />
-      <BlockAddToken v-if="pickerType === 'add-token'" @add="handleAddClick" />
       <BlockContactPicker
         v-else-if="pickerType === 'contact'"
         :loading="false"

@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, computed, watch, Ref } from 'vue';
+import { isAddress } from '@ethersproject/address';
 import { formatUnits } from '@ethersproject/units';
+import snapshot from '@snapshot-labs/snapshot.js';
+import { abis } from '@/helpers/abis';
 import { ETH_CONTRACT } from '@/helpers/constants';
 import { _n, shorten } from '@/helpers/utils';
+import space from '@/helpers/space.json';
 import type { Token } from '@/helpers/alchemy';
+
+const { Multicaller, getProvider } = snapshot.utils;
 
 const props = defineProps<{
   searchValue: string;
@@ -13,11 +19,18 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'pick', value: string);
-  (e: 'add');
+  (e: 'add', token: Token);
 }>();
 
-const filteredAssets = computed(() =>
-  props.assets
+const customTokenLoading = ref(false);
+const customToken: Ref<Token | null> = ref(null);
+
+const isSearchValueAddress = computed(() => isAddress(props.searchValue));
+
+const filteredAssets = computed(() => {
+  if (customToken.value) return [customToken.value];
+
+  return props.assets
     .filter(asset => {
       return (
         asset.symbol.toLocaleLowerCase().includes(props.searchValue.toLocaleLowerCase()) ||
@@ -30,17 +43,75 @@ const filteredAssets = computed(() =>
       if (isEth(a)) return -1;
       if (isEth(b)) return 1;
       return 0;
-    })
+    });
+});
+
+function handlePick(token: Token) {
+  if (token.contractAddress === customToken.value?.contractAddress) {
+    emit('add', token);
+  }
+
+  emit('pick', token.contractAddress);
+}
+
+async function fetchCustomToken(address) {
+  if (props.assets.find(asset => asset.contractAddress === address)) return;
+
+  customTokenLoading.value = true;
+
+  const network = space.network;
+  const provider = getProvider(network);
+  const tokens = [address];
+
+  try {
+    const multi = new Multicaller(network.toString(), provider, abis.erc20);
+    tokens.forEach(token => {
+      multi.call(`${token}.name`, token, 'name');
+      multi.call(`${token}.symbol`, token, 'symbol');
+      multi.call(`${token}.decimals`, token, 'decimals');
+      multi.call(`${token}.balance`, token, 'balanceOf', [space.wallet]);
+    });
+
+    const result = await multi.execute();
+
+    const fetchedToken = result[address];
+
+    customToken.value = {
+      logo: null,
+      contractAddress: address,
+      symbol: fetchedToken.symbol,
+      name: fetchedToken.name,
+      tokenBalance: fetchedToken.balance._hex,
+      decimals: fetchedToken.decimals,
+      price: 0,
+      change: 0,
+      value: 0
+    };
+  } finally {
+    customTokenLoading.value = false;
+  }
+}
+
+watch(
+  () => props.searchValue,
+  value => {
+    if (!isAddress(value)) {
+      customToken.value = null;
+      return;
+    }
+
+    fetchCustomToken(value);
+  }
 );
 </script>
 
 <template>
-  <div v-if="loading" class="px-4 py-3 block flex justify-center">
+  <div v-if="loading || customTokenLoading" class="px-4 py-3 block flex justify-center">
     <UiLoading />
   </div>
   <template v-else>
     <div
-      v-if="filteredAssets.length === 0"
+      v-if="filteredAssets.length === 0 && !isSearchValueAddress"
       class="text-center py-3 border-b"
       v-text="'No results'"
     />
@@ -49,7 +120,7 @@ const filteredAssets = computed(() =>
       :key="i"
       role="button"
       class="px-3 py-[12px] border-b last:border-0 flex justify-between"
-      @click="emit('pick', asset.contractAddress)"
+      @click="handlePick(asset)"
     >
       <div class="flex items-center min-w-0 pr-2">
         <Stamp :id="asset.contractAddress" type="token" :size="32" />
@@ -65,9 +136,6 @@ const filteredAssets = computed(() =>
         />
         <div class="text-sm" v-text="`$${_n(asset.price)}`" />
       </div>
-    </div>
-    <div class="text-center py-2">
-      <a @click="emit('add')">Add new token</a>
     </div>
   </template>
 </template>
