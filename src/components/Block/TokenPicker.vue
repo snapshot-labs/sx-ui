@@ -24,7 +24,7 @@ const emit = defineEmits<{
 
 const customTokenLoading = ref(false);
 const customToken: Ref<Token | null> = ref(null);
-
+const isSearchValueValidToken: Ref<boolean> = ref(false);
 const isSearchValueAddress = computed(() => isAddress(props.searchValue));
 
 const filteredAssets = computed(() => {
@@ -87,6 +87,9 @@ async function fetchCustomToken(address) {
       change: 0,
       value: 0
     };
+    isSearchValueValidToken.value = true;
+  } catch (e) {
+    isSearchValueValidToken.value = false;
   } finally {
     customTokenLoading.value = false;
   }
@@ -111,7 +114,7 @@ watch(
   </div>
   <template v-else>
     <div
-      v-if="filteredAssets.length === 0 && !isSearchValueAddress"
+      v-if="filteredAssets.length === 0 && (!isSearchValueAddress || !isSearchValueValidToken)"
       class="text-center py-3 border-b"
       v-text="'No results'"
     />
