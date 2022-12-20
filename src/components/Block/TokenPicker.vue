@@ -115,7 +115,7 @@ watch(
   <template v-else>
     <div
       v-if="filteredAssets.length === 0 && (!isSearchValueAddress || !isSearchValueValidToken)"
-      class="text-center py-3 border-b"
+      class="text-center py-3"
       v-text="'No results'"
     />
     <div
