@@ -171,7 +171,7 @@ export const SPACE_QUERY = gql`
 
 export const SPACES_QUERY = gql`
   query ($first: Int!, $skip: Int!) {
-    spaces(first: $first, skip: $skip, orderBy: created, orderDirection: desc) {
+    spaces(first: $first, skip: $skip, orderBy: vote_count, orderDirection: desc) {
       id
       name
       about
