@@ -1,0 +1,30 @@
+<script setup>
+import { ref, computed } from 'vue';
+import { useUiStore } from '@/stores/ui';
+
+const uiStore = useUiStore();
+const pendingTransactionsModalOpen = ref(false);
+
+const totalCount = computed(
+  () => uiStore.pendingTransactions.length + uiStore.broadcastingTransactionsCount
+);
+</script>
+
+<template>
+  <div class="inline-block">
+    <UiButton
+      v-if="totalCount > 0"
+      class="!px-0 w-[46px] bg-blue border-blue"
+      title="Pending transactions"
+      @click="pendingTransactionsModalOpen = true"
+    >
+      {{ totalCount }}
+    </UiButton>
+    <teleport to="#modal">
+      <ModalPendingTransactions
+        :open="pendingTransactionsModalOpen"
+        @close="pendingTransactionsModalOpen = false"
+      />
+    </teleport>
+  </div>
+</template>
