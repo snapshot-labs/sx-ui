@@ -14,7 +14,7 @@ const totalCount = computed(
   <UiButton
     v-if="totalCount > 0"
     v-bind="$attrs"
-    class="!px-0 w-[46px] bg-blue border-blue"
+    class="!px-0 w-[46px] bg-blue border-blue focus-within:border-blue"
     title="Pending transactions"
     @click="pendingTransactionsModalOpen = true"
   >
