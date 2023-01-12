@@ -11,20 +11,19 @@ const totalCount = computed(
 </script>
 
 <template>
-  <div class="inline-block">
-    <UiButton
-      v-if="totalCount > 0"
-      class="!px-0 w-[46px] bg-blue border-blue"
-      title="Pending transactions"
-      @click="pendingTransactionsModalOpen = true"
-    >
-      {{ totalCount }}
-    </UiButton>
-    <teleport to="#modal">
-      <ModalPendingTransactions
-        :open="pendingTransactionsModalOpen"
-        @close="pendingTransactionsModalOpen = false"
-      />
-    </teleport>
-  </div>
+  <UiButton
+    v-if="totalCount > 0"
+    v-bind="$attrs"
+    class="!px-0 w-[46px] bg-blue border-blue"
+    title="Pending transactions"
+    @click="pendingTransactionsModalOpen = true"
+  >
+    {{ totalCount }}
+  </UiButton>
+  <teleport to="#modal">
+    <ModalPendingTransactions
+      :open="pendingTransactionsModalOpen"
+      @close="pendingTransactionsModalOpen = false"
+    />
+  </teleport>
 </template>
