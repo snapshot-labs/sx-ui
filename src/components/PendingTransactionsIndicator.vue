@@ -1,4 +1,10 @@
-<script setup>
+<script lang="ts">
+export default {
+  inheritAttrs: false
+};
+</script>
+
+<script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useUiStore } from '@/stores/ui';
 
