@@ -84,6 +84,16 @@ export function useActions() {
     uiStore.addPendingTransaction(receipt.transaction_hash);
   }
 
+  async function finalizeProposal(proposal: Proposal) {
+    uiStore.broadcastingTransactionsCount++;
+
+    const receipt = await currentNetwork.actions.finalizeProposal(proposal);
+
+    console.log('Receipt', receipt);
+    uiStore.broadcastingTransactionsCount--;
+    uiStore.addPendingTransaction(receipt.transaction_hash);
+  }
+
   async function receiveProposal(proposal: Proposal) {
     if (!web3.value.account) return await forceLogin();
     if (web3.value.type === 'argentx') throw new Error('ArgentX is not supported');
@@ -103,6 +113,7 @@ export function useActions() {
   return {
     vote,
     propose,
+    finalizeProposal,
     receiveProposal,
     executeTransactions
   };

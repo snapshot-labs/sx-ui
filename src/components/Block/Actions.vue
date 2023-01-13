@@ -4,7 +4,11 @@ import type { Proposal as ProposalType } from '@/types';
 
 const props = defineProps<{ proposal: ProposalType }>();
 
-const { receiveProposal, executeTransactions } = useActions();
+const { finalizeProposal, receiveProposal, executeTransactions } = useActions();
+
+async function handleFinalizeProposalClick() {
+  return finalizeProposal(props.proposal);
+}
 
 async function handleReceiveProposalClick() {
   return receiveProposal(props.proposal);
@@ -17,7 +21,10 @@ async function handleExecuteTransactionsClick() {
 
 <template>
   <div class="x-block !border-x rounded-lg p-3">
-    <UiButton :disabled="true" class="block mb-2 w-full flex justify-center items-center">
+    <UiButton
+      class="block mb-2 w-full flex justify-center items-center"
+      @click="handleFinalizeProposalClick"
+    >
       <IH-check-circle class="inline-block mr-2" />
       Finalize proposal
     </UiButton>

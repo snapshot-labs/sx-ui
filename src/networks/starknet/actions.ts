@@ -84,6 +84,26 @@ export function createActions(starkProvider: Provider) {
         choice
       });
     },
+    finalizeProposal: async (proposal: Proposal) => {
+      const res = await fetch(
+        `${manaUrl}/space/${proposal.space.id}/${proposal.proposal_id}/finalize`,
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            transactions: convertToMetaTransactions(proposal.execution)
+          })
+        }
+      );
+
+      const { error, receipt } = await res.json();
+      if (error) throw new Error('Finalization failed');
+
+      return receipt;
+    },
     receiveProposal: (web3: Web3Provider | Wallet, proposal: Proposal) => {
       const signer = Wallet.isSigner(web3) ? web3 : web3.getSigner();
 
