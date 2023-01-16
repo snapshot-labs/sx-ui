@@ -38,7 +38,7 @@ export function useActions() {
     console.log('envelope', envelope);
     uiStore.broadcastingTransactionsCount++;
 
-    send(envelope);
+    await send(envelope);
   }
 
   async function propose(
@@ -77,7 +77,7 @@ export function useActions() {
     console.log('envelope', envelope);
     uiStore.broadcastingTransactionsCount++;
 
-    send(envelope);
+    await send(envelope);
   }
 
   return {
