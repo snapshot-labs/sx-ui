@@ -159,6 +159,7 @@ async function handleVoteClick(choice: number) {
             <div class="grid grid-cols-3 gap-2">
               <UiButton
                 class="w-full !text-white !bg-green !border-green"
+                :primary="true"
                 :loading="sendingType === 1"
                 @click="handleVoteClick(1)"
               >
@@ -166,6 +167,7 @@ async function handleVoteClick(choice: number) {
               </UiButton>
               <UiButton
                 class="w-full !text-white !bg-red !border-red"
+                :primary="true"
                 :loading="sendingType === 2"
                 @click="handleVoteClick(2)"
               >
@@ -173,6 +175,7 @@ async function handleVoteClick(choice: number) {
               </UiButton>
               <UiButton
                 class="w-full !text-white !bg-gray-500 !border-gray-500"
+                :primary="true"
                 :loading="sendingType === 3"
                 @click="handleVoteClick(3)"
               >
