@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useActions } from '@/composables/useActions';
+import { currentNetwork } from '@/networks';
 import type { Proposal as ProposalType } from '@/types';
 
 const props = defineProps<{ proposal: ProposalType }>();
@@ -29,6 +30,7 @@ async function handleExecuteTransactionsClick() {
       Finalize proposal
     </UiButton>
     <UiButton
+      v-if="currentNetwork.hasReceive"
       class="block mb-2 w-full flex justify-center items-center"
       @click="handleReceiveProposalClick"
     >

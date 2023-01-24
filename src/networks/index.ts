@@ -1,5 +1,6 @@
 import { createStarknetNetwork } from './starknet';
+import { createEvmNetwork } from './evm';
 
-export { createStarknetNetwork };
+export { createStarknetNetwork, createEvmNetwork };
 
-export const currentNetwork = createStarknetNetwork();
+export const currentNetwork = createEvmNetwork();

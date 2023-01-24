@@ -41,7 +41,7 @@ export default defineConfig({
     })
   ],
   optimizeDeps: {
-    include: ['@snapshot-labs/sx'],
+    include: ['@snapshot-labs/sx', '@snapshot-labs/snapshot-oc'],
     esbuildOptions: {
       plugins: [
         GlobalPolyFill({
@@ -52,7 +52,7 @@ export default defineConfig({
   },
   build: {
     commonjsOptions: {
-      include: [/sx.js/, /node_modules/],
+      include: [/sx.js/, /soc.js/, /node_modules/],
       transformMixedEsModules: true
     },
     rollupOptions: {
