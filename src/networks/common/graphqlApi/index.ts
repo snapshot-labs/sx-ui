@@ -1,6 +1,7 @@
-import apollo from '@/helpers/apollo';
+import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core';
 import {
   VOTES_QUERY,
+  USER_VOTES_QUERY,
   PROPOSALS_QUERY,
   PROPOSALS_SUMMARY_QUERY,
   PROPOSAL_QUERY,
@@ -8,11 +9,10 @@ import {
   SPACE_QUERY,
   USER_QUERY
 } from './queries';
+import type { PaginationOpts, NetworkApi } from '@/networks/types';
 import type { Space, Proposal, Vote, User, Transaction } from '@/types';
 
 type ApiProposal = Omit<Proposal, 'has_ended' | 'execution'> & { execution: string };
-
-type PaginationOpts = { limit: number; skip?: number };
 
 function formatExecution(execution: string): Transaction[] {
   if (execution === '') return [];
@@ -35,7 +35,21 @@ function formatProposal(proposal: ApiProposal, now: number = Date.now()): Propos
   };
 }
 
-export function createApi() {
+export function createApi(uri: string): NetworkApi {
+  const httpLink = createHttpLink({ uri });
+
+  const apollo = new ApolloClient({
+    link: httpLink,
+    cache: new InMemoryCache({
+      addTypename: false
+    }),
+    defaultOptions: {
+      query: {
+        fetchPolicy: 'no-cache'
+      }
+    }
+  });
+
   return {
     loadProposalVotes: async (proposal: Proposal): Promise<Vote[]> => {
       const { data } = await apollo.query({
@@ -50,9 +64,9 @@ export function createApi() {
     },
     loadUserVotes: async (voter: string): Promise<{ [key: string]: Vote }> => {
       const { data } = await apollo.query({
-        query: VOTES_QUERY,
+        query: USER_VOTES_QUERY,
         variables: {
-          voter
+          voter: voter.toLowerCase()
         }
       });
 
