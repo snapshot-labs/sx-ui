@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { _rt, shortenAddress } from '@/helpers/utils';
 import { useActions } from '@/composables/useActions';
-import type { Proposal as ProposalType } from '@/types';
+import type { Proposal as ProposalType, Choice } from '@/types';
 
 const props = defineProps<{ proposal: ProposalType }>();
 
@@ -11,7 +11,7 @@ const modalOpenVotes = ref(false);
 const modalOpenTimeline = ref(false);
 const sendingType = ref<null | number>(null);
 
-async function handleVoteClick(choice: number) {
+async function handleVoteClick(choice: Choice) {
   sendingType.value = choice;
 
   try {

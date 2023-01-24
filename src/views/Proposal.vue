@@ -5,6 +5,7 @@ import { sanitizeUrl } from '@braintree/sanitize-url';
 import { useProposalsStore } from '@/stores/proposals';
 import { _rt, _n, shortenAddress, getUrl } from '@/helpers/utils';
 import { useActions } from '@/composables/useActions';
+import type { Choice } from '@/types';
 
 const route = useRoute();
 const proposalsStore = useProposalsStore();
@@ -30,7 +31,7 @@ onMounted(() => {
   proposalsStore.fetchProposal(space, id);
 });
 
-async function handleVoteClick(choice: number) {
+async function handleVoteClick(choice: Choice) {
   if (!proposal.value) return;
 
   sendingType.value = choice;

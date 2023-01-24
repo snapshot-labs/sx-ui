@@ -1,3 +1,5 @@
+export type Choice = 1 | 2 | 3;
+
 export type Space = {
   id: string;
   name: string;
