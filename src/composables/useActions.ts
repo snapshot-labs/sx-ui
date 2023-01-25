@@ -1,10 +1,10 @@
 import { getInstance } from '@snapshot-labs/lock/plugins/vue3';
-import { currentNetwork } from '@/networks';
+import { getNetwork } from '@/networks';
 import { pin } from '@snapshot-labs/pineapple';
 import { useUiStore } from '@/stores/ui';
 import { useWeb3 } from '@/composables/useWeb3';
 import { useModal } from '@/composables/useModal';
-import type { Transaction, Proposal, Space, Choice } from '@/types';
+import type { Transaction, Proposal, Space, Choice, NetworkID } from '@/types';
 
 export function useActions() {
   const uiStore = useUiStore();
@@ -12,8 +12,10 @@ export function useActions() {
   const { modalAccountOpen } = useModal();
   const auth = getInstance();
 
-  async function wrapPromise(promise: Promise<any>) {
-    if (!currentNetwork.hasRelayer) {
+  async function wrapPromise(networkId: NetworkID, promise: Promise<any>) {
+    const network = getNetwork(networkId);
+
+    if (!network.hasRelayer) {
       uiStore.broadcastingTransactionsCount++;
     }
 
@@ -21,16 +23,16 @@ export function useActions() {
     console.log('envelope', envelope);
 
     // TODO: unify send/soc to both return txHash under same property
-    if (currentNetwork.hasRelayer) {
+    if (network.hasRelayer) {
       uiStore.broadcastingTransactionsCount++;
-      const receipt = await currentNetwork.actions.send(envelope);
+      const receipt = await network.actions.send(envelope);
 
       console.log('Receipt', receipt);
       uiStore.broadcastingTransactionsCount--;
-      uiStore.addPendingTransaction(receipt.transaction_hash);
+      uiStore.addPendingTransaction(receipt.transaction_hash, networkId);
     } else {
       uiStore.broadcastingTransactionsCount--;
-      uiStore.addPendingTransaction(envelope.hash);
+      uiStore.addPendingTransaction(envelope.hash, networkId);
     }
   }
 
@@ -42,7 +44,12 @@ export function useActions() {
     if (!web3.value.account) return await forceLogin();
     if (web3.value.type === 'argentx') throw new Error('ArgentX is not supported');
 
-    await wrapPromise(currentNetwork.actions.vote(auth.web3, web3.value.account, proposal, choice));
+    const network = getNetwork(proposal.network);
+
+    await wrapPromise(
+      proposal.network,
+      network.actions.vote(auth.web3, web3.value.account, proposal, choice)
+    );
   }
 
   async function propose(
@@ -54,6 +61,8 @@ export function useActions() {
   ) {
     if (!web3.value.account) return await forceLogin();
     if (web3.value.type === 'argentx') throw new Error('ArgentX is not supported');
+
+    const network = getNetwork(space.network);
 
     const transactions = execution.map((tx: Transaction) => ({
       ...tx,
@@ -71,7 +80,8 @@ export function useActions() {
     console.log('IPFS', pinned);
 
     await wrapPromise(
-      currentNetwork.actions.propose(auth.web3, web3.value.account, space, pinned.cid, transactions)
+      space.network,
+      network.actions.propose(auth.web3, web3.value.account, space, pinned.cid, transactions)
     );
   }
 
@@ -79,14 +89,17 @@ export function useActions() {
     if (!web3.value.account) return await forceLogin();
     if (web3.value.type === 'argentx') throw new Error('ArgentX is not supported');
 
+    const network = getNetwork(proposal.network);
+
     uiStore.broadcastingTransactionsCount++;
 
-    const receipt = await currentNetwork.actions.finalizeProposal(auth.web3, proposal);
+    const receipt = await network.actions.finalizeProposal(auth.web3, proposal);
 
     console.log('Receipt', receipt);
     uiStore.broadcastingTransactionsCount--;
     uiStore.addPendingTransaction(
-      currentNetwork.hasRelayer ? receipt.transaction_hash : receipt.hash
+      network.hasRelayer ? receipt.transaction_hash : receipt.hash,
+      proposal.network
     );
   }
 
@@ -94,9 +107,10 @@ export function useActions() {
     if (!web3.value.account) return await forceLogin();
     if (web3.value.type === 'argentx') throw new Error('ArgentX is not supported');
 
-    if (!currentNetwork.hasReceive) throw new Error('Receive on this network is not supported');
+    const network = getNetwork(proposal.network);
+    if (!network.hasReceive) throw new Error('Receive on this network is not supported');
 
-    const receipt = await currentNetwork.actions.receiveProposal(auth.web3, proposal);
+    const receipt = await network.actions.receiveProposal(auth.web3, proposal);
     console.log('Receipt', receipt);
   }
 
@@ -104,7 +118,9 @@ export function useActions() {
     if (!web3.value.account) return await forceLogin();
     if (web3.value.type === 'argentx') throw new Error('ArgentX is not supported');
 
-    const receipt = await currentNetwork.actions.executeTransactions(auth.web3, proposal);
+    const network = getNetwork(proposal.network);
+
+    const receipt = await network.actions.executeTransactions(auth.web3, proposal);
     console.log('Receipt', receipt);
   }
 
