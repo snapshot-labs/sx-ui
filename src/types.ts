@@ -1,4 +1,4 @@
-export type NetworkID = 'goe' | 'sn-tn2';
+export type NetworkID = 'gor' | 'sn-tn2';
 export type Choice = 1 | 2 | 3;
 
 export type Space = {
