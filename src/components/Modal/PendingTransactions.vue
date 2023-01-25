@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useUiStore } from '@/stores/ui';
-import { currentNetwork } from '@/networks';
+import { getNetwork } from '@/networks';
 
 defineProps<{
   open: boolean;
@@ -35,14 +35,14 @@ const totalCount = computed(
           broadcasting
         </span>
         <a
-          v-for="txId in uiStore.pendingTransactions"
-          :key="txId"
-          :href="currentNetwork.helpers.getTransactionLink(txId)"
+          v-for="pendingTx in uiStore.pendingTransactions"
+          :key="pendingTx.txId"
+          :href="getNetwork(pendingTx.networkId).helpers.getTransactionLink(pendingTx.txId)"
           target="_blank"
           class="border rounded-lg px-3 py-2 flex items-center w-full mb-2 last:mb-0"
         >
           <IH-external-link />
-          <div class="ml-2 truncate text-skin-link">{{ txId }}</div>
+          <div class="ml-2 truncate text-skin-link">{{ pendingTx.txId }}</div>
         </a>
       </template>
     </div>

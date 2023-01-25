@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Ref, ref, toRefs, watch } from 'vue';
-import { currentNetwork } from '@/networks';
+import { Ref, ref, toRefs, watch, computed } from 'vue';
+import { getNetwork } from '@/networks';
 import { shortenAddress } from '@/helpers/utils';
 import choices from '@/helpers/choices.json';
 import type { Proposal as ProposalType, Vote } from '@/types';
@@ -18,10 +18,12 @@ const votes: Ref<Vote[]> = ref([]);
 const loaded = ref(false);
 const { open } = toRefs(props);
 
+const network = computed(() => getNetwork(props.proposal.network));
+
 watch(open, async () => {
   if (open.value === false) return;
   console.log('Get votes');
-  votes.value = await currentNetwork.api.loadProposalVotes(props.proposal);
+  votes.value = await network.value.api.loadProposalVotes(props.proposal);
   loaded.value = true;
 });
 </script>
@@ -44,7 +46,7 @@ watch(open, async () => {
             :style="{
               width: `${((100 / proposal.scores_total) * vote.vp).toFixed(2)}%`
             }"
-            :class="`_${vote.choice}`"
+            :class="`_${vote.choice + network.choiceOffset}`"
           />
           <Stamp :id="vote.voter.id" :size="24" class="mr-2" />
           <router-link
@@ -53,7 +55,10 @@ watch(open, async () => {
           >
             {{ shortenAddress(vote.voter.id) }}
           </router-link>
-          <div class="absolute right-4 top-3 text-skin-link" v-text="choices[vote.choice]" />
+          <div
+            class="absolute right-4 top-3 text-skin-link"
+            v-text="choices[vote.choice + network.choiceOffset]"
+          />
         </div>
       </div>
       <div v-else class="p-4 text-center">There isn't any votes yet!</div>
