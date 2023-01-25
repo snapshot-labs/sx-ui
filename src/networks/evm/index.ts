@@ -9,7 +9,6 @@ export function createEvmNetwork(networkId: NetworkID): Network {
   const provider = createProvider('https://rpc.brovider.xyz/5');
 
   return {
-    choiceOffset: 1,
     hasRelayer: false,
     hasReceive: false,
     actions: createActions(),

@@ -46,7 +46,7 @@ watch(open, async () => {
             :style="{
               width: `${((100 / proposal.scores_total) * vote.vp).toFixed(2)}%`
             }"
-            :class="`_${vote.choice + network.choiceOffset}`"
+            :class="`_${vote.choice}`"
           />
           <Stamp :id="vote.voter.id" :size="24" class="mr-2" />
           <router-link
@@ -55,10 +55,7 @@ watch(open, async () => {
           >
             {{ shortenAddress(vote.voter.id) }}
           </router-link>
-          <div
-            class="absolute right-4 top-3 text-skin-link"
-            v-text="choices[vote.choice + network.choiceOffset]"
-          />
+          <div class="absolute right-4 top-3 text-skin-link" v-text="choices[vote.choice]" />
         </div>
       </div>
       <div v-else class="p-4 text-center">There isn't any votes yet!</div>
