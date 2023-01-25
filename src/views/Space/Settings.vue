@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import { shorten, _d } from '@/helpers/utils';
-import { currentNetwork } from '@/networks';
+import { getNetwork } from '@/networks';
 import { Space } from '@/types';
 
-defineProps<{ space: Space }>();
+const props = defineProps<{ space: Space }>();
+
+const network = computed(() => getNetwork(props.space.network));
 </script>
 
 <template>
@@ -67,7 +70,7 @@ defineProps<{ space: Space }>();
       <Label :label="'Auth(s)'" />
       <div v-for="(auth, i) in space.authenticators" :key="i" class="mx-4 py-3 border-b">
         <a :href="`https://goerli.voyager.online/contract/${auth}`" target="_blank" class="flex">
-          <h4 class="flex-auto" v-text="currentNetwork.constants.AUTHS[auth]" />
+          <h4 class="flex-auto" v-text="network.constants.AUTHS[auth]" />
           <div>
             <Stamp :id="auth" type="avatar" :size="18" class="mr-2 rounded-sm" />
             {{ shorten(auth) }} <IH-external-link class="inline-block" />
@@ -84,7 +87,7 @@ defineProps<{ space: Space }>();
           target="_blank"
           class="flex"
         >
-          <h4 class="flex-auto" v-text="currentNetwork.constants.STRATEGIES[strategy]" />
+          <h4 class="flex-auto" v-text="network.constants.STRATEGIES[strategy]" />
           <div>
             <Stamp :id="strategy" type="avatar" :size="18" class="mr-2 rounded-sm" />
             {{ shorten(strategy) }} <IH-external-link class="inline-block" />
@@ -101,10 +104,7 @@ defineProps<{ space: Space }>();
           target="_blank"
           class="flex"
         >
-          <h4
-            class="inline-block mr-3 flex-auto"
-            v-text="currentNetwork.constants.EXECUTORS[executor]"
-          />
+          <h4 class="inline-block mr-3 flex-auto" v-text="network.constants.EXECUTORS[executor]" />
           <div>
             <Stamp :id="executor" type="avatar" :size="18" class="mr-2 rounded-sm" />
             {{ shorten(executor) }} <IH-external-link class="inline-block" />

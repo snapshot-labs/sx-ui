@@ -5,6 +5,7 @@ import { useSpacesStore } from '@/stores/spaces';
 import { useActions } from '@/composables/useActions';
 import { useEditor } from '@/composables/useEditor';
 import { useModal } from '@/composables/useModal';
+import type { NetworkID } from '@/types';
 
 const { proposals } = useEditor();
 const { modalOpen: globalModalOpen } = useModal();
@@ -13,12 +14,13 @@ const router = useRouter();
 const { propose } = useActions();
 const spacesStore = useSpacesStore();
 const id = route.params.id as string;
+const [networkId, spaceId] = id.split(':');
 const key = route.params.key;
 const modalOpen = ref(false);
 const sending = ref(false);
 
 onMounted(() => {
-  spacesStore.fetchSpace(id);
+  spacesStore.fetchSpace(spaceId, networkId as NetworkID);
 
   if (!key && route.name) {
     globalModalOpen.value = false;

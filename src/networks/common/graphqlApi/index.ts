@@ -10,9 +10,10 @@ import {
   USER_QUERY
 } from './queries';
 import type { PaginationOpts, NetworkApi } from '@/networks/types';
-import type { Space, Proposal, Vote, User, Transaction } from '@/types';
+import type { Space, Proposal, Vote, User, Transaction, NetworkID } from '@/types';
 
-type ApiProposal = Omit<Proposal, 'has_ended' | 'execution'> & { execution: string };
+type ApiSpace = Omit<Space, 'network'>;
+type ApiProposal = Omit<Proposal, 'has_ended' | 'execution' | 'network'> & { execution: string };
 
 function formatExecution(execution: string): Transaction[] {
   if (execution === '') return [];
@@ -27,15 +28,27 @@ function formatExecution(execution: string): Transaction[] {
   }
 }
 
-function formatProposal(proposal: ApiProposal, now: number = Date.now()): Proposal {
+function formatSpace(space: ApiSpace, networkId: NetworkID): Space {
   return {
-    ...proposal,
-    execution: formatExecution(proposal.execution),
-    has_ended: proposal.max_end * 1000 <= now
+    ...space,
+    network: networkId
   };
 }
 
-export function createApi(uri: string): NetworkApi {
+function formatProposal(
+  proposal: ApiProposal,
+  networkId: NetworkID,
+  now: number = Date.now()
+): Proposal {
+  return {
+    ...proposal,
+    execution: formatExecution(proposal.execution),
+    has_ended: proposal.max_end * 1000 <= now,
+    network: networkId
+  };
+}
+
+export function createApi(uri: string, networkId: NetworkID): NetworkApi {
   const httpLink = createHttpLink({ uri });
 
   const apollo = new ApolloClient({
@@ -71,7 +84,7 @@ export function createApi(uri: string): NetworkApi {
       });
 
       return Object.fromEntries(
-        (data.votes as Vote[]).map(vote => [`${vote.space.id}/${vote.proposal}`, vote])
+        (data.votes as Vote[]).map(vote => [`${networkId}:${vote.space.id}/${vote.proposal}`, vote])
       );
     },
     loadProposals: async (
@@ -87,7 +100,7 @@ export function createApi(uri: string): NetworkApi {
         }
       });
 
-      return data.proposals.map(proposal => formatProposal(proposal));
+      return data.proposals.map(proposal => formatProposal(proposal, networkId));
     },
     loadProposalsSummary: async (spaceId: string, limit: number) => {
       const now = Date.now();
@@ -101,7 +114,9 @@ export function createApi(uri: string): NetworkApi {
         }
       });
 
-      return [...data.active, ...data.expired].map(proposal => formatProposal(proposal, now));
+      return [...data.active, ...data.expired].map(proposal =>
+        formatProposal(proposal, networkId, now)
+      );
     },
     loadProposal: async (spaceId: string, proposalId: number): Promise<Proposal> => {
       const { data } = await apollo.query({
@@ -109,7 +124,7 @@ export function createApi(uri: string): NetworkApi {
         variables: { id: `${spaceId}/${proposalId}` }
       });
 
-      return formatProposal(data.proposal);
+      return formatProposal(data.proposal, networkId);
     },
     loadSpaces: async ({ limit, skip = 0 }: PaginationOpts): Promise<Space[]> => {
       const { data } = await apollo.query({
@@ -120,7 +135,7 @@ export function createApi(uri: string): NetworkApi {
         }
       });
 
-      return data.spaces;
+      return data.spaces.map(space => formatSpace(space, networkId));
     },
     loadSpace: async (id: string): Promise<Space> => {
       const { data } = await apollo.query({
@@ -128,7 +143,7 @@ export function createApi(uri: string): NetworkApi {
         variables: { id }
       });
 
-      return data.space;
+      return formatSpace(data.space, networkId);
     },
     loadUser: async (id: string): Promise<User> => {
       const { data } = await apollo.query({

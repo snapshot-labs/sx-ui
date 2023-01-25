@@ -1,7 +1,9 @@
+export type NetworkID = 'goe' | 'sn-tn2';
 export type Choice = 1 | 2 | 3;
 
 export type Space = {
   id: string;
+  network: NetworkID;
   name: string;
   about?: string;
   controller: string;
@@ -21,6 +23,7 @@ export type Space = {
 export type Proposal = {
   id: string;
   proposal_id: number;
+  network: NetworkID;
   space: {
     id: string;
     quorum: number;

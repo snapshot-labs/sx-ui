@@ -11,10 +11,12 @@ const proposalsStore = useProposalsStore();
 const editSpaceModalOpen = ref(false);
 
 onMounted(() => {
-  proposalsStore.fetchSummary(props.space.id, PROPOSALS_LIMIT);
+  proposalsStore.fetchSummary(props.space.id, props.space.network, PROPOSALS_LIMIT);
 });
 
-const proposalsRecord = computed(() => proposalsStore.proposals[props.space.id]);
+const proposalsRecord = computed(
+  () => proposalsStore.proposals[`${props.space.network}:${props.space.id}`]
+);
 
 const grouped = computed(() => {
   const initialValue = {
