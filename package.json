@@ -41,6 +41,7 @@
     "events": "^3.3.0",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
+    "ipfs-http-client": "^60.0.0",
     "pinia": "^2.0.23",
     "scrollmonitor": "^1.2.9",
     "starknet": "^4.14.0",

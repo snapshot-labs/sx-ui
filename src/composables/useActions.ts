@@ -1,9 +1,9 @@
 import { getInstance } from '@snapshot-labs/lock/plugins/vue3';
 import { getNetwork } from '@/networks';
-import { pin } from '@snapshot-labs/pineapple';
 import { useUiStore } from '@/stores/ui';
 import { useWeb3 } from '@/composables/useWeb3';
 import { useModal } from '@/composables/useModal';
+import { pinGraph } from '@/helpers/graph';
 import type { Transaction, Proposal, Space, Choice, NetworkID } from '@/types';
 
 export function useActions() {
@@ -70,12 +70,12 @@ export function useActions() {
       operation: 0
     }));
 
-    const pinned = await pin({
+    const pinned = await pinGraph({
       title,
       body,
       discussion,
       execution: transactions
-    });
+    }); // pining to graph, otherwise indexer might not find it
     if (!pinned || !pinned.cid) return;
     console.log('IPFS', pinned);
 
