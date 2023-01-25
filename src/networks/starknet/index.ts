@@ -9,7 +9,6 @@ export function createStarknetNetwork(networkId: NetworkID): Network {
   const provider = createProvider();
 
   return {
-    choiceOffset: 0,
     hasRelayer: true,
     hasReceive: true,
     actions: createActions(provider),
