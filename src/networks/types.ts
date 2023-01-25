@@ -34,7 +34,6 @@ export type NetworkApi = {
 };
 
 export type Network = {
-  choiceOffset: number;
   hasRelayer: boolean;
   hasReceive: boolean;
   actions: NetworkActions;
