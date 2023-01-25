@@ -28,7 +28,10 @@ async function handleVoteClick(choice: Choice) {
         <router-link
           :to="{
             name: 'proposal',
-            params: { id: proposal.proposal_id, space: proposal.space.id }
+            params: {
+              id: proposal.proposal_id,
+              space: `${proposal.network}:${proposal.space.id}`
+            }
           }"
           class="block"
         >
@@ -37,7 +40,7 @@ async function handleVoteClick(choice: Choice) {
         <router-link
           :to="{
             name: 'user',
-            params: { id: proposal.author.id }
+            params: { id: `${proposal.network}:${proposal.author.id}` }
           }"
         >
           <Stamp :id="proposal.author.id" :size="24" class="mr-1" />
