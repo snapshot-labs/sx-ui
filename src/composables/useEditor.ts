@@ -27,7 +27,7 @@ export function useEditor() {
     return Object.entries(removeEmpty(proposals))
       .map(([k, value]) => ({
         id: k,
-        key: k.split(':')[1],
+        key: k.split(':')[2],
         ...value
       }))
       .sort((a, b) => b.updatedAt - a.updatedAt);

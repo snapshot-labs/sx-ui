@@ -33,14 +33,6 @@ const grouped = computed(() => {
     return v;
   }, initialValue);
 });
-
-const spaceState = computed(() => {
-  return {
-    name: props.space.name,
-    about: props.space.about || '',
-    website: ''
-  };
-});
 </script>
 
 <template>
@@ -107,10 +99,6 @@ const spaceState = computed(() => {
     </div>
   </div>
   <teleport to="#modal">
-    <ModalEditSpace
-      :open="editSpaceModalOpen"
-      :initial-state="spaceState"
-      @close="editSpaceModalOpen = false"
-    />
+    <ModalEditSpace :open="editSpaceModalOpen" :space="space" @close="editSpaceModalOpen = false" />
   </teleport>
 </template>

@@ -4,7 +4,7 @@ import { useUiStore } from '@/stores/ui';
 import { useWeb3 } from '@/composables/useWeb3';
 import { useModal } from '@/composables/useModal';
 import { pinGraph } from '@/helpers/graph';
-import type { Transaction, Proposal, Space, Choice, NetworkID } from '@/types';
+import type { Transaction, Proposal, SpaceMetadata, Space, Choice, NetworkID } from '@/types';
 
 export function useActions() {
   const uiStore = useUiStore();
@@ -15,29 +15,46 @@ export function useActions() {
   async function wrapPromise(networkId: NetworkID, promise: Promise<any>) {
     const network = getNetwork(networkId);
 
-    if (!network.hasRelayer) {
-      uiStore.broadcastingTransactionsCount++;
-    }
-
     const envelope = await promise;
     console.log('envelope', envelope);
 
     // TODO: unify send/soc to both return txHash under same property
     if (network.hasRelayer) {
-      uiStore.broadcastingTransactionsCount++;
       const receipt = await network.actions.send(envelope);
 
       console.log('Receipt', receipt);
-      uiStore.broadcastingTransactionsCount--;
       uiStore.addPendingTransaction(receipt.transaction_hash, networkId);
     } else {
-      uiStore.broadcastingTransactionsCount--;
       uiStore.addPendingTransaction(envelope.hash, networkId);
     }
   }
 
   async function forceLogin() {
     modalAccountOpen.value = true;
+  }
+
+  async function updateMetadata(space: Space, metadata: SpaceMetadata) {
+    if (!web3.value.account) return await forceLogin();
+    if (web3.value.type === 'argentx') throw new Error('ArgentX is not supported');
+
+    const network = getNetwork(space.network);
+
+    const pinned = await pinGraph(metadata);
+    if (!pinned || !pinned.cid) {
+      throw new Error('Failed to upload metadata');
+    }
+
+    const receipt = await network.actions.setMetadataUri(
+      auth.web3,
+      space.id,
+      `ipfs://${pinned.cid}`
+    );
+
+    console.log('Receipt', receipt);
+    uiStore.addPendingTransaction(
+      network.hasRelayer ? receipt.transaction_hash : receipt.hash,
+      space.network
+    );
   }
 
   async function vote(proposal: Proposal, choice: Choice) {
@@ -91,12 +108,9 @@ export function useActions() {
 
     const network = getNetwork(proposal.network);
 
-    uiStore.broadcastingTransactionsCount++;
-
     const receipt = await network.actions.finalizeProposal(auth.web3, proposal);
 
     console.log('Receipt', receipt);
-    uiStore.broadcastingTransactionsCount--;
     uiStore.addPendingTransaction(
       network.hasRelayer ? receipt.transaction_hash : receipt.hash,
       proposal.network
@@ -125,6 +139,7 @@ export function useActions() {
   }
 
   return {
+    updateMetadata,
     vote,
     propose,
     finalizeProposal,

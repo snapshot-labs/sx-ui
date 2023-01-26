@@ -17,7 +17,6 @@ function updateStorage(pendingTransactions: PendingTransaction[]) {
 export const useUiStore = defineStore('ui', {
   state: () => ({
     sidebarOpen: false,
-    broadcastingTransactionsCount: 0,
     pendingTransactions: [] as PendingTransaction[]
   }),
   actions: {
