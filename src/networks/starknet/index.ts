@@ -25,7 +25,8 @@ export function createStarknetNetwork(networkId: NetworkID): Network {
           cid: pinned.cid
         };
       },
-      waitForTransaction: txId => provider.waitForTransaction(txId),
+      waitForTransaction: txId =>
+        provider.waitForTransaction(txId, ['ACCEPTED_ON_L1', 'ACCEPTED_ON_L2']),
       getTransactionLink: txId => `https://testnet-2.starkscan.co/tx/${txId}`
     }
   };
