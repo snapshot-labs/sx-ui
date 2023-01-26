@@ -8,6 +8,7 @@ export type PaginationOpts = { limit: number; skip?: number };
 // TODO: make sx.js accept Signer instead of Web3Provider | Wallet
 
 export type NetworkActions = {
+  setMetadataUri(signer: Web3Provider | Wallet, spaceId: string, metadataUri: string);
   propose(
     signer: Web3Provider | Wallet,
     account: string,
