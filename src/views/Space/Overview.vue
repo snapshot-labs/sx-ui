@@ -64,8 +64,9 @@ const grouped = computed(() => {
           <b class="text-skin-link">{{ space.vote_count }}</b> votes
         </div>
         <div class="max-w-[540px] text-skin-link text-md leading-[26px] mb-3">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua.
+          <span v-if="space.about">
+            {{ space.about }}
+          </span>
         </div>
         <div class="space-x-2">
           <img src="~@/assets/twitter.svg" class="w-[28px] h-[28px] inline-block" />
