@@ -1,3 +1,4 @@
+import { pin } from '@snapshot-labs/pineapple';
 import { createApi } from '../common/graphqlApi';
 import { createActions } from './actions';
 import { createProvider } from './provider';
@@ -15,6 +16,15 @@ export function createStarknetNetwork(networkId: NetworkID): Network {
     api: createApi(constants.API_URL, networkId),
     constants,
     helpers: {
+      pin: async (content: any) => {
+        const pinned = await pin(content);
+        if (!pinned) throw new Error('Failed to pin');
+
+        return {
+          provider: pinned.provider,
+          cid: pinned.cid
+        };
+      },
       waitForTransaction: txId => provider.waitForTransaction(txId),
       getTransactionLink: txId => `https://testnet-2.starkscan.co/tx/${txId}`
     }

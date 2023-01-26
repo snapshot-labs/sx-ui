@@ -3,7 +3,6 @@ import { getNetwork } from '@/networks';
 import { useUiStore } from '@/stores/ui';
 import { useWeb3 } from '@/composables/useWeb3';
 import { useModal } from '@/composables/useModal';
-import { pinGraph } from '@/helpers/graph';
 import type { Transaction, Proposal, SpaceMetadata, Space, Choice, NetworkID } from '@/types';
 
 export function useActions() {
@@ -39,10 +38,7 @@ export function useActions() {
 
     const network = getNetwork(space.network);
 
-    const pinned = await pinGraph(metadata);
-    if (!pinned || !pinned.cid) {
-      throw new Error('Failed to upload metadata');
-    }
+    const pinned = await network.helpers.pin(metadata);
 
     const receipt = await network.actions.setMetadataUri(
       auth.web3,
@@ -87,12 +83,12 @@ export function useActions() {
       operation: 0
     }));
 
-    const pinned = await pinGraph({
+    const pinned = await network.helpers.pin({
       title,
       body,
       discussion,
       execution: transactions
-    }); // pining to graph, otherwise indexer might not find it
+    });
     if (!pinned || !pinned.cid) return;
     console.log('IPFS', pinned);
 
