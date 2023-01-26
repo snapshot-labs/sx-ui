@@ -30,6 +30,15 @@ export function createActions(): NetworkActions {
   const client = new clients.SnapshotEVMClient();
 
   return {
+    setMetadataUri: (web3: Web3Provider | Wallet, spaceId: string, metadataUri: string) => {
+      const signer = Wallet.isSigner(web3) ? web3 : web3.getSigner();
+
+      return client.setMetadataUri({
+        signer,
+        space: spaceId,
+        metadataUri
+      });
+    },
     propose: (web3: Web3Provider | Wallet, account: string, space: Space, cid: string) => {
       const signer = Wallet.isSigner(web3) ? web3 : web3.getSigner();
 

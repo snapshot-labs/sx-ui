@@ -45,6 +45,9 @@ export function createActions(starkProvider: Provider): NetworkActions {
   });
 
   return {
+    setMetadataUri: (web3: Web3Provider | Wallet, spaceId: string, metadataUri: string) => {
+      throw new Error('Unsupported');
+    },
     propose: (
       web3: Web3Provider | Wallet,
       account: string,
