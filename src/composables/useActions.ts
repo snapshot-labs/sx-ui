@@ -15,23 +15,16 @@ export function useActions() {
   async function wrapPromise(networkId: NetworkID, promise: Promise<any>) {
     const network = getNetwork(networkId);
 
-    if (!network.hasRelayer) {
-      uiStore.broadcastingTransactionsCount++;
-    }
-
     const envelope = await promise;
     console.log('envelope', envelope);
 
     // TODO: unify send/soc to both return txHash under same property
     if (network.hasRelayer) {
-      uiStore.broadcastingTransactionsCount++;
       const receipt = await network.actions.send(envelope);
 
       console.log('Receipt', receipt);
-      uiStore.broadcastingTransactionsCount--;
       uiStore.addPendingTransaction(receipt.transaction_hash, networkId);
     } else {
-      uiStore.broadcastingTransactionsCount--;
       uiStore.addPendingTransaction(envelope.hash, networkId);
     }
   }
@@ -91,12 +84,9 @@ export function useActions() {
 
     const network = getNetwork(proposal.network);
 
-    uiStore.broadcastingTransactionsCount++;
-
     const receipt = await network.actions.finalizeProposal(auth.web3, proposal);
 
     console.log('Receipt', receipt);
-    uiStore.broadcastingTransactionsCount--;
     uiStore.addPendingTransaction(
       network.hasRelayer ? receipt.transaction_hash : receipt.hash,
       proposal.network
