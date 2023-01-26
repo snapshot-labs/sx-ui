@@ -49,6 +49,7 @@ export type Network = {
     EXECUTORS: { [key: string]: string };
   };
   helpers: {
+    pin: (content: any) => Promise<{ cid: string; provider: string }>;
     waitForTransaction(txId: string): Promise<any>;
     getTransactionLink(txId: string): string;
   };
