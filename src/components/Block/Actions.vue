@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { useActions } from '@/composables/useActions';
 import { getNetwork } from '@/networks';
 import type { Proposal as ProposalType } from '@/types';
@@ -7,16 +8,38 @@ const props = defineProps<{ proposal: ProposalType }>();
 
 const { finalizeProposal, receiveProposal, executeTransactions } = useActions();
 
+const finalizeProposalSending = ref(false);
+const receiveProposalSending = ref(false);
+const executeTransactionsSending = ref(false);
+
 async function handleFinalizeProposalClick() {
-  return finalizeProposal(props.proposal);
+  finalizeProposalSending.value = true;
+
+  try {
+    await finalizeProposal(props.proposal);
+  } finally {
+    finalizeProposalSending.value = false;
+  }
 }
 
 async function handleReceiveProposalClick() {
-  return receiveProposal(props.proposal);
+  receiveProposalSending.value = true;
+
+  try {
+    await receiveProposal(props.proposal);
+  } finally {
+    receiveProposalSending.value = false;
+  }
 }
 
 async function handleExecuteTransactionsClick() {
-  return executeTransactions(props.proposal);
+  executeTransactionsSending.value = true;
+
+  try {
+    await executeTransactions(props.proposal);
+  } finally {
+    executeTransactionsSending.value = false;
+  }
 }
 </script>
 
@@ -24,6 +47,7 @@ async function handleExecuteTransactionsClick() {
   <div class="x-block !border-x rounded-lg p-3">
     <UiButton
       class="block mb-2 w-full flex justify-center items-center"
+      :loading="finalizeProposalSending"
       @click="handleFinalizeProposalClick"
     >
       <IH-check-circle class="inline-block mr-2" />
@@ -32,6 +56,7 @@ async function handleExecuteTransactionsClick() {
     <UiButton
       v-if="getNetwork(proposal.network).hasReceive"
       class="block mb-2 w-full flex justify-center items-center"
+      :loading="receiveProposalSending"
       @click="handleReceiveProposalClick"
     >
       <IH-database class="inline-block mr-2" />
@@ -39,6 +64,7 @@ async function handleExecuteTransactionsClick() {
     </UiButton>
     <UiButton
       class="block mb-2 w-full flex justify-center items-center"
+      :loading="executeTransactionsSending"
       @click="handleExecuteTransactionsClick"
     >
       <IH-play class="inline-block mr-2" />
