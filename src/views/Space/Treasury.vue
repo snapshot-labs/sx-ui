@@ -8,9 +8,13 @@ import { _n, shorten, explorerUrl } from '@/helpers/utils';
 import { ETH_CONTRACT } from '@/helpers/constants';
 import type { Token } from '@/helpers/alchemy';
 import type { Space } from '@/types';
+import { Transaction as TransactionType } from '@/types';
+import { useProposalsStore } from '@/stores/proposals';
+import { useRouter } from 'vue-router';
 
 defineProps<{ space: Space }>();
 
+const router = useRouter();
 const page: Ref<'tokens' | 'nfts'> = ref('tokens');
 
 const { loading, loaded, assets, loadBalances } = useBalances();
@@ -31,6 +35,24 @@ const sortedAssets = computed(() =>
   })
 );
 
+const modalState: Ref<{
+  sendToken?: any;
+}> = ref({});
+const modalOpen = ref({
+  sendToken: false
+});
+
+function openModal(type: 'sendToken') {
+  modalState.value[type] = null;
+  modalOpen.value[type] = true;
+}
+const proposalsStore = useProposalsStore();
+function addTx(tx: TransactionType) {
+  // TODO: maybe store this temp execution in useEditor state?
+  proposalsStore.executionTemp = tx;
+  router.push('create');
+}
+
 onMounted(() => {
   loadBalances(space.wallet, space.network);
   loadNfts(space.wallet);
@@ -45,11 +67,9 @@ onMounted(() => {
         <IH-duplicate class="inline-block" />
       </UiButton>
     </a>
-    <router-link :to="{ name: 'editor' }">
-      <UiButton class="!px-0 w-[46px]">
-        <IH-arrow-sm-right class="inline-block -rotate-45" />
-      </UiButton>
-    </router-link>
+    <UiButton class="!px-0 w-[46px]" @click="openModal('sendToken')">
+      <IH-arrow-sm-right class="inline-block -rotate-45" />
+    </UiButton>
   </div>
   <div class="space-y-3">
     <div>
@@ -112,4 +132,14 @@ onMounted(() => {
       </div>
     </div>
   </div>
+  <teleport to="#modal">
+    <ModalSendToken
+      :open="modalOpen.sendToken"
+      :address="space.wallet"
+      :network="space.network"
+      :initial-state="modalState.sendToken"
+      @close="modalOpen.sendToken = false"
+      @add="addTx"
+    />
+  </teleport>
 </template>

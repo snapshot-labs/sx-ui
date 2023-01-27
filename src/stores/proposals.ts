@@ -19,7 +19,8 @@ const PROPOSALS_LIMIT = 20;
 export const useProposalsStore = defineStore('proposals', {
   state: () => ({
     proposals: {} as Partial<Record<string, SpaceRecord>>,
-    summaryProposals: {} as Partial<Record<string, SpaceRecord>>
+    summaryProposals: {} as Partial<Record<string, SpaceRecord>>,
+    executionTemp: null as any
   }),
   getters: {
     getProposal: state => {

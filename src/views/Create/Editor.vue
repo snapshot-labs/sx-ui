@@ -3,10 +3,12 @@ import { watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useEditor } from '@/composables/useEditor';
 import { omit } from '@/helpers/utils';
+import { useProposalsStore } from '@/stores/proposals';
 
 const router = useRouter();
 const route = useRoute();
 const { proposals } = useEditor();
+const proposalsStore = useProposalsStore();
 
 const id = route.params.id;
 const draft = route.params.key;
@@ -23,6 +25,11 @@ if (!proposals[key]) {
 }
 
 if (!proposals[key].execution) proposals[key].execution = [];
+
+if (proposalsStore.executionTemp) {
+  proposals[key].execution.push(JSON.parse(JSON.stringify(proposalsStore.executionTemp)));
+  proposalsStore.executionTemp = null;
+}
 
 watch(proposals, () => {
   if (!proposals[key]) {
