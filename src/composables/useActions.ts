@@ -122,6 +122,8 @@ export function useActions() {
 
     const receipt = await network.actions.receiveProposal(auth.web3, proposal);
     console.log('Receipt', receipt);
+
+    uiStore.addPendingTransaction(receipt.hash, 'gor');
   }
 
   async function executeTransactions(proposal: Proposal) {
@@ -132,6 +134,8 @@ export function useActions() {
 
     const receipt = await network.actions.executeTransactions(auth.web3, proposal);
     console.log('Receipt', receipt);
+
+    uiStore.addPendingTransaction(receipt.hash, 'gor');
   }
 
   return {
