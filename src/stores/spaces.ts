@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { currentNetwork } from '@/networks';
 import { useStorage } from '@vueuse/core';
 import type { Space } from '@/types';
+import pkg from '@/../package.json';
 
 const SPACES_LIMIT = 10;
 
@@ -12,7 +13,7 @@ export const useSpacesStore = defineStore('spaces', {
     loaded: false,
     hasMoreSpaces: true,
     spaces: [] as Space[],
-    spacesStarred: useStorage('sx-spaces-starred', [] as string[])
+    spacesStarred: useStorage(`${pkg.name}.spaces-starred`, [] as string[])
   }),
   getters: {
     spacesMap: state => new Map(state.spaces.map(space => [space.id, space]))
