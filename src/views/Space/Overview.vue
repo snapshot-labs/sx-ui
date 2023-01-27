@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
+import { useSpacesStore } from '@/stores/spaces';
 import { useProposalsStore } from '@/stores/proposals';
 import { Space, Proposal as ProposalType } from '@/types';
 
@@ -7,6 +8,7 @@ const PROPOSALS_LIMIT = 4;
 
 const props = defineProps<{ space: Space }>();
 
+const spacesStore = useSpacesStore();
 const proposalsStore = useProposalsStore();
 const editSpaceModalOpen = ref(false);
 
@@ -39,6 +41,10 @@ const spaceState = computed(() => {
     website: ''
   };
 });
+
+const spaceStarred = computed(() => {
+  return spacesStore.spacesStarred.includes(props.space.id);
+});
 </script>
 
 <template>
@@ -52,6 +58,10 @@ const spaceState = computed(() => {
         </router-link>
         <UiButton class="!px-0 w-[46px]" @click="editSpaceModalOpen = true">
           <IH-cog class="inline-block" />
+        </UiButton>
+        <UiButton class="w-[46px] !px-0" @click="spacesStore.starSpace(space.id)">
+          <IS-star v-if="spaceStarred" class="inline-block" />
+          <IH-star v-else class="inline-block" />
         </UiButton>
       </div>
     </div>

@@ -22,7 +22,8 @@ export default defineConfig({
       resolvers: [
         IconsResolver({
           alias: {
-            h: 'heroicons-outline'
+            h: 'heroicons-outline',
+            s: 'heroicons-solid'
           }
         })
       ]

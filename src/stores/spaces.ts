@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { currentNetwork } from '@/networks';
+import { useStorage } from '@vueuse/core';
 import type { Space } from '@/types';
 
 const SPACES_LIMIT = 10;
@@ -10,7 +11,8 @@ export const useSpacesStore = defineStore('spaces', {
     loadingMore: false,
     loaded: false,
     hasMoreSpaces: true,
-    spaces: [] as Space[]
+    spaces: [] as Space[],
+    spacesStarred: useStorage('sx-spaces-starred', [] as string[])
   }),
   getters: {
     spacesMap: state => new Map(state.spaces.map(space => [space.id, space]))
@@ -50,6 +52,13 @@ export const useSpacesStore = defineStore('spaces', {
 
       if (this.spacesMap.get(id)) return;
       this.spaces.push(space);
+    },
+    starSpace(id: string) {
+      if (this.spacesStarred.includes(id)) {
+        this.spacesStarred = this.spacesStarred.filter((spaceId: string) => spaceId !== id);
+      } else {
+        this.spacesStarred.push(id);
+      }
     }
   }
 });
