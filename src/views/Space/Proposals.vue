@@ -34,7 +34,7 @@ onMounted(() => {
         </a>
         <router-link :to="{ name: 'editor' }">
           <UiButton class="!px-0 w-[46px]">
-            <IH-plus-sm class="inline-block" />
+            <IH-pencil-alt class="inline-block" />
           </UiButton>
         </router-link>
       </div>

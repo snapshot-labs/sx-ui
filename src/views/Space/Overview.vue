@@ -41,7 +41,7 @@ const grouped = computed(() => {
       <div class="absolute right-4 top-4 space-x-2">
         <router-link :to="{ name: 'editor' }">
           <UiButton class="!px-0 w-[46px]">
-            <IH-plus-sm class="inline-block" />
+            <IH-pencil-alt class="inline-block" />
           </UiButton>
         </router-link>
         <UiButton class="!px-0 w-[46px]" @click="editSpaceModalOpen = true">
