@@ -2,7 +2,7 @@
 import { onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUsersStore } from '@/stores/users';
-import { shortenAddress } from '@/helpers/utils';
+import { shortenAddress, _n } from '@/helpers/utils';
 import type { NetworkID } from '@/types';
 
 const route = useRoute();
@@ -28,8 +28,8 @@ const user = computed(() => {
         <Stamp :id="userId" :size="90" class="mb-2 border-[4px] border-skin-bg !bg-skin-bg" />
         <h1>{{ shortenAddress(userId) }}</h1>
         <div>
-          <b class="text-skin-link">{{ user.proposal_count }}</b> proposals ·
-          <b class="text-skin-link">{{ user.vote_count }}</b> votes
+          <b class="text-skin-link">{{ _n(user.proposal_count) }}</b> proposals ·
+          <b class="text-skin-link">{{ _n(user.vote_count) }}</b> votes
         </div>
       </div>
     </Container>

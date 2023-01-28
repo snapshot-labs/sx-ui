@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { useProposalsStore } from '@/stores/proposals';
+import { _n } from '@/helpers/utils';
 import { Space, Proposal as ProposalType } from '@/types';
 
 const PROPOSALS_LIMIT = 4;
@@ -60,8 +61,8 @@ const grouped = computed(() => {
         </router-link>
         <h1 v-text="space.name" />
         <div class="mb-3">
-          <b class="text-skin-link">{{ space.proposal_count }}</b> proposals ·
-          <b class="text-skin-link">{{ space.vote_count }}</b> votes
+          <b class="text-skin-link">{{ _n(space.proposal_count) }}</b> proposals ·
+          <b class="text-skin-link">{{ _n(space.vote_count) }}</b> votes
         </div>
         <div class="max-w-[540px] text-skin-link text-md leading-[26px] mb-3">
           <span v-if="space.about">
