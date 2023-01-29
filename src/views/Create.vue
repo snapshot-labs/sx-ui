@@ -6,12 +6,13 @@ import { useActions } from '@/composables/useActions';
 import { useEditor } from '@/composables/useEditor';
 import { useModal } from '@/composables/useModal';
 
-const { proposals } = useEditor();
+const { proposals, createDraft } = useEditor();
 const { modalOpen: globalModalOpen } = useModal();
 const route = useRoute();
 const router = useRouter();
 const { propose } = useActions();
 const spacesStore = useSpacesStore();
+
 const id = route.params.id as string;
 const key = route.params.key;
 const modalOpen = ref(false);
@@ -23,10 +24,11 @@ onMounted(() => {
   if (!key && route.name) {
     globalModalOpen.value = false;
 
-    const str = (Math.random() + 1).toString(36).substring(7);
+    const draftId = createDraft(id);
+
     router.replace({
       name: route.name,
-      params: { id, key: str }
+      params: { id, key: draftId }
     });
   }
 });
@@ -53,6 +55,7 @@ async function handleProposeClick() {
   }
 }
 </script>
+
 <template>
   <div>
     <nav class="border-b bg-skin-bg fixed top-0 z-10 right-0 left-0 lg:left-[72px]">

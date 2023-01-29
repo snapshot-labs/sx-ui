@@ -3,33 +3,22 @@ import { watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useEditor } from '@/composables/useEditor';
 import { omit } from '@/helpers/utils';
-import { useProposalsStore } from '@/stores/proposals';
 
 const router = useRouter();
 const route = useRoute();
-const { proposals } = useEditor();
-const proposalsStore = useProposalsStore();
+const { proposals, createDraft } = useEditor();
 
+// TODO: maybe better to use just props here and not global route.params
 const id = route.params.id;
 const draft = route.params.key;
 const key = `${id}:${draft}`;
 
+// TODO: editor should be just editor
 if (!proposals[key]) {
-  proposals[key] = {
-    title: '',
-    body: '',
-    discussion: '',
-    execution: [],
-    updatedAt: Date.now()
-  };
+  createDraft(id, { id: draft });
 }
 
 if (!proposals[key].execution) proposals[key].execution = [];
-
-if (proposalsStore.executionTemp) {
-  proposals[key].execution.push(JSON.parse(JSON.stringify(proposalsStore.executionTemp)));
-  proposalsStore.executionTemp = null;
-}
 
 watch(proposals, () => {
   if (!proposals[key]) {
@@ -49,6 +38,7 @@ watch(proposalData, () => {
   proposals[key].updatedAt = Date.now();
 });
 </script>
+
 <template>
   <Container v-if="proposals[key]" class="pt-5 s-box">
     <h4 class="eyebrow mb-3">Context</h4>

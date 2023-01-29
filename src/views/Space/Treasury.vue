@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { onMounted, computed, ref, Ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { formatUnits } from '@ethersproject/units';
 import { useBalances } from '@/composables/useBalances';
+import { useEditor } from '@/composables/useEditor';
 import { useNfts } from '@/composables/useNfts';
 import space from '@/helpers/space.json';
 import { _n, shorten, explorerUrl } from '@/helpers/utils';
@@ -9,16 +11,16 @@ import { ETH_CONTRACT } from '@/helpers/constants';
 import type { Token } from '@/helpers/alchemy';
 import type { Space } from '@/types';
 import { Transaction as TransactionType } from '@/types';
-import { useProposalsStore } from '@/stores/proposals';
-import { useRouter } from 'vue-router';
 
-defineProps<{ space: Space }>();
+// TODO confusing above space variable for mock data, change to real data?
+const props = defineProps<{ space: Space }>();
 
-const router = useRouter();
 const page: Ref<'tokens' | 'nfts'> = ref('tokens');
 
+const router = useRouter();
 const { loading, loaded, assets, loadBalances } = useBalances();
 const { loading: nftsLoading, loaded: nftsLoaded, nfts, loadNfts } = useNfts();
+const { createDraft } = useEditor();
 
 const totalQuote = computed(() =>
   assets.value.reduce((acc, asset) => {
@@ -38,6 +40,7 @@ const sortedAssets = computed(() =>
 const modalState: Ref<{
   sendToken?: any;
 }> = ref({});
+
 const modalOpen = ref({
   sendToken: false
 });
@@ -46,11 +49,10 @@ function openModal(type: 'sendToken') {
   modalState.value[type] = null;
   modalOpen.value[type] = true;
 }
-const proposalsStore = useProposalsStore();
+
 function addTx(tx: TransactionType) {
-  // TODO: maybe store this temp execution in useEditor state?
-  proposalsStore.executionTemp = tx;
-  router.push('create');
+  const draftId = createDraft(props.space.id, { execution: [tx] });
+  router.push(`create/${draftId}`);
 }
 
 onMounted(() => {

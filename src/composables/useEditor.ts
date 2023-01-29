@@ -1,6 +1,7 @@
 import { reactive, watch, computed } from 'vue';
 import { lsGet, lsSet, omit } from '@/helpers/utils';
 import type { Drafts } from '@/types';
+import type { Proposal as ProposalType } from '@/types';
 
 const proposals = reactive<Drafts>(lsGet('proposals', {}));
 
@@ -20,6 +21,25 @@ function removeEmpty(proposals: Drafts): Drafts {
   }, {});
 }
 
+function generateId() {
+  return (Math.random() + 1).toString(36).substring(7);
+}
+
+function createDraft(spaceId: string, payload?: Partial<ProposalType>) {
+  const id = payload?.id || generateId();
+  const key = `${spaceId}:${id}`;
+
+  proposals[key] = {
+    title: '',
+    body: '',
+    discussion: '',
+    execution: [],
+    updatedAt: Date.now(),
+    ...payload
+  };
+  return id;
+}
+
 export function useEditor() {
   watch(proposals, () => lsSet('proposals', removeEmpty(proposals)));
 
@@ -37,5 +57,11 @@ export function useEditor() {
     delete proposals[key];
   }
 
-  return { proposals, drafts, removeDraft };
+  return {
+    proposals,
+    drafts,
+    generateId,
+    createDraft,
+    removeDraft
+  };
 }
