@@ -9,8 +9,8 @@ const route = useRoute();
 const { proposals, createDraft } = useEditor();
 
 // TODO: maybe better to use just props here and not global route.params
-const id = route.params.id;
-const draft = route.params.key;
+const id = route.params.id as string;
+const draft = route.params.key as string;
 const key = `${id}:${draft}`;
 
 // TODO: editor should be just editor
