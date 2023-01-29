@@ -58,7 +58,7 @@ export const useSpacesStore = defineStore('spaces', {
       if (this.spacesStarred.includes(id)) {
         this.spacesStarred = this.spacesStarred.filter((spaceId: string) => spaceId !== id);
       } else {
-        this.spacesStarred.push(id);
+        this.spacesStarred.unshift(id);
       }
     }
   }
