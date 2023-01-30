@@ -55,7 +55,7 @@ onMounted(() => {
 
 watch(proposals, () => {
   if (!proposals[proposalKey]) {
-    router.replace({ name: 'create' });
+    router.replace({ name: 'editor' });
   }
 });
 

@@ -45,7 +45,7 @@ const spaceState = computed(() => {
   <div>
     <div class="relative bg-skin-border h-[140px] -mb-[70px]">
       <div class="absolute right-4 top-4 space-x-2">
-        <router-link :to="{ name: 'create' }">
+        <router-link :to="{ name: 'editor' }">
           <UiButton class="!px-0 w-[46px]">
             <IH-plus-sm class="inline-block" />
           </UiButton>

@@ -31,7 +31,7 @@ const spaceDrafts = computed(() => drafts.value.filter(draft => draft.space === 
         >
           <router-link
             :to="{
-              name: 'create',
+              name: 'editor',
               params: { id: space, key: proposal.key }
             }"
             @click="$emit('close')"

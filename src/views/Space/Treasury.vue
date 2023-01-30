@@ -45,7 +45,7 @@ onMounted(() => {
         <IH-duplicate class="inline-block" />
       </UiButton>
     </a>
-    <router-link :to="{ name: 'create' }">
+    <router-link :to="{ name: 'editor' }">
       <UiButton class="!px-0 w-[46px]">
         <IH-arrow-sm-right class="inline-block -rotate-45" />
       </UiButton>
