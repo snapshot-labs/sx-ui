@@ -5,7 +5,6 @@ import Overview from '@/views/Space/Overview.vue';
 import Proposals from '@/views/Space/Proposals.vue';
 import Settings from '@/views/Space/Settings.vue';
 import Create from '@/views/Create.vue';
-import Editor from '@/views/Create/Editor.vue';
 import Treasury from '@/views/Space/Treasury.vue';
 import Proposal from '@/views/Proposal.vue';
 import User from '@/views/User.vue';
@@ -25,11 +24,10 @@ const routes: any[] = [
   },
   {
     path: '/:id/create/:key?',
-    component: Create,
-    children: [{ path: '', name: 'editor', component: Editor }]
+    name: 'create',
+    component: Create
   },
   { path: '/:space/proposal/:id?', name: 'proposal', component: Proposal },
-  { path: '/:id/create', name: 'create', component: Create },
   { path: '/profile/:id', name: 'user', component: User }
 ];
 

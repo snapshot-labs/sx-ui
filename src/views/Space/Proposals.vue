@@ -30,7 +30,7 @@ onMounted(() => {
             <IH-lightning-bolt class="inline-block" />
           </UiButton>
         </a>
-        <router-link :to="{ name: 'editor' }">
+        <router-link :to="{ name: 'create' }">
           <UiButton class="!px-0 w-[46px]">
             <IH-plus-sm class="inline-block" />
           </UiButton>
