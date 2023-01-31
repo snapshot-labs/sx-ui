@@ -12,24 +12,6 @@ const network = computed(() => getNetwork(props.space.network));
 <template>
   <div class="space-y-3">
     <div>
-      <Label :label="'Profile'" />
-      <div class="mx-4 pt-3">
-        <div class="mb-3">
-          <div class="s-label !mb-0">Name</div>
-          <h4 class="text-skin-link text-md" v-text="space.name" />
-        </div>
-        <div class="mb-3">
-          <div class="s-label !mb-0">About</div>
-          <h4 class="text-skin-link text-md" v-text="space.about || '...'" />
-        </div>
-        <div class="mb-3">
-          <div class="s-label !mb-0">Discussions</div>
-          <h4 class="text-skin-link text-md" v-text="space.discussions || '...'" />
-        </div>
-      </div>
-    </div>
-
-    <div>
       <Label :label="'Voting'" />
       <div class="mx-4 pt-3">
         <div class="mb-3">
