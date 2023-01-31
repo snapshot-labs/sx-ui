@@ -43,7 +43,7 @@ const spaceState = computed(() => {
 });
 
 const spaceStarred = computed(() => {
-  return spacesStore.spacesStarred.includes(props.space.id);
+  return spacesStore.spacesStarredIds.includes(props.space.id);
 });
 </script>
 
@@ -59,7 +59,7 @@ const spaceStarred = computed(() => {
         <UiButton class="!px-0 w-[46px]" @click="editSpaceModalOpen = true">
           <IH-cog class="inline-block" />
         </UiButton>
-        <UiButton class="w-[46px] !px-0" @click="spacesStore.starSpace(space.id)">
+        <UiButton class="w-[46px] !px-0" @click="spacesStore.toggleSpaceStar(space.id)">
           <IS-star v-if="spaceStarred" class="inline-block" />
           <IH-star v-else class="inline-block" />
         </UiButton>

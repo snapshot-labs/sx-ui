@@ -14,7 +14,12 @@ onMounted(() => spacesStore.fetch());
       <IH-stop class="inline-block my-4 w-[32px] h-[32px] text-skin-link" />
     </router-link>
     <UiLoading v-if="!spacesStore.loaded" class="py-2 block" />
-    <draggable v-else v-model="spacesStore.spacesStarred" class="space-y-3 p-2" :item-key="i => i">
+    <draggable
+      v-else
+      v-model="spacesStore.spacesStarredIds"
+      :item-key="i => i"
+      class="space-y-3 p-2"
+    >
       <template #item="{ element }">
         <router-link :to="{ name: 'overview', params: { id: element } }" class="block">
           <Stamp :id="element" :size="32" class="!rounded-[4px]" />
