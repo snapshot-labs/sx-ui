@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useSpacesStore } from '@/stores/spaces';
 import { useActions } from '@/composables/useActions';
 import { useEditor } from '@/composables/useEditor';
 import { useModal } from '@/composables/useModal';
+import { omit } from '@/helpers/utils';
 import type { NetworkID } from '@/types';
 
 const { proposals } = useEditor();
@@ -16,8 +17,29 @@ const spacesStore = useSpacesStore();
 const id = route.params.id as string;
 const [networkId, spaceId] = id.split(':');
 const key = route.params.key;
+const proposalKey = `${id}:${key}`;
+
 const modalOpen = ref(false);
 const sending = ref(false);
+
+const space = computed(() => spacesStore.spacesMap.get(id));
+const proposalData = computed(() => {
+  if (!proposals[proposalKey]) return null;
+
+  return JSON.stringify(omit(proposals[proposalKey], ['updatedAt']));
+});
+
+if (!proposals[proposalKey]) {
+  proposals[proposalKey] = {
+    title: '',
+    body: '',
+    discussion: '',
+    execution: [],
+    updatedAt: Date.now()
+  };
+}
+
+if (!proposals[proposalKey].execution) proposals[proposalKey].execution = [];
 
 onMounted(() => {
   spacesStore.fetchSpace(spaceId, networkId as NetworkID);
@@ -33,7 +55,17 @@ onMounted(() => {
   }
 });
 
-const space = computed(() => spacesStore.spacesMap.get(id));
+watch(proposals, () => {
+  if (!proposals[proposalKey]) {
+    router.replace({ name: 'editor' });
+  }
+});
+
+watch(proposalData, () => {
+  if (!proposals[proposalKey]) return;
+
+  proposals[proposalKey].updatedAt = Date.now();
+});
 
 async function handleProposeClick() {
   if (!space.value) return;
@@ -84,9 +116,42 @@ async function handleProposeClick() {
         </div>
       </div>
     </nav>
-    <router-view v-if="key" />
+    <Container v-if="proposals[proposalKey]" class="pt-5 s-box">
+      <h4 class="eyebrow mb-3">Context</h4>
+      <SIString
+        v-model="proposals[proposalKey].title"
+        :definition="{
+          type: 'string',
+          title: 'Title'
+        }"
+      />
+      <div class="s-base mb-5">
+        <div class="s-label" v-text="'Description'" />
+        <textarea
+          v-model="proposals[proposalKey].body"
+          maxlength="280"
+          class="s-input mb-3 h-[160px]"
+        />
+        <SIString
+          v-model="proposals[proposalKey].discussion"
+          :definition="{
+            type: 'string',
+            title: 'Discussion',
+            examples: ['e.g. https://forum.balancer.fi/t/proposal…']
+          }"
+        />
+        <Preview :url="proposals[proposalKey].discussion" />
+      </div>
+      <h4 class="eyebrow mb-3">Execution</h4>
+      <BlockExecutionEditable v-model="proposals[proposalKey].execution" class="mb-4" />
+    </Container>
     <teleport to="#modal">
-      <ModalDrafts :open="modalOpen" :space="id" @close="modalOpen = false" />
+      <ModalDrafts
+        :open="modalOpen"
+        :network-id="networkId"
+        :space="spaceId"
+        @close="modalOpen = false"
+      />
     </teleport>
   </div>
 </template>

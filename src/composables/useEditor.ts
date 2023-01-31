@@ -25,11 +25,17 @@ export function useEditor() {
 
   const drafts = computed(() => {
     return Object.entries(removeEmpty(proposals))
-      .map(([k, value]) => ({
-        id: k,
-        key: k.split(':')[2],
-        ...value
-      }))
+      .map(([k, value]) => {
+        const [networkId, space, key] = k.split(':');
+
+        return {
+          id: k,
+          networkId,
+          space,
+          key,
+          ...value
+        };
+      })
       .sort((a, b) => b.updatedAt - a.updatedAt);
   });
 

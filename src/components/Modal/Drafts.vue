@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { toRefs } from 'vue';
+import { toRefs, computed } from 'vue';
 import { useEditor } from '@/composables/useEditor';
 
 const props = defineProps<{
   open: boolean;
+  networkId: string;
   space: string;
 }>();
 
@@ -13,6 +14,10 @@ defineEmits<{
 
 const { drafts, removeDraft } = useEditor();
 const { open } = toRefs(props);
+
+const spaceDrafts = computed(() =>
+  drafts.value.filter(draft => draft.space === props.space && draft.networkId === props.networkId)
+);
 </script>
 
 <template>
@@ -21,16 +26,16 @@ const { open } = toRefs(props);
       <h3 v-text="'Drafts'" />
     </template>
     <div>
-      <div v-if="drafts.length > 0">
+      <div v-if="spaceDrafts.length > 0">
         <div
-          v-for="proposal in drafts"
+          v-for="proposal in spaceDrafts"
           :key="proposal.id"
           class="py-3 px-4 border-b last:border-b-0 flex justify-between items-center"
         >
           <router-link
             :to="{
               name: 'editor',
-              params: { id: space, key: proposal.key }
+              params: { id: `${networkId}:${space}`, key: proposal.key }
             }"
             @click="$emit('close')"
           >
