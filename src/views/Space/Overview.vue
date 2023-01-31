@@ -43,7 +43,7 @@ const spaceState = computed(() => {
 });
 
 const spaceStarred = computed(() => {
-  return spacesStore.spacesStarredIds.includes(props.space.id);
+  return spacesStore.starredSpacesIds.includes(props.space.id);
 });
 </script>
 

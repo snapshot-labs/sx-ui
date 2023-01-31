@@ -16,7 +16,7 @@ onMounted(() => spacesStore.fetch());
     <UiLoading v-if="!spacesStore.loaded" class="py-2 block" />
     <draggable
       v-else
-      v-model="spacesStore.spacesStarredIds"
+      v-model="spacesStore.starredSpacesIds"
       :item-key="i => i"
       class="space-y-3 p-2"
     >

@@ -13,7 +13,7 @@ export const useSpacesStore = defineStore('spaces', {
     loaded: false,
     hasMoreSpaces: true,
     spaces: [] as Space[],
-    spacesStarredIds: useStorage(`${pkg.name}.spaces-starred`, [] as string[])
+    starredSpacesIds: useStorage(`${pkg.name}.spaces-starred`, [] as string[])
   }),
   getters: {
     spacesMap: state => new Map(state.spaces.map(space => [space.id, space]))
@@ -55,10 +55,10 @@ export const useSpacesStore = defineStore('spaces', {
       this.spaces.push(space);
     },
     toggleSpaceStar(id: string) {
-      if (this.spacesStarredIds.includes(id)) {
-        this.spacesStarredIds = this.spacesStarredIds.filter((spaceId: string) => spaceId !== id);
+      if (this.starredSpacesIds.includes(id)) {
+        this.starredSpacesIds = this.starredSpacesIds.filter((spaceId: string) => spaceId !== id);
       } else {
-        this.spacesStarredIds.unshift(id);
+        this.starredSpacesIds.unshift(id);
       }
     }
   }
