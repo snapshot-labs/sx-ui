@@ -33,6 +33,37 @@ export function useActions() {
     modalAccountOpen.value = true;
   }
 
+  async function createSpace(networkId: NetworkID, metadata: SpaceMetadata) {
+    if (!web3.value.account) return await forceLogin();
+
+    const network = getNetwork(networkId);
+    if (!network.managerConnectors.includes(web3.value.type as Connector)) {
+      throw new Error(`${web3.value.type} is not supported for this actions`);
+    }
+
+    const pinned = await network.helpers.pin(metadata);
+
+    const receipt = await network.actions.createSpace(auth.web3, {
+      controller: web3.value.account,
+      votingDelay: 0,
+      minVotingDuration: 0,
+      maxVotingDuration: 86400,
+      proposalThreshold: 1n,
+      qorum: 1n,
+      authenticators: ['0x64cce9272197eba6353f5bbf060e097e516b411e66e83a9cf5910a08697df14'],
+      votingStrategies: ['0xd1b81feff3095ca9517fdfc7427e742ce96f7ca8f3b2664a21b2fba552493b'],
+      votingStrategiesParams: [['0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6', '0x3']],
+      executionStrategies: ['0x21dda40770f4317582251cffd5a0202d6b223dc167e5c8db25dc887d11eba81'],
+      metadataUri: `ipfs://${pinned.cid}`
+    });
+
+    console.log('Receipt', receipt);
+    uiStore.addPendingTransaction(
+      network.hasRelayer ? receipt.transaction_hash : receipt.hash,
+      networkId
+    );
+  }
+
   async function updateMetadata(space: Space, metadata: SpaceMetadata) {
     if (!web3.value.account) return await forceLogin();
 
@@ -142,6 +173,7 @@ export function useActions() {
   }
 
   return {
+    createSpace,
     updateMetadata,
     vote,
     propose,
