@@ -5,17 +5,11 @@ import { useActions } from '@/composables/useActions';
 import { clone } from '@/helpers/utils';
 import { validateForm } from '@/helpers/validation';
 import { enabledNetworks, getNetwork } from '@/networks';
-import type { NetworkID } from '@/types';
+import type { NetworkID, SpaceSettings } from '@/types';
 
-type FormState = { name: string; about?: string; website?: string };
+type MetadataState = { name: string; about?: string; website?: string };
 
-const DEFAULT_FORM_STATE: FormState = {
-  name: '',
-  about: '',
-  website: ''
-};
-
-const definition = {
+const metadataDefinition = {
   type: 'object',
   title: 'Space',
   additionalProperties: false,
@@ -41,6 +35,48 @@ const definition = {
   }
 };
 
+const settingsDefinition = {
+  type: 'object',
+  title: 'SpaceSettings',
+  additionalProperties: false,
+  required: [
+    'votingDelay',
+    'minVotingDuration',
+    'maxVotingDuration',
+    'proposalThreshold',
+    'quorum'
+  ],
+  properties: {
+    votingDelay: {
+      type: 'number',
+      title: 'Voting delay',
+      examples: ['0']
+    },
+    minVotingDuration: {
+      type: 'number',
+      title: 'Min. voting duration',
+      examples: ['0']
+    },
+    maxVotingDuration: {
+      type: 'number',
+      title: 'Max. voting duration',
+      examples: ['86400']
+    },
+    proposalThreshold: {
+      type: 'string',
+      format: 'uint256',
+      title: 'Proposal threshold',
+      examples: ['1']
+    },
+    quorum: {
+      type: 'string',
+      format: 'uint256',
+      title: 'Quorum',
+      examples: ['1']
+    }
+  }
+};
+
 const availableNetworks = enabledNetworks.map(id => ({
   id,
   name: getNetwork(id).name
@@ -51,19 +87,44 @@ const { createSpace } = useActions();
 
 const sending = ref(false);
 const selectedNetworkId: Ref<NetworkID> = ref('sn-tn2');
-const form: FormState = reactive(clone(DEFAULT_FORM_STATE));
+const metadataForm: MetadataState = reactive(
+  clone({
+    name: '',
+    about: '',
+    website: ''
+  })
+);
+const settingsForm: SpaceSettings = reactive(
+  clone({
+    votingDelay: 0,
+    minVotingDuration: 0,
+    maxVotingDuration: 86400,
+    proposalThreshold: '1',
+    quorum: '1'
+  })
+);
 
-const formErrors = computed(() => validateForm(definition, form));
+const metadataFormErrors = computed(() => validateForm(metadataDefinition, metadataForm));
+const settingsFormErrors = computed(() => validateForm(settingsDefinition, settingsForm));
+const disabled = computed(
+  () =>
+    Object.keys(metadataFormErrors.value).length > 0 ||
+    Object.keys(settingsFormErrors.value).length > 0
+);
 
 async function handleSubmit() {
   sending.value = true;
 
   try {
-    await createSpace(selectedNetworkId.value, {
-      name: form.name,
-      description: form.about || '',
-      external_url: form.website || ''
-    });
+    await createSpace(
+      selectedNetworkId.value,
+      {
+        name: metadataForm.name,
+        description: metadataForm.about || '',
+        external_url: metadataForm.website || ''
+      },
+      settingsForm
+    );
 
     router.back();
   } finally {
@@ -77,10 +138,14 @@ async function handleSubmit() {
     <Container class="pt-5">
       <h2>Deploy space</h2>
       <div class="s-box pt-4">
-        <SIObject v-model="form" :error="formErrors" :definition="definition" />
+        <SIObject
+          v-model="metadataForm"
+          :error="metadataFormErrors"
+          :definition="metadataDefinition"
+        />
       </div>
 
-      <fieldset class="my-4">
+      <fieldset class="my-3">
         <legend>Network:</legend>
 
         <div v-for="network in availableNetworks" :key="network.id">
@@ -88,12 +153,16 @@ async function handleSubmit() {
           <label class="ml-2" :for="network.id">{{ network.name }}</label>
         </div>
       </fieldset>
-      <UiButton
-        class="w-full"
-        :loading="sending"
-        :disabled="Object.keys(formErrors).length > 0"
-        @click="handleSubmit"
-      >
+
+      <div class="s-box">
+        <h3 class="mb-2">Settings</h3>
+        <SIObject
+          v-model="settingsForm"
+          :error="settingsFormErrors"
+          :definition="settingsDefinition"
+        />
+      </div>
+      <UiButton class="w-full" :loading="sending" :disabled="disabled" @click="handleSubmit">
         Save
       </UiButton>
     </Container>

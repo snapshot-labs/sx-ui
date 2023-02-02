@@ -3,7 +3,15 @@ import { getNetwork } from '@/networks';
 import { useUiStore } from '@/stores/ui';
 import { useWeb3 } from '@/composables/useWeb3';
 import { useModal } from '@/composables/useModal';
-import type { Transaction, Proposal, SpaceMetadata, Space, Choice, NetworkID } from '@/types';
+import type {
+  Transaction,
+  Proposal,
+  SpaceMetadata,
+  SpaceSettings,
+  Space,
+  Choice,
+  NetworkID
+} from '@/types';
 import type { Connector } from '@/networks/types';
 
 export function useActions() {
@@ -33,7 +41,11 @@ export function useActions() {
     modalAccountOpen.value = true;
   }
 
-  async function createSpace(networkId: NetworkID, metadata: SpaceMetadata) {
+  async function createSpace(
+    networkId: NetworkID,
+    metadata: SpaceMetadata,
+    settings: SpaceSettings
+  ) {
     if (!web3.value.account) return await forceLogin();
 
     const network = getNetwork(networkId);
@@ -45,11 +57,11 @@ export function useActions() {
 
     const receipt = await network.actions.createSpace(auth.web3, {
       controller: web3.value.account,
-      votingDelay: 0,
-      minVotingDuration: 0,
-      maxVotingDuration: 86400,
-      proposalThreshold: 1n,
-      qorum: 1n,
+      votingDelay: settings.votingDelay,
+      minVotingDuration: settings.minVotingDuration,
+      maxVotingDuration: settings.maxVotingDuration,
+      proposalThreshold: BigInt(settings.proposalThreshold),
+      qorum: BigInt(settings.quorum),
       authenticators: ['0x64cce9272197eba6353f5bbf060e097e516b411e66e83a9cf5910a08697df14'],
       votingStrategies: ['0xd1b81feff3095ca9517fdfc7427e742ce96f7ca8f3b2664a21b2fba552493b'],
       votingStrategiesParams: [['0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6', '0x3']],
