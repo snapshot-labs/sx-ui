@@ -163,7 +163,7 @@ async function handleSubmit() {
         />
       </div>
       <UiButton class="w-full" :loading="sending" :disabled="disabled" @click="handleSubmit">
-        Save
+        Create
       </UiButton>
     </Container>
   </div>
