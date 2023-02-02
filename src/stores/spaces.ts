@@ -49,13 +49,13 @@ export const useSpacesStore = defineStore('spaces', {
 
           const spaces = await network.api.loadSpaces({
             skip: overwrite ? 0 : record.spaces.length,
-            limit: SPACES_LIMIT
+            limit: SPACES_LIMIT + 1
           });
 
           return {
             id,
-            spaces,
-            hasMoreSpaces: spaces.length === SPACES_LIMIT
+            spaces: spaces.slice(0, SPACES_LIMIT),
+            hasMoreSpaces: spaces.length === SPACES_LIMIT + 1
           };
         })
       );

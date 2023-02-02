@@ -58,11 +58,11 @@ export const useProposalsStore = defineStore('proposals', {
       record.value.loading = true;
 
       const proposals = await getNetwork(networkId).api.loadProposals(spaceId, {
-        limit: PROPOSALS_LIMIT
+        limit: PROPOSALS_LIMIT + 1
       });
 
-      record.value.proposals = proposals;
-      record.value.hasMoreProposals = proposals.length === PROPOSALS_LIMIT;
+      record.value.proposals = proposals.slice(0, PROPOSALS_LIMIT);
+      record.value.hasMoreProposals = proposals.length === PROPOSALS_LIMIT + 1;
       record.value.loaded = true;
       record.value.loading = false;
     },
@@ -88,13 +88,13 @@ export const useProposalsStore = defineStore('proposals', {
       record.value.loadingMore = true;
 
       const proposals = await getNetwork(networkId).api.loadProposals(spaceId, {
-        limit: PROPOSALS_LIMIT,
+        limit: PROPOSALS_LIMIT + 1,
         skip: record.value.proposals.length
       });
 
-      record.value.proposals = [...record.value.proposals, ...proposals];
+      record.value.proposals = [...record.value.proposals, ...proposals.slice(0, PROPOSALS_LIMIT)];
 
-      record.value.hasMoreProposals = proposals.length === PROPOSALS_LIMIT;
+      record.value.hasMoreProposals = proposals.length === PROPOSALS_LIMIT + 1;
       record.value.loadingMore = false;
     },
     async fetchSummary(spaceId: string, networkId: NetworkID, limit = 3) {
