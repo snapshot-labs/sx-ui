@@ -46,7 +46,10 @@ export function useActions() {
     metadata: SpaceMetadata,
     settings: SpaceSettings
   ) {
-    if (!web3.value.account) return await forceLogin();
+    if (!web3.value.account) {
+      forceLogin();
+      return false;
+    }
 
     const network = getNetwork(networkId);
     if (!network.managerConnectors.includes(web3.value.type as Connector)) {

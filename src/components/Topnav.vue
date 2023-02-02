@@ -70,14 +70,6 @@ async function handleLogin(connector) {
           </template>
         </UiButton>
         <PendingTransactionsIndicator class="ml-2" />
-        <router-link
-          v-if="$auth.isAuthenticated.value && !(loading || web3.authLoading)"
-          :to="{ name: 'create' }"
-        >
-          <UiButton class="!px-0 w-[46px] ml-2" title="Create new space">
-            <IH-plus class="inline-block" />
-          </UiButton>
-        </router-link>
         <UiButton class="!px-0 w-[46px] ml-2" @click="toggleSkin">
           <IH-light-bulb v-if="getMode() === 'dark'" class="inline-block" />
           <IH-moon v-else class="inline-block" />

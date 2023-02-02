@@ -116,7 +116,7 @@ async function handleSubmit() {
   sending.value = true;
 
   try {
-    await createSpace(
+    const result = await createSpace(
       selectedNetworkId.value,
       {
         name: metadataForm.name,
@@ -126,7 +126,7 @@ async function handleSubmit() {
       settingsForm
     );
 
-    router.back();
+    if (result) router.back();
   } finally {
     sending.value = false;
   }
