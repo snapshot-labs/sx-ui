@@ -1,29 +1,16 @@
-<div align="center">
-    <h1>SnapshotX</h1>
-    <strong>SnapshotX is an on-chain governance platform.</strong>
-</div>
-<br>
-<div align="center">
-    <a href="https://github.com/snapshot-labs/sx-ui/actions/workflows/test.yml/badge.svg">
-        <img src="https://github.com/snapshot-labs/sx-ui/actions/workflows/test.yml/badge.svg" alt="Test CI">
-    </a>
-    <img src="https://img.shields.io/github/commit-activity/w/snapshot-labs/sx-ui" alt="GitHub commit activity">
-    <a href="https://github.com/snapshot-labs/sx-ui/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22">
-        <img src="https://img.shields.io/github/issues/snapshot-labs/sx-ui/help wanted" alt="GitHub issues help wanted">
-    </a>
-    <a href="https://discord.snapshot.org/">
-        <img src="https://img.shields.io/discord/707079246388133940.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2" alt="Discord">
-    </a>
-    <a href="https://twitter.com/SnapshotLabs">
-        <img src="https://img.shields.io/twitter/follow/SnapshotLabs?label=SnapshotLabs&style=flat&logo=twitter&color=1DA1F2" alt="Twitter">
-    </a>
-</div>
-<div align="center">
-    <br>
-    <a href="testnet.snapshotx.xyz"><b>testnet.snapshotx.xyz »</b></a>
-    <br></br>
-    <a href="https://docs.snapshotx.xyz/"><b>Documentation</b></a>
-</div>
+[![Test CI](https://github.com/snapshot-labs/sx-ui/actions/workflows/test.yml/badge.svg)](https://github.com/snapshot-labs/sx-ui/actions/workflows/test.yml)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/snapshot-labs/sx-ui)
+[![GitHub issues help wanted](https://img.shields.io/github/issues/snapshot-labs/sx-ui/help%20wanted)](https://github.com/snapshot-labs/sx-ui/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
+[![Discord](https://img.shields.io/discord/707079246388133940.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.snapshot.org/)
+[![Twitter](https://img.shields.io/twitter/follow/SnapshotLabs?label=SnapshotLabs&style=flat&logo=twitter&color=1DA1F2)](https://twitter.com/SnapshotLabs)
+
+# Snapshot X
+
+Snapshot X is an on-chain governance platform.
+
+**[testnet.snapshotx.xyz](https://testnet.snapshotx.xyz)**
+
+**[Documentation](https://obytejs.com)**
 
 ## Project setup
 
