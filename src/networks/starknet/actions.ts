@@ -67,7 +67,7 @@ export function createActions(starkProvider: Provider): NetworkActions {
         disableEstimation: true
       });
 
-      return await spaceManager.deploySpace(params);
+      return spaceManager.deploySpace(params);
     },
     setMetadataUri: async (web3: any, spaceId: string, metadataUri: string) => {
       const spaceManager = new clients.SpaceManager({
