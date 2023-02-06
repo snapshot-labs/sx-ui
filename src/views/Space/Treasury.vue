@@ -135,7 +135,7 @@ onMounted(() => {
     <ModalSendToken
       :open="modalOpen.sendToken"
       :address="spaceData.wallet"
-      :network="space.network"
+      :network="spaceData.network"
       @close="modalOpen.sendToken = false"
       @add="addTx"
     />
