@@ -1,55 +1,132 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useSpacesStore } from '@/stores/spaces';
+import { ref, reactive, computed, Ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useActions } from '@/composables/useActions';
-import { useEditor } from '@/composables/useEditor';
-import { useModal } from '@/composables/useModal';
+import { clone } from '@/helpers/utils';
+import { validateForm } from '@/helpers/validation';
+import { enabledNetworks, getNetwork } from '@/networks';
+import type { NetworkID, SpaceSettings } from '@/types';
 
-const { proposals, createDraft } = useEditor();
-const { modalOpen: globalModalOpen } = useModal();
-const route = useRoute();
-const router = useRouter();
-const { propose } = useActions();
-const spacesStore = useSpacesStore();
+type MetadataState = { name: string; about?: string; website?: string };
 
-const id = route.params.id as string;
-const key = route.params.key;
-const modalOpen = ref(false);
-const sending = ref(false);
-
-onMounted(() => {
-  spacesStore.fetchSpace(id);
-
-  if (!key && route.name) {
-    globalModalOpen.value = false;
-
-    const draftId = createDraft(id);
-
-    router.replace({
-      name: route.name,
-      params: { id, key: draftId }
-    });
+const metadataDefinition = {
+  type: 'object',
+  title: 'Space',
+  additionalProperties: false,
+  required: ['name'],
+  properties: {
+    name: {
+      type: 'string',
+      title: 'Name',
+      minLength: 1,
+      examples: ['Space name']
+    },
+    about: {
+      type: 'string',
+      format: 'long',
+      title: 'About',
+      examples: ['Space description']
+    },
+    website: {
+      type: 'string',
+      title: 'Website',
+      examples: ['Space website URL']
+    }
   }
-});
+};
 
-const space = computed(() => spacesStore.spacesMap.get(id));
+const settingsDefinition = {
+  type: 'object',
+  title: 'SpaceSettings',
+  additionalProperties: false,
+  required: [
+    'votingDelay',
+    'minVotingDuration',
+    'maxVotingDuration',
+    'proposalThreshold',
+    'quorum'
+  ],
+  properties: {
+    votingDelay: {
+      type: 'number',
+      title: 'Voting delay',
+      examples: ['0']
+    },
+    minVotingDuration: {
+      type: 'number',
+      title: 'Min. voting duration',
+      examples: ['0']
+    },
+    maxVotingDuration: {
+      type: 'number',
+      title: 'Max. voting duration',
+      examples: ['86400']
+    },
+    proposalThreshold: {
+      type: 'string',
+      format: 'uint256',
+      title: 'Proposal threshold',
+      examples: ['1']
+    },
+    quorum: {
+      type: 'string',
+      format: 'uint256',
+      title: 'Quorum',
+      examples: ['1']
+    }
+  }
+};
 
-async function handleProposeClick() {
-  if (!space.value) return;
+const availableNetworks = enabledNetworks.map(id => ({
+  id,
+  name: getNetwork(id).name
+}));
 
+const router = useRouter();
+const { createSpace } = useActions();
+
+const sending = ref(false);
+const selectedNetworkId: Ref<NetworkID> = ref('sn-tn2');
+const metadataForm: MetadataState = reactive(
+  clone({
+    name: '',
+    about: '',
+    website: ''
+  })
+);
+const settingsForm: SpaceSettings = reactive(
+  clone({
+    votingDelay: 0,
+    minVotingDuration: 0,
+    maxVotingDuration: 86400,
+    proposalThreshold: '1',
+    quorum: '1'
+  })
+);
+
+const metadataFormErrors = computed(() => validateForm(metadataDefinition, metadataForm));
+const settingsFormErrors = computed(() => validateForm(settingsDefinition, settingsForm));
+const disabled = computed(
+  () =>
+    Object.keys(metadataFormErrors.value).length > 0 ||
+    Object.keys(settingsFormErrors.value).length > 0
+);
+
+async function handleSubmit() {
   sending.value = true;
 
   try {
-    await propose(
-      space.value,
-      proposals[`${id}:${key}`].title,
-      proposals[`${id}:${key}`].body,
-      proposals[`${id}:${key}`].discussion,
-      proposals[`${id}:${key}`].execution
+    const result = await createSpace(
+      selectedNetworkId.value,
+      {
+        name: metadataForm.name,
+        description: metadataForm.about || '',
+        external_url: metadataForm.website || ''
+      },
+      settingsForm
     );
 
-    router.back();
+    if (result) router.back();
   } finally {
     sending.value = false;
   }
@@ -58,36 +135,36 @@ async function handleProposeClick() {
 
 <template>
   <div>
-    <nav class="border-b bg-skin-bg fixed top-0 z-10 right-0 left-0 lg:left-[72px]">
-      <div class="flex items-center h-[71px] mx-4">
-        <div class="flex-auto space-x-2">
-          <router-link :to="{ name: 'overview', params: { id } }" class="mr-2">
-            <UiButton class="leading-3 w-[46px] !px-0">
-              <IH-arrow-narrow-left class="inline-block" />
-            </UiButton>
-          </router-link>
-          <h4 class="py-2 inline-block">New proposal</h4>
-        </div>
-        <PendingTransactionsIndicator class="mr-2" />
-        <UiLoading v-if="!space" class="block p-4" />
-        <div v-else class="space-x-2">
-          <UiButton class="float-left leading-3 !px-3 rounded-r-none" @click="modalOpen = true">
-            <IH-collection class="inline-block" />
-          </UiButton>
-          <UiButton
-            class="rounded-l-none border-l-0 float-left !m-0 !px-3"
-            :loading="sending"
-            @click="handleProposeClick"
-          >
-            <span class="hidden mr-2 md:inline-block" v-text="'Publish'" />
-            <IH-paper-airplane class="inline-block rotate-90" />
-          </UiButton>
-        </div>
+    <Container class="pt-5">
+      <h2>Deploy space</h2>
+      <div class="s-box pt-4">
+        <SIObject
+          v-model="metadataForm"
+          :error="metadataFormErrors"
+          :definition="metadataDefinition"
+        />
       </div>
-    </nav>
-    <router-view v-if="key" />
-    <teleport to="#modal">
-      <ModalDrafts :open="modalOpen" :space="id" @close="modalOpen = false" />
-    </teleport>
+
+      <fieldset class="my-3">
+        <legend>Network:</legend>
+
+        <div v-for="network in availableNetworks" :key="network.id">
+          <input v-model="selectedNetworkId" :value="network.id" type="radio" />
+          <label class="ml-2" :for="network.id">{{ network.name }}</label>
+        </div>
+      </fieldset>
+
+      <div class="s-box">
+        <h3 class="mb-2">Settings</h3>
+        <SIObject
+          v-model="settingsForm"
+          :error="settingsFormErrors"
+          :definition="settingsDefinition"
+        />
+      </div>
+      <UiButton class="w-full" :loading="sending" :disabled="disabled" @click="handleSubmit">
+        Create
+      </UiButton>
+    </Container>
   </div>
 </template>

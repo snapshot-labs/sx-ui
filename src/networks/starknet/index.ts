@@ -1,16 +1,40 @@
+import { pin } from '@snapshot-labs/pineapple';
+import { createApi } from '../common/graphqlApi';
 import { createActions } from './actions';
-import { createApi } from './api';
 import { createProvider } from './provider';
+import * as constants from './constants';
+import type { Network } from '@/networks/types';
+import type { NetworkID } from '@/types';
 
-export function createStarknetNetwork() {
+export function createStarknetNetwork(networkId: NetworkID): Network {
   const provider = createProvider();
 
   return {
+    name: 'Starknet (testnet2)',
+    hasRelayer: true,
+    hasReceive: true,
+    managerConnectors: ['argentx'],
     actions: createActions(provider),
-    api: createApi(),
+    api: createApi(constants.API_URL, networkId),
+    constants,
     helpers: {
-      waitForTransaction: txId => provider.waitForTransaction(txId),
-      getTransactionLink: txId => `https://testnet-2.starkscan.co/tx/${txId}`
+      pin: async (content: any) => {
+        const pinned = await pin(content);
+        if (!pinned) throw new Error('Failed to pin');
+
+        return {
+          provider: pinned.provider,
+          cid: pinned.cid
+        };
+      },
+      waitForTransaction: txId =>
+        provider.waitForTransaction(txId, undefined, ['ACCEPTED_ON_L1', 'ACCEPTED_ON_L2']),
+      getExplorerUrl: (id, type) => {
+        let dataType: 'tx' | 'contract' = 'tx';
+        if (['address', 'contract'].includes(type)) dataType = 'contract';
+
+        return `https://testnet-2.starkscan.co/${dataType}/${id}`;
+      }
     }
   };
 }

@@ -2,10 +2,11 @@
 import { onMounted, computed, ref, Ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { formatUnits } from '@ethersproject/units';
+import { useClipboard } from '@vueuse/core';
 import { useBalances } from '@/composables/useBalances';
 import { useEditor } from '@/composables/useEditor';
 import { useNfts } from '@/composables/useNfts';
-import space from '@/helpers/space.json';
+import spaceData from '@/helpers/space.json';
 import { _n, shorten, explorerUrl } from '@/helpers/utils';
 import { ETH_CONTRACT } from '@/helpers/constants';
 import type { Token } from '@/helpers/alchemy';
@@ -18,6 +19,7 @@ const props = defineProps<{ space: Space }>();
 const page: Ref<'tokens' | 'nfts'> = ref('tokens');
 
 const router = useRouter();
+const { copy, copied } = useClipboard();
 const { loading, loaded, assets, loadBalances } = useBalances();
 const { loading: nftsLoading, loaded: nftsLoaded, nfts, loadNfts } = useNfts();
 const { createDraft } = useEditor();
@@ -56,8 +58,8 @@ function addTx(tx: TransactionType) {
 }
 
 onMounted(() => {
-  loadBalances(space.wallet, space.network);
-  loadNfts(space.wallet);
+  loadBalances(spaceData.wallet, spaceData.network);
+  loadNfts(spaceData.wallet);
 });
 </script>
 
@@ -65,8 +67,9 @@ onMounted(() => {
   <div class="p-4 space-x-2 flex">
     <div class="flex-auto" />
     <a>
-      <UiButton class="!px-0 w-[46px]">
-        <IH-duplicate class="inline-block" />
+      <UiButton class="!px-0 w-[46px]" @click="copy(spaceData.wallet)">
+        <IH-duplicate v-if="!copied" class="inline-block" />
+        <IH-check v-else class="inline-block" />
       </UiButton>
     </a>
     <UiButton class="!px-0 w-[46px]" @click="openModal('sendToken')">
@@ -77,14 +80,14 @@ onMounted(() => {
     <div>
       <Label label="Treasury" />
       <a
-        :href="explorerUrl('1', space.wallet)"
+        :href="explorerUrl('1', spaceData.wallet)"
         target="_blank"
         class="flex justify-between items-center mx-4 py-3 block border-b"
       >
-        <Stamp :id="space.wallet" type="avatar" :size="32" class="mr-3" />
+        <Stamp :id="spaceData.wallet" type="avatar" :size="32" class="mr-3" />
         <div class="flex-1 leading-[22px]">
-          <h4 class="text-skin-link" v-text="shorten(space.wallet)" />
-          <div class="text-skin-text text-sm" v-text="shorten(space.wallet)" />
+          <h4 class="text-skin-link" v-text="shorten(spaceData.wallet)" />
+          <div class="text-skin-text text-sm" v-text="shorten(spaceData.wallet)" />
         </div>
         <h3 v-text="`$${_n(totalQuote.toFixed())}`" />
       </a>
