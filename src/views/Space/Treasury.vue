@@ -13,7 +13,6 @@ import type { Token } from '@/helpers/alchemy';
 import type { Space } from '@/types';
 import { Transaction as TransactionType } from '@/types';
 
-// TODO confusing above space variable for mock data, change to real data?
 const props = defineProps<{ space: Space }>();
 
 const page: Ref<'tokens' | 'nfts'> = ref('tokens');
@@ -39,21 +38,16 @@ const sortedAssets = computed(() =>
   })
 );
 
-const modalState: Ref<{
-  sendToken?: any;
-}> = ref({});
-
 const modalOpen = ref({
   sendToken: false
 });
 
 function openModal(type: 'sendToken') {
-  modalState.value[type] = null;
   modalOpen.value[type] = true;
 }
 
 function addTx(tx: TransactionType) {
-  const draftId = createDraft(props.space.id, { execution: [tx] });
+  const draftId = createDraft(`${props.space.network}:${props.space.id}`, { execution: [tx] });
   router.push(`create/${draftId}`);
 }
 
@@ -140,9 +134,8 @@ onMounted(() => {
   <teleport to="#modal">
     <ModalSendToken
       :open="modalOpen.sendToken"
-      :address="space.wallet"
+      :address="spaceData.wallet"
       :network="space.network"
-      :initial-state="modalState.sendToken"
       @close="modalOpen.sendToken = false"
       @add="addTx"
     />
