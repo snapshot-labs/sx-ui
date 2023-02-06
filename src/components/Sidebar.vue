@@ -22,7 +22,7 @@ onMounted(() => spacesStore.fetch());
     >
       <template #item="{ element }">
         <router-link :to="{ name: 'overview', params: { id: element } }" class="block">
-          <Stamp :id="element" :size="32" class="!rounded-[4px]" />
+          <Stamp :id="element.split(':')[1]" :size="32" class="!rounded-[4px]" />
         </router-link>
       </template>
     </draggable>
