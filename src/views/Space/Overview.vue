@@ -19,9 +19,7 @@ onMounted(() => {
 
 const spaceIdComposite = `${props.space.network}:${props.space.id}`;
 
-const spaceStarred = computed(() => {
-  return spacesStore.starredSpacesIds.includes(spaceIdComposite);
-});
+const spaceStarred = computed(() => spacesStore.starredSpacesIds.includes(spaceIdComposite));
 
 const proposalsRecord = computed(() => proposalsStore.proposals[spaceIdComposite]);
 
