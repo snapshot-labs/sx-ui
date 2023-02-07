@@ -49,12 +49,14 @@ onMounted(() => {
   }
 });
 
-// TODO we dont need it cos we handle !key in onMounted and router.replace() there
-// watch(proposals, () => {
-//   if (!proposals[proposalKey]) {
-//     router.replace({ name: 'editor' });
-//   }
-// });
+watch(
+  () => proposals[proposalKey],
+  (to, from) => {
+    if (from && !to) {
+      router.replace({ name: 'editor' });
+    }
+  }
+);
 
 watch(proposalData, () => {
   if (!proposals[proposalKey]) return;
