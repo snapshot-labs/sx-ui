@@ -153,7 +153,7 @@ watch(selectedNetworkId, () => {
 <template>
   <div>
     <Container class="pt-5">
-      <h2 class="mb-2">Deploy space</h2>
+      <h2>Deploy space</h2>
       <div class="s-box pt-4">
         <SIObject
           v-model="metadataForm"
