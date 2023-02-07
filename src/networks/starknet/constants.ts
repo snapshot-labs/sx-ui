@@ -60,9 +60,10 @@ export const EDITOR_VOTING_STRATEGIES = [
     name: 'Single slot proof',
     generateSummary: (params: Record<string, any>) =>
       `(${shorten(params.contractAddress)}, ${params.slotIndex})`,
-    generateParams: (params: Record<string, any>) => {
-      return [params.contractAddress, `0x${params.slotIndex.toString(16)}`];
-    },
+    generateParams: (params: Record<string, any>) => [
+      params.contractAddress,
+      `0x${params.slotIndex.toString(16)}`
+    ],
     paramsDefinition: {
       type: 'object',
       title: 'Params',
