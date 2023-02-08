@@ -17,6 +17,9 @@ onMounted(() => spacesStore.fetch());
     <draggable
       v-else
       v-model="spacesStore.starredSpacesIds"
+      :delay="75"
+      :delay-on-touch-only="true"
+      :touch-star-threshold="35"
       :item-key="i => i"
       class="space-y-3 p-2"
     >
