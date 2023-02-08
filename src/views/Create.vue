@@ -46,6 +46,7 @@ const router = useRouter();
 const { createSpace } = useActions();
 const { web3 } = useWeb3();
 
+const pagesRefs = ref([] as HTMLElement[]);
 const sending = ref(false);
 const currentPage: Ref<PageID> = ref('profile');
 const pagesErrors: Ref<Record<PageID, Record<string, string>>> = ref({
@@ -110,6 +111,7 @@ function handleNextClick() {
   if (currentIndex === pages.length - 1) return;
 
   currentPage.value = pages[currentIndex + 1].id;
+  pagesRefs.value[currentIndex + 1].scrollIntoView();
 }
 
 async function handleSubmit() {
@@ -159,9 +161,10 @@ watch(selectedNetworkId, () => {
       >
         <button
           v-for="page in pages"
+          ref="pagesRefs"
           :key="page.id"
           :disabled="!accessiblePages[page.id]"
-          class="px-3 py-1 block lg:w-full rounded text-left first:ml-auto last:mr-auto"
+          class="px-3 py-1 block lg:w-full rounded text-left scroll-mr-3 first:ml-auto last:mr-auto"
           :class="{
             'bg-skin-active': page.id === currentPage,
             'hover:bg-skin-hover': page.id !== currentPage
