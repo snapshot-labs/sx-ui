@@ -155,13 +155,13 @@ watch(selectedNetworkId, () => {
   <div>
     <Container class="pt-5">
       <div
-        class="flex fixed top-[72px] inset-x-0 p-3 border-b z-10 bg-skin-bg lg:top-auto lg:inset-x-auto lg:p-0 lg:pr-5 lg:border-0 lg:flex-col lg:translate-x-[-100%] justify-center gap-1 min-w-[180px] overflow-auto"
+        class="flex fixed top-[72px] inset-x-0 p-3 border-b z-10 bg-skin-bg lg:top-auto lg:inset-x-auto lg:p-0 lg:pr-5 lg:border-0 lg:flex-col lg:translate-x-[-100%] gap-1 min-w-[180px] overflow-auto"
       >
         <button
           v-for="page in pages"
           :key="page.id"
           :disabled="!accessiblePages[page.id]"
-          class="px-3 py-1 block lg:w-full rounded text-left"
+          class="px-3 py-1 block lg:w-full rounded text-left first:ml-auto last:mr-auto"
           :class="{
             'bg-skin-active': page.id === currentPage,
             'hover:bg-skin-hover': page.id !== currentPage
