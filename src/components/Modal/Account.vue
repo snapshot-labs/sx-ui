@@ -1,7 +1,8 @@
 <script setup>
 import { toRefs, watch } from 'vue';
 import { getInjected } from '@snapshot-labs/lock/src/utils';
-import { shorten, explorerUrl, getUrl } from '@/helpers/utils';
+import { shorten, explorerUrl } from '@/helpers/utils';
+import { getLocalUrl } from '@/helpers/connectorsIcons';
 import connectors from '@/helpers/connectors.json';
 import { useWeb3 } from '@/composables/useWeb3';
 
@@ -49,7 +50,7 @@ watch(open, () => (step = null));
             class="button-outline w-full flex justify-center items-center"
           >
             <img
-              :src="getUrl(connector.icon)"
+              :src="getLocalUrl(connector.icon)"
               height="28"
               width="28"
               class="mr-2 -mt-1"
