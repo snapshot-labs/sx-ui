@@ -76,6 +76,11 @@ export type User = {
   created: number;
 };
 
+export type Contact = {
+  address: string;
+  name: string;
+};
+
 export type Vote = {
   id: string;
   voter: {

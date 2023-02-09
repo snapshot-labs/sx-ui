@@ -19,7 +19,15 @@ const items = {
     name: 'Settings'
   }
 };
+
+const itemsAccount = {
+  contacts: {
+    name: 'Contacts'
+  }
+};
+// TODO: refactor items, itemsAccount and <IH-ICON_NAME> to more generic, maybe in store ui
 </script>
+
 <template>
   <div
     v-if="route.matched[0]?.name === 'space'"
@@ -41,6 +49,27 @@ const items = {
         <IH-newspaper v-if="i === 'proposals'" class="inline-block" />
         <IH-cash v-if="i === 'treasury'" class="inline-block" />
         <IH-cog v-if="i === 'settings'" class="inline-block" />
+        <span v-text="item.name" />
+      </router-link>
+    </div>
+  </div>
+  <div
+    v-if="route.matched[0]?.name === 'account'"
+    class="lg:visible fixed w-[240px] border-r left-[72px] top-0 bottom-0 z-10 bg-skin-bg"
+    :class="{
+      invisible: !uiStore.sidebarOpen
+    }"
+  >
+    <div class="h-[72px] border-b" />
+    <div class="py-4">
+      <router-link
+        v-for="(item, key) in itemsAccount"
+        :key="key"
+        :to="{ name: key }"
+        class="px-4 py-[7px] block space-x-2 text-skin-text flex items-center"
+        :class="route.name === key && 'text-skin-link'"
+      >
+        <IH-user v-if="key === 'contacts'" class="inline-block" />
         <span v-text="item.name" />
       </router-link>
     </div>

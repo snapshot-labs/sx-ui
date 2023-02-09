@@ -2,21 +2,7 @@
 import { computed } from 'vue';
 import { useAccount } from '@/composables/useAccount';
 import { shorten } from '@/helpers/utils';
-
-const CONTACTS = [
-  {
-    name: 'Sekhmet',
-    address: '0x556B14CbdA79A36dC33FcD461a04A5BCb5dC2A70'
-  },
-  {
-    name: 'Definitely not Sekhmet',
-    address: '0x537f1896541d28F4c70116EEa602b1B34Da95163'
-  },
-  {
-    name: 'WETH',
-    address: '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6'
-  }
-];
+import { useContactsStore } from '@/stores/contacts';
 
 const props = defineProps<{
   searchValue: string;
@@ -28,16 +14,17 @@ const emit = defineEmits<{
 }>();
 
 const { account } = useAccount();
+const contactsStore = useContactsStore();
 
 const allContacts = computed(() => {
-  if (!account) return CONTACTS;
+  if (!account) return contactsStore.contacts;
 
   return [
     {
       name: 'You',
       address: account
     },
-    ...CONTACTS
+    ...contactsStore.contacts
   ];
 });
 
