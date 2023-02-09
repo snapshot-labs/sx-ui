@@ -5,6 +5,9 @@ import options from '@/helpers/auth';
 import App from '@/App.vue';
 import router from '@/router';
 import '@/helpers/auth';
+
+import 'uno.css';
+import '@unocss/reset/tailwind.css';
 import '@/style.scss';
 
 const pinia = createPinia();

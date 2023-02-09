@@ -1,5 +1,11 @@
-@tailwind base;
-@tailwind utilities;
+// @tailwind base;
+// @tailwind utilities;
+
+*,
+::before,
+::after {
+  border-color: var(--border-color)
+}
 
 [data-color-scheme='dark'] {
   color-scheme: dark;
