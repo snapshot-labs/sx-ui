@@ -18,6 +18,8 @@ const contactsStore = useContactsStore();
 
 const allContacts = computed(() => {
   if (!account) return contactsStore.contacts;
+  if (contactsStore.contacts.find(contact => contact.address === account))
+    return contactsStore.contacts;
 
   return [
     {

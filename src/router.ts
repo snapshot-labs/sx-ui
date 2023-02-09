@@ -3,14 +3,14 @@ import Home from '@/views/Home.vue';
 import Space from '@/views/Space.vue';
 import Overview from '@/views/Space/Overview.vue';
 import Proposals from '@/views/Space/Proposals.vue';
-import Settings from '@/views/Space/Settings.vue';
+import SpaceSettings from '@/views/Space/Settings.vue';
 import Editor from '@/views/Editor.vue';
 import Treasury from '@/views/Space/Treasury.vue';
 import Proposal from '@/views/Proposal.vue';
 import User from '@/views/User.vue';
 import Create from '@/views/Create.vue';
-import Account from '@/views/Account.vue';
-import Contacts from '@/views/Account/Contacts.vue';
+import Settings from '@/views/Settings.vue';
+import Contacts from '@/views/Settings/Contacts.vue';
 
 const routes: any[] = [
   { path: '/', name: 'home', component: Home },
@@ -21,7 +21,7 @@ const routes: any[] = [
     children: [
       { path: '', name: 'overview', component: Overview },
       { path: 'proposals', name: 'proposals', component: Proposals },
-      { path: 'settings', name: 'settings', component: Settings },
+      { path: 'settings', name: 'settings', component: SpaceSettings },
       { path: 'treasury', name: 'treasury', component: Treasury }
     ]
   },
@@ -34,11 +34,11 @@ const routes: any[] = [
   { path: '/profile/:id', name: 'user', component: User },
   { path: '/create', name: 'create', component: Create },
   {
-    path: '/account',
-    name: 'account',
-    component: Account,
+    path: '/settings',
+    name: 'settings',
+    component: Settings,
     children: [
-      { path: '', redirect: '/account/contacts' },
+      { path: '', redirect: '/settings/contacts' },
       { path: 'contacts', name: 'contacts', component: Contacts }
     ]
   }

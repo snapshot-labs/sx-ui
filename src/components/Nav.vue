@@ -54,7 +54,7 @@ const itemsAccount = {
     </div>
   </div>
   <div
-    v-if="route.matched[0]?.name === 'account'"
+    v-if="route.matched[0]?.name === 'settings'"
     class="lg:visible fixed w-[240px] border-r left-[72px] top-0 bottom-0 z-10 bg-skin-bg"
     :class="{
       invisible: !uiStore.sidebarOpen
@@ -69,7 +69,7 @@ const itemsAccount = {
         class="px-4 py-[7px] block space-x-2 text-skin-text flex items-center"
         :class="route.name === key && 'text-skin-link'"
       >
-        <IH-user v-if="key === 'contacts'" class="inline-block" />
+        <IH-users v-if="key === 'contacts'" class="inline-block" />
         <span v-text="item.name" />
       </router-link>
     </div>

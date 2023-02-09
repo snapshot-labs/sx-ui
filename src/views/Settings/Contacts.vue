@@ -1,24 +1,23 @@
 <script setup lang="ts">
 import { ref, Ref } from 'vue';
 import { useContactsStore } from '@/stores/contacts';
+import { shortenAddress } from '@/helpers/utils';
 
 const contactsStore = useContactsStore();
 
 const modalState: Ref<{
   editContact?: any;
 }> = ref({});
-
 const modalOpen = ref({
   editContact: false
 });
-const contactOver = ref();
 
 function openModal(type: 'editContact') {
   modalOpen.value[type] = true;
   modalState.value[type] = null;
 }
 
-function onContactClick(contact) {
+function handleContactEdit(contact) {
   modalState.value.editContact = contact;
   modalOpen.value.editContact = true;
 }
@@ -31,7 +30,7 @@ function onContactClick(contact) {
       <div class="pt-4 px-4 space-x-2">
         <a>
           <UiButton class="!px-0 w-[46px]" @click="openModal('editContact')">
-            <IH-plus class="inline-block" />
+            <IH-user-add class="inline-block" />
           </UiButton>
         </a>
       </div>
@@ -40,25 +39,25 @@ function onContactClick(contact) {
     <div
       v-for="contact in contactsStore.contacts"
       :key="contact.address"
-      class="px-4 py-3 border-b flex"
-      @mouseover="contactOver = contact.address"
-      @mouseleave="contactOver = null"
+      class="px-4 py-3 border-b flex group"
     >
-      <div class="flex-auto flex items-center min-w-0" @click="onContactClick(contact)">
-        <Stamp :id="contact.address" type="token" :size="32" />
+      <div class="flex-auto flex items-center min-w-0">
+        <Stamp :id="contact.address" type="avatar" :size="32" />
         <div class="flex flex-col ml-3 leading-[22px] min-w-0 pr-2 md:pr-0">
           <h4 class="text-skin-link" v-text="contact.name" />
-          <div class="text-sm truncate" v-text="contact.address" />
+          <div class="text-sm truncate" v-text="shortenAddress(contact.address)" />
         </div>
       </div>
-      <div class="flex-col items-end text-right leading-[22px] min-h-[46px] w-auto md:w-[180px]">
-        <UiButton
-          v-show="contactOver === contact.address"
-          class="!px-0 w-[46px]"
+      <div class="flex flex-row items-center content-center gap-x-4">
+        <a class="invisible group-hover:visible" @click="handleContactEdit(contact)">
+          <IH-pencil />
+        </a>
+        <a
+          class="invisible group-hover:visible"
           @click="contactsStore.deleteContact(contact.address)"
         >
-          <IH-trash class="inline-block" />
-        </UiButton>
+          <IH-trash />
+        </a>
       </div>
     </div>
   </div>

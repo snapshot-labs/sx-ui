@@ -69,12 +69,12 @@ watch(open, () => (step = null));
             <IH-external-link class="inline-block ml-1" />
           </UiButton>
         </a>
-        <router-link to="/account" class="block">
+        <router-link to="/settings" class="block">
           <UiButton
             class="button-outline w-full flex justify-center items-center"
             @click="emit('close')"
           >
-            <span>Account</span>
+            <span>Settings</span>
           </UiButton>
         </router-link>
         <UiButton class="button-outline w-full" @click="step = 'connect'">
