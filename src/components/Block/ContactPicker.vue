@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useAccount } from '@/composables/useAccount';
-import { shorten } from '@/helpers/utils';
+import { shorten, shortenAddress } from '@/helpers/utils';
 import { useContactsStore } from '@/stores/contacts';
 
 const props = defineProps<{
@@ -57,7 +57,10 @@ const filteredContacts = computed(() =>
         <Stamp :id="contact.address" type="avatar" :size="32" />
         <div class="flex flex-col ml-3 leading-[20px] overflow-hidden">
           <div class="text-skin-link" v-text="shorten(contact.name, 24)" />
-          <div class="text-sm text-ellipsis overflow-hidden" v-text="contact.address" />
+          <div
+            class="text-sm text-ellipsis overflow-hidden"
+            v-text="shortenAddress(contact.address)"
+          />
         </div>
       </div>
     </div>

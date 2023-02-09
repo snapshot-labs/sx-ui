@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, Ref } from 'vue';
 import { useContactsStore } from '@/stores/contacts';
-import { shortenAddress } from '@/helpers/utils';
+import { shorten, shortenAddress } from '@/helpers/utils';
 
 const contactsStore = useContactsStore();
 
@@ -44,7 +44,7 @@ function handleContactEdit(contact) {
       <div class="flex-auto flex items-center min-w-0">
         <Stamp :id="contact.address" type="avatar" :size="32" />
         <div class="flex flex-col ml-3 leading-[22px] min-w-0 pr-2 md:pr-0">
-          <h4 class="text-skin-link" v-text="contact.name" />
+          <h4 class="text-skin-link" v-text="shorten(contact.name, 24)" />
           <div class="text-sm truncate" v-text="shortenAddress(contact.address)" />
         </div>
       </div>
