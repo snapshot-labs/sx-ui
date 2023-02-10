@@ -165,3 +165,5 @@ export async function verifyNetwork(web3Provider: Web3Provider, chainId: number)
     params: [{ chainId: `0x${chainId.toString(16)}` }]
   });
 }
+
+export const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

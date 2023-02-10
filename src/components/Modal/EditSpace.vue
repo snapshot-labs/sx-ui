@@ -5,12 +5,13 @@ import { clone } from '@/helpers/utils';
 import { validateForm } from '@/helpers/validation';
 import type { Space } from '@/types';
 
-type FormState = { name: string; about?: string; website?: string };
+type FormState = { name: string; about?: string; website?: string; avatar?: string };
 
 const DEFAULT_FORM_STATE: FormState = {
   name: '',
   about: '',
-  website: ''
+  website: '',
+  avatar: ''
 };
 
 const definition = {
@@ -35,6 +36,11 @@ const definition = {
       type: 'string',
       title: 'Website',
       examples: ['Space website URL']
+    },
+    avatar: {
+      type: 'string',
+      title: 'Avatar',
+      examples: ['Space avatar URL']
     }
   }
 };
@@ -55,12 +61,13 @@ const formErrors = computed(() => validateForm(definition, form));
 
 async function handleSubmit() {
   sending.value = true;
-
+  console.log('form', form);
   try {
     await updateMetadata(props.space, {
       name: form.name,
       description: form.about || '',
-      external_url: form.website || ''
+      external_url: form.website || '',
+      avatar: form.avatar || ''
     });
     emit('close');
   } finally {
@@ -72,6 +79,7 @@ onMounted(() => {
   form.name = props.space.name;
   form.about = props.space.about || '';
   form.website = '';
+  form.avatar = '';
 });
 </script>
 
@@ -80,6 +88,29 @@ onMounted(() => {
     <template #header>
       <h3>Edit profile</h3>
     </template>
+    <div class="relative bg-skin-border h-[100px] -mb-[50px]" />
+    <SIUploadImage
+      class="relative h-[80px] ml-4 group max-w-max cursor-pointer"
+      @image-uploaded="url => (form.avatar = url)"
+    >
+      <template #avatar="{ uploading, previewUrl }">
+        <Stamp
+          :id="space.id"
+          :size="80"
+          class="pointer-events-none border-[4px] border-skin-bg !bg-skin-bg !rounded-lg group-hover:opacity-80"
+          :class="{
+            'opacity-80': uploading
+          }"
+        />
+        <div
+          class="pointer-events-none absolute group-hover:visible inset-0 z-10 flex flex-row w-full h-full items-center content-center justify-center"
+        >
+          <IH-pencil v-if="!uploading" class="text-skin-link" />
+          <UiLoading v-if="uploading" class="block bg-green z-5" />
+          <img v-if="previewUrl" :src="previewUrl" class="absolute w-full h-full z-3" />
+        </div>
+      </template>
+    </SIUploadImage>
     <div class="s-box p-4">
       <SIObject v-model="form" :error="formErrors" :definition="definition" />
     </div>
