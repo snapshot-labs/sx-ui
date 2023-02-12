@@ -21,7 +21,7 @@ onMounted(() => spacesStore.fetch());
       class="space-y-3 p-2"
     >
       <template #item="{ element }">
-        <router-link :to="{ name: 'overview', params: { id: element } }" class="block">
+        <router-link :to="{ name: 'space-overview', params: { id: element } }" class="block">
           <Stamp :id="element.split(':')[1]" :size="32" class="!rounded-[4px]" />
         </router-link>
       </template>

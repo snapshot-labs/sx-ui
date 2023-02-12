@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, computed, watch } from 'vue';
+import { reactive, computed, watch, ref } from 'vue';
 import { clone } from '@/helpers/utils';
 import { useContactsStore } from '@/stores/contacts';
 
@@ -24,7 +24,15 @@ const form: {
   address: string;
 } = reactive(clone(DEFAULT_FORM_STATE));
 
-const formValid = computed(() => form.name !== '' && form.address !== '');
+const addressDuplicated = computed(() => {
+  const duplicate = contactsStore.contacts.find(c => c.address === form.address);
+  if (duplicate) return 'Contact already exists';
+  return undefined;
+});
+
+const formValid = computed(
+  () => form.name !== '' && form.address !== '' && !addressDuplicated.value
+);
 
 function handleSubmit() {
   contactsStore.saveContact(clone(form));
@@ -60,6 +68,7 @@ watch(
       />
       <SIString
         v-model="form.address"
+        :error="addressDuplicated"
         :definition="{
           type: 'string',
           title: 'Address',

@@ -39,7 +39,7 @@ function handleContactEdit(contact) {
     <div
       v-for="contact in contactsStore.contacts"
       :key="contact.address"
-      class="px-4 py-3 border-b flex group"
+      class="mx-4 py-3 border-b flex group"
     >
       <div class="flex-auto flex items-center min-w-0">
         <Stamp :id="contact.address" type="avatar" :size="32" />
@@ -48,7 +48,7 @@ function handleContactEdit(contact) {
           <div class="text-sm truncate" v-text="shortenAddress(contact.address)" />
         </div>
       </div>
-      <div class="flex flex-row items-center content-center gap-x-4">
+      <div class="flex flex-row items-center content-center gap-x-3">
         <a class="invisible group-hover:visible" @click="handleContactEdit(contact)">
           <IH-pencil />
         </a>
@@ -59,6 +59,10 @@ function handleContactEdit(contact) {
           <IH-trash />
         </a>
       </div>
+    </div>
+    <div v-if="!contactsStore.contacts.length" class="px-4 py-3 text-skin-link">
+      <IH-exclamation-circle class="inline-block mr-2" />
+      <span v-text="'There are no contacts here.'" />
     </div>
   </div>
   <teleport to="#modal">

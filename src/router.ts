@@ -1,11 +1,11 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import Home from '@/views/Home.vue';
 import Space from '@/views/Space.vue';
-import Overview from '@/views/Space/Overview.vue';
-import Proposals from '@/views/Space/Proposals.vue';
+import SpaceOverview from '@/views/Space/Overview.vue';
+import SpaceProposals from '@/views/Space/Proposals.vue';
 import SpaceSettings from '@/views/Space/Settings.vue';
+import SpaceTreasury from '@/views/Space/Treasury.vue';
 import Editor from '@/views/Editor.vue';
-import Treasury from '@/views/Space/Treasury.vue';
 import Proposal from '@/views/Proposal.vue';
 import User from '@/views/User.vue';
 import Create from '@/views/Create.vue';
@@ -19,10 +19,10 @@ const routes: any[] = [
     name: 'space',
     component: Space,
     children: [
-      { path: '', name: 'overview', component: Overview },
-      { path: 'proposals', name: 'proposals', component: Proposals },
-      { path: 'settings', name: 'settings', component: SpaceSettings },
-      { path: 'treasury', name: 'treasury', component: Treasury }
+      { path: '', name: 'space-overview', component: SpaceOverview },
+      { path: 'proposals', name: 'space-proposals', component: SpaceProposals },
+      { path: 'settings', name: 'space-settings', component: SpaceSettings },
+      { path: 'treasury', name: 'space-treasury', component: SpaceTreasury }
     ]
   },
   {
@@ -39,7 +39,7 @@ const routes: any[] = [
     component: Settings,
     children: [
       { path: '', redirect: '/settings/contacts' },
-      { path: 'contacts', name: 'contacts', component: Contacts }
+      { path: 'contacts', name: 'settings-contacts', component: Contacts }
     ]
   }
 ];

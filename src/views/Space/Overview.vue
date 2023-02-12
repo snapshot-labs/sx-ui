@@ -60,7 +60,7 @@ const grouped = computed(() => {
     </div>
     <div class="px-4">
       <div class="mb-4 relative">
-        <router-link :to="{ name: 'overview' }">
+        <router-link :to="{ name: 'space-overview' }">
           <Stamp
             :id="space.id"
             :size="90"
@@ -91,7 +91,7 @@ const grouped = computed(() => {
         :limit="PROPOSALS_LIMIT - 1"
         :proposals="grouped.active"
         :route="{
-          name: 'proposals',
+          name: 'space-proposals',
           linkTitle: 'See more'
         }"
       />
@@ -101,7 +101,7 @@ const grouped = computed(() => {
         :limit="PROPOSALS_LIMIT - 1"
         :proposals="grouped.ended"
         :route="{
-          name: 'proposals',
+          name: 'space-proposals',
           linkTitle: 'See more'
         }"
         class="mt-4"
