@@ -28,6 +28,10 @@ const totalQuote = computed(() =>
 );
 
 const page: Ref<'tokens' | 'nfts'> = ref('tokens');
+const modalOpen = ref({
+  tokens: false,
+  nfts: false
+});
 
 const sortedAssets = computed(() =>
   (assets || []).value.sort((a, b) => {
@@ -37,11 +41,6 @@ const sortedAssets = computed(() =>
     return 0;
   })
 );
-
-const modalOpen = ref({
-  tokens: false,
-  nfts: false
-});
 
 function openModal(type: 'tokens' | 'nfts') {
   modalOpen.value[type] = true;
