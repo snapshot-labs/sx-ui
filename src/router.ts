@@ -10,8 +10,25 @@ import Proposal from '@/views/Proposal.vue';
 import User from '@/views/User.vue';
 import Create from '@/views/Create.vue';
 
+import { isAddress } from '@ethersproject/address';
+import { getNetwork } from '@/networks';
+
+const validateIdGuard = (to, from, next) => {
+  try {
+    const id = to.params.id;
+    const [networkId, spaceId] = id.split(':');
+    console.log(':beforeEnter,', networkId, spaceId);
+    getNetwork(networkId);
+    if (!isAddress(spaceId)) return next('/');
+    return next();
+  } catch (error) {
+    return next('/');
+  }
+};
+
 const routes: any[] = [
   { path: '/', name: 'home', component: Home },
+  { path: '/create', name: 'create', component: Create },
   {
     path: '/:id',
     name: 'space',
@@ -20,17 +37,23 @@ const routes: any[] = [
       { path: '', name: 'overview', component: Overview },
       { path: 'proposals', name: 'proposals', component: Proposals },
       { path: 'settings', name: 'settings', component: Settings },
-      { path: 'treasury', name: 'treasury', component: Treasury }
-    ]
+      { path: 'treasury', name: 'treasury', component: Treasury },
+      { path: 'create/:key?', name: 'editor', component: Editor },
+      { path: 'proposal/:pid', name: 'proposal', component: Proposal }
+    ],
+    beforeEnter: validateIdGuard
   },
   {
-    path: '/:id/create/:key?',
-    name: 'editor',
-    component: Editor
+    path: '/profile/:id',
+    name: 'user',
+    component: User,
+    beforeEnter: validateIdGuard
   },
-  { path: '/:space/proposal/:id?', name: 'proposal', component: Proposal },
-  { path: '/profile/:id', name: 'user', component: User },
-  { path: '/create', name: 'create', component: Create }
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'error-404',
+    redirect: '/'
+  }
 ];
 
 const router = createRouter({

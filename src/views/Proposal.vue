@@ -10,8 +10,8 @@ import type { Choice, NetworkID } from '@/types';
 const route = useRoute();
 const proposalsStore = useProposalsStore();
 const { vote } = useActions();
-const id = parseInt((route.params.id as string) || '0');
-const spaceParam = route.params.space as string;
+const id = parseInt((route.params.pid as string) || '0');
+const spaceParam = route.params.id as string;
 const [networkId, space] = spaceParam.split(':');
 
 const modalOpenVotes = ref(false);
