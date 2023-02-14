@@ -7,7 +7,8 @@ import pkg from '../../package.json';
 const SPACES_LIMIT = 10;
 
 type NetworkRecord = {
-  spaces: Space[];
+  spacesMap: Record<string, Space>;
+  spacesList: string[];
   hasMoreSpaces: boolean;
 };
 
@@ -20,18 +21,25 @@ export const useSpacesStore = defineStore('spaces', {
       enabledNetworks.map(network => [
         network,
         {
-          spaces: [] as Space[],
+          spacesMap: {},
+          spacesList: [],
           hasMoreSpaces: true
-        }
+        } as NetworkRecord
       ])
-    ) as Record<NetworkID, NetworkRecord>,
+    ),
     starredSpacesIds: useStorage(`${pkg.name}.spaces-starred`, [] as string[])
   }),
   getters: {
-    spaces: state => Object.values(state.networksMap).flatMap(record => record.spaces),
-    spacesMap(): Map<string, Space> {
-      return new Map(this.spaces.map(space => [`${space.network}:${space.id}`, space]));
-    },
+    spaces: state =>
+      Object.values(state.networksMap).flatMap(record =>
+        record.spacesList.map(spaceId => record.spacesMap[spaceId])
+      ),
+    spacesMap: state =>
+      new Map(
+        Object.values(state.networksMap).flatMap(record =>
+          Object.values(record.spacesMap).map(space => [`${space.network}:${space.id}`, space])
+        )
+      ),
     hasMoreSpaces: state =>
       Object.values(state.networksMap).some(record => record.hasMoreSpaces === true)
   },
@@ -51,7 +59,7 @@ export const useSpacesStore = defineStore('spaces', {
           }
 
           const spaces = await network.api.loadSpaces({
-            skip: overwrite ? 0 : record.spaces.length,
+            skip: overwrite ? 0 : record.spacesList.length,
             limit: SPACES_LIMIT
           });
 
@@ -68,9 +76,14 @@ export const useSpacesStore = defineStore('spaces', {
           return [
             result.id,
             {
-              spaces: overwrite
-                ? result.spaces
-                : [...this.networksMap[result.id].spaces, ...result.spaces],
+              spacesList: [
+                ...this.networksMap[result.id].spacesList,
+                ...result.spaces.map(space => space.id)
+              ],
+              spacesMap: {
+                ...this.networksMap[result.id].spacesMap,
+                ...Object.fromEntries(result.spaces.map(space => [space.id, space]))
+              },
               hasMoreSpaces: result.hasMoreSpaces
             }
           ];
@@ -95,15 +108,14 @@ export const useSpacesStore = defineStore('spaces', {
       this.loadingMore = false;
     },
     async fetchSpace(spaceId: string, networkId: NetworkID) {
-      const uniqueId = `${networkId}:${spaceId}`;
-
       const network = getNetwork(networkId);
 
-      if (this.spacesMap.get(uniqueId)) return;
       const space = await network.api.loadSpace(spaceId);
 
-      if (this.spacesMap.get(uniqueId)) return;
-      this.networksMap[networkId].spaces.push(space);
+      this.networksMap[networkId].spacesMap = {
+        ...this.networksMap[networkId].spacesMap,
+        [spaceId]: space
+      };
     },
     toggleSpaceStar(id: string) {
       if (this.starredSpacesIds.includes(id)) {
