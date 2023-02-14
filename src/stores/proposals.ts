@@ -7,8 +7,8 @@ type SpaceRecord = {
   loading: boolean;
   loadingMore: boolean;
   loaded: boolean;
-  proposalsList: number[];
-  proposalsMap: Record<number, Proposal>;
+  proposalsIdsList: number[];
+  proposals: Record<number, Proposal>;
   hasMoreProposals: boolean;
   summaryLoading: boolean;
   summaryLoaded: boolean;
@@ -30,7 +30,7 @@ export const useProposalsStore = defineStore('proposals', {
         const record = state.proposals[getUniqueSpaceId(spaceId, networkId)];
         if (!record) return [];
 
-        return record.proposalsList.map(proposalId => record.proposalsMap[proposalId]);
+        return record.proposalsIdsList.map(proposalId => record.proposals[proposalId]);
       };
     },
     getProposal: state => {
@@ -38,7 +38,7 @@ export const useProposalsStore = defineStore('proposals', {
         const record = state.proposals[getUniqueSpaceId(spaceId, networkId)];
         if (!record) return undefined;
 
-        return record.proposalsMap[proposalId];
+        return record.proposals[proposalId];
       };
     }
   },
@@ -51,8 +51,8 @@ export const useProposalsStore = defineStore('proposals', {
           loading: false,
           loadingMore: false,
           loaded: false,
-          proposalsList: [],
-          proposalsMap: {},
+          proposalsIdsList: [],
+          proposals: {},
           hasMoreProposals: true,
           summaryLoading: false,
           summaryLoaded: false,
@@ -69,9 +69,9 @@ export const useProposalsStore = defineStore('proposals', {
         limit: PROPOSALS_LIMIT
       });
 
-      record.value.proposalsList = proposals.map(proposal => proposal.proposal_id);
-      record.value.proposalsMap = {
-        ...record.value.proposalsMap,
+      record.value.proposalsIdsList = proposals.map(proposal => proposal.proposal_id);
+      record.value.proposals = {
+        ...record.value.proposals,
         ...Object.fromEntries(proposals.map(proposal => [proposal.proposal_id, proposal]))
       };
       record.value.hasMoreProposals = proposals.length === PROPOSALS_LIMIT;
@@ -86,8 +86,8 @@ export const useProposalsStore = defineStore('proposals', {
           loading: false,
           loadingMore: false,
           loaded: false,
-          proposalsList: [],
-          proposalsMap: {},
+          proposalsIdsList: [],
+          proposals: {},
           hasMoreProposals: true,
           summaryLoading: false,
           summaryLoaded: false,
@@ -102,15 +102,15 @@ export const useProposalsStore = defineStore('proposals', {
 
       const proposals = await getNetwork(networkId).api.loadProposals(spaceId, {
         limit: PROPOSALS_LIMIT,
-        skip: record.value.proposalsList.length
+        skip: record.value.proposalsIdsList.length
       });
 
-      record.value.proposalsList = [
-        ...record.value.proposalsList,
+      record.value.proposalsIdsList = [
+        ...record.value.proposalsIdsList,
         ...proposals.map(proposal => proposal.proposal_id)
       ];
-      record.value.proposalsMap = {
-        ...record.value.proposalsMap,
+      record.value.proposals = {
+        ...record.value.proposals,
         ...Object.fromEntries(proposals.map(proposal => [proposal.proposal_id, proposal]))
       };
 
@@ -125,8 +125,8 @@ export const useProposalsStore = defineStore('proposals', {
           loading: false,
           loadingMore: false,
           loaded: false,
-          proposalsList: [],
-          proposalsMap: {},
+          proposalsIdsList: [],
+          proposals: {},
           hasMoreProposals: true,
           summaryLoading: false,
           summaryLoaded: false,
@@ -155,8 +155,8 @@ export const useProposalsStore = defineStore('proposals', {
           loading: false,
           loadingMore: false,
           loaded: false,
-          proposalsList: [],
-          proposalsMap: {},
+          proposalsIdsList: [],
+          proposals: {},
           hasMoreProposals: true,
           summaryLoading: false,
           summaryLoaded: false,
@@ -168,8 +168,8 @@ export const useProposalsStore = defineStore('proposals', {
 
       const proposal = await getNetwork(networkId).api.loadProposal(spaceId, proposalId);
 
-      record.value.proposalsMap = {
-        ...record.value.proposalsMap,
+      record.value.proposals = {
+        ...record.value.proposals,
         [proposalId]: proposal
       };
     }
