@@ -8,10 +8,7 @@ import { getNetwork } from '@/networks';
 import type { StrategyConfig } from '@/networks/types';
 import type { NetworkID, SpaceSettings } from '@/types';
 
-type PageID = typeof pages[number]['id'];
-type MetadataState = { name: string; about?: string; website?: string };
-
-const pages = [
+const PAGES = [
   {
     id: 'profile',
     title: 'Profile'
@@ -41,6 +38,9 @@ const pages = [
     title: 'Controller'
   }
 ] as const;
+
+type PageID = typeof PAGES[number]['id'];
+type MetadataState = { name: string; about?: string; website?: string };
 
 const router = useRouter();
 const { createSpace } = useActions();
@@ -82,17 +82,17 @@ const controller = ref(web3.value.account);
 
 const selectedNetwork = computed(() => getNetwork(selectedNetworkId.value));
 const accessiblePages = computed(() => {
-  const invalidPageIndex = pages.findIndex(page => !validatePage(page.id));
+  const invalidPageIndex = PAGES.findIndex(page => !validatePage(page.id));
 
   return Object.fromEntries(
-    pages.map((page, i) => [page.id, invalidPageIndex === -1 ? true : i <= invalidPageIndex])
+    PAGES.map((page, i) => [page.id, invalidPageIndex === -1 ? true : i <= invalidPageIndex])
   );
 });
 const showCreate = computed(
-  () => pages.findIndex(page => page.id === currentPage.value) === pages.length - 1
+  () => PAGES.findIndex(page => page.id === currentPage.value) === PAGES.length - 1
 );
 const nextDisabled = computed(() => !validatePage(currentPage.value));
-const submitDisabled = computed(() => pages.some(page => !validatePage(page.id)));
+const submitDisabled = computed(() => PAGES.some(page => !validatePage(page.id)));
 
 function validatePage(page: PageID) {
   if (page === 'strategies') return votingStrategies.value.length > 0;
@@ -107,10 +107,10 @@ function handleErrors(page: PageID, errors: any) {
 }
 
 function handleNextClick() {
-  const currentIndex = pages.findIndex(page => page.id === currentPage.value);
-  if (currentIndex === pages.length - 1) return;
+  const currentIndex = PAGES.findIndex(page => page.id === currentPage.value);
+  if (currentIndex === PAGES.length - 1) return;
 
-  currentPage.value = pages[currentIndex + 1].id;
+  currentPage.value = PAGES[currentIndex + 1].id;
   pagesRefs.value[currentIndex + 1].scrollIntoView();
 }
 
@@ -160,7 +160,7 @@ watch(selectedNetworkId, () => {
         class="flex fixed top-[72px] inset-x-0 p-3 border-b z-10 bg-skin-bg lg:top-auto lg:inset-x-auto lg:p-0 lg:pr-5 lg:border-0 lg:flex-col lg:translate-x-[-100%] gap-1 min-w-[180px] overflow-auto"
       >
         <button
-          v-for="page in pages"
+          v-for="page in PAGES"
           ref="pagesRefs"
           :key="page.id"
           :disabled="!accessiblePages[page.id]"
