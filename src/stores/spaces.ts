@@ -73,13 +73,14 @@ export const useSpacesStore = defineStore('spaces', {
 
       this.networksMap = Object.fromEntries(
         results.map(result => {
+          const spacesIds = result.spaces.map(space => space.id);
+
           return [
             result.id,
             {
-              spacesIdsList: [
-                ...this.networksMap[result.id].spacesIdsList,
-                ...result.spaces.map(space => space.id)
-              ],
+              spacesIdsList: overwrite
+                ? spacesIds
+                : [...this.networksMap[result.id].spacesIdsList, ...spacesIds],
               spaces: {
                 ...this.networksMap[result.id].spaces,
                 ...Object.fromEntries(result.spaces.map(space => [space.id, space]))
