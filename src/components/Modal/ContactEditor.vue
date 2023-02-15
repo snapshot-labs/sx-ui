@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, computed, watch, ref } from 'vue';
+import { reactive, computed, watch } from 'vue';
 import { clone } from '@/helpers/utils';
 import { useContactsStore } from '@/stores/contacts';
 
@@ -26,7 +26,12 @@ const form: {
 
 const addressDuplicated = computed(() => {
   const duplicate = contactsStore.contacts.find(c => c.address === form.address);
-  if (duplicate) return 'Contact already exists';
+  if (duplicate) {
+    if (duplicate.address === props.initialState?.address) {
+      return undefined;
+    }
+    return 'Contact already exists';
+  }
   return undefined;
 });
 
