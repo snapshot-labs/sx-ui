@@ -203,12 +203,12 @@ watch(selectedNetworkId, () => {
           description="Lorem ipsum..."
         />
         <BlockSpaceFormVoting
-          v-if="currentPage === 'voting'"
+          v-else-if="currentPage === 'voting'"
           :form="settingsForm"
           @errors="v => handleErrors('voting', v)"
         />
         <BlockSpaceFormController
-          v-if="currentPage === 'controller'"
+          v-else-if="currentPage === 'controller'"
           v-model="controller"
           @errors="v => handleErrors('controller', v)"
         />
