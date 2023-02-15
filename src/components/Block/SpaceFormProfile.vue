@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { validateForm } from '@/helpers/validation';
 
 const props = defineProps<{
@@ -36,13 +36,9 @@ const definition = {
   }
 };
 
-const formErrors = computed(() => {
-  const errors = validateForm(definition, props.form);
+const formErrors = computed(() => validateForm(definition, props.form));
 
-  emit('errors', errors);
-
-  return errors;
-});
+watch(formErrors, value => emit('errors', value));
 </script>
 
 <template>

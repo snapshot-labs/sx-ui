@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { validateForm } from '@/helpers/validation';
 
 const props = defineProps<{
@@ -18,8 +18,8 @@ const definition = {
   examples: ['0x0000…']
 };
 
-const formErrors = computed(() => {
-  const errors = validateForm(
+const formErrors = computed(() =>
+  validateForm(
     {
       type: 'object',
       title: 'Space',
@@ -32,12 +32,10 @@ const formErrors = computed(() => {
     {
       controller: props.modelValue
     }
-  );
+  )
+);
 
-  emit('errors', errors);
-
-  return errors;
-});
+watch(formErrors, value => emit('errors', value));
 </script>
 
 <template>
