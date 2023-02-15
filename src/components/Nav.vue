@@ -13,7 +13,7 @@ import IHUsers from '~icons/heroicons-outline/users';
 const route = useRoute();
 const uiStore = useUiStore();
 
-const navGroups = {
+const NAVIGATION_CONFIG = {
   space: {
     overview: {
       name: 'Overview',
@@ -39,13 +39,13 @@ const navGroups = {
     }
   }
 };
-const navGroupKey = computed(() => String(route.matched[0]?.name));
-const navGroup = computed(() => navGroups[navGroupKey.value || '']);
+const currentRouteName = computed(() => String(route.matched[0]?.name));
+const navigationItems = computed(() => NAVIGATION_CONFIG[currentRouteName.value || '']);
 </script>
 
 <template>
   <div
-    v-if="navGroup"
+    v-if="navigationItems"
     class="lg:visible fixed w-[240px] border-r left-[72px] top-0 bottom-0 z-10 bg-skin-bg"
     :class="{
       invisible: !uiStore.sidebarOpen
@@ -54,11 +54,11 @@ const navGroup = computed(() => navGroups[navGroupKey.value || '']);
     <div class="h-[72px] border-b" />
     <div class="py-4">
       <router-link
-        v-for="(item, itemKey) in navGroup"
+        v-for="(item, itemKey) in navigationItems"
         :key="itemKey"
-        :to="{ name: `${navGroupKey}-${itemKey}` }"
+        :to="{ name: `${currentRouteName}-${itemKey}` }"
         class="px-4 py-[7px] block space-x-2 text-skin-text flex items-center"
-        :class="route.name === `${navGroupKey}-${itemKey}` && 'text-skin-link'"
+        :class="route.name === `${currentRouteName}-${itemKey}` && 'text-skin-link'"
       >
         <component :is="item.icon" class="inline-block"></component>
         <span v-text="item.name" />
