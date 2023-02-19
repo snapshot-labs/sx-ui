@@ -4,6 +4,8 @@ import draggable from 'vuedraggable';
 import spaceData from '@/helpers/space.json';
 import { Transaction as TransactionType } from '@/types';
 
+type ModalType = 'sendToken' | 'sendNft' | 'contractCall' | 'walletConnect';
+
 const props = defineProps<{ modelValue: TransactionType[] }>();
 
 const emit = defineEmits<{
@@ -19,7 +21,8 @@ const modalState: Ref<{
 const modalOpen = ref({
   sendToken: false,
   sendNft: false,
-  contractCall: false
+  contractCall: false,
+  walletConnect: false
 });
 
 const txs = computed({
@@ -48,7 +51,7 @@ function removeTx(index: number) {
   ]);
 }
 
-function openModal(type: 'sendToken' | 'sendNft' | 'contractCall') {
+function openModal(type: ModalType) {
   editedTx.value = null;
   modalState.value[type] = null;
   modalOpen.value[type] = true;
@@ -56,7 +59,6 @@ function openModal(type: 'sendToken' | 'sendNft' | 'contractCall') {
 
 function editTx(index: number) {
   const tx = props.modelValue[index];
-
   editedTx.value = index;
   modalState.value[tx._type] = tx._form;
   modalOpen.value[tx._type] = true;
@@ -69,25 +71,32 @@ function editTx(index: number) {
         class="mb-3 flex flex-no-wrap overflow-x-scroll no-scrollbar scrolling-touch items-start space-x-3"
       >
         <a
-          class="px-4 py-3 border-b border rounded-lg block min-w-[165px]"
+          class="px-4 py-3 border-b border rounded-lg block min-w-[120px]"
           @click="openModal('sendToken')"
         >
           <IH-stop />
           Send token
         </a>
         <a
-          class="px-4 py-3 border-b border rounded-lg block min-w-[165px]"
+          class="px-4 py-3 border-b border rounded-lg block min-w-[120px]"
           @click="openModal('sendNft')"
         >
           <IH-photograph />
           Send NFT
         </a>
         <a
-          class="px-4 py-3 border-b border rounded-lg block min-w-[165px]"
+          class="px-4 py-3 border-b border rounded-lg block min-w-[120px]"
           @click="openModal('contractCall')"
         >
           <IH-chip />
           Contract call
+        </a>
+        <a
+          class="px-4 py-3 border-b border rounded-lg block min-w-[120px]"
+          @click="openModal('walletConnect')"
+        >
+          <IH-login />
+          Wallet Connect
         </a>
       </div>
     </div>
@@ -137,6 +146,11 @@ function editTx(index: number) {
         :open="modalOpen.contractCall"
         :initial-state="modalState.contractCall"
         @close="modalOpen.contractCall = false"
+        @add="addTx"
+      />
+      <ModalWalletConnect
+        :open="modalOpen.walletConnect"
+        @close="modalOpen.walletConnect = false"
         @add="addTx"
       />
     </teleport>
