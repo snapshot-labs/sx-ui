@@ -33,22 +33,26 @@ async function adaptToContractCallTransactionForm(
     data: callParams.data
   });
 
-  const [functionSignature] =
+  const [functionSignature, functionData] =
     Object.entries(iface.functions).find(([key, value]) => {
       return value.name === methodName && value.inputs.length === functionArgs.length;
     }) || [];
 
-  if (!functionSignature) {
+  if (!functionSignature || !functionData) {
     throw new Error(
       `Could not find matching function for ${methodName} with ${functionArgs.length} arguments`
     );
   }
 
+  const args = functionData.inputs
+    .map(input => input.name)
+    .reduce((acc, name) => ({ ...acc, [name]: functionArgs[name] }), {});
+
   return {
     to: callParams.to,
     abi,
     method: functionSignature,
-    args: functionArgs,
+    args,
     amount: formatUnits(callParams.value || 0)
   };
 }
