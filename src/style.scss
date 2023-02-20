@@ -235,3 +235,17 @@ a,
     @apply focus-within:border-skin-link;
   }
 }
+
+// Styles for get-starknet@v1 to unify overlay and prevent mismatched z-indexes
+.s-overlay {
+  z-index: 40 !important;
+
+  .s-overlay__scrim {
+    opacity: 1 !important;
+    background-color: rgba(0, 0, 0, 0.4) !important;
+  }
+}
+
+.s-dialog {
+  z-index: 41 !important;
+}
