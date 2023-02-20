@@ -155,9 +155,9 @@ watch(selectedNetworkId, () => {
 
 <template>
   <div>
-    <Container class="pt-5">
+    <div class="pt-5 flex max-w-[50rem] mx-auto px-4">
       <div
-        class="flex fixed top-[72px] inset-x-0 p-3 border-b z-10 bg-skin-bg lg:top-auto lg:inset-x-auto lg:p-0 lg:pr-5 lg:border-0 lg:flex-col lg:translate-x-[-100%] gap-1 min-w-[180px] overflow-auto"
+        class="flex fixed lg:sticky top-[72px] inset-x-0 p-3 border-b z-10 bg-skin-bg lg:top-auto lg:inset-x-auto lg:p-0 lg:pr-5 lg:border-0 lg:flex-col gap-1 min-w-[180px] overflow-auto"
       >
         <button
           v-for="page in PAGES"
@@ -174,58 +174,63 @@ watch(selectedNetworkId, () => {
           {{ page.title }}
         </button>
       </div>
-      <div class="mt-8 lg:mt-0">
-        <BlockSpaceFormProfile
-          v-if="currentPage === 'profile'"
-          :form="metadataForm"
-          @errors="v => handleErrors('profile', v)"
-        />
-        <BlockSpaceFormNetwork v-else-if="currentPage === 'network'" v-model="selectedNetworkId" />
-        <BlockSpaceFormStrategies
-          v-else-if="currentPage === 'strategies'"
-          v-model="votingStrategies"
-          :available-strategies="selectedNetwork.constants.EDITOR_VOTING_STRATEGIES"
-          title="Voting strategies"
-          description="Lorem ipsum..."
-        />
-        <BlockSpaceFormStrategies
-          v-else-if="currentPage === 'auths'"
-          v-model="authenticators"
-          :available-strategies="selectedNetwork.constants.EDITOR_AUTHENTICATORS"
-          title="Authenticators"
-          description="Lorem ipsum..."
-        />
-        <BlockSpaceFormStrategies
-          v-else-if="currentPage === 'executions'"
-          v-model="executionStrategies"
-          :available-strategies="selectedNetwork.constants.EDITOR_EXECUTION_STRATEGIES"
-          title="Execution strategies"
-          description="Lorem ipsum..."
-        />
-        <BlockSpaceFormVoting
-          v-else-if="currentPage === 'voting'"
-          :form="settingsForm"
-          @errors="v => handleErrors('voting', v)"
-        />
-        <BlockSpaceFormController
-          v-else-if="currentPage === 'controller'"
-          v-model="controller"
-          @errors="v => handleErrors('controller', v)"
-        />
-      </div>
+      <div class="flex-1">
+        <div class="mt-8 lg:mt-0">
+          <BlockSpaceFormProfile
+            v-if="currentPage === 'profile'"
+            :form="metadataForm"
+            @errors="v => handleErrors('profile', v)"
+          />
+          <BlockSpaceFormNetwork
+            v-else-if="currentPage === 'network'"
+            v-model="selectedNetworkId"
+          />
+          <BlockSpaceFormStrategies
+            v-else-if="currentPage === 'strategies'"
+            v-model="votingStrategies"
+            :available-strategies="selectedNetwork.constants.EDITOR_VOTING_STRATEGIES"
+            title="Voting strategies"
+            description="Lorem ipsum..."
+          />
+          <BlockSpaceFormStrategies
+            v-else-if="currentPage === 'auths'"
+            v-model="authenticators"
+            :available-strategies="selectedNetwork.constants.EDITOR_AUTHENTICATORS"
+            title="Authenticators"
+            description="Lorem ipsum..."
+          />
+          <BlockSpaceFormStrategies
+            v-else-if="currentPage === 'executions'"
+            v-model="executionStrategies"
+            :available-strategies="selectedNetwork.constants.EDITOR_EXECUTION_STRATEGIES"
+            title="Execution strategies"
+            description="Lorem ipsum..."
+          />
+          <BlockSpaceFormVoting
+            v-else-if="currentPage === 'voting'"
+            :form="settingsForm"
+            @errors="v => handleErrors('voting', v)"
+          />
+          <BlockSpaceFormController
+            v-else-if="currentPage === 'controller'"
+            v-model="controller"
+            @errors="v => handleErrors('controller', v)"
+          />
+        </div>
 
-      <UiButton
-        v-if="showCreate"
-        class="w-full"
-        :loading="sending"
-        :disabled="submitDisabled"
-        @click="handleSubmit"
-      >
-        Create
-      </UiButton>
-      <UiButton v-else class="w-full" :disabled="nextDisabled" @click="handleNextClick">
-        Next
-      </UiButton>
-    </Container>
+        <UiButton
+          v-if="showCreate"
+          class="w-full"
+          :loading="sending"
+          :disabled="submitDisabled"
+          @click="handleSubmit"
+        >
+          Create
+        </UiButton>
+        <UiButton v-else class="w-full" :disabled="nextDisabled" @click="handleNextClick">
+          Next
+        </UiButton>
+      </div>
+    </div>
   </div>
 </template>
