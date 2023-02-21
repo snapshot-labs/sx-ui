@@ -6,7 +6,7 @@ import { useWeb3 } from '@/composables/useWeb3';
 import { clone } from '@/helpers/utils';
 import { getNetwork } from '@/networks';
 import type { StrategyConfig } from '@/networks/types';
-import type { NetworkID, SpaceSettings } from '@/types';
+import type { NetworkID, SpaceMetadata, SpaceSettings } from '@/types';
 
 const PAGES = [
   {
@@ -40,7 +40,6 @@ const PAGES = [
 ] as const;
 
 type PageID = typeof PAGES[number]['id'];
-type MetadataState = { name: string; about?: string; website?: string };
 
 const router = useRouter();
 const { createSpace } = useActions();
@@ -58,11 +57,15 @@ const pagesErrors: Ref<Record<PageID, Record<string, string>>> = ref({
   voting: {},
   controller: {}
 });
-const metadataForm: MetadataState = reactive(
+const metadataForm: SpaceMetadata = reactive(
   clone({
     name: '',
-    about: '',
-    website: ''
+    description: '',
+    externalUrl: '',
+    twitterUrl: '',
+    githubUrl: '',
+    discordUrl: '',
+    treasuryAddress: ''
   })
 );
 const selectedNetworkId: Ref<NetworkID> = ref('sn-tn2');
@@ -120,11 +123,7 @@ async function handleSubmit() {
   try {
     const result = await createSpace(
       selectedNetworkId.value,
-      {
-        name: metadataForm.name,
-        description: metadataForm.about || '',
-        external_url: metadataForm.website || ''
-      },
+      metadataForm,
       settingsForm,
       authenticators.value,
       votingStrategies.value,

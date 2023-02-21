@@ -102,7 +102,6 @@ watch(open, (val, prev) => {
     }
 
     .modal-body {
-      max-height: 420px;
       flex: auto;
       text-align: initial;
       overflow-y: auto;

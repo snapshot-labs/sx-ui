@@ -1,10 +1,16 @@
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { computed, watch, onMounted } from 'vue';
 import { validateForm } from '@/helpers/validation';
 
-const props = defineProps<{
-  form: any;
-}>();
+const props = withDefaults(
+  defineProps<{
+    showTitle?: boolean;
+    form: any;
+  }>(),
+  {
+    showTitle: true
+  }
+);
 
 const emit = defineEmits<{
   (e: 'errors', value: any);
@@ -14,7 +20,7 @@ const definition = {
   type: 'object',
   title: 'Space',
   additionalProperties: false,
-  required: ['name'],
+  required: ['name', 'treasuryAddress'],
   properties: {
     name: {
       type: 'string',
@@ -22,16 +28,37 @@ const definition = {
       minLength: 1,
       examples: ['Space name']
     },
-    about: {
+    description: {
       type: 'string',
       format: 'long',
       title: 'About',
       examples: ['Space description']
     },
-    website: {
+    externalUrl: {
       type: 'string',
       title: 'Website',
-      examples: ['Space website URL']
+      examples: ['Website URL']
+    },
+    githubUrl: {
+      type: 'string',
+      title: 'Github',
+      examples: ['Github URL']
+    },
+    twitterUrl: {
+      type: 'string',
+      title: 'Twitter',
+      examples: ['Twitter URL']
+    },
+    discordUrl: {
+      type: 'string',
+      title: 'Discord',
+      examples: ['Discord URL']
+    },
+    treasuryAddress: {
+      type: 'string',
+      minLength: 1,
+      title: 'Treasury address',
+      examples: ['0x0000…']
     }
   }
 };
@@ -39,11 +66,15 @@ const definition = {
 const formErrors = computed(() => validateForm(definition, props.form));
 
 watch(formErrors, value => emit('errors', value));
+
+onMounted(() => {
+  emit('errors', formErrors.value);
+});
 </script>
 
 <template>
-  <h3>Space profile</h3>
-  <div class="s-box pt-4">
+  <h3 v-if="showTitle" class="mb-4">Space profile</h3>
+  <div class="s-box">
     <SIObject :model-value="form" :error="formErrors" :definition="definition" />
   </div>
 </template>
