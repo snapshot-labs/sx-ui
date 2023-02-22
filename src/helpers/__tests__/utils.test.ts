@@ -9,10 +9,10 @@ describe('utils', () => {
         name: 'Test',
         description: 'Test description',
         externalUrl: 'https://test.com',
-        githubUrl: 'https://github.com',
-        twitterUrl: 'https://twitter.com',
-        discordUrl: 'https://discord.com',
-        treasuryAddress: '0x000000000000000000000000000000000000dead'
+        github: 'snapshot-labs',
+        twitter: 'SnapshotLabs',
+        discord: 'snapshot',
+        wallet: 'gor:0x000000000000000000000000000000000000dead'
       });
 
       expect(metadata).toEqual({
@@ -20,10 +20,10 @@ describe('utils', () => {
         description: 'Test description',
         external_url: 'https://test.com',
         properties: {
-          github_url: 'https://github.com',
-          twitter_url: 'https://twitter.com',
-          discord_url: 'https://discord.com',
-          treasury_address: '0x000000000000000000000000000000000000dead'
+          github: 'snapshot-labs',
+          twitter: 'SnapshotLabs',
+          discord: 'snapshot',
+          wallets: ['gor:0x000000000000000000000000000000000000dead']
         }
       });
     });

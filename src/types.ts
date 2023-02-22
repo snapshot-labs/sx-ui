@@ -5,10 +5,10 @@ export type SpaceMetadata = {
   name: string;
   description: string;
   externalUrl: string;
-  twitterUrl: string;
-  githubUrl: string;
-  discordUrl: string;
-  treasuryAddress: string;
+  twitter: string;
+  github: string;
+  discord: string;
+  wallet: string;
 };
 
 export type SpaceSettings = {

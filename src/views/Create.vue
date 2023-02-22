@@ -62,10 +62,10 @@ const metadataForm: SpaceMetadata = reactive(
     name: '',
     description: '',
     externalUrl: '',
-    twitterUrl: '',
-    githubUrl: '',
-    discordUrl: '',
-    treasuryAddress: ''
+    twitter: '',
+    github: '',
+    discord: '',
+    wallet: ''
   })
 );
 const selectedNetworkId: Ref<NetworkID> = ref('sn-tn2');

@@ -8,10 +8,10 @@ const DEFAULT_FORM_STATE: SpaceMetadata = {
   name: '',
   description: '',
   externalUrl: '',
-  twitterUrl: '',
-  githubUrl: '',
-  discordUrl: '',
-  treasuryAddress: ''
+  twitter: '',
+  github: '',
+  discord: '',
+  wallet: ''
 };
 
 const props = defineProps<{
@@ -42,10 +42,10 @@ onMounted(() => {
   form.name = props.space.name;
   form.description = props.space.about || '';
   form.externalUrl = '';
-  form.githubUrl = '';
-  form.discordUrl = '';
-  form.twitterUrl = '';
-  form.treasuryAddress = '';
+  form.github = '';
+  form.discord = '';
+  form.twitter = '';
+  form.wallet = '';
 });
 </script>
 

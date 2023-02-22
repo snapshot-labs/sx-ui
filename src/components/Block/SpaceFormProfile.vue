@@ -20,7 +20,7 @@ const definition = {
   type: 'object',
   title: 'Space',
   additionalProperties: false,
-  required: ['name', 'treasuryAddress'],
+  required: ['name', 'wallet'],
   properties: {
     name: {
       type: 'string',
@@ -39,26 +39,26 @@ const definition = {
       title: 'Website',
       examples: ['Website URL']
     },
-    githubUrl: {
+    github: {
       type: 'string',
-      title: 'Github',
-      examples: ['Github URL']
+      title: 'GitHub',
+      examples: ['GitHub handle']
     },
-    twitterUrl: {
+    twitter: {
       type: 'string',
       title: 'Twitter',
-      examples: ['Twitter URL']
+      examples: ['Twitter handle']
     },
-    discordUrl: {
+    discord: {
       type: 'string',
       title: 'Discord',
-      examples: ['Discord URL']
+      examples: ['Discord handle']
     },
-    treasuryAddress: {
+    wallet: {
       type: 'string',
       minLength: 1,
       title: 'Treasury address',
-      examples: ['0x0000…']
+      examples: ['gor:0x0000…']
     }
   }
 };

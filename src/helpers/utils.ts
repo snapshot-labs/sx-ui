@@ -180,10 +180,10 @@ export function createErc1155Metadata(metadata: SpaceMetadata) {
     description: metadata.description,
     external_url: metadata.externalUrl,
     properties: {
-      twitter_url: metadata.twitterUrl,
-      github_url: metadata.githubUrl,
-      discord_url: metadata.discordUrl,
-      treasury_address: metadata.treasuryAddress
+      github: metadata.github,
+      twitter: metadata.twitter,
+      discord: metadata.discord,
+      wallets: [metadata.wallet]
     }
   };
 }
