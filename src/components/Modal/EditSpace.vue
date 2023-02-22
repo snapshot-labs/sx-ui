@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, watch } from 'vue';
 import { useActions } from '@/composables/useActions';
 import { clone } from '@/helpers/utils';
 import type { Space, SpaceMetadata } from '@/types';
@@ -24,9 +24,16 @@ const emit = defineEmits(['add', 'close']);
 
 const { updateMetadata } = useActions();
 
+const showPicker = ref(false);
+const searchValue = ref('');
 const sending = ref(false);
 const formErrors = ref({} as Record<string, string>);
 const form: SpaceMetadata = reactive(clone(DEFAULT_FORM_STATE));
+
+function handlePickerSelect(value: string) {
+  showPicker.value = false;
+  form.walletAddress = value;
+}
 
 async function handleSubmit() {
   sending.value = true;
@@ -39,27 +46,59 @@ async function handleSubmit() {
   }
 }
 
-onMounted(() => {
-  form.name = props.space.name;
-  form.description = props.space.about || '';
-  form.externalUrl = '';
-  form.github = '';
-  form.discord = '';
-  form.twitter = '';
-  form.walletNetwork = 'gor';
-  form.walletAddress = '';
-});
+watch(
+  () => props.open,
+  () => {
+    showPicker.value = false;
+
+    form.name = props.space.name;
+    form.description = props.space.about || '';
+    form.externalUrl = '';
+    form.github = '';
+    form.discord = '';
+    form.twitter = '';
+    form.walletNetwork = 'gor';
+    form.walletAddress = '';
+  }
+);
 </script>
 
 <template>
   <UiModal :open="open" @close="$emit('close')">
     <template #header>
-      <h3>Edit profile</h3>
+      <h3 v-if="!showPicker">Edit profile</h3>
+      <template v-else>
+        <h3>Select contact</h3>
+        <a class="absolute left-0 -top-1 p-4 text-color" @click="showPicker = false">
+          <IH-arrow-narrow-left class="mr-2" />
+        </a>
+        <div class="flex items-center border-t px-2 py-3 mt-3 -mb-3">
+          <IH-search class="mx-2" />
+          <input
+            ref="searchInput"
+            v-model="searchValue"
+            type="text"
+            placeholder="Search"
+            class="flex-auto bg-transparent text-skin-link"
+          />
+        </div>
+      </template>
     </template>
-    <div class="p-4">
-      <BlockSpaceFormProfile :show-title="false" :form="form" @errors="v => (formErrors = v)" />
+    <BlockContactPicker
+      v-if="showPicker"
+      :loading="false"
+      :search-value="searchValue"
+      @pick="handlePickerSelect"
+    />
+    <div v-else class="p-4">
+      <BlockSpaceFormProfile
+        :show-title="false"
+        :form="form"
+        @pick="showPicker = true"
+        @errors="v => (formErrors = v)"
+      />
     </div>
-    <template #footer>
+    <template v-if="!showPicker" #footer>
       <UiButton
         class="w-full"
         :loading="sending"

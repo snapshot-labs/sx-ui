@@ -15,6 +15,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   (e: 'errors', value: any);
+  (e: 'pick', field: any);
 }>();
 
 const definition = {
@@ -62,7 +63,7 @@ const definition = {
     },
     walletAddress: {
       type: 'string',
-      minLength: 1,
+      format: 'address',
       title: 'Treasury address',
       examples: ['0x0000…']
     }
@@ -81,6 +82,11 @@ onMounted(() => {
 <template>
   <h3 v-if="showTitle" class="mb-4">Space profile</h3>
   <div class="s-box">
-    <SIObject :model-value="form" :error="formErrors" :definition="definition" />
+    <SIObject
+      :model-value="form"
+      :error="formErrors"
+      :definition="definition"
+      @pick="field => emit('pick', field)"
+    />
   </div>
 </template>
