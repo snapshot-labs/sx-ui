@@ -11,7 +11,8 @@ const DEFAULT_FORM_STATE: SpaceMetadata = {
   twitter: '',
   github: '',
   discord: '',
-  wallet: ''
+  walletNetwork: 'gor',
+  walletAddress: ''
 };
 
 const props = defineProps<{
@@ -45,7 +46,8 @@ onMounted(() => {
   form.github = '';
   form.discord = '';
   form.twitter = '';
-  form.wallet = '';
+  form.walletNetwork = 'gor';
+  form.walletAddress = '';
 });
 </script>
 

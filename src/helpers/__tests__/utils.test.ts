@@ -12,7 +12,8 @@ describe('utils', () => {
         github: 'snapshot-labs',
         twitter: 'SnapshotLabs',
         discord: 'snapshot',
-        wallet: 'gor:0x000000000000000000000000000000000000dead'
+        walletNetwork: 'gor',
+        walletAddress: '0x000000000000000000000000000000000000dead'
       });
 
       expect(metadata).toEqual({

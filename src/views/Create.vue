@@ -65,7 +65,8 @@ const metadataForm: SpaceMetadata = reactive(
     twitter: '',
     github: '',
     discord: '',
-    wallet: ''
+    walletNetwork: 'gor',
+    walletAddress: ''
   })
 );
 const selectedNetworkId: Ref<NetworkID> = ref('sn-tn2');

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, watch, onMounted } from 'vue';
 import { validateForm } from '@/helpers/validation';
+import { enabledNetworks } from '@/networks';
 
 const props = withDefaults(
   defineProps<{
@@ -20,7 +21,7 @@ const definition = {
   type: 'object',
   title: 'Space',
   additionalProperties: false,
-  required: ['name', 'wallet'],
+  required: ['name', 'walletNetwork', 'walletAddress'],
   properties: {
     name: {
       type: 'string',
@@ -54,11 +55,16 @@ const definition = {
       title: 'Discord',
       examples: ['Discord handle']
     },
-    wallet: {
+    walletNetwork: {
+      type: 'string',
+      enum: enabledNetworks,
+      title: 'Treasury network'
+    },
+    walletAddress: {
       type: 'string',
       minLength: 1,
       title: 'Treasury address',
-      examples: ['gor:0x0000…']
+      examples: ['0x0000…']
     }
   }
 };

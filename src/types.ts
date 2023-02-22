@@ -8,7 +8,8 @@ export type SpaceMetadata = {
   twitter: string;
   github: string;
   discord: string;
-  wallet: string;
+  walletNetwork: NetworkID;
+  walletAddress: string;
 };
 
 export type SpaceSettings = {

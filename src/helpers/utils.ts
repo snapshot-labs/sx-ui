@@ -183,7 +183,7 @@ export function createErc1155Metadata(metadata: SpaceMetadata) {
       github: metadata.github,
       twitter: metadata.twitter,
       discord: metadata.discord,
-      wallets: [metadata.wallet]
+      wallets: [`${metadata.walletNetwork}:${metadata.walletAddress}`]
     }
   };
 }
