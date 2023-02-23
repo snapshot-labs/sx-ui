@@ -2,7 +2,7 @@
 import { ref, reactive, watch } from 'vue';
 import { useActions } from '@/composables/useActions';
 import { clone } from '@/helpers/utils';
-import type { Space, SpaceMetadata } from '@/types';
+import type { Space, SpaceMetadata, NetworkID } from '@/types';
 
 const DEFAULT_FORM_STATE: SpaceMetadata = {
   name: '',
@@ -53,12 +53,14 @@ watch(
 
     form.name = props.space.name;
     form.description = props.space.about || '';
-    form.externalUrl = '';
-    form.github = '';
-    form.discord = '';
-    form.twitter = '';
-    form.walletNetwork = 'gor';
-    form.walletAddress = '';
+    form.externalUrl = props.space.external_url;
+    form.github = props.space.github;
+    form.discord = props.space.discord;
+    form.twitter = props.space.twitter;
+
+    const [walletNetwork, walletAddress] = props.space.wallet.split(':');
+    form.walletNetwork = walletNetwork as NetworkID;
+    form.walletAddress = walletAddress;
   }
 );
 </script>

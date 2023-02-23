@@ -25,6 +25,11 @@ export type Space = {
   network: NetworkID;
   name: string;
   about?: string;
+  external_url: string;
+  twitter: string;
+  github: string;
+  discord: string;
+  wallet: string;
   controller: string;
   voting_delay: number;
   min_voting_period: number;
