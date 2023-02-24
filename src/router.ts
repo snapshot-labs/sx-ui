@@ -11,6 +11,7 @@ import User from '@/views/User.vue';
 import Create from '@/views/Create.vue';
 import Settings from '@/views/Settings.vue';
 import Contacts from '@/views/Settings/Contacts.vue';
+import Explore from '@/views/Explore.vue';
 
 const routes: any[] = [
   { path: '/', name: 'home', component: Home },
@@ -41,7 +42,8 @@ const routes: any[] = [
       { path: '', redirect: '/settings/contacts' },
       { path: 'contacts', name: 'settings-contacts', component: Contacts }
     ]
-  }
+  },
+  { path: '/explore', name: 'explore', component: Explore }
 ];
 
 const router = createRouter({
