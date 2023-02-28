@@ -45,6 +45,8 @@ export function createActions(chainId: number): NetworkActions {
         metadataUri: string;
       }
     ) {
+      await verifyNetwork(web3, chainId);
+
       const response = await client.deploySpace({
         signer: web3.getSigner(),
         ...params,
