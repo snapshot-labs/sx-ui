@@ -10,8 +10,7 @@ type FormState = { name: string; about?: string; website?: string; avatar?: stri
 const DEFAULT_FORM_STATE: FormState = {
   name: '',
   about: '',
-  website: '',
-  avatar: ''
+  website: ''
 };
 
 const definition = {
@@ -36,11 +35,6 @@ const definition = {
       type: 'string',
       title: 'Website',
       examples: ['Space website URL']
-    },
-    avatar: {
-      type: 'string',
-      title: 'Avatar',
-      examples: ['Space avatar URL']
     }
   }
 };
@@ -56,6 +50,7 @@ const { updateMetadata } = useActions();
 
 const sending = ref(false);
 const form: FormState = reactive(clone(DEFAULT_FORM_STATE));
+const avatar = ref('');
 
 const formErrors = computed(() => validateForm(definition, form));
 
@@ -67,7 +62,7 @@ async function handleSubmit() {
       name: form.name,
       description: form.about || '',
       external_url: form.website || '',
-      avatar: form.avatar || ''
+      avatar: avatar.value || ''
     });
     emit('close');
   } finally {
@@ -79,7 +74,7 @@ onMounted(() => {
   form.name = props.space.name;
   form.about = props.space.about || '';
   form.website = '';
-  form.avatar = '';
+  avatar.value = '';
 });
 </script>
 
@@ -91,7 +86,7 @@ onMounted(() => {
     <div class="relative bg-skin-border h-[100px] -mb-[50px]" />
     <SIUploadImage
       class="relative h-[80px] ml-4 group max-w-max cursor-pointer"
-      @image-uploaded="url => (form.avatar = url)"
+      @image-uploaded="url => (avatar = url)"
     >
       <template #avatar="{ uploading, previewUrl }">
         <Stamp
@@ -105,13 +100,13 @@ onMounted(() => {
         <div
           class="pointer-events-none absolute group-hover:visible inset-0 z-10 flex flex-row w-full h-full items-center content-center justify-center"
         >
-          <IH-pencil v-if="!uploading" class="text-skin-link" />
+          <IH-pencil v-if="!uploading" class="invisible text-skin-link group-hover:visible" />
           <UiLoading v-if="uploading" class="block bg-green z-5" />
-          <img v-if="previewUrl" :src="previewUrl" class="absolute w-full h-full z-3" />
+          <img v-if="previewUrl" :src="previewUrl" class="absolute w-full h-full z-3 !rounded-lg" />
         </div>
       </template>
     </SIUploadImage>
-    <div class="s-box p-4">
+    <div class="s-box px-4 pb-4 pt-3">
       <SIObject v-model="form" :error="formErrors" :definition="definition" />
     </div>
     <template #footer>
