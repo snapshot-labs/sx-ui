@@ -1163,10 +1163,10 @@
     json-to-graphql-query "^2.2.4"
     lodash.set "^4.3.2"
 
-"@snapshot-labs/sx@^0.1.0-beta.22":
-  version "0.1.0-beta.22"
-  resolved "https://registry.yarnpkg.com/@snapshot-labs/sx/-/sx-0.1.0-beta.22.tgz#95e6f5717f2f1835cb2866d289ca6db571ae27bb"
-  integrity sha512-nw+YaeXxsGyepH3P+jNC0+uNVxH2DrRSf0T+2pbexa5YvHA2+MIXRAEUkRDxboyrfYE7h3I8CUD0WMIEzaTYOw==
+"@snapshot-labs/sx@^0.1.0-beta.23":
+  version "0.1.0-beta.23"
+  resolved "https://registry.yarnpkg.com/@snapshot-labs/sx/-/sx-0.1.0-beta.23.tgz#8c1c9c2b917cf0b49aeffa9d7d185aa6a7373de0"
+  integrity sha512-ZEbAVBs3SUoqWCdsS5TGYbkT5xSc0x1mFtx5fft1sVBCv9I5pnWhg3qJVjOtv615fAKURtNjtdZL/PifkFqCSQ==
   dependencies:
     "@ethereumjs/block" "^3.6.3"
     "@ethereumjs/common" "^2.6.5"
