@@ -45,6 +45,11 @@ export const EDITOR_AUTHENTICATORS = [
     address: '0xcc3fb327de5428d182ba2e739aea5978c0e2ce35',
     name: 'Ethereum transaction',
     paramsDefinition: null
+  },
+  {
+    address: '0x277f388b77cd36fff1c0e976c49a7c54413a449a',
+    name: 'Ethereum signnature',
+    paramsDefinition: null
   }
 ];
 
