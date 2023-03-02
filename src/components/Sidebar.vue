@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { useSpacesStore } from '@/stores/spaces';
-import { onMounted } from 'vue';
 import draggable from 'vuedraggable';
 
 const spacesStore = useSpacesStore();
-
-onMounted(() => spacesStore.fetch());
 </script>
 
 <template>
@@ -13,9 +10,7 @@ onMounted(() => spacesStore.fetch());
     <router-link :to="{ name: 'home' }" class="h-[72px] block">
       <IH-stop class="inline-block my-4 w-[32px] h-[32px] text-skin-link" />
     </router-link>
-    <UiLoading v-if="!spacesStore.loaded" class="py-2 block" />
     <draggable
-      v-else
       v-model="spacesStore.starredSpacesIds"
       :delay="100"
       :delay-on-touch-only="true"
