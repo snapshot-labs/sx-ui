@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router';
 import { useUiStore } from '@/stores/ui';
 
 // TODO: need to import all icons https://github.com/antfu/unplugin-icons/issues/5
+// move to this when stable to avoid imports https://www.npmjs.com/package/@iconify/tailwind
 import IHGlobeAlt from '~icons/heroicons-outline/cash';
 import IHNewspaper from '~icons/heroicons-outline/newspaper';
 import IHCash from '~icons/heroicons-outline/cash';
@@ -54,11 +55,11 @@ const navigationItems = computed(() => NAVIGATION_CONFIG[currentRouteName.value 
     <div class="h-[72px] border-b" />
     <div class="py-4">
       <router-link
-        v-for="(item, itemKey) in navigationItems"
-        :key="itemKey"
-        :to="{ name: `${currentRouteName}-${itemKey}` }"
+        v-for="(item, key) in navigationItems"
+        :key="key"
+        :to="{ name: `${currentRouteName}-${key}` }"
         class="px-4 py-[7px] block space-x-2 text-skin-text flex items-center"
-        :class="route.name === `${currentRouteName}-${itemKey}` && 'text-skin-link'"
+        :class="route.name === `${currentRouteName}-${key}` && 'text-skin-link'"
       >
         <component :is="item.icon" class="inline-block"></component>
         <span v-text="item.name" />

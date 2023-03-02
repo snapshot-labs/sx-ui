@@ -20,7 +20,6 @@ export default defineConfig({
   plugins: [
     vue({ reactivityTransform: true }),
     Components({
-      dts: true,
       directoryAsNamespace: true,
       resolvers: [
         IconsResolver({
