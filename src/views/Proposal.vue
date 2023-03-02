@@ -113,6 +113,9 @@ watch([() => web3.value.account, proposal], () => getVotingPower());
             <UiButton
               v-if="web3.account && web3.type !== 'argentx'"
               :loading="loadingVotingPower"
+              :class="{
+                '!px-0 w-[46px]': loadingVotingPower
+              }"
               class="mr-2"
             >
               <IH-lightning-bolt class="inline-block" />

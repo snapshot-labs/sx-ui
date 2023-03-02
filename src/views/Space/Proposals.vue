@@ -69,7 +69,13 @@ watch(
     <div class="flex">
       <div class="flex-auto" />
       <div class="p-4 space-x-2">
-        <UiButton v-if="web3.account && web3.type !== 'argentx'" :loading="loadingVotingPower">
+        <UiButton
+          v-if="web3.account && web3.type !== 'argentx'"
+          :loading="loadingVotingPower"
+          :class="{
+            '!px-0 w-[46px]': loadingVotingPower
+          }"
+        >
           <IH-lightning-bolt class="inline-block" />
           <span class="ml-1">{{ _n(votingPower, 'compact') }}</span>
         </UiButton>
