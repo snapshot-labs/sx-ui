@@ -9,25 +9,11 @@ import Treasury from '@/views/Space/Treasury.vue';
 import Proposal from '@/views/Proposal.vue';
 import User from '@/views/User.vue';
 import Create from '@/views/Create.vue';
-
-import { isAddress } from '@ethersproject/address';
-import { getNetwork } from '@/networks';
-
-const validateIdGuard = (to, from, next) => {
-  try {
-    const id = to.params.id;
-    const [networkId, spaceId] = id.split(':');
-    console.log(':beforeEnter,', networkId, spaceId);
-    getNetwork(networkId);
-    if (!isAddress(spaceId)) return next('/');
-    return next();
-  } catch (error) {
-    return next('/');
-  }
-};
+import Explore from '@/views/Explore.vue';
 
 const routes: any[] = [
   { path: '/', name: 'home', component: Home },
+  { path: '/explore', name: 'explore', component: Explore },
   { path: '/create', name: 'create', component: Create },
   {
     path: '/:id',
@@ -40,14 +26,12 @@ const routes: any[] = [
       { path: 'treasury', name: 'treasury', component: Treasury },
       { path: 'create/:key?', name: 'editor', component: Editor },
       { path: 'proposal/:pid', name: 'proposal', component: Proposal }
-    ],
-    beforeEnter: validateIdGuard
+    ]
   },
   {
     path: '/profile/:id',
     name: 'user',
-    component: User,
-    beforeEnter: validateIdGuard
+    component: User
   },
   {
     path: '/:pathMatch(.*)*',
