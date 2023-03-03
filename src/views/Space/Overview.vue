@@ -2,7 +2,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { useSpacesStore } from '@/stores/spaces';
 import { useProposalsStore } from '@/stores/proposals';
-import { _n } from '@/helpers/utils';
+import { _n, compareAddresses } from '@/helpers/utils';
 import { useWeb3 } from '@/composables/useWeb3';
 import { Space, Proposal as ProposalType } from '@/types';
 
@@ -22,7 +22,9 @@ onMounted(() => {
 const spaceIdComposite = `${props.space.network}:${props.space.id}`;
 
 const spaceStarred = computed(() => spacesStore.starredSpacesIds.includes(spaceIdComposite));
-const spaceIsEditable = computed(() => props.space.controller === web3.value.account);
+const spaceIsEditable = computed(() =>
+  compareAddresses(props.space.controller, web3.value.account)
+);
 
 const proposalsRecord = computed(() => proposalsStore.proposals[spaceIdComposite]);
 
