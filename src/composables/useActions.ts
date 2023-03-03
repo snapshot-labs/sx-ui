@@ -3,6 +3,7 @@ import { getNetwork } from '@/networks';
 import { useUiStore } from '@/stores/ui';
 import { useWeb3 } from '@/composables/useWeb3';
 import { useModal } from '@/composables/useModal';
+import { createErc1155Metadata } from '@/helpers/utils';
 import type {
   Transaction,
   Proposal,
@@ -59,7 +60,7 @@ export function useActions() {
       throw new Error(`${web3.value.type} is not supported for this actions`);
     }
 
-    const pinned = await network.helpers.pin(metadata);
+    const pinned = await network.helpers.pin(createErc1155Metadata(metadata));
 
     const receipt = await network.actions.createSpace(auth.web3, {
       controller: web3.value.account,
@@ -67,7 +68,7 @@ export function useActions() {
       minVotingDuration: settings.minVotingDuration,
       maxVotingDuration: settings.maxVotingDuration,
       proposalThreshold: BigInt(settings.proposalThreshold),
-      qorum: BigInt(settings.quorum),
+      quorum: BigInt(settings.quorum),
       authenticators: authenticators.map(config => config.address),
       votingStrategies: votingStrategies.map(config => config.address),
       votingStrategiesParams: votingStrategies.map(config =>
@@ -82,6 +83,8 @@ export function useActions() {
       network.hasRelayer ? receipt.transaction_hash : receipt.hash,
       networkId
     );
+
+    return true;
   }
 
   async function updateMetadata(space: Space, metadata: SpaceMetadata) {
@@ -92,7 +95,7 @@ export function useActions() {
       throw new Error(`${web3.value.type} is not supported for this actions`);
     }
 
-    const pinned = await network.helpers.pin(metadata);
+    const pinned = await network.helpers.pin(createErc1155Metadata(metadata));
 
     const receipt = await network.actions.setMetadataUri(
       auth.web3,
@@ -126,7 +129,10 @@ export function useActions() {
     discussion: string,
     execution: Transaction[]
   ) {
-    if (!web3.value.account) return await forceLogin();
+    if (!web3.value.account) {
+      forceLogin();
+      return false;
+    }
     if (web3.value.type === 'argentx') throw new Error('ArgentX is not supported');
 
     const network = getNetwork(space.network);
@@ -143,13 +149,15 @@ export function useActions() {
       discussion,
       execution: transactions
     });
-    if (!pinned || !pinned.cid) return;
+    if (!pinned || !pinned.cid) return false;
     console.log('IPFS', pinned);
 
     await wrapPromise(
       space.network,
       network.actions.propose(auth.web3, web3.value.account, space, pinned.cid, transactions)
     );
+
+    return true;
   }
 
   async function finalizeProposal(proposal: Proposal) {
