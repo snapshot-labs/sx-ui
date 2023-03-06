@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import { useActions } from '@/composables/useActions';
 import { useWeb3 } from '@/composables/useWeb3';
 import { clone } from '@/helpers/utils';
-import { getNetwork } from '@/networks';
+import { getNetwork, evmNetworks } from '@/networks';
 import type { StrategyConfig } from '@/networks/types';
 import type { NetworkID, SpaceMetadata, SpaceSettings } from '@/types';
 
@@ -81,7 +81,9 @@ const settingsForm: SpaceSettings = reactive(
     minVotingDuration: 0,
     maxVotingDuration: 86400,
     proposalThreshold: '1',
-    quorum: '1'
+    ...(!evmNetworks.includes(selectedNetworkId.value) && {
+      quorum: '1'
+    })
   })
 );
 const controller = ref(web3.value.account);
