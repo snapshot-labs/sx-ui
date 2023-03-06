@@ -22,7 +22,7 @@ const definition = {
     'minVotingDuration',
     'maxVotingDuration',
     'proposalThreshold',
-    'quorum'
+    ...(!evmNetworks.includes(props.selectedNetworkId) ? ['quorum'] : [])
   ],
   properties: {
     votingDelay: {
