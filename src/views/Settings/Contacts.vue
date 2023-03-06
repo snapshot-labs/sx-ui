@@ -66,7 +66,7 @@ function handleContactEdit(contact) {
     </div>
   </div>
   <teleport to="#modal">
-    <ModalContactEditor
+    <ModalEditContact
       :open="modalOpen.editContact"
       :initial-state="modalState.editContact"
       @close="modalOpen.editContact = false"

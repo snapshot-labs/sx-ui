@@ -2,6 +2,7 @@
 import { reactive, computed, watch } from 'vue';
 import { clone } from '@/helpers/utils';
 import { useContactsStore } from '@/stores/contacts';
+import { validateForm } from '@/helpers/validation';
 
 const DEFAULT_FORM_STATE = {
   name: '',
@@ -19,6 +20,25 @@ const emit = defineEmits<{
 
 const contactsStore = useContactsStore();
 
+const definition = {
+  type: 'object',
+  title: 'Contact',
+  additionalProperties: false,
+  required: ['name', 'address'],
+  properties: {
+    name: {
+      type: 'string',
+      title: 'Name',
+      minLength: 1
+    },
+    address: {
+      type: 'string',
+      title: 'Address',
+      examples: ['Address or ENS']
+    }
+  }
+};
+
 const form: {
   name: string;
   address: string;
@@ -28,16 +48,18 @@ const addressDuplicated = computed(() => {
   const duplicate = contactsStore.contacts.find(c => c.address === form.address);
   if (duplicate) {
     if (duplicate.address === props.initialState?.address) {
-      return undefined;
+      return false;
     }
-    return 'Contact already exists';
+    return true;
   }
-  return undefined;
+  return false;
 });
 
-const formValid = computed(
-  () => form.name !== '' && form.address !== '' && !addressDuplicated.value
-);
+const formErrors = computed(() => {
+  const errors = validateForm(definition, form);
+  if (addressDuplicated.value) errors.address = 'Address duplicated';
+  return errors;
+});
 
 function handleSubmit() {
   contactsStore.saveContact(clone(form));
@@ -64,25 +86,12 @@ watch(
       <h3 v-text="initialState?.address ? 'Edit contact' : 'Add contact'" />
     </template>
     <div class="s-box p-4">
-      <SIString
-        v-model="form.name"
-        :definition="{
-          type: 'string',
-          title: 'Name'
-        }"
-      />
-      <SIString
-        v-model="form.address"
-        :error="addressDuplicated"
-        :definition="{
-          type: 'string',
-          title: 'Address',
-          examples: ['Address or ENS']
-        }"
-      />
+      <SIObject :model-value="form" :error="formErrors" :definition="definition" />
     </div>
     <template #footer>
-      <UiButton class="w-full" :disabled="!formValid" @click="handleSubmit"> Confirm </UiButton>
+      <UiButton class="w-full" :disabled="Object.keys(formErrors).length > 0" @click="handleSubmit">
+        Confirm
+      </UiButton>
     </template>
   </UiModal>
 </template>
