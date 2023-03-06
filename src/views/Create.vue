@@ -217,6 +217,7 @@ watch(selectedNetworkId, () => {
           <BlockSpaceFormVoting
             v-else-if="currentPage === 'voting'"
             :form="settingsForm"
+            :selected-network-id="selectedNetworkId"
             @errors="v => handleErrors('voting', v)"
           />
           <BlockSpaceFormController
