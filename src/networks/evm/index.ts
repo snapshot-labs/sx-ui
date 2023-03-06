@@ -17,7 +17,7 @@ export function createEvmNetwork(networkId: NetworkID): Network {
     hasRelayer: true,
     hasReceive: false,
     managerConnectors: ['injected', 'walletconnect', 'walletlink', 'portis', 'gnosis'],
-    actions: createActions(chainId),
+    actions: createActions(provider, chainId),
     api: createApi(constants.API_URL, networkId),
     constants,
     helpers: {

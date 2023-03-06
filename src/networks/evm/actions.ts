@@ -1,3 +1,4 @@
+import { Provider } from '@ethersproject/providers';
 import { clients, getExecutionData, getEvmStrategy, evmGoerli } from '@snapshot-labs/sx';
 import { SUPPORTED_AUTHENTICATORS, SUPPORTED_STRATEGIES } from './constants';
 import { verifyNetwork } from '@/helpers/utils';
@@ -63,7 +64,7 @@ function pickAuthenticatorAndStrategies(authenticators: string[], strategies: st
   return { authenticator, strategies: selectedStrategies };
 }
 
-export function createActions(chainId: number): NetworkActions {
+export function createActions(provider: Provider, chainId: number): NetworkActions {
   const manaUrl: string = import.meta.env.VITE_MANA_URL || 'http://localhost:3000';
 
   const client = new clients.EvmEthereumTx();
@@ -206,7 +207,6 @@ export function createActions(chainId: number): NetworkActions {
     },
     send: (envelope: any) => ethSigClient.send(envelope),
     getVotingPower: async (
-      web3: Web3Provider,
       strategiesAddresses: string[],
       strategiesParams: any[],
       voterAddress: string,
@@ -222,7 +222,7 @@ export function createActions(chainId: number): NetworkActions {
             voterAddress,
             Math.floor(timestamp / 1000), // TODO: unify
             strategiesParams[i],
-            web3
+            provider
           );
         })
       );

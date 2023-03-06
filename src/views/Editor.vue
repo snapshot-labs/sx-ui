@@ -69,7 +69,6 @@ async function getVotingPower() {
     const network = getNetwork(space.value.network);
 
     const currentVotingPower = await network.actions.getVotingPower(
-      auth.web3,
       space.value.strategies,
       space.value.strategies_params,
       web3.value.account,
