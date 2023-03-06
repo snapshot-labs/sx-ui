@@ -1,22 +1,21 @@
-import { clients as Clients, getExecutionData, defaultNetwork, clients } from '@snapshot-labs/sx';
+import {
+  clients as Clients,
+  getExecutionData,
+  defaultNetwork,
+  clients,
+  getStarknetStrategy
+} from '@snapshot-labs/sx';
 import { SUPPORTED_AUTHENTICATORS, SUPPORTED_EXECUTORS, SUPPORTED_STRATEGIES } from './constants';
 import { verifyNetwork } from '@/helpers/utils';
+import { convertToMetaTransactions } from '@/helpers/transactions';
 import type { Provider } from 'starknet';
 import type { Web3Provider } from '@ethersproject/providers';
 import type { MetaTransaction } from '@snapshot-labs/sx/dist/utils/encoding/execution-hash';
-import type { NetworkActions } from '@/networks/types';
-import type { Space, Proposal, Transaction } from '@/types';
+import type { NetworkActions, StrategyConfig } from '@/networks/types';
+import type { Space, Proposal } from '@/types';
 
 const VANILLA_EXECUTOR = '0x4ecc83848a519cc22b0d0ffb70e65ec8dde85d3d13439eff7145d4063cf6b4d';
 const ZODIAC_EXECUTOR = '0x21dda40770f4317582251cffd5a0202d6b223dc167e5c8db25dc887d11eba81';
-
-function convertToMetaTransactions(transactions: Transaction[]): MetaTransaction[] {
-  return transactions.map((tx: Transaction) => ({
-    ...tx,
-    nonce: 0,
-    operation: 0
-  }));
-}
 
 function buildExecution(space: Space, transactions: MetaTransaction[]) {
   if (space.executors.find(executor => executor === ZODIAC_EXECUTOR)) {
@@ -61,11 +60,13 @@ export function createActions(
   const manaUrl: string = import.meta.env.VITE_MANA_URL || 'http://localhost:3000';
   const ethUrl: string = import.meta.env.VITE_ETH_RPC_URL;
 
-  const client = new Clients.EthereumSig({
+  const clientConfig = {
     starkProvider,
     manaUrl,
     ethUrl
-  });
+  };
+
+  const client = new Clients.EthereumSig(clientConfig);
 
   return {
     async createSpace(
@@ -80,7 +81,7 @@ export function createActions(
         authenticators: string[];
         votingStrategies: string[];
         votingStrategiesParams: string[][];
-        executionStrategies: string[];
+        executionStrategies: StrategyConfig[];
         metadataUri: string;
       }
     ) {
@@ -90,7 +91,10 @@ export function createActions(
         disableEstimation: true
       });
 
-      return spaceManager.deploySpace(params);
+      return spaceManager.deploySpace({
+        ...params,
+        executionStrategies: params.executionStrategies.map(strategy => strategy.address)
+      });
     },
     setMetadataUri: async (web3: any, spaceId: string, metadataUri: string) => {
       const spaceManager = new clients.SpaceManager({
@@ -189,6 +193,38 @@ export function createActions(
         executor,
         convertToMetaTransactions(proposal.execution)
       );
+    },
+    getVotingPower: async (
+      web3: Web3Provider,
+      strategiesAddresses: string[],
+      strategiesParams: any[],
+      voterAddress: string,
+      timestamp: number
+    ): Promise<bigint> => {
+      const offsetsLength = parseInt(strategiesParams[0], 16);
+      const offsets = strategiesParams
+        .slice(1, offsetsLength + 1)
+        .map(offset => parseInt(offset, 16));
+      const elementsLength = strategiesParams.length - offsetsLength - 1;
+      const elements = strategiesParams.slice(offsetsLength + 1);
+      const params2D = offsets.map((offset, index) => {
+        const last = index === offsetsLength - 1 ? elementsLength : offsets[index + 1];
+        return elements.slice(offset, last);
+      });
+
+      const votingPowers = await Promise.all(
+        strategiesAddresses.map((address, i) => {
+          const strategy = getStarknetStrategy(address, defaultNetwork);
+          if (!strategy) return 0n;
+
+          return strategy.getVotingPower(address, voterAddress, timestamp, params2D[i], {
+            ...clientConfig,
+            networkConfig: defaultNetwork
+          });
+        })
+      );
+
+      return votingPowers.reduce((a, b) => a + b, 0n);
     },
     send: (envelope: any) => client.send(envelope)
   };

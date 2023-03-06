@@ -7,13 +7,14 @@ export const PROPOSAL_QUERY = gql`
       proposal_id
       space {
         id
-        quorum
         authenticators
         executors
+        executors_types
       }
       author {
         id
       }
+      quorum
       execution_hash
       metadata_uri
       title
@@ -29,9 +30,11 @@ export const PROPOSAL_QUERY = gql`
       scores_3
       scores_total
       strategies
+      strategies_params
       created
       tx
       vote_count
+      executed
     }
   }
 `;
@@ -52,10 +55,12 @@ export const PROPOSALS_QUERY = gql`
         quorum
         authenticators
         executors
+        executors_types
       }
       author {
         id
       }
+      quorum
       execution_hash
       metadata_uri
       title
@@ -71,9 +76,11 @@ export const PROPOSALS_QUERY = gql`
       scores_3
       scores_total
       strategies
+      strategies_params
       created
       tx
       vote_count
+      executed
     }
   }
 `;
@@ -126,9 +133,11 @@ export const PROPOSALS_SUMMARY_QUERY = gql`
     scores_3
     scores_total
     strategies
+    strategies_params
     created
     tx
     vote_count
+    executed
   }
 `;
 
@@ -184,10 +193,11 @@ export const SPACE_QUERY = gql`
       min_voting_period
       max_voting_period
       proposal_threshold
-      quorum
       strategies
+      strategies_params
       authenticators
       executors
+      executors_types
       proposal_count
       vote_count
       created
@@ -211,10 +221,11 @@ export const SPACES_QUERY = gql`
       min_voting_period
       max_voting_period
       proposal_threshold
-      quorum
       strategies
+      strategies_params
       authenticators
       executors
+      executors_types
       proposal_count
       vote_count
       created

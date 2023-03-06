@@ -1,13 +1,55 @@
-import { clients } from '@snapshot-labs/sx';
-import { SUPPORTED_AUTHENTICATORS, SUPPORTED_STRATEGIES } from './constants';
+import { clients, getExecutionData, getEvmStrategy, evmGoerli } from '@snapshot-labs/sx';
+import {
+  RELAYER_AUTHENTICATORS,
+  SUPPORTED_AUTHENTICATORS,
+  SUPPORTED_STRATEGIES
+} from './constants';
 import { verifyNetwork } from '@/helpers/utils';
+import { convertToMetaTransactions } from '@/helpers/transactions';
 import type { Web3Provider } from '@ethersproject/providers';
-import type { NetworkActions } from '@/networks/types';
+import type { NetworkActions, StrategyConfig } from '@/networks/types';
+import type { MetaTransaction } from '@snapshot-labs/sx/dist/utils/encoding/execution-hash';
 import type { Space, Proposal } from '@/types';
 
 type Choice = 0 | 1 | 2;
+type SpaceExecutionData = Pick<Space, 'executors' | 'executors_types'>;
 
-const EXECUTOR = '0xb1001fdf62c020761039a750b27e73c512fdaa5e';
+const VANILLA_EXECUTOR = '0x6241b5c89350bb3c465179706cf26050ea32444f';
+
+function buildExecution(space: SpaceExecutionData, transactions: MetaTransaction[]) {
+  const avatarIndex = space.executors_types.findIndex(
+    executorType => executorType === 'SimpleQuorumAvatar'
+  );
+
+  if (avatarIndex !== -1) {
+    const address = space.executors[avatarIndex];
+
+    const networkConfig = {
+      ...evmGoerli,
+      executors: {
+        ...evmGoerli.executors,
+        [address]: {
+          type: 'avatar' as const
+        }
+      }
+    };
+
+    return getExecutionData(space.executors[avatarIndex], networkConfig, { transactions });
+  }
+
+  if (space.executors.find(executor => executor === VANILLA_EXECUTOR)) {
+    if (transactions.length) {
+      console.warn('transactions will be ignored as vanilla executor is used');
+    }
+
+    return {
+      executor: VANILLA_EXECUTOR,
+      executionParams: ['0x00']
+    };
+  }
+
+  throw new Error('No supported executor configured for this space');
+}
 
 function pickAuthenticatorAndStrategies(authenticators: string[], strategies: string[]) {
   const authenticator = authenticators.find(
@@ -22,11 +64,20 @@ function pickAuthenticatorAndStrategies(authenticators: string[], strategies: st
     throw new Error('Unsupported space');
   }
 
-  return { authenticator, strategies: selectedStrategies };
+  return {
+    useRelayer: !!RELAYER_AUTHENTICATORS[authenticator],
+    authenticator,
+    strategies: selectedStrategies
+  };
 }
 
 export function createActions(chainId: number): NetworkActions {
+  const manaUrl: string = import.meta.env.VITE_MANA_URL || 'http://localhost:3000';
+
   const client = new clients.EvmEthereumTx();
+  const ethSigClient = new clients.EvmEthereumSig({
+    manaUrl
+  });
 
   return {
     async createSpace(
@@ -41,11 +92,19 @@ export function createActions(chainId: number): NetworkActions {
         authenticators: string[];
         votingStrategies: string[];
         votingStrategiesParams: string[][];
-        executionStrategies: string[];
+        executionStrategies: StrategyConfig[];
         metadataUri: string;
       }
     ) {
       await verifyNetwork(web3, chainId);
+
+      const processedExecutionStrategies = await Promise.all(
+        params.executionStrategies.map(async config =>
+          config.deploy
+            ? await config.deploy(client, web3.getSigner(), params.controller, config.params)
+            : config.address
+        )
+      );
 
       const response = await client.deploySpace({
         signer: web3.getSigner(),
@@ -53,7 +112,17 @@ export function createActions(chainId: number): NetworkActions {
         votingStrategies: params.votingStrategies.map((strategy, i) => ({
           addy: strategy,
           params: params.votingStrategiesParams[i][0] ?? '0x'
-        }))
+        })),
+        executionStrategies: processedExecutionStrategies.map((strategy, i) => {
+          const config = params.executionStrategies[i];
+
+          return {
+            addy: strategy,
+            params: config.generateParams
+              ? config.generateParams(params.executionStrategies[i].params)[0]
+              : []
+          };
+        })
       });
 
       return { hash: response.txId };
@@ -67,25 +136,46 @@ export function createActions(chainId: number): NetworkActions {
         metadataUri
       });
     },
-    propose: async (web3: Web3Provider, account: string, space: Space, cid: string) => {
+    propose: async (
+      web3: Web3Provider,
+      account: string,
+      space: Space,
+      cid: string,
+      transactions: MetaTransaction[]
+    ) => {
       await verifyNetwork(web3, chainId);
 
-      const { authenticator, strategies } = pickAuthenticatorAndStrategies(
+      const { useRelayer, authenticator, strategies } = pickAuthenticatorAndStrategies(
         space.authenticators,
         space.strategies
       );
 
+      const executionData = buildExecution(space, transactions);
+      const index = space.executors.findIndex(executor => executor === executionData.executor);
+
+      const data = {
+        space: space.id,
+        authenticator,
+        strategies,
+        executor: {
+          index,
+          address: executionData.executor
+        },
+        executionParams: executionData.executionParams[0],
+        metadataUri: `ipfs://${cid}`
+      };
+
+      if (useRelayer) {
+        return ethSigClient.propose({
+          signer: web3.getSigner(),
+          data
+        });
+      }
+
       return client.propose({
         signer: web3.getSigner(),
         envelope: {
-          data: {
-            space: space.id,
-            authenticator,
-            strategies,
-            executor: EXECUTOR,
-            executionParams: [],
-            metadataUri: `ipfs://${cid}`
-          }
+          data
         }
       });
     },
@@ -94,39 +184,80 @@ export function createActions(chainId: number): NetworkActions {
 
       if (choice < 1 || choice > 3) throw new Error('Invalid chocie');
 
-      const { authenticator, strategies } = pickAuthenticatorAndStrategies(
+      const { useRelayer, authenticator, strategies } = pickAuthenticatorAndStrategies(
         proposal.space.authenticators,
         proposal.strategies
       );
 
-      // NOTE: here 0 is For
-      const convertedChoice: Choice = (choice - 1) as Choice;
+      let convertedChoice: Choice = 0;
+      if (choice === 1) convertedChoice = 1;
+      if (choice === 2) convertedChoice = 0;
+      if (choice === 3) convertedChoice = 2;
+
+      const data = {
+        space: proposal.space.id,
+        authenticator,
+        strategies,
+        proposal: proposal.proposal_id,
+        choice: convertedChoice,
+        metadataUri: ''
+      };
+
+      if (useRelayer) {
+        return ethSigClient.vote({
+          signer: web3.getSigner(),
+          data
+        });
+      }
 
       return client.vote({
         signer: web3.getSigner(),
         envelope: {
-          data: {
-            space: proposal.space.id,
-            authenticator,
-            strategies,
-            proposal: proposal.proposal_id,
-            choice: convertedChoice
-          }
+          data
         }
       });
     },
-    finalizeProposal: async (web3: Web3Provider, proposal: Proposal) => {
+    finalizeProposal: () => null,
+    receiveProposal: () => null,
+    executeTransactions: async (web3: Web3Provider, proposal: Proposal) => {
       await verifyNetwork(web3, chainId);
 
-      return client.finalizeProposal({
+      const executionData = buildExecution(
+        proposal.space,
+        convertToMetaTransactions(proposal.execution)
+      );
+
+      return client.execute({
         signer: web3.getSigner(),
         space: proposal.space.id,
         proposal: proposal.proposal_id,
-        executionParams: '0x00'
+        executionParams: executionData.executionParams[0]
       });
     },
-    receiveProposal: () => null,
-    executeTransactions: () => null,
-    send: (): any => null
+    send: (envelope: any) => ethSigClient.send(envelope),
+    getVotingPower: async (
+      web3: Web3Provider,
+      strategiesAddresses: string[],
+      strategiesParams: any[],
+      voterAddress: string,
+      timestamp: number
+    ): Promise<bigint> => {
+      const votingPowers = await Promise.all(
+        strategiesAddresses.map((address, i) => {
+          const strategy = getEvmStrategy(address, evmGoerli);
+          if (!strategy) return 0n;
+
+          return strategy.getVotingPower(
+            address,
+            voterAddress,
+            timestamp,
+            strategiesParams[i],
+            web3
+          );
+        })
+      );
+
+      return votingPowers.reduce((a, b) => a + b, 0n);
+    }
   };
 }

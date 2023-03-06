@@ -35,10 +35,11 @@ export type Space = {
   min_voting_period: number;
   max_voting_period: number;
   proposal_threshold: number;
-  quorum: number;
   strategies: string[];
+  strategies_params: any[];
   authenticators: string[];
   executors: string[];
+  executors_types: string[];
   proposal_count: number;
   vote_count: number;
   created: number;
@@ -48,11 +49,12 @@ export type Proposal = {
   id: string;
   proposal_id: number;
   network: NetworkID;
+  quorum: number;
   space: {
     id: string;
-    quorum: number;
     authenticators: string[];
     executors: string[];
+    executors_types: string[];
   };
   author: {
     id: string;
@@ -72,10 +74,12 @@ export type Proposal = {
   scores_3: number;
   scores_total: number;
   strategies: string[];
+  strategies_params: any[];
   created: number;
   tx: string;
   vote_count: number;
   has_ended: boolean;
+  executed: boolean;
 };
 
 export type User = {
