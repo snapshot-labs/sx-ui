@@ -45,14 +45,8 @@ const form: {
 } = reactive(clone(DEFAULT_FORM_STATE));
 
 const addressDuplicated = computed(() => {
-  const duplicate = contactsStore.contacts.find(c => c.address === form.address);
-  if (duplicate) {
-    if (duplicate.address === props.initialState?.address) {
-      return false;
-    }
-    return true;
-  }
-  return false;
+  if (form.address === props.initialState?.address) return false;
+  return !!contactsStore.contacts.find(c => c.address === form.address);
 });
 
 const formErrors = computed(() => {
