@@ -148,7 +148,7 @@ watch(proposalData, () => {
     </nav>
     <Container v-if="proposals[proposalKey]" class="pt-5 s-box">
       <UiAlert v-if="!fetchingVotingPower && !votingPowerValid" type="error">
-        You do not have enough Voting Power to create proposal in this space.
+        You do not have enough voting power to create proposal in this space.
       </UiAlert>
       <h4 class="eyebrow mb-3">Context</h4>
       <SIString
