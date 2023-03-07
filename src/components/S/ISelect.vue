@@ -41,10 +41,10 @@ const inputValue = computed({
       <option disabled value="">Please select one</option>
       <option
         v-for="option in definition.options || definition.enum"
-        :key="option"
-        :value="option?.id || option"
+        :key="option.id ?? option"
+        :value="option.id ?? option"
       >
-        {{ option?.name || option }}
+        {{ option.name ?? option }}
       </option>
     </select>
   </SBase>
