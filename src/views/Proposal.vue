@@ -26,6 +26,14 @@ const votingPower = ref(0n);
 const loadingVotingPower = ref(true);
 
 const proposal = computed(() => proposalsStore.getProposal(space, id, networkId as NetworkID));
+const votingPowerDecimals = computed(() => {
+  if (!proposal.value) return 0;
+
+  return Math.max(
+    ...proposal.value.space.strategies_metadata.map(metadata => parseInt(metadata, 16)),
+    0
+  );
+});
 
 const discussion = computed(() => {
   if (!proposal.value?.discussion) return null;
@@ -118,7 +126,7 @@ watch([() => web3.value.account, proposal], () => getVotingPower());
               class="mr-2"
             >
               <IH-lightning-bolt class="inline-block" />
-              <span class="ml-1">{{ _n(votingPower, 'compact') }}</span>
+              <span class="ml-1">{{ _n(Number(votingPower) / 10 ** votingPowerDecimals) }}</span>
             </UiButton>
             <a :href="sanitizeUrl(getUrl(proposal.metadata_uri))" target="_blank">
               <UiButton class="!w-[46px] !h-[46px] !px-[12px]">
