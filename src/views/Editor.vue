@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { getInstance } from '@snapshot-labs/lock/plugins/vue3';
 import { useSpacesStore } from '@/stores/spaces';
 import { useActions } from '@/composables/useActions';
 import { useWeb3 } from '@/composables/useWeb3';
@@ -16,7 +15,6 @@ const { modalOpen: globalModalOpen } = useModal();
 const route = useRoute();
 const router = useRouter();
 const { propose } = useActions();
-const auth = getInstance();
 const { web3 } = useWeb3();
 const spacesStore = useSpacesStore();
 
