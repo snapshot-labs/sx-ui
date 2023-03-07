@@ -90,9 +90,8 @@ export function createActions(provider: Provider, chainId: number): NetworkActio
         maxVotingDuration: number;
         proposalThreshold: bigint;
         quorum: bigint;
-        authenticators: string[];
-        votingStrategies: string[];
-        votingStrategiesParams: string[][];
+        authenticators: StrategyConfig[];
+        votingStrategies: StrategyConfig[];
         executionStrategies: StrategyConfig[];
         metadataUri: string;
       }
@@ -110,9 +109,10 @@ export function createActions(provider: Provider, chainId: number): NetworkActio
       const response = await client.deploySpace({
         signer: web3.getSigner(),
         ...params,
-        votingStrategies: params.votingStrategies.map((strategy, i) => ({
-          addy: strategy,
-          params: params.votingStrategiesParams[i][0] ?? '0x'
+        authenticators: params.authenticators.map(config => config.address),
+        votingStrategies: params.votingStrategies.map(config => ({
+          addy: config.address,
+          params: config.generateParams ? config.generateParams(config.params)[0] : '0x'
         })),
         executionStrategies: processedExecutionStrategies.map((strategy, i) => {
           const config = params.executionStrategies[i];

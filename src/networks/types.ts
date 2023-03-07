@@ -43,9 +43,8 @@ export type NetworkActions = {
       maxVotingDuration: number;
       proposalThreshold: bigint;
       quorum: bigint;
-      authenticators: string[];
-      votingStrategies: string[];
-      votingStrategiesParams: string[][];
+      authenticators: StrategyConfig[];
+      votingStrategies: StrategyConfig[];
       executionStrategies: StrategyConfig[];
       metadataUri: string;
     }
