@@ -67,7 +67,7 @@ const metadataForm: SpaceMetadata = reactive(
     twitter: '',
     github: '',
     discord: '',
-    walletNetwork: 'gor',
+    walletNetwork: null,
     walletAddress: ''
   })
 );
@@ -187,6 +187,7 @@ watch(selectedNetworkId, () => {
             v-if="currentPage === 'profile'"
             :form="metadataForm"
             @pick="showPicker = true"
+            @no-network="metadataForm.walletAddress = null"
             @errors="v => handleErrors('profile', v)"
           />
           <BlockSpaceFormNetwork

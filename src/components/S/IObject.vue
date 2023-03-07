@@ -44,8 +44,19 @@ const inputValue = computed({
   }
 });
 
-const getComponent = (property: { type: string; format: string; enum?: string[] }) => {
-  switch (property.type) {
+const getComponent = (property: {
+  type: string;
+  format: string;
+  enum?: string[];
+  hidden?: boolean;
+}) => {
+  if (property.hidden) return null;
+
+  let type = property.type;
+  if (Array.isArray(property.type)) {
+    type = property.type[0];
+  }
+  switch (type) {
     case 'object':
       return IObject;
     case 'array':
