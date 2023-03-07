@@ -18,6 +18,7 @@ export type StrategyTemplate = {
   paramsDefinition: any;
   generateSummary?: (params: Record<string, any>) => string;
   generateParams?: (params: Record<string, any>) => any[];
+  generateMetadata?: (params: Record<string, any>) => string;
   deploy?: (
     client: any,
     signer: Signer,

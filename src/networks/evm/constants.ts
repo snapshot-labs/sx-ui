@@ -62,17 +62,23 @@ export const EDITOR_VOTING_STRATEGIES = [
     name: 'Delegated Comp Token',
     generateSummary: (params: Record<string, any>) => `(${shorten(params.contractAddress)})`,
     generateParams: (params: Record<string, any>) => [params.contractAddress],
+    generateMetadata: (params: Record<string, any>) => `0x${params.decimals.toString(16)}`,
     paramsDefinition: {
       type: 'object',
       title: 'Params',
       additionalProperties: false,
-      required: ['contractAddress'],
+      required: ['contractAddress', 'decimals'],
       properties: {
         contractAddress: {
           type: 'string',
           format: 'address',
-          title: 'Contract address',
+          title: 'Token address',
           examples: ['0x0000…']
+        },
+        decimals: {
+          type: 'integer',
+          title: 'Decimals',
+          examples: ['18']
         }
       }
     }

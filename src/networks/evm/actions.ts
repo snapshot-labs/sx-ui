@@ -114,6 +114,9 @@ export function createActions(provider: Provider, chainId: number): NetworkActio
           addy: config.address,
           params: config.generateParams ? config.generateParams(config.params)[0] : '0x'
         })),
+        votingStrategiesMetadata: params.votingStrategies.map(config =>
+          config.generateMetadata ? config.generateMetadata(config.params) : '0x00'
+        ),
         executionStrategies: processedExecutionStrategies.map((strategy, i) => {
           const config = params.executionStrategies[i];
 
