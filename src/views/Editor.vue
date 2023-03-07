@@ -45,12 +45,14 @@ async function handleProposeClick() {
   sending.value = true;
 
   try {
+    const proposal = proposals[proposalKey];
+
     const result = await propose(
       space.value,
-      proposals[`${id}:${key}`].title,
-      proposals[`${id}:${key}`].body,
-      proposals[`${id}:${key}`].discussion,
-      proposals[`${id}:${key}`].execution
+      proposal.title,
+      proposal.body,
+      proposal.discussion,
+      proposal.execution
     );
 
     if (result) router.back();
