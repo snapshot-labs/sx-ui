@@ -65,8 +65,8 @@ const definition = computed(() => {
       },
       walletNetwork: {
         type: ['string', 'null'],
-        enum: [...enabledNetworks, null],
-        options: [...availableNetworks, { id: null, name: 'No treasury' }],
+        enum: [null, ...enabledNetworks],
+        options: [{ id: null, name: 'No treasury' }, ...availableNetworks],
         title: 'Treasury network',
         nullable: true
       },
