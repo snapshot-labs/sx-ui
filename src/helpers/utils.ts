@@ -16,8 +16,14 @@ dayjs.extend(duration);
 
 dayjs.updateLocale('en', {
   relativeTime: {
-    future: '%s ago',
-    past: '%s left',
+    future: value => {
+      if (value === 'now') return 'in few seconds';
+      return `${value} left`;
+    },
+    past: value => {
+      if (value === 'now') return 'just now';
+      return `${value} ago`;
+    },
     s: 'now',
     m: '1m',
     mm: '%dm',
@@ -56,8 +62,8 @@ export function explorerUrl(network, str: string, type = 'address'): string {
   return `${networks[network].explorer}/${type}/${str}`;
 }
 
-export function _n(value) {
-  const formatter = new Intl.NumberFormat('en', { notation: 'standard' });
+export function _n(value: any, notation: 'standard' | 'compact' = 'standard') {
+  const formatter = new Intl.NumberFormat('en', { notation });
   return formatter.format(value);
 }
 
@@ -106,7 +112,7 @@ export function _t(number) {
 
 export function _rt(number) {
   try {
-    return dayjs(number * 1e3).toNow(false);
+    return dayjs(number * 1e3).fromNow(false);
   } catch (e) {
     console.log(e);
     return '';
@@ -175,6 +181,11 @@ export async function verifyNetwork(web3Provider: Web3Provider, chainId: number)
  * @returns ERC1155 metadata object
  */
 export function createErc1155Metadata(metadata: SpaceMetadata) {
+  const wallets: string[] = [];
+  if (metadata.walletNetwork && metadata.walletAddress) {
+    wallets.push(`${metadata.walletNetwork}:${metadata.walletAddress}`);
+  }
+
   return {
     name: metadata.name,
     description: metadata.description,
@@ -183,7 +194,12 @@ export function createErc1155Metadata(metadata: SpaceMetadata) {
       github: metadata.github,
       twitter: metadata.twitter,
       discord: metadata.discord,
-      wallets: [`${metadata.walletNetwork}:${metadata.walletAddress}`]
+      wallets
     }
   };
+}
+
+export function compareAddresses(a: string, b: string): boolean {
+  // TODO: in future ignore padding as well
+  return a.toLowerCase() === b.toLowerCase();
 }
