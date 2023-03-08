@@ -114,6 +114,9 @@ onMounted(() => {
         </div>
         <div v-if="page === 'tokens'">
           <UiLoading v-if="loading && !loaded" class="px-4 py-3 block" />
+          <div v-if="loaded && sortedAssets.length === 0" class="px-4 py-3">
+            There are no tokens in treasury
+          </div>
           <div v-for="(asset, i) in sortedAssets" :key="i" class="mx-4 py-3 border-b flex">
             <div class="flex-auto flex items-center min-w-0">
               <Stamp :id="asset.contractAddress" type="token" :size="32" />
@@ -142,6 +145,9 @@ onMounted(() => {
           </div>
         </div>
         <div v-else-if="page === 'nfts'">
+          <div v-if="nftsLoaded && nfts.length === 0" class="px-4 py-3">
+            There are no NFTs in treasury
+          </div>
           <UiLoading v-if="nftsLoading && !nftsLoaded" class="px-4 py-3 block" />
           <div class="grid gap-4 grid-cols-3 md:grid-cols-4 lg:grid-cols-6 p-4">
             <div v-for="(nft, i) in nfts" :key="i" class="block">
