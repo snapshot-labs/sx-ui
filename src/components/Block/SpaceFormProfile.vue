@@ -71,7 +71,7 @@ const definition = computed(() => {
         nullable: true
       },
       walletAddress: {
-        type: ['string', 'null'],
+        type: props.form.walletNetwork === null ? 'null' : 'string',
         format: 'address',
         title: 'Treasury address',
         examples: ['0x0000…'],

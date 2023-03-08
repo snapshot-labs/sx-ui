@@ -68,7 +68,7 @@ const metadataForm: SpaceMetadata = reactive(
     github: '',
     discord: '',
     walletNetwork: null,
-    walletAddress: ''
+    walletAddress: null
   })
 );
 const selectedNetworkId: Ref<NetworkID> = ref('gor');
