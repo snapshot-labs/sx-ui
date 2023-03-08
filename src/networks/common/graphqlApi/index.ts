@@ -137,6 +137,17 @@ export function createApi(uri: string, networkId: NetworkID): NetworkApi {
 
       return data.spaces.map(space => formatSpace(space, networkId));
     },
+    loadSpacesByController: async ({ limit, skip = 0 }: PaginationOpts): Promise<Space[]> => {
+      const { data } = await apollo.query({
+        query: SPACES_QUERY,
+        variables: {
+          first: limit,
+          skip
+        }
+      });
+
+      return data.spaces.map(space => formatSpace(space, networkId));
+    },
     loadSpace: async (id: string): Promise<Space> => {
       const { data } = await apollo.query({
         query: SPACE_QUERY,

@@ -12,6 +12,7 @@ import IHNewspaper from '~icons/heroicons-outline/newspaper';
 import IHCash from '~icons/heroicons-outline/cash';
 import IHCog from '~icons/heroicons-outline/cog';
 import IHUsers from '~icons/heroicons-outline/users';
+import IHStop from '~icons/heroicons-outline/stop';
 
 const route = useRoute();
 const uiStore = useUiStore();
@@ -47,6 +48,10 @@ const navigationConfig = computed(() => ({
     }
   },
   settings: {
+    spaces: {
+      name: 'Spaces',
+      icon: IHStop
+    },
     contacts: {
       name: 'Contacts',
       icon: IHUsers

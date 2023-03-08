@@ -12,6 +12,7 @@ import Create from '@/views/Create.vue';
 import Settings from '@/views/Settings.vue';
 import Contacts from '@/views/Settings/Contacts.vue';
 import Explore from '@/views/Explore.vue';
+import SettingsSpaces from '@/views/Settings/Spaces.vue';
 
 const routes: any[] = [
   { path: '/', name: 'home', component: Home },
@@ -39,7 +40,8 @@ const routes: any[] = [
     name: 'settings',
     component: Settings,
     children: [
-      { path: '', redirect: '/settings/contacts' },
+      // { path: '', redirect: '/settings/contacts' },
+      { path: '', name: 'settings-spaces', component: SettingsSpaces },
       { path: 'contacts', name: 'settings-contacts', component: Contacts }
     ]
   },

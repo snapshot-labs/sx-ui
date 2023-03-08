@@ -79,6 +79,7 @@ export type NetworkApi = {
   loadProposalsSummary(spaceId: string, limit: number): Promise<Proposal[]>;
   loadProposal(spaceId: string, proposalId: number): Promise<Proposal>;
   loadSpaces(paginationOpts: PaginationOpts): Promise<Space[]>;
+  loadSpacesByController(paginationOpts: PaginationOpts): Promise<Space[]>;
   loadSpace(spaceId: string): Promise<Space>;
   loadUser(userId: string): Promise<User>;
 };
