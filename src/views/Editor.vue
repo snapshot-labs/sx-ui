@@ -89,7 +89,7 @@ async function handleProposeClick() {
     <nav class="border-b bg-skin-bg fixed top-0 z-10 right-0 left-0 lg:left-[72px]">
       <div class="flex items-center h-[71px] mx-4">
         <div class="flex-auto space-x-2">
-          <router-link :to="{ name: 'overview', params: { id } }" class="mr-2">
+          <router-link :to="{ name: 'space-overview', params: { id } }" class="mr-2">
             <UiButton class="leading-3 w-[46px] !px-0">
               <IH-arrow-narrow-left class="inline-block" />
             </UiButton>
@@ -140,7 +140,11 @@ async function handleProposeClick() {
         <Preview :url="proposals[proposalKey].discussion" />
       </div>
       <h4 class="eyebrow mb-3">Execution</h4>
-      <BlockExecutionEditable v-model="proposals[proposalKey].execution" class="mb-4" />
+      <BlockExecutionEditable
+        v-model="proposals[proposalKey].execution"
+        :space="space"
+        class="mb-4"
+      />
     </Container>
     <teleport to="#modal">
       <ModalDrafts
