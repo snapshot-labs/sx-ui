@@ -50,8 +50,6 @@ const getComponent = (property: {
   enum?: string[];
   hidden?: boolean;
 }) => {
-  if (property.hidden) return null;
-
   let type = property.type;
   if (Array.isArray(property.type)) {
     type = property.type[0];
