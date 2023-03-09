@@ -28,7 +28,7 @@ const definition = computed(() => {
   return {
     type: 'object',
     title: 'Space',
-    additionalProperties: false,
+    additionalProperties: true,
     required: ['name', 'walletNetwork', 'walletAddress'],
     properties: {
       name: {
@@ -70,21 +70,17 @@ const definition = computed(() => {
         title: 'Treasury network',
         nullable: true
       },
-      walletAddress:
-        props.form.walletNetwork === null
-          ? {
-              type: 'null',
-              title: 'Treasury address',
-              examples: ['0x0000…']
-            }
-          : {
+      ...(props.form.walletNetwork !== null
+        ? {
+            walletAddress: {
               type: 'string',
               title: 'Treasury address',
               examples: ['0x0000…'],
               format: 'address',
-              minLength: 1,
-              hidden: props.form.walletNetwork === null
+              minLength: 1
             }
+          }
+        : {})
     }
   };
 });

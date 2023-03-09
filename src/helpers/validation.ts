@@ -63,8 +63,6 @@ export function validateForm(schema, form): Record<string, string> {
 
   ajv.addKeyword('options');
 
-  ajv.addKeyword('hidden');
-
   ajv.validate(schema, form);
 
   const output = {};
