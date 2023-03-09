@@ -70,13 +70,21 @@ const definition = computed(() => {
         title: 'Treasury network',
         nullable: true
       },
-      walletAddress: {
-        type: props.form.walletNetwork === null ? 'null' : 'string',
-        format: 'address',
-        title: 'Treasury address',
-        examples: ['0x0000…'],
-        hidden: props.form.walletNetwork === null
-      }
+      walletAddress:
+        props.form.walletNetwork === null
+          ? {
+              type: 'null',
+              title: 'Treasury address',
+              examples: ['0x0000…']
+            }
+          : {
+              type: 'string',
+              title: 'Treasury address',
+              examples: ['0x0000…'],
+              format: 'address',
+              minLength: 1,
+              hidden: props.form.walletNetwork === null
+            }
     }
   };
 });
