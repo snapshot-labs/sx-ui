@@ -8,6 +8,7 @@ export const PROPOSAL_QUERY = gql`
       space {
         id
         authenticators
+        strategies_metadata
         executors
         executors_types
       }
