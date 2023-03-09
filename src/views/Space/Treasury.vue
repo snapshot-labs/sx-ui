@@ -72,7 +72,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="!treasury || !currentNetwork" class="p-4 flex items-center">
+  <div v-if="!treasury || !currentNetwork" class="p-4 flex items-center text-skin-link">
     <IH-exclamation-circle class="inline-block mr-2" />
     No treasury configured.
   </div>
@@ -117,7 +117,10 @@ onMounted(() => {
         </div>
         <div v-if="page === 'tokens'">
           <UiLoading v-if="loading && !loaded" class="px-4 py-3 block" />
-          <div v-if="loaded && sortedAssets.length === 0" class="px-4 py-3 flex items-center">
+          <div
+            v-if="loaded && sortedAssets.length === 0"
+            class="px-4 py-3 flex items-center text-skin-link"
+          >
             <IH-exclamation-circle class="inline-block mr-2" />
             There are no tokens in treasury.
           </div>
@@ -149,7 +152,10 @@ onMounted(() => {
           </div>
         </div>
         <div v-else-if="page === 'nfts'">
-          <div v-if="nftsLoaded && nfts.length === 0" class="px-4 py-3 flex items-center">
+          <div
+            v-if="nftsLoaded && nfts.length === 0"
+            class="px-4 py-3 flex items-center text-skin-link"
+          >
             <IH-exclamation-circle class="inline-block mr-2" />
             There are no NFTs in treasury.
           </div>
