@@ -39,7 +39,7 @@ export const useUiStore = defineStore('ui', {
         message
       });
 
-      setTimeout(() => this.dismissNotification(id), 5000);
+      setTimeout(() => this.dismissNotification(id), timeout);
     },
     dismissNotification(id: string) {
       this.notifications = this.notifications.filter(notification => notification.id !== id);
