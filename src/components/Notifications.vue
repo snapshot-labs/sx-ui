@@ -5,13 +5,13 @@ const uiStore = useUiStore();
 </script>
 
 <template>
-  <div class="fixed bottom-4 left-4 right-4 md:left-1/2 md:right-0 md:-translate-x-1/2 z-50">
+  <div class="fixed bottom-4 left-0 right-0 z-50">
     <UiAlert
       v-for="notification in uiStore.notifications"
       :key="notification.id"
       dismissable
       :type="notification.type"
-      class="mb-2 last:mb-0"
+      class="w-fit max-w-[90%] mx-auto mb-2 last:mb-0"
       @close="uiStore.dismissNotification(notification.id)"
     >
       {{ notification.message }}
