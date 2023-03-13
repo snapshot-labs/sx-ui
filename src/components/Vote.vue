@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useAccount } from '@/composables/useAccount';
+import { _t } from '@/helpers/utils';
 import { getNetwork } from '@/networks';
 import type { Proposal as ProposalType } from '@/types';
 
@@ -32,7 +33,7 @@ const isSupported = computed(() => {
   </slot>
 
   <slot v-else-if="proposal.has_started" name="waiting">
-    Voting for this proposal hasn't started yet
+    Voting for this proposal hasn't started yet. Voting will start {{ _t(proposal.start) }}.
   </slot>
 
   <slot v-else-if="proposal.has_ended || proposal.executed" name="ended">
