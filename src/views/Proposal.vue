@@ -15,8 +15,8 @@ const proposalsStore = useProposalsStore();
 const auth = getInstance();
 const { web3 } = useWeb3();
 const { vote } = useActions();
-const id = parseInt((route.params.id as string) || '0');
-const spaceParam = route.params.space as string;
+const id = parseInt((route.params.pid as string) || '0');
+const spaceParam = route.params.id as string;
 const [networkId, space] = spaceParam.split(':');
 
 const modalOpenVotes = ref(false);
@@ -48,7 +48,6 @@ async function getVotingPower() {
   loadingVotingPower.value = true;
   try {
     votingPower.value = await network.actions.getVotingPower(
-      auth.web3,
       proposal.value.strategies,
       proposal.value.strategies_params,
       web3.value.account,
@@ -172,7 +171,7 @@ watch([() => web3.value.account, proposal], () => getVotingPower());
                 <IH-chart-bar class="inline-block mr-2" />
                 <span>Results</span>
               </h4>
-              <Results :proposal="proposal" width="full" />
+              <Results :proposal="proposal" with-details />
               <div class="mt-2">
                 <div v-if="userVote.choice === 1">
                   You already voted <strong>for</strong> this proposal
@@ -190,7 +189,7 @@ watch([() => web3.value.account, proposal], () => getVotingPower());
                 <IH-chart-bar class="inline-block mr-2" />
                 <span>Results</span>
               </h4>
-              <Results :proposal="proposal" width="full" />
+              <Results :proposal="proposal" with-details />
             </template>
             <div class="grid grid-cols-3 gap-2">
               <UiButton
