@@ -26,7 +26,9 @@ export function useActions() {
       try {
         return await fn(...args);
       } catch (err) {
-        uiStore.addNotification('error', 'Something went wrong. Please try again later.');
+        if (err.code !== 'ACTION_REJECTED' && err.message !== 'User abort') {
+          uiStore.addNotification('error', 'Something went wrong. Please try again later.');
+        }
 
         throw err;
       }
