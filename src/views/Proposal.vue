@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { getInstance } from '@snapshot-labs/lock/plugins/vue3';
 import { useWeb3 } from '@/composables/useWeb3';
 import { useActions } from '@/composables/useActions';
 import { sanitizeUrl } from '@braintree/sanitize-url';
@@ -12,7 +11,6 @@ import type { Choice, NetworkID } from '@/types';
 
 const route = useRoute();
 const proposalsStore = useProposalsStore();
-const auth = getInstance();
 const { web3 } = useWeb3();
 const { vote } = useActions();
 const id = parseInt((route.params.pid as string) || '0');
@@ -117,17 +115,12 @@ watch([() => web3.value.account, proposal], () => getVotingPower());
                 />
               </span>
             </div>
-            <UiButton
-              v-if="web3.account && web3.type !== 'argentx'"
+            <VotingPowerIndicator
               :loading="loadingVotingPower"
-              :class="{
-                '!px-0 w-[46px]': loadingVotingPower
-              }"
+              :voting-power="votingPower"
+              :decimals="votingPowerDecimals"
               class="mr-2"
-            >
-              <IH-lightning-bolt class="inline-block" />
-              <span class="ml-1">{{ _n(Number(votingPower) / 10 ** votingPowerDecimals) }}</span>
-            </UiButton>
+            />
             <a :href="sanitizeUrl(getUrl(proposal.metadata_uri))" target="_blank">
               <UiButton class="!w-[46px] !h-[46px] !px-[12px]">
                 <IH-dots-horizontal />

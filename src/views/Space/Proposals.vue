@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
-import { getInstance } from '@snapshot-labs/lock/plugins/vue3';
 import { useWeb3 } from '@/composables/useWeb3';
 import { useProposalsStore } from '@/stores/proposals';
 import { getNetwork } from '@/networks';
-import { _n } from '@/helpers/utils';
 import type { Space } from '@/types';
 
 const props = defineProps<{ space: Space }>();
 
-const auth = getInstance();
 const { web3 } = useWeb3();
 const proposalsStore = useProposalsStore();
 
@@ -70,17 +67,12 @@ watch(
   <div>
     <div class="flex">
       <div class="flex-auto" />
-      <div class="p-4 space-x-2">
-        <UiButton
-          v-if="web3.account && web3.type !== 'argentx'"
+      <div class="flex flex-row p-4 space-x-2">
+        <VotingPowerIndicator
           :loading="loadingVotingPower"
-          :class="{
-            '!px-0 w-[46px]': loadingVotingPower
-          }"
-        >
-          <IH-lightning-bolt class="inline-block" />
-          <span class="ml-1">{{ _n(Number(votingPower) / 10 ** votingPowerDecimals) }}</span>
-        </UiButton>
+          :voting-power="votingPower"
+          :decimals="votingPowerDecimals"
+        />
         <router-link :to="{ name: 'editor' }">
           <UiButton class="!px-0 w-[46px]">
             <IH-pencil-alt class="inline-block" />
