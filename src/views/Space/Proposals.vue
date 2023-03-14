@@ -3,22 +3,20 @@ import { ref, computed, watch, onMounted } from 'vue';
 import { useWeb3 } from '@/composables/useWeb3';
 import { useProposalsStore } from '@/stores/proposals';
 import { getNetwork } from '@/networks';
-import type { Space } from '@/types';
+import { Space } from '@/types';
+import { VotingPower } from '@/networks/types';
 
 const props = defineProps<{ space: Space }>();
 
 const { web3 } = useWeb3();
 const proposalsStore = useProposalsStore();
 
-const votingPower = ref(0n);
+const votingPowers = ref([] as VotingPower[]);
 const loadingVotingPower = ref(true);
 
 const proposalsRecord = computed(
   () => proposalsStore.proposals[`${props.space.network}:${props.space.id}`]
 );
-const votingPowerDecimals = computed(() => {
-  return Math.max(...props.space.strategies_metadata.map(metadata => parseInt(metadata, 16)), 0);
-});
 
 async function handleEndReached() {
   if (!proposalsRecord.value?.hasMoreProposals) return;
@@ -30,22 +28,23 @@ async function getVotingPower() {
   const network = getNetwork(props.space.network);
 
   if (!web3.value.account) {
-    votingPower.value = 0n;
+    votingPowers.value = [];
     loadingVotingPower.value = false;
     return;
   }
 
   loadingVotingPower.value = true;
   try {
-    votingPower.value = await network.actions.getVotingPower(
+    votingPowers.value = await network.actions.getVotingPower(
       props.space.strategies,
       props.space.strategies_params,
+      props.space.strategies_metadata,
       web3.value.account,
       Math.floor(Date.now() / 1000)
     );
   } catch (err) {
     console.warn('err', err);
-    votingPower.value = 0n;
+    votingPowers.value = [];
   } finally {
     loadingVotingPower.value = false;
   }
@@ -69,9 +68,9 @@ watch(
       <div class="flex-auto" />
       <div class="flex flex-row p-4 space-x-2">
         <VotingPowerIndicator
+          :network-id="space.network"
           :loading="loadingVotingPower"
-          :voting-power="votingPower"
-          :decimals="votingPowerDecimals"
+          :voting-powers="votingPowers"
         />
         <router-link :to="{ name: 'editor' }">
           <UiButton class="!px-0 w-[46px]">
