@@ -260,7 +260,12 @@ export function createActions(provider: Provider, chainId: number): NetworkActio
           );
 
           const token = strategy.type === 'comp' ? strategiesParams[i] : undefined;
-          return { address, value, decimals: parseInt(strategiesMetadata[i], 16), token };
+          return {
+            address,
+            value,
+            decimals: strategiesMetadata[i] ? parseInt(strategiesMetadata[i], 16) : 0,
+            token
+          };
         })
       );
     }
