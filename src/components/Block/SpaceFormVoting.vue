@@ -16,7 +16,7 @@ const emit = defineEmits<{
 const definition = {
   type: 'object',
   title: 'SpaceSettings',
-  additionalProperties: false,
+  additionalProperties: true,
   required: [
     'votingDelay',
     'minVotingDuration',
