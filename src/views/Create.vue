@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import { useActions } from '@/composables/useActions';
 import { useWeb3 } from '@/composables/useWeb3';
 import { clone } from '@/helpers/utils';
-import { getNetwork, evmNetworks } from '@/networks';
+import { getNetwork } from '@/networks';
 import type { StrategyConfig } from '@/networks/types';
 import type { NetworkID, SpaceMetadata, SpaceSettings } from '@/types';
 
