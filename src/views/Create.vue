@@ -81,9 +81,7 @@ const settingsForm: SpaceSettings = reactive(
     minVotingDuration: 0,
     maxVotingDuration: 86400,
     proposalThreshold: '1',
-    ...(!evmNetworks.includes(selectedNetworkId.value) && {
-      quorum: '1'
-    })
+    quorum: '1'
   })
 );
 const controller = ref(web3.value.account);
