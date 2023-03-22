@@ -29,7 +29,9 @@ const tabs = [
       <div v-for="i in 10" :key="i" class="w-full border-b p-4">{{ i }} space where i voted</div>
     </template>
     <template v-if="tab === 'proposed'">
-      <div v-for="i in 5" :key="i" class="w-full border-b p-4">{{ i }} space where i created a proposal</div>
+      <div v-for="i in 5" :key="i" class="w-full border-b p-4">
+        {{ i }} space where i created a proposal
+      </div>
     </template>
   </div>
 </template>
