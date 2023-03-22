@@ -29,8 +29,8 @@ async function handleVoteClick(choice: Choice) {
           :to="{
             name: 'proposal',
             params: {
-              id: proposal.proposal_id,
-              space: `${proposal.network}:${proposal.space.id}`
+              pid: proposal.proposal_id,
+              id: `${proposal.network}:${proposal.space.id}`
             }
           }"
           class="block"
@@ -58,6 +58,7 @@ async function handleVoteClick(choice: Choice) {
       <div class="hidden md:block">
         <Vote :proposal="proposal">
           <template #unsupported><div /></template>
+          <template #waiting><div /></template>
           <template #voted>
             <Results :proposal="proposal" />
           </template>

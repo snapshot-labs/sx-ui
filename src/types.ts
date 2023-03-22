@@ -1,3 +1,6 @@
+// UI
+export type NotificationType = 'error' | 'warning';
+
 export type NetworkID = 'gor' | 'sn-tn2';
 export type Choice = 1 | 2 | 3;
 
@@ -8,8 +11,8 @@ export type SpaceMetadata = {
   twitter: string;
   github: string;
   discord: string;
-  walletNetwork: NetworkID;
-  walletAddress: string;
+  walletNetwork: NetworkID | null;
+  walletAddress: string | null;
 };
 
 export type SpaceSettings = {
@@ -17,7 +20,7 @@ export type SpaceSettings = {
   minVotingDuration: number;
   maxVotingDuration: number;
   proposalThreshold: string;
-  quorum: string;
+  quorum?: string;
 };
 
 export type Space = {
@@ -34,9 +37,10 @@ export type Space = {
   voting_delay: number;
   min_voting_period: number;
   max_voting_period: number;
-  proposal_threshold: number;
+  proposal_threshold: string;
   strategies: string[];
   strategies_params: any[];
+  strategies_metadata: string[];
   authenticators: string[];
   executors: string[];
   executors_types: string[];
@@ -53,6 +57,7 @@ export type Proposal = {
   space: {
     id: string;
     authenticators: string[];
+    strategies_metadata: string[];
     executors: string[];
     executors_types: string[];
   };
@@ -78,6 +83,7 @@ export type Proposal = {
   created: number;
   tx: string;
   vote_count: number;
+  has_started: boolean;
   has_ended: boolean;
   executed: boolean;
 };

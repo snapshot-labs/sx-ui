@@ -67,8 +67,8 @@ const metadataForm: SpaceMetadata = reactive(
     twitter: '',
     github: '',
     discord: '',
-    walletNetwork: 'gor',
-    walletAddress: ''
+    walletNetwork: null,
+    walletAddress: null
   })
 );
 const selectedNetworkId: Ref<NetworkID> = ref('gor');
@@ -187,6 +187,7 @@ watch(selectedNetworkId, () => {
             v-if="currentPage === 'profile'"
             :form="metadataForm"
             @pick="showPicker = true"
+            @no-network="metadataForm.walletAddress = null"
             @errors="v => handleErrors('profile', v)"
           />
           <BlockSpaceFormNetwork
@@ -217,6 +218,7 @@ watch(selectedNetworkId, () => {
           <BlockSpaceFormVoting
             v-else-if="currentPage === 'voting'"
             :form="settingsForm"
+            :selected-network-id="selectedNetworkId"
             @errors="v => handleErrors('voting', v)"
           />
           <BlockSpaceFormController

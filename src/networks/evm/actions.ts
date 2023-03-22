@@ -1,3 +1,4 @@
+import { Provider } from '@ethersproject/providers';
 import { clients, getExecutionData, getEvmStrategy, evmGoerli } from '@snapshot-labs/sx';
 import {
   RELAYER_AUTHENTICATORS,
@@ -7,7 +8,7 @@ import {
 import { verifyNetwork } from '@/helpers/utils';
 import { convertToMetaTransactions } from '@/helpers/transactions';
 import type { Web3Provider } from '@ethersproject/providers';
-import type { NetworkActions, StrategyConfig } from '@/networks/types';
+import type { NetworkActions, StrategyConfig, VotingPower } from '@/networks/types';
 import type { MetaTransaction } from '@snapshot-labs/sx/dist/utils/encoding/execution-hash';
 import type { Space, Proposal } from '@/types';
 
@@ -71,7 +72,7 @@ function pickAuthenticatorAndStrategies(authenticators: string[], strategies: st
   };
 }
 
-export function createActions(chainId: number): NetworkActions {
+export function createActions(provider: Provider, chainId: number): NetworkActions {
   const manaUrl: string = import.meta.env.VITE_MANA_URL || 'http://localhost:3000';
 
   const client = new clients.EvmEthereumTx();
@@ -89,9 +90,8 @@ export function createActions(chainId: number): NetworkActions {
         maxVotingDuration: number;
         proposalThreshold: bigint;
         quorum: bigint;
-        authenticators: string[];
-        votingStrategies: string[];
-        votingStrategiesParams: string[][];
+        authenticators: StrategyConfig[];
+        votingStrategies: StrategyConfig[];
         executionStrategies: StrategyConfig[];
         metadataUri: string;
       }
@@ -109,10 +109,14 @@ export function createActions(chainId: number): NetworkActions {
       const response = await client.deploySpace({
         signer: web3.getSigner(),
         ...params,
-        votingStrategies: params.votingStrategies.map((strategy, i) => ({
-          addy: strategy,
-          params: params.votingStrategiesParams[i][0] ?? '0x'
+        authenticators: params.authenticators.map(config => config.address),
+        votingStrategies: params.votingStrategies.map(config => ({
+          addy: config.address,
+          params: config.generateParams ? config.generateParams(config.params)[0] : '0x'
         })),
+        votingStrategiesMetadata: params.votingStrategies.map(config =>
+          config.generateMetadata ? config.generateMetadata(config.params) : '0x00'
+        ),
         executionStrategies: processedExecutionStrategies.map((strategy, i) => {
           const config = params.executionStrategies[i];
 
@@ -236,28 +240,34 @@ export function createActions(chainId: number): NetworkActions {
     },
     send: (envelope: any) => ethSigClient.send(envelope),
     getVotingPower: async (
-      web3: Web3Provider,
       strategiesAddresses: string[],
       strategiesParams: any[],
+      strategiesMetadata: string[],
       voterAddress: string,
       timestamp: number
-    ): Promise<bigint> => {
-      const votingPowers = await Promise.all(
-        strategiesAddresses.map((address, i) => {
+    ): Promise<VotingPower[]> => {
+      return Promise.all(
+        strategiesAddresses.map(async (address, i) => {
           const strategy = getEvmStrategy(address, evmGoerli);
-          if (!strategy) return 0n;
+          if (!strategy) return { address, value: 0n, decimals: 0 };
 
-          return strategy.getVotingPower(
+          const value = await strategy.getVotingPower(
             address,
             voterAddress,
             timestamp,
             strategiesParams[i],
-            web3
+            provider
           );
+
+          const token = strategy.type === 'comp' ? strategiesParams[i] : undefined;
+          return {
+            address,
+            value,
+            decimals: strategiesMetadata[i] ? parseInt(strategiesMetadata[i], 16) : 0,
+            token
+          };
         })
       );
-
-      return votingPowers.reduce((a, b) => a + b, 0n);
     }
   };
 }

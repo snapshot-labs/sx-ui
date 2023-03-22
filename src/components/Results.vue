@@ -1,13 +1,18 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { _n } from '@/helpers/utils';
 import { Proposal as ProposalType } from '@/types';
 
 const props = withDefaults(
   defineProps<{
     proposal: ProposalType;
-    width?: number | 'full';
+    decimals?: number;
+    withDetails?: boolean;
+    width?: number;
   }>(),
   {
+    decimals: 0,
+    withDetails: false,
     width: 100
   }
 );
@@ -46,9 +51,14 @@ const visibleResults = computed(() =>
 </script>
 
 <template>
-  <div class="h-full">
+  <div
+    class="h-full"
+    :class="{
+      'flex items-center': !withDetails
+    }"
+  >
     <div
-      v-if="width === 'full'"
+      v-if="withDetails"
       class="inline-block text-skin-link mb-2 cursor-pointer hover:opacity-80"
       @click="showAlternatives = !showAlternatives"
     >
@@ -57,13 +67,13 @@ const visibleResults = computed(() =>
           {{ result.progress.toFixed(0) }}%
         </span>
         <IH-lightning-bolt class="inline-block ml-1" />
-        {{ result.score }}
+        {{ _n(Number(result.score) / 10 ** decimals) }}
       </div>
     </div>
     <div
       class="rounded-full h-[6px] overflow-hidden"
       :style="{
-        width: width === 'full' ? '100%' : `${width}px`
+        width: withDetails ? '100%' : `${width}px`
       }"
     >
       <div
