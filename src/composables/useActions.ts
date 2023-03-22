@@ -61,6 +61,7 @@ export function useActions() {
     metadata: SpaceMetadata,
     settings: SpaceSettings,
     authenticators: StrategyConfig[],
+    validationStrategy: StrategyConfig,
     votingStrategies: StrategyConfig[],
     executionStrategies: StrategyConfig[]
   ) {
@@ -74,8 +75,6 @@ export function useActions() {
       throw new Error(`${web3.value.type} is not supported for this actions`);
     }
 
-    const pinned = await network.helpers.pin(createErc1155Metadata(metadata));
-
     const receipt = await network.actions.createSpace(auth.web3, {
       controller: web3.value.account,
       votingDelay: settings.votingDelay,
@@ -86,9 +85,10 @@ export function useActions() {
         ? { quorum: BigInt(settings.quorum) }
         : {}),
       authenticators,
+      validationStrategy,
       votingStrategies,
       executionStrategies,
-      metadataUri: `ipfs://${pinned.cid}`
+      metadata
     });
 
     console.log('Receipt', receipt);
@@ -105,13 +105,7 @@ export function useActions() {
       throw new Error(`${web3.value.type} is not supported for this actions`);
     }
 
-    const pinned = await network.helpers.pin(createErc1155Metadata(metadata));
-
-    const receipt = await network.actions.setMetadataUri(
-      auth.web3,
-      space.id,
-      `ipfs://${pinned.cid}`
-    );
+    const receipt = await network.actions.setMetadata(auth.web3, space, metadata);
 
     console.log('Receipt', receipt);
     uiStore.addPendingTransaction(receipt.transaction_hash || receipt.hash, space.network);
