@@ -3,7 +3,6 @@ import { getNetwork, evmNetworks } from '@/networks';
 import { useUiStore } from '@/stores/ui';
 import { useWeb3 } from '@/composables/useWeb3';
 import { useModal } from '@/composables/useModal';
-import { createErc1155Metadata } from '@/helpers/utils';
 import type {
   Transaction,
   Proposal,
