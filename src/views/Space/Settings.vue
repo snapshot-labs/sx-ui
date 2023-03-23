@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { shorten, _d } from '@/helpers/utils';
-import { getNetwork } from '@/networks';
+import { getNetwork, evmNetworks } from '@/networks';
 import { Space } from '@/types';
 
 const props = defineProps<{ space: Space }>();
@@ -26,7 +26,7 @@ const network = computed(() => getNetwork(props.space.network));
           <div class="s-label !mb-0">Max. voting period</div>
           <h4 class="text-skin-link text-md" v-text="_d(space.max_voting_period)" />
         </div>
-        <div class="mb-3">
+        <div v-if="!evmNetworks.includes(space.network)" class="mb-3">
           <div class="s-label !mb-0" v-text="'Proposal threshold'" />
           <h4 class="text-skin-link text-md" v-text="space.proposal_threshold" />
         </div>
