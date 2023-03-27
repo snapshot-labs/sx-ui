@@ -23,6 +23,11 @@ const space = computed(() =>
 );
 const { treasury } = useTreasury(space);
 
+const showNavigationItems = computed(() => {
+  if (currentRouteName.value === 'space') return Object.keys(route.params).length === 1;
+  return true;
+});
+
 const navigationConfig = computed(() => ({
   space: {
     overview: {
@@ -65,7 +70,7 @@ const navigationItems = computed(() => navigationConfig.value[currentRouteName.v
     }"
   >
     <div class="h-[72px] border-b" />
-    <div class="py-4">
+    <div v-if="showNavigationItems" class="py-4">
       <router-link
         v-for="(item, key) in navigationItems"
         :key="key"
