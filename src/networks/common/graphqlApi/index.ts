@@ -56,7 +56,7 @@ function formatProposal(
     has_started: proposal.start * 1000 >= now,
     has_execution_window_opened: proposal.min_end * 1000 <= now,
     has_ended: proposal.max_end * 1000 <= now,
-    has_veto_period_ended: proposal.execution_time === 0 || proposal.execution_time * 1000 >= now,
+    has_veto_period_ended: proposal.execution_time === 0 || proposal.execution_time * 1000 <= now,
     network: networkId
   };
 }
