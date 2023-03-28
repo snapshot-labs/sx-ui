@@ -84,7 +84,7 @@ async function handleExecuteQueuedProposalClick() {
         @click="handleExecuteTransactionsClick"
       >
         <IH-play class="inline-block mr-2" />
-        Execute transactions
+        Execute proposal
       </UiButton>
       <UiButton
         v-if="proposal.executed && !proposal.completed"
