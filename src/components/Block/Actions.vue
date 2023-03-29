@@ -66,10 +66,13 @@ async function handleExecuteQueuedProposalClick() {
     <div v-if="proposal.execution_tx">
       Proposal has been already executed at
       <a
+        class="inline-flex items-center"
         target="_blank"
         :href="baseNetwork.helpers.getExplorerUrl(proposal.execution_tx, 'transaction')"
-        v-text="shorten(proposal.execution_tx)"
-      />
+      >
+        {{ shorten(proposal.execution_tx) }}
+        <IH-external-link class="inline-block ml-1"
+      /></a>
     </div>
     <template v-else>
       <UiButton
