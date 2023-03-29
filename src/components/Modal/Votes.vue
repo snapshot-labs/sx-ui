@@ -39,23 +39,25 @@ watch(open, async () => {
         <div
           v-for="(vote, i) in votes"
           :key="i"
-          class="py-3 px-4 border-b last:border-b-0 relative"
+          class="py-3 pl-4 border-b last:border-b-0 relative flex justify-between"
         >
-          <div
-            class="absolute choice-bg top-0 bottom-0 right-0 opacity-10"
-            :style="{
-              width: `${((100 / proposal.scores_total) * vote.vp).toFixed(2)}%`
-            }"
-            :class="`_${vote.choice}`"
-          />
-          <Stamp :id="vote.voter.id" :size="24" class="mr-2" />
-          <router-link
-            :to="{ name: 'user', params: { id: vote.voter.id } }"
-            @click="$emit('close')"
-          >
-            {{ shortenAddress(vote.voter.id) }}
-          </router-link>
-          <div class="absolute right-4 top-3 text-skin-link" v-text="choices[vote.choice]" />
+          <div>
+            <div
+              class="absolute choice-bg top-0 bottom-0 right-0 opacity-10"
+              :style="{
+                width: `${((100 / proposal.scores_total) * vote.vp).toFixed(2)}%`
+              }"
+              :class="`_${vote.choice}`"
+            />
+            <Stamp :id="vote.voter.id" :size="24" class="mr-2" />
+            <router-link
+              :to="{ name: 'user', params: { id: vote.voter.id } }"
+              @click="$emit('close')"
+            >
+              {{ shortenAddress(vote.voter.id) }}
+            </router-link>
+          </div>
+          <div class="text-skin-link text-center w-[90px]" v-text="choices[vote.choice]" />
         </div>
       </div>
       <div v-else class="p-4 text-center">There isn't any votes yet!</div>
