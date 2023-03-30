@@ -155,7 +155,9 @@ watch([() => web3.value.account, proposal], () => getVotingPower());
           v-if="
             proposal.execution &&
             proposal.execution.length > 0 &&
-            proposal.scores_total >= proposal.quorum
+            BigInt(proposal.scores_total) >= BigInt(proposal.quorum) &&
+            BigInt(proposal.scores_1) > BigInt(proposal.scores_2) &&
+            proposal.has_execution_window_opened
           "
         >
           <h4 class="mb-3 eyebrow flex items-center">
@@ -196,6 +198,7 @@ watch([() => web3.value.account, proposal], () => getVotingPower());
             <div class="grid grid-cols-3 gap-2">
               <UiButton
                 class="w-full !text-white !bg-green !border-green"
+                title="For"
                 :primary="true"
                 :loading="sendingType === 1"
                 @click="handleVoteClick(1)"
@@ -204,6 +207,7 @@ watch([() => web3.value.account, proposal], () => getVotingPower());
               </UiButton>
               <UiButton
                 class="w-full !text-white !bg-red !border-red"
+                title="Against"
                 :primary="true"
                 :loading="sendingType === 2"
                 @click="handleVoteClick(2)"
@@ -212,6 +216,7 @@ watch([() => web3.value.account, proposal], () => getVotingPower());
               </UiButton>
               <UiButton
                 class="w-full !text-white !bg-gray-500 !border-gray-500"
+                title="Abstain"
                 :primary="true"
                 :loading="sendingType === 3"
                 @click="handleVoteClick(3)"

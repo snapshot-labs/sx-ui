@@ -1,6 +1,6 @@
 import { shorten } from '@/helpers/utils';
 
-export const API_URL = 'https://testnet-api-1.snapshotx.xyz';
+export const API_URL = 'https://api-1.snapshotx.xyz';
 
 export const SUPPORTED_AUTHENTICATORS = {
   '0x64cce9272197eba6353f5bbf060e097e516b411e66e83a9cf5910a08697df14': true
@@ -26,6 +26,8 @@ export const AUTHS = {
   '0x59283b509832027a386b3f419628a5b149e9d6462a6547c63e92bd4a09a7245': 'Starknet signature'
 };
 
+export const PROPOSAL_VALIDATIONS = {};
+
 export const STRATEGIES = {
   '0x58623786b93d9b6ed1f83cec5c6fa6bea5f399d2795ee56a6123bdd83f5aa48': 'Vanilla',
   '0xd1b81feff3095ca9517fdfc7427e742ce96f7ca8f3b2664a21b2fba552493b': 'Single slot proof'
@@ -48,6 +50,8 @@ export const EDITOR_AUTHENTICATORS = [
     paramsDefinition: null
   }
 ];
+
+export const EDITOR_PROPOSAL_VALIDATIONS = [];
 
 export const EDITOR_VOTING_STRATEGIES = [
   {

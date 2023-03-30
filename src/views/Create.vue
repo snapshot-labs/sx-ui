@@ -26,6 +26,10 @@ const PAGES = [
     title: 'Auths'
   },
   {
+    id: 'validations',
+    title: 'Proposal validation'
+  },
+  {
     id: 'executions',
     title: 'Executions'
   },
@@ -55,6 +59,7 @@ const pagesErrors: Ref<Record<PageID, Record<string, string>>> = ref({
   network: {},
   strategies: {},
   auths: {},
+  validations: {},
   executions: {},
   voting: {},
   controller: {}
@@ -73,6 +78,7 @@ const metadataForm: SpaceMetadata = reactive(
 );
 const selectedNetworkId: Ref<NetworkID> = ref('gor');
 const authenticators = ref([] as StrategyConfig[]);
+const validationStrategy: Ref<StrategyConfig | null> = ref(null);
 const votingStrategies = ref([] as StrategyConfig[]);
 const executionStrategies = ref([] as StrategyConfig[]);
 const settingsForm: SpaceSettings = reactive(
@@ -87,22 +93,45 @@ const settingsForm: SpaceSettings = reactive(
 const controller = ref(web3.value.account);
 
 const selectedNetwork = computed(() => getNetwork(selectedNetworkId.value));
+const activePages = computed(() =>
+  PAGES.filter(page => {
+    const proposalValidations = selectedNetwork.value.constants.EDITOR_PROPOSAL_VALIDATIONS;
+
+    if (page.id === 'validations' && proposalValidations.length === 0) {
+      return false;
+    }
+
+    return true;
+  })
+);
 const accessiblePages = computed(() => {
-  const invalidPageIndex = PAGES.findIndex(page => !validatePage(page.id));
+  const invalidPageIndex = activePages.value.findIndex(page => !validatePage(page.id));
 
   return Object.fromEntries(
-    PAGES.map((page, i) => [page.id, invalidPageIndex === -1 ? true : i <= invalidPageIndex])
+    activePages.value.map((page, i) => [
+      page.id,
+      invalidPageIndex === -1 ? true : i <= invalidPageIndex
+    ])
   );
 });
 const showCreate = computed(
-  () => PAGES.findIndex(page => page.id === currentPage.value) === PAGES.length - 1
+  () =>
+    activePages.value.findIndex(page => page.id === currentPage.value) ===
+    activePages.value.length - 1
 );
 const nextDisabled = computed(() => !validatePage(currentPage.value));
-const submitDisabled = computed(() => PAGES.some(page => !validatePage(page.id)));
+const submitDisabled = computed(() => activePages.value.some(page => !validatePage(page.id)));
 
 function validatePage(page: PageID) {
   if (page === 'strategies') return votingStrategies.value.length > 0;
   if (page === 'auths') return authenticators.value.length > 0;
+  if (page === 'validations') {
+    if (!validationStrategy.value) return false;
+
+    return validationStrategy.value.validate
+      ? validationStrategy.value.validate(validationStrategy.value.params)
+      : true;
+  }
   if (page === 'executions') return executionStrategies.value.length > 0;
 
   return Object.values(pagesErrors.value[page]).length === 0;
@@ -113,10 +142,10 @@ function handleErrors(page: PageID, errors: any) {
 }
 
 function handleNextClick() {
-  const currentIndex = PAGES.findIndex(page => page.id === currentPage.value);
-  if (currentIndex === PAGES.length - 1) return;
+  const currentIndex = activePages.value.findIndex(page => page.id === currentPage.value);
+  if (currentIndex === activePages.value.length - 1) return;
 
-  currentPage.value = PAGES[currentIndex + 1].id;
+  currentPage.value = activePages.value[currentIndex + 1].id;
   pagesRefs.value[currentIndex + 1].scrollIntoView();
 }
 
@@ -134,6 +163,7 @@ async function handleSubmit() {
       metadataForm,
       settingsForm,
       authenticators.value,
+      validationStrategy.value,
       votingStrategies.value,
       executionStrategies.value
     );
@@ -155,6 +185,7 @@ watch(
 
 watch(selectedNetworkId, () => {
   authenticators.value = [];
+  validationStrategy.value = null;
   votingStrategies.value = [];
   executionStrategies.value = [];
 });
@@ -167,7 +198,7 @@ watch(selectedNetworkId, () => {
         class="flex fixed lg:sticky top-[72px] inset-x-0 p-3 border-b z-10 bg-skin-bg lg:top-auto lg:inset-x-auto lg:p-0 lg:pr-5 lg:border-0 lg:flex-col gap-1 min-w-[180px] overflow-auto"
       >
         <button
-          v-for="page in PAGES"
+          v-for="page in activePages"
           ref="pagesRefs"
           :key="page.id"
           :disabled="!accessiblePages[page.id]"
@@ -206,6 +237,14 @@ watch(selectedNetworkId, () => {
             v-model="authenticators"
             :available-strategies="selectedNetwork.constants.EDITOR_AUTHENTICATORS"
             title="Authenticators"
+            description="Lorem ipsum..."
+          />
+          <BlockSpaceFormValidation
+            v-else-if="currentPage === 'validations'"
+            v-model="validationStrategy"
+            :available-strategies="selectedNetwork.constants.EDITOR_PROPOSAL_VALIDATIONS"
+            :available-voting-strategies="selectedNetwork.constants.EDITOR_VOTING_STRATEGIES"
+            title="Proposal validation"
             description="Lorem ipsum..."
           />
           <BlockSpaceFormStrategies

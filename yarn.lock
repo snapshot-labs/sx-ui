@@ -1163,10 +1163,10 @@
     json-to-graphql-query "^2.2.4"
     lodash.set "^4.3.2"
 
-"@snapshot-labs/sx@^0.1.0-beta.25":
-  version "0.1.0-beta.25"
-  resolved "https://registry.yarnpkg.com/@snapshot-labs/sx/-/sx-0.1.0-beta.25.tgz#fdd7ddf89d15d05024cb0131570754e39f444ffb"
-  integrity sha512-dEwZ0+yd6lCdTZmEREdD/tmZQgF1AiBilkjpvpTb2v15/4fWhC9iqrixbWFjrRuBazZvf4kDj3gQshv5woYBcg==
+"@snapshot-labs/sx@^0.1.0-beta.26":
+  version "0.1.0-beta.26"
+  resolved "https://registry.yarnpkg.com/@snapshot-labs/sx/-/sx-0.1.0-beta.26.tgz#ac755a7228dd676b46eeaa15ac41ff3968e7802e"
+  integrity sha512-V3IGK5L0RZElqgalrEiNcSsswnokoEpoNTM47dCml5ZOfGFCyLqcwbU7GasDc2ZphzGNLSnsSa234FQW8wEYAA==
   dependencies:
     "@ethereumjs/block" "^3.6.3"
     "@ethereumjs/common" "^2.6.5"
@@ -1217,6 +1217,11 @@
   integrity sha512-XIB2XbzHTN6ieIjfIMV9hlVcfPU26s2vafYWQcZHWXHOxiaRZYEDKEwdl129Zyg50+foYV2jCgtrqSA6qNuNSA==
   dependencies:
     defer-to-connect "^1.0.1"
+
+"@tailwindcss/line-clamp@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@tailwindcss/line-clamp/-/line-clamp-0.4.2.tgz#f353c5a8ab2c939c6267ac5b907f012e5ee130f9"
+  integrity sha512-HFzAQuqYCjyy/SX9sLGB1lroPzmcnWv1FHkIpmypte10hptf4oPUfucryMKovZh2u0uiS9U5Ty3GghWfEJGwVw==
 
 "@toruslabs/eccrypto@^1.1.8":
   version "1.1.8"
