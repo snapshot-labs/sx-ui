@@ -50,12 +50,12 @@ watch(route, () => {
     <div v-else class="pb-6 flex">
       <Sidebar class="lg:visible" :class="{ invisible: !uiStore.sidebarOpen }" />
       <Topnav @toggle="uiStore.toggleSidebar" />
-      <Nav />
+      <Nav v-if="uiStore.sidebarOpen || !route.meta.hideNav" />
       <div
         v-if="uiStore.sidebarOpen"
         class="backdrop lg:hidden"
         :style="{
-          left: `${72 + (route.matched[0]?.name === 'space' ? 240 : 0)}px`
+          left: `${72 + (['space', 'settings'].includes(route.matched[0]?.name) ? 240 : 0)}px`
         }"
         @click="uiStore.toggleSidebar"
       />

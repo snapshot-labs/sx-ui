@@ -35,7 +35,9 @@ const navigationItems = computed(() => ({
         :key="key"
         :to="{ name: `settings-${key}` }"
         class="px-4 py-[6px] space-x-2 text-skin-text flex items-center"
-        :class="route.name === `settings-${key}` && 'text-skin-link'"
+        :class="{
+          'text-skin-link': route.name === `settings-${key}`
+        }"
       >
         <component :is="item.icon" class="inline-block"></component>
         <span v-text="item.name" />

@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { useRoute } from 'vue-router';
 import { useUiStore } from '@/stores/ui';
 import { useWeb3 } from '@/composables/useWeb3';
 
 const uiStore = useUiStore();
+const route = useRoute();
 const { web3Account } = useWeb3();
 </script>
 
@@ -11,10 +13,12 @@ const { web3Account } = useWeb3();
     <div>
       <div
         class="ml-0 lg:ml-[240px] mr-0 xl:mr-[240px]"
-        :class="{ 'translate-x-[240px] lg:translate-x-0': uiStore.sidebarOpen }"
+        :class="{
+          'translate-x-[240px] lg:translate-x-0': uiStore.sidebarOpen,
+          'lg:ml-[240px] xl:mr-[240px]': !route.meta.hideNav
+        }"
       >
-        <NavSettings />
-        <router-view v-if="web3Account" />
+        <router-view v-if="web3Account" :key="web3Account.toLowerCase()" />
       </div>
       <div class="invisible xl:visible fixed w-[240px] border-l bottom-0 top-[72px] right-0" />
     </div>

@@ -27,8 +27,8 @@ const routes: any[] = [
       { path: 'proposals', name: 'space-proposals', component: SpaceProposals },
       { path: 'settings', name: 'space-settings', component: SpaceSettings },
       { path: 'treasury', name: 'space-treasury', component: SpaceTreasury },
-      { path: 'create/:key?', name: 'editor', component: SpaceEditor },
-      { path: 'proposal/:pid', name: 'proposal', component: Proposal }
+      { path: 'create/:key?', name: 'editor', component: SpaceEditor, meta: { hideNav: true } },
+      { path: 'proposal/:pid', name: 'proposal', component: Proposal, meta: { hideNav: true } }
     ]
   },
   {
@@ -41,7 +41,6 @@ const routes: any[] = [
     name: 'settings',
     component: Settings,
     children: [
-      // { path: '', redirect: '/settings/contacts' },
       { path: '', name: 'settings-spaces', component: SettingsSpaces },
       { path: 'contacts', name: 'settings-contacts', component: Contacts }
     ]

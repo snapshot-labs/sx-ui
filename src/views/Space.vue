@@ -20,8 +20,11 @@ onMounted(() => {
   <div>
     <div>
       <div
-        class="ml-0 lg:ml-[240px] mr-0 xl:mr-[240px]"
-        :class="{ 'translate-x-[240px] lg:translate-x-0': uiStore.sidebarOpen }"
+        class="ml-0 mr-0"
+        :class="{
+          'translate-x-[240px] lg:translate-x-0': uiStore.sidebarOpen,
+          'lg:ml-[240px] xl:mr-[240px]': !route.meta.hideNav
+        }"
       >
         <UiLoading v-if="!spacesStore.spacesMap.has(id)" class="block p-4" />
         <router-view v-else :space="spacesStore.spacesMap.get(id)" />
