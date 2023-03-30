@@ -68,8 +68,9 @@ export function _n(value: any, notation: 'standard' | 'compact' = 'standard') {
 }
 
 export function _c(value: string | bigint, decimals = 18) {
-  const parsed = Number(value) / 10 ** decimals;
-  if (parsed < 0.000001) return `~0`;
+  const raw = BigInt(value);
+  const parsed = Number(raw) / 10 ** decimals;
+  if (raw !== 0n && parsed < 0.000001) return `~0`;
 
   const formatter = new Intl.NumberFormat('en', { maximumFractionDigits: 6 });
   return formatter.format(parsed);
