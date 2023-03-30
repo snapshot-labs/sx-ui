@@ -77,14 +77,14 @@ watch(route, to => {
             v-if="currentRouteName === 'space'"
             class="flex items-center flex-1 px-2 py-3 h-full"
           >
-            <IH-search class="mr-4" :class="{ 'text-skin-link': focused }" />
-            <form @submit="handleSearchSubmit">
+            <IH-search class="mr-3" :class="{ 'text-skin-link': focused }" />
+            <form class="flex flex-1" @submit="handleSearchSubmit">
               <input
                 ref="searchInput"
                 v-model="searchValue"
                 type="text"
                 placeholder="Search"
-                class="flex-auto bg-transparent text-skin-link"
+                class="flex-auto bg-transparent text-skin-link text-[19px]"
               />
             </form>
           </div>
