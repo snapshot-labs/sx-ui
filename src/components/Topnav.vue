@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useFocus } from '@vueuse/core';
 import { getInstance } from '@snapshot-labs/lock/plugins/vue3';
 import { shorten } from '@/helpers/utils';
 import { useUiStore } from '@/stores/ui';
@@ -19,7 +20,10 @@ const { login, web3 } = useWeb3();
 const { toggleSkin, getMode } = useUserSkin();
 
 const loading = ref(false);
+const searchInput = ref();
 const searchValue = ref('');
+
+const { focused } = useFocus(searchInput);
 
 const currentRouteName = computed(() => {
   return String(route.matched[0]?.name);
@@ -73,7 +77,7 @@ watch(route, to => {
             v-if="currentRouteName === 'space'"
             class="flex items-center flex-1 px-2 py-3 h-full"
           >
-            <IH-search class="mr-4" />
+            <IH-search class="mr-4" :class="{ 'text-skin-link': focused }" />
             <form @submit="handleSearchSubmit">
               <input
                 ref="searchInput"
