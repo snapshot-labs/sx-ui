@@ -60,40 +60,35 @@ watch(route, to => {
     }"
   >
     <div
-      class="flex items-center h-[71px] px-4 bg-skin-bg"
+      class="flex items-center justify-between h-[71px] px-4 bg-skin-bg"
       :class="{
         'lg:ml-[240px]': route.matched[0]?.name === 'space',
         'translate-x-[240px] lg:translate-x-0':
           uiStore.sidebarOpen && route.matched[0]?.name === 'space'
       }"
     >
-      <div class="flex-auto h-full">
-        <div class="flex items-center h-full">
-          <IH-menu-alt-2
-            class="inline-block text-skin-link mr-4 cursor-pointer lg:hidden"
-            @click="emit('toggle')"
-          />
-          <div
-            v-if="currentRouteName === 'space'"
-            class="flex items-center flex-1 px-2 py-3 h-full"
-          >
-            <IH-search class="mr-3" :class="{ 'text-skin-link': focused }" />
-            <form class="flex flex-1" @submit="handleSearchSubmit">
-              <input
-                ref="searchInput"
-                v-model="searchValue"
-                type="text"
-                placeholder="Search"
-                class="flex-auto bg-transparent text-skin-link text-[19px]"
-              />
-            </form>
-          </div>
-          <router-link v-else :to="{ path: '/' }" class="flex items-center" style="font-size: 24px">
-            snapshot x
-          </router-link>
+      <div class="flex flex-grow items-center h-full">
+        <IH-menu-alt-2
+          class="inline-block text-skin-link mr-4 cursor-pointer lg:hidden"
+          @click="emit('toggle')"
+        />
+        <div v-if="currentRouteName === 'space'" class="flex items-center flex-1 px-2 py-3 h-full">
+          <IH-search class="mr-3 flex-shrink-0" :class="{ 'text-skin-link': focused }" />
+          <form class="flex flex-grow" @submit="handleSearchSubmit">
+            <input
+              ref="searchInput"
+              v-model="searchValue"
+              type="text"
+              placeholder="Search"
+              class="bg-transparent text-skin-link text-[19px] w-full"
+            />
+          </form>
         </div>
+        <router-link v-else :to="{ path: '/' }" class="flex items-center" style="font-size: 24px">
+          snapshot x
+        </router-link>
       </div>
-      <div :key="web3.account">
+      <div :key="web3.account" class="flex">
         <UiButton v-if="loading || web3.authLoading" loading class="!px-0 w-[46px]" />
         <UiButton
           v-else
