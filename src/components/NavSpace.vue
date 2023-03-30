@@ -60,8 +60,8 @@ const navigationItems = computed(() => ({
           'text-skin-link': route.name === `space-${key}`
         }"
       >
-        <component :is="item.icon" class="inline-block"></component>
-        <span v-text="item.name" />
+        <component :is="item?.icon" class="inline-block"></component>
+        <span v-text="item?.name" />
       </router-link>
     </div>
   </div>
