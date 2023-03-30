@@ -20,12 +20,10 @@ provide('web3', web3);
 
 const skin = computed(() => userSkin.value);
 const scrollDisabled = computed(() => modalOpen.value || uiStore.sidebarOpen);
-const backdropLeft = computed(
-  () =>
-    `${
-      72 + (['space', 'settings'].includes(route.matched[0]?.name) && !route.meta.hideNav ? 240 : 0)
-    }px`
-);
+const backdropLeftOffset = computed(() => {
+  const isOffset = ['space', 'settings'].includes(route.matched[0]?.name) && !route.meta.hideNav;
+  return `${72 + (isOffset ? 240 : 0)}px`;
+});
 
 onMounted(async () => {
   uiStore.restorePendingTransactions();
@@ -61,7 +59,7 @@ watch(route, () => {
         v-if="uiStore.sidebarOpen"
         class="backdrop lg:hidden"
         :style="{
-          left: backdropLeft
+          left: backdropLeftOffset
         }"
         @click="uiStore.toggleSidebar"
       />
