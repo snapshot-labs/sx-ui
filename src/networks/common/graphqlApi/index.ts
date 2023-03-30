@@ -133,23 +133,13 @@ export function createApi(uri: string, networkId: NetworkID): NetworkApi {
 
       return formatProposal(data.proposal, networkId);
     },
-    loadSpaces: async ({ limit, skip = 0 }: PaginationOpts): Promise<Space[]> => {
+    loadSpaces: async ({ limit, skip = 0, filter }: PaginationOpts): Promise<Space[]> => {
       const { data } = await apollo.query({
         query: SPACES_QUERY,
         variables: {
           first: limit,
-          skip
-        }
-      });
-
-      return data.spaces.map(space => formatSpace(space, networkId));
-    },
-    loadSpacesByController: async ({ limit, skip = 0 }: PaginationOpts): Promise<Space[]> => {
-      const { data } = await apollo.query({
-        query: SPACES_QUERY,
-        variables: {
-          first: limit,
-          skip
+          skip,
+          ...(filter ? { where: filter } : {})
         }
       });
 

@@ -1,37 +1,26 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted } from 'vue';
+import { useWeb3 } from '@/composables/useWeb3';
+import { useSpaces } from '@/composables/useSpaces';
 
-const tab = ref('controlled');
-const tabs = [
-  { id: 'controlled', name: 'Controlled' },
-  { id: 'voted', name: 'Voted' },
-  { id: 'proposed', name: 'Proposed' }
-];
+const { web3Account } = useWeb3();
+const { loaded, spaces, fetch } = useSpaces();
+
+onMounted(() => {
+  fetch({ controller: web3Account.value });
+});
 </script>
 
 <template>
   <div>
-    <!-- TODO refactor to tabs -->
-    <div class="flex flex-row w-full justify-start border-b sticky top-[72px] bg-skin-bg">
-      <h4
-        v-for="t in tabs"
-        :key="t.id"
-        class="eyebrow py-2 px-4 cursor-pointer"
-        :class="{ 'text-skin-text': t.id !== tab }"
-        @click="tab = t.id"
-        v-text="t.name"
-      />
-    </div>
-    <template v-if="tab === 'controlled'">
-      <div v-for="i in 12" :key="i" class="w-full border-b p-4">{{ i }} space i control</div>
-    </template>
-    <template v-if="tab === 'voted'">
-      <div v-for="i in 10" :key="i" class="w-full border-b p-4">{{ i }} space where i voted</div>
-    </template>
-    <template v-if="tab === 'proposed'">
-      <div v-for="i in 5" :key="i" class="w-full border-b p-4">
-        {{ i }} space where i created a proposal
+    <Container class="max-w-screen-md pt-5">
+      <h2 class="mb-4 mono !text-xl" v-text="'My spaces'" />
+      <UiLoading v-if="!loaded" class="block mb-2" />
+      <div v-if="loaded" class="max-w-screen-md">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-3">
+          <SpaceItem v-for="space in spaces" :key="space.id" :space="space" />
+        </div>
       </div>
-    </template>
+    </Container>
   </div>
 </template>
