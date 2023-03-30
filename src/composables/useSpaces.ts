@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue';
 import { enabledNetworks, getNetwork } from '@/networks';
-import type { Space, NetworkID } from '@/types';
+import { Space, NetworkID } from '@/types';
+import { SpacesFilter } from '@/networks/types';
 
 const SPACES_LIMIT = 1000;
 
@@ -8,10 +9,6 @@ type NetworkRecord = {
   spaces: Record<string, Space>;
   spacesIdsList: string[];
   hasMoreSpaces: boolean;
-};
-
-type SpaceFilter = {
-  controller?: string;
 };
 
 export function useSpaces() {
@@ -50,7 +47,7 @@ export function useSpaces() {
     Object.values(networksMap.value).some(record => record.hasMoreSpaces === true)
   );
 
-  async function _fetchSpaces(overwrite: boolean, filter?: SpaceFilter) {
+  async function _fetchSpaces(overwrite: boolean, filter?: SpacesFilter) {
     const results = await Promise.all(
       enabledNetworks.map(async id => {
         const network = getNetwork(id);
@@ -64,11 +61,13 @@ export function useSpaces() {
           };
         }
 
-        const spaces = await network.api.loadSpaces({
-          skip: overwrite ? 0 : record.spacesIdsList.length,
-          limit: SPACES_LIMIT,
+        const spaces = await network.api.loadSpaces(
+          {
+            skip: overwrite ? 0 : record.spacesIdsList.length,
+            limit: SPACES_LIMIT
+          },
           filter
-        });
+        );
 
         return {
           id,
@@ -99,7 +98,7 @@ export function useSpaces() {
     ) as Record<NetworkID, NetworkRecord>;
   }
 
-  async function fetch(filter?: SpaceFilter) {
+  async function fetch(filter?: SpacesFilter) {
     if (loading.value || loaded.value) return;
     loading.value = true;
 
@@ -109,7 +108,7 @@ export function useSpaces() {
     loading.value = false;
   }
 
-  async function fetchMore(filter?: SpaceFilter) {
+  async function fetchMore(filter?: SpacesFilter) {
     if (loading.value || !loaded.value) return;
     loadingMore.value = true;
 

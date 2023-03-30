@@ -3,7 +3,10 @@ import type { Signer } from '@ethersproject/abstract-signer';
 import type { MetaTransaction } from '@snapshot-labs/sx/dist/utils/encoding';
 import type { Space, SpaceMetadata, Proposal, Vote, User, Choice, NetworkID } from '@/types';
 
-export type PaginationOpts = { limit: number; skip?: number; filter?: any };
+export type PaginationOpts = { limit: number; skip?: number };
+export type SpacesFilter = {
+  controller: string;
+};
 export type Connector =
   | 'argentx'
   | 'injected'
@@ -89,7 +92,7 @@ export type NetworkApi = {
   loadProposals(spaceId: string, paginationOpts: PaginationOpts): Promise<Proposal[]>;
   loadProposalsSummary(spaceId: string, limit: number): Promise<Proposal[]>;
   loadProposal(spaceId: string, proposalId: number): Promise<Proposal>;
-  loadSpaces(paginationOpts: PaginationOpts): Promise<Space[]>;
+  loadSpaces(paginationOpts: PaginationOpts, filter?: SpacesFilter): Promise<Space[]>;
   loadSpace(spaceId: string): Promise<Space>;
   loadUser(userId: string): Promise<User>;
 };
