@@ -20,6 +20,12 @@ provide('web3', web3);
 
 const skin = computed(() => userSkin.value);
 const scrollDisabled = computed(() => modalOpen.value || uiStore.sidebarOpen);
+const backdropLeft = computed(
+  () =>
+    `${
+      72 + (['space', 'settings'].includes(route.matched[0]?.name) && !route.meta.hideNav ? 240 : 0)
+    }px`
+);
 
 onMounted(async () => {
   uiStore.restorePendingTransactions();
@@ -50,12 +56,12 @@ watch(route, () => {
     <div v-else class="pb-6 flex">
       <Sidebar class="lg:visible" :class="{ invisible: !uiStore.sidebarOpen }" />
       <Topnav @toggle="uiStore.toggleSidebar" />
-      <Nav v-if="uiStore.sidebarOpen || !route.meta.hideNav" />
+      <Nav v-if="!route.meta.hideNav" />
       <div
         v-if="uiStore.sidebarOpen"
         class="backdrop lg:hidden"
         :style="{
-          left: `${72 + (['space', 'settings'].includes(route.matched[0]?.name) ? 240 : 0)}px`
+          left: backdropLeft
         }"
         @click="uiStore.toggleSidebar"
       />
