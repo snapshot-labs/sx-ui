@@ -30,22 +30,26 @@ export const PROPOSAL_QUERY = gql`
       scores_2
       scores_3
       scores_total
+      execution_time
+      execution_strategy
       strategies
       strategies_params
       created
       tx
+      execution_tx
       vote_count
       executed
+      completed
     }
   }
 `;
 
 export const PROPOSALS_QUERY = gql`
-  query ($first: Int!, $skip: Int!, $space: String!) {
+  query ($first: Int!, $skip: Int!, $space: String!, $searchQuery: String) {
     proposals(
       first: $first
       skip: $skip
-      where: { space: $space }
+      where: { space: $space, title_contains_nocase: $searchQuery }
       orderBy: created
       orderDirection: desc
     ) {
@@ -77,12 +81,16 @@ export const PROPOSALS_QUERY = gql`
       scores_2
       scores_3
       scores_total
+      execution_time
+      execution_strategy
       strategies
       strategies_params
       created
       tx
+      execution_tx
       vote_count
       executed
+      completed
     }
   }
 `;
@@ -135,12 +143,16 @@ export const PROPOSALS_SUMMARY_QUERY = gql`
     scores_2
     scores_3
     scores_total
+    execution_time
+    execution_strategy
     strategies
     strategies_params
     created
     tx
+    execution_tx
     vote_count
     executed
+    completed
   }
 `;
 

@@ -1,16 +1,24 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useActions } from '@/composables/useActions';
 import { getNetwork } from '@/networks';
+import { shorten } from '@/helpers/utils';
 import type { Proposal as ProposalType } from '@/types';
 
 const props = defineProps<{ proposal: ProposalType }>();
 
-const { finalizeProposal, receiveProposal, executeTransactions } = useActions();
+const { finalizeProposal, receiveProposal, executeTransactions, executeQueuedProposal } =
+  useActions();
 
 const finalizeProposalSending = ref(false);
 const receiveProposalSending = ref(false);
 const executeTransactionsSending = ref(false);
+const executeQueuedProposalSending = ref(false);
+
+const network = computed(() => getNetwork(props.proposal.network));
+const baseNetwork = computed(() =>
+  network.value.baseNetworkId ? getNetwork(network.value.baseNetworkId) : network.value
+);
 
 async function handleFinalizeProposalClick() {
   finalizeProposalSending.value = true;
@@ -41,14 +49,34 @@ async function handleExecuteTransactionsClick() {
     executeTransactionsSending.value = false;
   }
 }
+
+async function handleExecuteQueuedProposalClick() {
+  executeQueuedProposalSending.value = true;
+
+  try {
+    await executeQueuedProposal(props.proposal);
+  } finally {
+    executeQueuedProposalSending.value = false;
+  }
+}
 </script>
 
 <template>
   <div class="x-block !border-x rounded-lg p-3">
-    <div v-if="proposal.executed">Proposal has been already executed</div>
+    <div v-if="proposal.execution_tx">
+      Proposal has been already executed at
+      <a
+        class="inline-flex items-center"
+        target="_blank"
+        :href="baseNetwork.helpers.getExplorerUrl(proposal.execution_tx, 'transaction')"
+      >
+        {{ shorten(proposal.execution_tx) }}
+        <IH-external-link class="inline-block ml-1"
+      /></a>
+    </div>
     <template v-else>
       <UiButton
-        v-if="getNetwork(proposal.network).hasReceive"
+        v-if="network.hasReceive"
         class="block mb-2 w-full flex justify-center items-center"
         :loading="finalizeProposalSending"
         @click="handleFinalizeProposalClick"
@@ -57,7 +85,7 @@ async function handleExecuteTransactionsClick() {
         Finalize proposal
       </UiButton>
       <UiButton
-        v-if="getNetwork(proposal.network).hasReceive"
+        v-if="network.hasReceive"
         class="block mb-2 w-full flex justify-center items-center"
         :loading="receiveProposalSending"
         @click="handleReceiveProposalClick"
@@ -66,12 +94,24 @@ async function handleExecuteTransactionsClick() {
         Receive proposal
       </UiButton>
       <UiButton
+        v-if="!proposal.executed"
         class="block mb-2 w-full flex justify-center items-center"
         :loading="executeTransactionsSending"
         @click="handleExecuteTransactionsClick"
       >
         <IH-play class="inline-block mr-2" />
-        Execute transactions
+        Execute proposal
+      </UiButton>
+      <UiButton
+        v-if="proposal.executed && !proposal.completed"
+        :disabled="!proposal.has_veto_period_ended"
+        :title="proposal.has_veto_period_ended ? '' : 'Veto period has not ended yet'"
+        class="block mb-2 w-full flex justify-center items-center"
+        :loading="executeQueuedProposalSending"
+        @click="handleExecuteQueuedProposalClick"
+      >
+        <IH-play class="inline-block mr-2" />
+        Execute queued transactions
       </UiButton>
     </template>
   </div>

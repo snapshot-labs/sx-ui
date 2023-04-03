@@ -76,6 +76,7 @@ export type NetworkActions = {
   finalizeProposal(web3: Web3Provider, proposal: Proposal);
   receiveProposal(web3: Web3Provider, proposal: Proposal);
   executeTransactions(web3: Web3Provider, proposal: Proposal);
+  executeQueuedProposal(web3: Web3Provider, proposal: Proposal);
   getVotingPower(
     strategiesAddresses: string[],
     strategiesParams: any[],
@@ -89,7 +90,11 @@ export type NetworkActions = {
 export type NetworkApi = {
   loadProposalVotes(proposal: Proposal): Promise<Vote[]>;
   loadUserVotes(voter: string): Promise<{ [key: string]: Vote }>;
-  loadProposals(spaceId: string, paginationOpts: PaginationOpts): Promise<Proposal[]>;
+  loadProposals(
+    spaceId: string,
+    paginationOpts: PaginationOpts,
+    searchQuery?: string
+  ): Promise<Proposal[]>;
   loadProposalsSummary(spaceId: string, limit: number): Promise<Proposal[]>;
   loadProposal(spaceId: string, proposalId: number): Promise<Proposal>;
   loadSpaces(paginationOpts: PaginationOpts, filter?: SpacesFilter): Promise<Space[]>;
