@@ -119,7 +119,14 @@ export const EDITOR_VOTING_STRATEGIES = [
     generateSummary: (params: Record<string, any>) =>
       `(${shorten(params.contractAddress)}, ${params.decimals})`,
     generateParams: (params: Record<string, any>) => [params.contractAddress],
-    generateMetadata: (params: Record<string, any>) => `0x${params.decimals.toString(16)}`,
+    generateMetadata: (params: Record<string, any>) => ({
+      name: 'Delegated Comp Token',
+      properties: {
+        symbol: params.symbol,
+        decimals: parseInt(params.decimals),
+        token: params.contractAddress
+      }
+    }),
     paramsDefinition: {
       type: 'object',
       title: 'Params',
@@ -136,6 +143,12 @@ export const EDITOR_VOTING_STRATEGIES = [
           type: 'integer',
           title: 'Decimals',
           examples: ['18']
+        },
+        symbol: {
+          type: 'string',
+          maxLength: 6,
+          title: 'Symbol',
+          examples: ['COMP']
         }
       }
     }
@@ -146,7 +159,14 @@ export const EDITOR_VOTING_STRATEGIES = [
     generateSummary: (params: Record<string, any>) =>
       `(${shorten(params.contractAddress)}, ${params.decimals})`,
     generateParams: (params: Record<string, any>) => [params.contractAddress],
-    generateMetadata: (params: Record<string, any>) => `0x${params.decimals.toString(16)}`,
+    generateMetadata: (params: Record<string, any>) => ({
+      name: 'Delegated Comp Token',
+      properties: {
+        symbol: params.symbol,
+        decimals: parseInt(params.decimals),
+        token: params.contractAddress
+      }
+    }),
     paramsDefinition: {
       type: 'object',
       title: 'Params',
@@ -163,6 +183,12 @@ export const EDITOR_VOTING_STRATEGIES = [
           type: 'integer',
           title: 'Decimals',
           examples: ['18']
+        },
+        symbol: {
+          type: 'string',
+          maxLength: 6,
+          title: 'Symbol',
+          examples: ['COMP']
         }
       }
     }

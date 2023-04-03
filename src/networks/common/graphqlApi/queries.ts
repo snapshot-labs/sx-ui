@@ -9,6 +9,11 @@ export const PROPOSAL_QUERY = gql`
         id
         authenticators
         strategies_metadata
+        strategies_parsed_metadata {
+          decimals
+          symbol
+          token
+        }
         executors
         executors_types
       }
@@ -60,6 +65,11 @@ export const PROPOSALS_QUERY = gql`
         quorum
         authenticators
         strategies_metadata
+        strategies_parsed_metadata {
+          decimals
+          symbol
+          token
+        }
         executors
         executors_types
       }
@@ -214,6 +224,11 @@ export const SPACE_QUERY = gql`
       strategies
       strategies_params
       strategies_metadata
+      strategies_parsed_metadata {
+        decimals
+        symbol
+        token
+      }
       authenticators
       executors
       executors_types
@@ -246,6 +261,11 @@ export const SPACES_QUERY = gql`
       strategies
       strategies_params
       strategies_metadata
+      strategies_parsed_metadata {
+        decimals
+        symbol
+        token
+      }
       authenticators
       executors
       executors_types

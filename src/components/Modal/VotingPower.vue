@@ -56,7 +56,10 @@ const baseNetwork = computed(() =>
             {{ shorten(strategy.token) }}
             <IH-external-link class="ml-1" />
           </a>
-          <div>{{ _n(Number(strategy.value) / 10 ** strategy.decimals) }} units</div>
+          <div>
+            {{ _n(Number(strategy.value) / 10 ** strategy.decimals) }}
+            {{ strategy.symbol || 'units' }}
+          </div>
         </div>
       </div>
     </div>
