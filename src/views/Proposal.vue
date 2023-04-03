@@ -236,7 +236,12 @@ watch([() => web3.value.account, proposal], () => getVotingPower());
       </div>
     </Container>
     <teleport to="#modal">
-      <ModalVotes :open="modalOpenVotes" :proposal="proposal" @close="modalOpenVotes = false" />
+      <ModalVotes
+        v-if="proposal"
+        :open="modalOpenVotes"
+        :proposal="proposal"
+        @close="modalOpenVotes = false"
+      />
       <ModalTimeline
         :open="modalOpenTimeline"
         :proposal="proposal"
