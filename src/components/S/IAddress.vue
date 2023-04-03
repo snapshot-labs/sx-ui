@@ -5,15 +5,15 @@ export default {
 </script>
 
 <script setup lang="ts">
-type Props = {
-  showPicker?: boolean;
-  path?: string;
-  definition: any;
-};
-
-withDefaults(defineProps<Props>(), {
-  showPicker: true
-});
+withDefaults(
+  defineProps<{
+    showPicker?: boolean;
+    path?: string;
+  }>(),
+  {
+    showPicker: true
+  }
+);
 
 const emit = defineEmits<{
   (e: 'pick', path: string);
@@ -25,6 +25,6 @@ const emit = defineEmits<{
     <div v-if="showPicker" class="absolute top-[20px] right-3 z-10">
       <a @click="emit('pick', path || '')"><IH-identification /></a>
     </div>
-    <SIString v-bind="$attrs as Props" class="!pr-7" />
+    <SIString v-bind="$attrs as any" class="!pr-7" />
   </div>
 </template>
