@@ -29,7 +29,12 @@ const routes: any[] = [
       { path: 'search', name: 'space-search-proposals', component: SpaceSearchProposals },
       { path: 'settings', name: 'space-settings', component: SpaceSettings },
       { path: 'treasury', name: 'space-treasury', component: SpaceTreasury },
-      { path: 'create/:key?', name: 'editor', component: SpaceEditor, meta: { hideNav: true } },
+      {
+        path: 'create/:key?',
+        name: 'editor',
+        component: SpaceEditor,
+        meta: { hideNav: true, hideTopNav: true }
+      },
       { path: 'proposal/:pid', name: 'proposal', component: Proposal, meta: { hideNav: true } }
     ]
   },
