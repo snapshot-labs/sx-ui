@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import { onMounted, ref, computed, watch } from 'vue';
-import { useRoute } from 'vue-router';
-import { useWeb3 } from '@/composables/useWeb3';
-import { useActions } from '@/composables/useActions';
 import { sanitizeUrl } from '@braintree/sanitize-url';
 import { useProposalsStore } from '@/stores/proposals';
 import { getNetwork } from '@/networks';
