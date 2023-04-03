@@ -8,6 +8,7 @@ import { VotingPower } from '@/networks/types';
 const props = defineProps<{
   networkId: NetworkID;
   loading: boolean;
+  votingPowerSymbol: string;
   votingPowers: VotingPower[];
 }>();
 
@@ -34,12 +35,13 @@ const decimals = computed(() =>
       @click="modalOpen = true"
     >
       <IH-lightning-bolt class="inline-block" />
-      <span class="ml-1">{{ _c(votingPower, decimals) }}</span>
+      <span class="ml-1">{{ _c(votingPower, decimals) }} {{ votingPowerSymbol }}</span>
     </UiButton>
     <teleport to="#modal">
       <ModalVotingPower
         :open="modalOpen"
         :network-id="networkId"
+        :voting-power-symbol="votingPowerSymbol"
         :voting-powers="props.votingPowers"
         :final-decimals="decimals"
         @close="modalOpen = false"

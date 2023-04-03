@@ -70,6 +70,7 @@ watch(
         <VotingPowerIndicator
           :network-id="space.network"
           :loading="loadingVotingPower"
+          :voting-power-symbol="space.voting_power_symbol"
           :voting-powers="votingPowers"
         />
         <router-link :to="{ name: 'editor' }">

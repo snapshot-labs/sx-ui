@@ -7,6 +7,7 @@ export const PROPOSAL_QUERY = gql`
       proposal_id
       space {
         id
+        voting_power_symbol
         authenticators
         strategies_metadata
         strategies_parsed_metadata {
@@ -62,6 +63,7 @@ export const PROPOSALS_QUERY = gql`
       proposal_id
       space {
         id
+        voting_power_symbol
         quorum
         authenticators
         strategies_metadata
@@ -212,6 +214,7 @@ export const SPACE_QUERY = gql`
       github
       twitter
       discord
+      voting_power_symbol
       wallet
       controller
       voting_delay
@@ -249,6 +252,7 @@ export const SPACES_QUERY = gql`
       github
       twitter
       discord
+      voting_power_symbol
       wallet
       controller
       voting_delay

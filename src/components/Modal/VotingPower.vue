@@ -4,10 +4,12 @@ import { getNetwork } from '@/networks';
 import { _n, shorten } from '@/helpers/utils';
 import { NetworkID } from '@/types';
 import { VotingPower } from '@/networks/types';
+import voting from '@snapshot-labs/snapshot.js/src/voting';
 
 const props = defineProps<{
   open: boolean;
   networkId: NetworkID;
+  votingPowerSymbol: string;
   votingPowers: VotingPower[];
   finalDecimals: number;
 }>();
@@ -43,7 +45,7 @@ const baseNetwork = computed(() =>
             v-text="network.constants.STRATEGIES[strategy.address]"
           />
           <div class="text-skin-link">
-            {{ _n(Number(strategy.value) / 10 ** finalDecimals) }} VP
+            {{ _n(Number(strategy.value) / 10 ** finalDecimals) }} {{ votingPowerSymbol }}
           </div>
         </div>
         <div v-if="strategy.token" class="flex justify-between">

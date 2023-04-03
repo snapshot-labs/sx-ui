@@ -119,6 +119,7 @@ watch([() => web3.value.account, proposal], () => getVotingPower());
             <VotingPowerIndicator
               :network-id="networkId as NetworkID"
               :loading="loadingVotingPower"
+              :voting-power-symbol="proposal.space.voting_power_symbol"
               :voting-powers="votingPowers"
               class="mr-2"
             />

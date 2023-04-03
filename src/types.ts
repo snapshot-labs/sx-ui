@@ -11,6 +11,7 @@ export type SpaceMetadata = {
   twitter: string;
   github: string;
   discord: string;
+  votingPowerSymbol: string;
   walletNetwork: NetworkID | null;
   walletAddress: string | null;
 };
@@ -38,6 +39,7 @@ export type Space = {
   twitter: string;
   github: string;
   discord: string;
+  voting_power_symbol: string;
   wallet: string;
   controller: string;
   voting_delay: number;
@@ -66,6 +68,7 @@ export type Proposal = {
   quorum: number;
   space: {
     id: string;
+    voting_power_symbol: string;
     authenticators: string[];
     strategies_metadata: string[];
     executors: string[];
