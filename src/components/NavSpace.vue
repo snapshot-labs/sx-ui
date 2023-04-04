@@ -14,7 +14,6 @@ const route = useRoute();
 const uiStore = useUiStore();
 const spacesStore = useSpacesStore();
 
-// TODO if we not get ALL spaces like paginate 1000 we will not find a space here
 const space = computed(() => spacesStore.spacesMap.get(route.params.id as string));
 const { treasury } = useTreasury(space);
 

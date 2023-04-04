@@ -62,9 +62,9 @@ watch(route, to => {
     <div
       class="flex items-center justify-between h-[71px] px-4 bg-skin-bg"
       :class="{
-        'lg:ml-[240px]': route.matched[0]?.name === 'space',
+        'lg:ml-[240px]': ['space', 'settings'].includes(route.matched[0]?.name),
         'translate-x-[240px] lg:translate-x-0':
-          uiStore.sidebarOpen && route.matched[0]?.name === 'space'
+          uiStore.sidebarOpen && ['space', 'settings'].includes(route.matched[0]?.name)
       }"
     >
       <div class="flex flex-grow items-center h-full">
