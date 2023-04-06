@@ -66,8 +66,8 @@ const definition = computed(() => {
       votingPowerSymbol: {
         type: 'string',
         maxLength: 6,
-        title: 'Voting Power symbol',
-        examples: ['VP']
+        title: 'Voting power symbol',
+        examples: ['e.g. VP']
       },
       walletNetwork: {
         type: ['string', 'null'],

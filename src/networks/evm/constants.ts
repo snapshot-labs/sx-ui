@@ -69,7 +69,7 @@ export const EDITOR_PROPOSAL_VALIDATIONS = [
   {
     address: '0x03d512E0165d6B53ED2753Df2f3184fBd2b52E48',
     type: 'VotingPower',
-    name: 'Voting Power',
+    name: 'Voting power',
     validate: (params: Record<string, any>) => {
       return params?.strategies?.length > 0;
     },
@@ -148,7 +148,7 @@ export const EDITOR_VOTING_STRATEGIES = [
           type: 'string',
           maxLength: 6,
           title: 'Symbol',
-          examples: ['COMP']
+          examples: ['e.g. COMP']
         }
       }
     }
@@ -188,7 +188,7 @@ export const EDITOR_VOTING_STRATEGIES = [
           type: 'string',
           maxLength: 6,
           title: 'Symbol',
-          examples: ['COMP']
+          examples: ['e.g. COMP']
         }
       }
     }
