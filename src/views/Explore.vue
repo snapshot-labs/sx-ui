@@ -7,7 +7,7 @@ onMounted(() => spacesStore.fetch());
 </script>
 
 <template>
-  <div>
+  <Layout>
     <Container class="max-w-screen-md pt-5">
       <h2 class="mb-4 mono !text-xl" v-text="'Explore'" />
       <UiLoading v-if="!spacesStore.loaded" class="block mb-2" />
@@ -17,5 +17,5 @@ onMounted(() => spacesStore.fetch());
         </div>
       </div>
     </Container>
-  </div>
+  </Layout>
 </template>

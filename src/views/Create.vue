@@ -188,7 +188,7 @@ watch(selectedNetworkId, () => {
 </script>
 
 <template>
-  <div>
+  <Layout hide-right-border>
     <div class="pt-5 flex max-w-[50rem] mx-auto px-4">
       <div
         class="flex fixed lg:sticky top-[72px] inset-x-0 p-3 border-b z-10 bg-skin-bg lg:top-auto lg:inset-x-auto lg:p-0 lg:pr-5 lg:border-0 lg:flex-col gap-1 min-w-[180px] overflow-auto"
@@ -198,7 +198,7 @@ watch(selectedNetworkId, () => {
           ref="pagesRefs"
           :key="page.id"
           :disabled="!accessiblePages[page.id]"
-          class="px-3 py-1 block lg:w-full rounded text-left scroll-mr-3 first:ml-auto last:mr-auto"
+          class="px-3 py-1 block lg:w-full rounded text-left scroll-mr-3 first:ml-auto last:mr-auto whitespace-nowrap"
           :class="{
             'bg-skin-active': page.id === currentPage,
             'hover:bg-skin-hover': page.id !== currentPage
@@ -302,5 +302,5 @@ watch(selectedNetworkId, () => {
         />
       </UiModal>
     </teleport>
-  </div>
+  </Layout>
 </template>

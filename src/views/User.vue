@@ -18,10 +18,9 @@ const user = computed(() => {
 </script>
 
 <template>
-  <UiLoading v-if="!usersStore.users[userId]?.loaded" class="block text-center p-4" />
-  <div v-else-if="user">
+  <Layout :loading="!usersStore.users[userId]?.loaded" hide-right-border>
     <div class="relative bg-skin-border h-[140px] -mb-[70px]" />
-    <Container slim>
+    <Container v-if="user" slim>
       <div class="text-center mb-4 relative">
         <Stamp :id="userId" :size="90" class="mb-2 border-[4px] border-skin-bg !bg-skin-border" />
         <h1>{{ shortenAddress(userId) }}</h1>
@@ -31,5 +30,5 @@ const user = computed(() => {
         </div>
       </div>
     </Container>
-  </div>
+  </Layout>
 </template>

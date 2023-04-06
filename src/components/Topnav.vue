@@ -23,6 +23,9 @@ const { focused } = useFocus(searchInput);
 const currentRouteName = computed(() => {
   return String(route.matched[0]?.name);
 });
+const routeWithNav = computed(() =>
+  ['space', 'settings'].includes(route.matched[0]?.name as string)
+);
 
 async function handleLogin(connector) {
   modalAccountOpen.value = false;
@@ -57,9 +60,8 @@ watch(route, to => {
     <div
       class="flex items-center justify-between h-[71px] px-4 bg-skin-bg"
       :class="{
-        'lg:ml-[240px]': ['space', 'settings'].includes(route.matched[0]?.name),
-        'translate-x-[240px] lg:translate-x-0':
-          uiStore.sidebarOpen && ['space', 'settings'].includes(route.matched[0]?.name)
+        'lg:ml-[240px]': routeWithNav,
+        'translate-x-[240px] lg:translate-x-0': routeWithNav && uiStore.sidebarOpen
       }"
     >
       <div class="flex flex-grow items-center h-full">

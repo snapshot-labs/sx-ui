@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <Layout hide-right-border>
     <div class="py-8 mb-6 border-b hero">
       <Container class="max-w-screen-md">
         <div class="eyebrow mb-3" v-text="'Snapshot X'" />
@@ -51,5 +51,5 @@
         </div>
       </div>
     </Container>
-  </div>
+  </Layout>
 </template>

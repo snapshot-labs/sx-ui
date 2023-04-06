@@ -1,8 +1,5 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
-import { useRoute } from 'vue-router';
 import { useUiStore } from '@/stores/ui';
-import { useTreasury } from '@/composables/useTreasury';
 import { useSpacesStore } from '@/stores/spaces';
 
 import IHGlobeAlt from '~icons/heroicons-outline/cash';
