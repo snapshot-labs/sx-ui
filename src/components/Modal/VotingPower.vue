@@ -47,8 +47,9 @@ const baseNetwork = computed(() =>
             {{ _n(Number(strategy.value) / 10 ** finalDecimals) }} {{ votingPowerSymbol }}
           </div>
         </div>
-        <div v-if="strategy.token" class="flex justify-between">
+        <div class="flex justify-between">
           <a
+            v-if="strategy.token"
             :href="baseNetwork.helpers.getExplorerUrl(strategy.token, 'contract')"
             target="_blank"
             class="flex items-center text-skin-text"
@@ -57,6 +58,7 @@ const baseNetwork = computed(() =>
             {{ shorten(strategy.token) }}
             <IH-external-link class="ml-1" />
           </a>
+          <div v-else />
           <div>
             {{ _n(Number(strategy.value) / 10 ** strategy.decimals) }}
             {{ strategy.symbol || 'units' }}

@@ -111,7 +111,27 @@ export const EDITOR_VOTING_STRATEGIES = [
   {
     address: '0xeba53160c146cbf77a150e9a218d4c2de5db6b51',
     name: 'Vanilla',
-    paramsDefinition: null
+    generateMetadata: (params: Record<string, any>) => ({
+      name: 'Vanilla',
+      properties: {
+        symbol: params.symbol,
+        decimals: 1
+      }
+    }),
+    paramsDefinition: {
+      type: 'object',
+      title: 'Params',
+      additionalProperties: false,
+      required: [],
+      properties: {
+        symbol: {
+          type: 'string',
+          maxLength: 6,
+          title: 'Symbol',
+          examples: ['e.g. VP']
+        }
+      }
+    }
   },
   {
     address: '0x343baf4b44f7f79b14301cfa8068e3f8be7470de',
