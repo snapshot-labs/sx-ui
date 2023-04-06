@@ -182,8 +182,8 @@ export const EDITOR_EXECUTION_STRATEGIES = [
       controller: string,
       spaceAddress: string,
       params: Record<string, any>
-    ): Promise<string> => {
-      const { address } = await client.deployAvatarExecution({
+    ): Promise<{ address: string; txId: string }> => {
+      return client.deployAvatarExecution({
         signer,
         params: {
           controller,
@@ -192,8 +192,6 @@ export const EDITOR_EXECUTION_STRATEGIES = [
           quorum: BigInt(params.quorum)
         }
       });
-
-      return address;
     },
     paramsDefinition: {
       type: 'object',
@@ -226,8 +224,8 @@ export const EDITOR_EXECUTION_STRATEGIES = [
       controller: string,
       spaceAddress: string,
       params: Record<string, any>
-    ): Promise<string> => {
-      const { address } = await client.deployTimelockExecution({
+    ): Promise<{ address: string; txId: string }> => {
+      return client.deployTimelockExecution({
         signer,
         params: {
           controller,
@@ -236,8 +234,6 @@ export const EDITOR_EXECUTION_STRATEGIES = [
           quorum: BigInt(params.quorum)
         }
       });
-
-      return address;
     },
     paramsDefinition: {
       type: 'object',

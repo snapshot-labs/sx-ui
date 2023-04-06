@@ -27,7 +27,7 @@ export type StrategyTemplate = {
     controller: string,
     spaceAddress: string,
     params: Record<string, any>
-  ) => Promise<string>;
+  ) => Promise<{ address: string; txId: string }>;
 };
 
 export type StrategyConfig = StrategyTemplate & {
@@ -45,8 +45,18 @@ export type VotingPower = {
 // TODO: make sx.js accept Signer instead of Web3Provider | Wallet
 
 export type NetworkActions = {
+  predictSpaceAddress(web3: Web3Provider, params: { salt: string }): Promise<string | null>;
+  deployDependency(
+    web3: Web3Provider,
+    params: {
+      controller: string;
+      spaceAddress: string;
+      strategy: StrategyConfig;
+    }
+  ): Promise<{ address: string; txId: string }>;
   createSpace(
     web3: Web3Provider,
+    salt: string,
     params: {
       controller: string;
       votingDelay: number;
