@@ -20,6 +20,15 @@ const votingPower = computed(() => props.votingPowers.reduce((acc, b) => acc + b
 const decimals = computed(() =>
   Math.max(...props.votingPowers.map(votingPower => votingPower.decimals), 0)
 );
+const formattedVotingPower = computed(() => {
+  const value = _c(votingPower.value, decimals.value);
+
+  if (props.votingPowerSymbol) {
+    return `${value} ${props.votingPowerSymbol}`;
+  }
+
+  return value;
+});
 </script>
 
 <template>
@@ -35,7 +44,7 @@ const decimals = computed(() =>
       @click="modalOpen = true"
     >
       <IH-lightning-bolt class="inline-block" />
-      <span class="ml-1">{{ _c(votingPower, decimals) }} {{ votingPowerSymbol }}</span>
+      <span class="ml-1">{{ formattedVotingPower }}</span>
     </UiButton>
     <teleport to="#modal">
       <ModalVotingPower

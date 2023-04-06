@@ -4,7 +4,6 @@ import { getNetwork } from '@/networks';
 import { _n, shorten } from '@/helpers/utils';
 import { NetworkID } from '@/types';
 import { VotingPower } from '@/networks/types';
-import voting from '@snapshot-labs/snapshot.js/src/voting';
 
 const props = defineProps<{
   open: boolean;

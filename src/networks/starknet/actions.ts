@@ -227,7 +227,7 @@ export function createActions(
       return Promise.all(
         strategiesAddresses.map(async (address, i) => {
           const strategy = getStarknetStrategy(address, defaultNetwork);
-          if (!strategy) return { address, value: 0n, decimals: 0, token: null, symbol: 'VP' };
+          if (!strategy) return { address, value: 0n, decimals: 0, token: null, symbol: '' };
 
           const value = await strategy.getVotingPower(
             address,
@@ -241,7 +241,7 @@ export function createActions(
           );
 
           const token = strategy.type === 'singleSlotProof' ? params2D[i][0] : null;
-          return { address, value, decimals: 0, token, symbol: 'VP' };
+          return { address, value, decimals: 0, token, symbol: '' };
         })
       );
     },
