@@ -29,10 +29,16 @@ const steps = computed(() => {
   const dependenciesSteps = props.executionStrategies.filter(strategy => strategy.deploy);
 
   return [
-    ...dependenciesSteps.map((_, i) => ({
-      id: `DEPLOYING_DEPS_${i}`,
-      title: 'Deploying dependency'
-    })),
+    ...dependenciesSteps.map((config, i) => {
+      const title = config.type
+        ? `Deploying ${network.value.constants.EXECUTORS[config.type]} execution strategy`
+        : 'Deploying dependency';
+
+      return {
+        id: `DEPLOYING_DEPS_${i}`,
+        title
+      };
+    }),
     {
       id: 'DEPLOYING_SPACE',
       title: 'Deploying space'
