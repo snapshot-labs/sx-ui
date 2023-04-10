@@ -24,9 +24,11 @@ export function createActions(
 
   return {
     async predictSpaceAddress(web3: Web3Provider, { salt }) {
+      await verifyNetwork(web3, chainId);
+
       return client.predictSpaceAddress({ signer: web3.getSigner(), salt });
     },
-    deployDependency(
+    async deployDependency(
       web3: Web3Provider,
       params: {
         controller: string;
@@ -34,6 +36,8 @@ export function createActions(
         strategy: StrategyConfig;
       }
     ) {
+      await verifyNetwork(web3, chainId);
+
       if (!params.strategy.deploy) {
         throw new Error('This strategy is not deployable');
       }
