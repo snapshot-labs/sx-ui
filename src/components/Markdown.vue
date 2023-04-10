@@ -12,6 +12,40 @@ const remarkable = new Remarkable({
   typographer: false,
   linkTarget: '_blank'
 });
+remarkable.core.ruler.disable([
+  'abbr',
+  'abbr2',
+  'footnote_tail',
+  'references',
+  'replacements',
+  'smartquotes'
+]);
+remarkable.block.ruler.disable([
+  'code',
+  'deflist',
+  'fences',
+  'footnote',
+  'hr',
+  'htmlblock',
+  'lheading',
+  'list',
+  'table'
+]);
+remarkable.inline.ruler.disable([
+  'autolink',
+  'backticks',
+  'del',
+  'entity',
+  'escape',
+  'footnote_inline',
+  'footnote_ref',
+  'htmltag',
+  'ins',
+  'mark',
+  'sub',
+  'sup',
+  'text'
+]);
 
 const parsed = computed(() => remarkable.render(props.body));
 </script>
@@ -49,34 +83,10 @@ const parsed = computed(() => remarkable.render(props.body));
   color: inherit;
   text-decoration: none;
 }
-.markdown-body .absent {
-  color: #cb2431;
-}
-.markdown-body .anchor {
-  float: left;
-  padding-right: 4px;
-  margin-left: -20px;
-  line-height: 1;
-}
-.markdown-body .anchor:focus {
-  outline: none;
-}
 .markdown-body p,
-.markdown-body blockquote,
-.markdown-body ul,
-.markdown-body ol,
-.markdown-body dl,
-.markdown-body table,
-.markdown-body pre {
+.markdown-body blockquote {
   margin-top: 0;
   margin-bottom: 16px;
-}
-.markdown-body hr {
-  height: 0.25em;
-  padding: 0;
-  margin: 24px 0;
-  background-color: #e1e4e8;
-  border: 0;
 }
 .markdown-body blockquote {
   padding: 0 1em;
@@ -89,19 +99,6 @@ const parsed = computed(() => remarkable.render(props.body));
 .markdown-body blockquote > :last-child {
   margin-bottom: 0;
 }
-.markdown-body kbd {
-  display: inline-block;
-  padding: 3px 5px;
-  font-size: 11px;
-  line-height: 10px;
-  color: #444d56;
-  vertical-align: middle;
-  background-color: #fafbfc;
-  border: solid 1px #c6cbd1;
-  border-bottom-color: #959da5;
-  border-radius: 3px;
-  box-shadow: inset 0 -1px 0 #959da5;
-}
 .markdown-body h1,
 .markdown-body h2,
 .markdown-body h3,
@@ -113,90 +110,17 @@ const parsed = computed(() => remarkable.render(props.body));
   font-weight: 600;
   line-height: 1.4 !important;
 }
-.markdown-body h1 .octicon-link,
-.markdown-body h2 .octicon-link,
-.markdown-body h3 .octicon-link,
-.markdown-body h4 .octicon-link,
-.markdown-body h5 .octicon-link,
-.markdown-body h6 .octicon-link {
-  color: #1b1f23;
-  vertical-align: middle;
-  visibility: hidden;
-}
-.markdown-body h1:hover .anchor,
-.markdown-body h2:hover .anchor,
-.markdown-body h3:hover .anchor,
-.markdown-body h4:hover .anchor,
-.markdown-body h5:hover .anchor,
-.markdown-body h6:hover .anchor {
-  text-decoration: none;
-}
-.markdown-body h1:hover .anchor .octicon-link,
-.markdown-body h2:hover .anchor .octicon-link,
-.markdown-body h3:hover .anchor .octicon-link,
-.markdown-body h4:hover .anchor .octicon-link,
-.markdown-body h5:hover .anchor .octicon-link,
-.markdown-body h6:hover .anchor .octicon-link {
-  visibility: visible;
-}
-.markdown-body h1 tt,
-.markdown-body h1 code,
-.markdown-body h2 tt,
-.markdown-body h2 code,
-.markdown-body h3 tt,
-.markdown-body h3 code,
-.markdown-body h4 tt,
-.markdown-body h4 code,
-.markdown-body h5 tt,
-.markdown-body h5 code,
-.markdown-body h6 tt,
-.markdown-body h6 code {
-  font-size: inherit;
-}
-.markdown-body h1 {
-  font-size: 1.5em;
-}
+.markdown-body h1,
 .markdown-body h2 {
   font-size: 1.25em;
 }
-.markdown-body h3 {
-  font-size: 1em;
-}
-.markdown-body h4 {
-  font-size: 0.875em;
-}
-.markdown-body h5 {
-  font-size: 0.85em;
-}
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
 .markdown-body h6 {
-  font-size: 0.8em;
+  font-size: 1em;
 }
 .markdown-body p {
   font-size: 1em;
-}
-.markdown-body ul,
-.markdown-body ol {
-  padding-left: 2em;
-}
-.markdown-body ul.no-list,
-.markdown-body ol.no-list {
-  padding: 0;
-  list-style-type: none;
-}
-.markdown-body ul {
-  list-style-type: disc;
-}
-.markdown-body ol {
-  list-style-type: decimal;
-}
-.markdown-body ul ul,
-.markdown-body ul ol,
-.markdown-body ol ol,
-.markdown-body ol ul {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-.markdown-body li {
-  word-wrap: break-all;
 }
 </style>
