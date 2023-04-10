@@ -32,6 +32,7 @@ function createDraft(spaceId: string, payload?: Partial<ProposalType>) {
     title: '',
     body: '',
     discussion: '',
+    executionStrategy: null,
     execution: [],
     updatedAt: Date.now(),
     ...payload
