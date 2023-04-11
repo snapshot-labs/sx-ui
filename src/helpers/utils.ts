@@ -208,6 +208,7 @@ export function createErc1155Metadata(
 
   return {
     name: metadata.name,
+    avatar: metadata.avatar,
     description: metadata.description,
     external_url: metadata.externalUrl,
     properties: {

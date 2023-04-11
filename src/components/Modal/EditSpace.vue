@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { clone } from '@/helpers/utils';
 import type { Space, SpaceMetadata, NetworkID } from '@/types';
+import SIUploadImage from '@/components/S/IUploadImage.vue';
 
 const DEFAULT_FORM_STATE: SpaceMetadata = {
   name: '',
+  avatar: '',
   description: '',
   externalUrl: '',
   twitter: '',
@@ -28,6 +30,7 @@ const searchValue = ref('');
 const sending = ref(false);
 const formErrors = ref({} as Record<string, string>);
 const form: SpaceMetadata = reactive(clone(DEFAULT_FORM_STATE));
+const avatarInput = ref<InstanceType<typeof SIUploadImage> | null>(null);
 
 function handlePickerSelect(value: string) {
   showPicker.value = false;
@@ -38,6 +41,13 @@ async function handleSubmit() {
   sending.value = true;
 
   try {
+    // Upload avatar
+    console.log('avatarInput', avatarInput.value);
+    console.log('avatarInput?.value?.previewFile?', avatarInput?.value?.previewFile);
+    if (avatarInput?.value?.previewFile) {
+      await avatarInput?.value?.uploadFile();
+    }
+
     await updateMetadata(props.space, form);
     emit('close');
   } finally {
@@ -51,6 +61,7 @@ watch(
     showPicker.value = false;
 
     form.name = props.space.name;
+    form.avatar = props.space.avatar;
     form.description = props.space.about || '';
     form.externalUrl = props.space.external_url;
     form.github = props.space.github;
@@ -91,6 +102,31 @@ watch(
         </div>
       </template>
     </template>
+    <div v-if="!showPicker" class="relative bg-skin-border h-[100px] -mb-[50px]" />
+    <SIUploadImage
+      v-if="!showPicker"
+      ref="avatarInput"
+      class="relative h-[80px] ml-4 group max-w-max cursor-pointer"
+      @image-uploaded="url => (form.avatar = url)"
+    >
+      <template #avatar="{ uploading, previewUrl }">
+        <Stamp
+          :id="space.id"
+          :size="80"
+          class="pointer-events-none border-[4px] border-skin-bg !bg-skin-bg !rounded-lg group-hover:opacity-80"
+          :class="{
+            'opacity-80': uploading
+          }"
+        />
+        <div
+          class="pointer-events-none absolute group-hover:visible inset-0 z-10 flex flex-row w-full h-full items-center content-center justify-center"
+        >
+          <IH-pencil v-if="!uploading" class="invisible text-skin-link group-hover:visible" />
+          <UiLoading v-if="uploading" class="block bg-green z-5" />
+          <img v-if="previewUrl" :src="previewUrl" class="absolute w-full h-full z-3 !rounded-lg" />
+        </div>
+      </template>
+    </SIUploadImage>
     <BlockContactPicker
       v-if="showPicker"
       :loading="false"
