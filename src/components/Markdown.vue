@@ -122,5 +122,6 @@ const parsed = computed(() => remarkable.render(props.body));
 }
 .markdown-body p {
   font-size: 1em;
+  color: var(--content-color);
 }
 </style>
