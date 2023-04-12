@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import draggable from 'vuedraggable';
-import { Transaction as TransactionType, Space, SelectedStrategy } from '@/types';
 import { getNetwork } from '@/networks';
+import { Transaction as TransactionType, Space, SelectedStrategy } from '@/types';
 
 const props = defineProps<{
   modelValue: TransactionType[];
