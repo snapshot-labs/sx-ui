@@ -228,7 +228,9 @@ watch(proposalData, () => {
             "
           >
             <IH-cog />
-            {{ space.executors_types[i] }} ({{ shortenAddress(executor) }})
+            {{ network.constants.EXECUTORS[space.executors_types[i]] }} execution strategy ({{
+              shortenAddress(executor)
+            }})
           </ExecutionButton>
         </div>
         <BlockExecutionEditable
