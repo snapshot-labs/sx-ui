@@ -14,14 +14,10 @@ export function useImageUpload() {
     imageName.value = '';
   };
 
-  const upload = async (
-    file: File | undefined,
-    onSuccess: (image: { name: string; url: string }) => void
-  ) => {
+  const upload = async (file: File | undefined) => {
     reset();
     if (!file) return;
     isUploadingImage.value = true;
-    const formData = new FormData();
 
     // TODO: Additional Validations - File Size, File Type, Empty File, Hidden File
     if (!['image/jpeg', 'image/jpg', 'image/png'].includes(file.type)) {
@@ -29,12 +25,14 @@ export function useImageUpload() {
       isUploadingImage.value = false;
       return;
     }
+
+    const formData = new FormData();
     formData.append('file', file);
     try {
       const receipt = await pin(formData);
       imageUrl.value = `ipfs://${receipt.cid}`;
       imageName.value = file.name;
-      onSuccess({ name: file.name, url: imageUrl.value });
+      return { name: file.name, url: imageUrl.value };
     } catch (err) {
       // TODO: add notify
       imageUploadError.value = (err as Error).message;

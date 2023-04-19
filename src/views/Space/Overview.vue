@@ -78,7 +78,7 @@ const grouped = computed(() => {
           <Stamp
             :id="space.id"
             :size="90"
-            type="space-sx"
+            type="space"
             class="mb-2 border-[4px] border-skin-bg !bg-skin-border !rounded-lg"
           />
         </router-link>

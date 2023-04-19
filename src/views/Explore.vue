@@ -32,7 +32,7 @@ onMounted(() => spacesStore.fetch());
             <Stamp
               :id="space.id"
               :size="32"
-              type="space-sx"
+              type="space"
               class="border-skin-bg !bg-skin-border rounded-sm mb-2"
             />
             <h3 class="truncate" v-text="space.name" />

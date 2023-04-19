@@ -14,7 +14,6 @@ const emit = defineEmits<{
 const { upload, isUploadingImage } = useImageUpload();
 
 const fileInput = ref<HTMLInputElement | null>(null);
-const uploadSuccess = ref(false);
 
 const imgUrl = computed(() => {
   if (!props.modelValue) return undefined;
@@ -27,15 +26,14 @@ function openFilePicker() {
   fileInput.value?.click();
 }
 
-function handleFileChange(e: Event) {
-  uploadSuccess.value = false;
+async function handleFileChange(e: Event) {
   const file = (e.target as HTMLInputElement).files?.[0];
-  if (file) {
-    upload(file, image => {
-      uploadSuccess.value = true;
-      emit('update:modelValue', image.url);
-    });
-  }
+  if (!file) return
+
+  const image = await upload(file)
+  if (!image) return
+
+  emit('update:modelValue', image.url);
 }
 </script>
 
@@ -58,7 +56,7 @@ function handleFileChange(e: Event) {
       :id="definition.default"
       :size="80"
       class="pointer-events-none border-[4px] border-skin-bg !bg-skin-bg !rounded-lg group-hover:opacity-80"
-      type="space-sx"
+      type="space"
       :class="{
         'opacity-80': isUploadingImage
       }"
