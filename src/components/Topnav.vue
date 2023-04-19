@@ -69,7 +69,7 @@ watch(route, to => {
           class="inline-block text-skin-link mr-4 cursor-pointer lg:hidden"
           @click="emit('toggle')"
         />
-        <div v-if="currentRouteName === 'space'" class="flex items-center flex-1 px-2 py-3 h-full">
+        <div v-if="!route.meta.hideNav" class="flex items-center flex-1 px-2 py-3 h-full">
           <IH-search class="mr-3 flex-shrink-0" :class="{ 'text-skin-link': focused }" />
           <form class="flex flex-grow" @submit="handleSearchSubmit">
             <input
