@@ -7,6 +7,7 @@ describe('utils', () => {
     it('should create metadata', () => {
       const metadata = createErc1155Metadata({
         name: 'Test',
+        avatar: '',
         description: 'Test description',
         externalUrl: 'https://test.com',
         github: 'snapshot-labs',
