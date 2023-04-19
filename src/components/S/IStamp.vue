@@ -28,10 +28,10 @@ function openFilePicker() {
 
 async function handleFileChange(e: Event) {
   const file = (e.target as HTMLInputElement).files?.[0];
-  if (!file) return
+  if (!file) return;
 
-  const image = await upload(file)
-  if (!image) return
+  const image = await upload(file);
+  if (!image) return;
 
   emit('update:modelValue', image.url);
 }
