@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { clone } from '@/helpers/utils';
 import type { Space, SpaceMetadata, NetworkID } from '@/types';
-import SIUploadImage from '@/components/S/IUploadImage.vue';
 
 const DEFAULT_FORM_STATE: SpaceMetadata = {
   name: '',
@@ -30,7 +29,6 @@ const searchValue = ref('');
 const sending = ref(false);
 const formErrors = ref({} as Record<string, string>);
 const form: SpaceMetadata = reactive(clone(DEFAULT_FORM_STATE));
-const avatarInput = ref<InstanceType<typeof SIUploadImage> | null>(null);
 
 function handlePickerSelect(value: string) {
   showPicker.value = false;
@@ -41,10 +39,6 @@ async function handleSubmit() {
   sending.value = true;
 
   try {
-    if (avatarInput?.value?.previewFile) {
-      await avatarInput?.value?.uploadFile();
-    }
-
     await updateMetadata(props.space, form);
     emit('close');
   } finally {
@@ -100,46 +94,15 @@ watch(
       </template>
     </template>
     <div v-if="!showPicker" class="relative bg-skin-border h-[100px] -mb-[50px]" />
-    <SIUploadImage
-      v-if="!showPicker"
-      ref="avatarInput"
-      class="relative h-[80px] ml-4 group max-w-max cursor-pointer"
-      @image-uploaded="url => (form.avatar = url)"
-    >
-      <template #avatar="{ uploading, previewUrl }">
-        <img
-          v-if="previewUrl"
-          :src="previewUrl"
-          class="w-full h-full !rounded-lg"
-          :class="{
-            'opacity-80': uploading
-          }"
-        />
-        <Stamp
-          v-else
-          :id="space.id"
-          :size="80"
-          class="pointer-events-none border-[4px] border-skin-bg !bg-skin-bg !rounded-lg group-hover:opacity-80"
-          :class="{
-            'opacity-80': uploading
-          }"
-        />
-        <div
-          class="pointer-events-none absolute group-hover:visible inset-0 z-10 flex flex-row w-full h-full items-center content-center justify-center"
-        >
-          <UiLoading v-if="uploading" class="block z-5" />
-          <IH-pencil v-else class="invisible text-skin-link group-hover:visible" />
-        </div>
-      </template>
-    </SIUploadImage>
     <BlockContactPicker
       v-if="showPicker"
       :loading="false"
       :search-value="searchValue"
       @pick="handlePickerSelect"
     />
-    <div v-else class="p-4">
+    <div v-else class="p-4 -mt-[80px]">
       <BlockSpaceFormProfile
+        :id="space.id"
         :show-title="false"
         :form="form"
         @pick="showPicker = true"

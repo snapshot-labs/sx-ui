@@ -209,7 +209,7 @@ export const SPACE_QUERY = gql`
     space(id: $id) {
       id
       name
-      # avatar
+      avatar
       about
       external_url
       github
