@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getUrl } from '@/helpers/utils';
+import { getUrl, imageUpload } from '@/helpers/utils';
 
 const props = defineProps<{
   modelValue?: string;
@@ -11,9 +11,8 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string);
 }>();
 
-const { upload, isUploadingImage } = useImageUpload();
-
 const fileInput = ref<HTMLInputElement | null>(null);
+const isUploadingImage = ref(false);
 
 const imgUrl = computed(() => {
   if (!props.modelValue) return undefined;
@@ -27,13 +26,20 @@ function openFilePicker() {
 }
 
 async function handleFileChange(e: Event) {
-  const file = (e.target as HTMLInputElement).files?.[0];
-  if (!file) return;
+  try {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) throw new Error('File not found');
+    isUploadingImage.value = true;
 
-  const image = await upload(file);
-  if (!image) return;
+    const image = await imageUpload(file);
+    if (!image) throw new Error('Image not uploaded');
 
-  emit('update:modelValue', image.url);
+    emit('update:modelValue', image.url);
+    isUploadingImage.value = false;
+  } catch (error) {
+    console.error(error);
+    isUploadingImage.value = false;
+  }
 }
 </script>
 
