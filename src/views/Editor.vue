@@ -152,7 +152,7 @@ watch(proposalData, () => {
             :loading="sending || (web3.account !== '' && fetchingVotingPower)"
             :disabled="
               (!fetchingVotingPower && !votingPowerValid) ||
-              !proposals[proposalKey].executionStrategy
+              !proposals[proposalKey]?.executionStrategy
             "
             @click="handleProposeClick"
           >
