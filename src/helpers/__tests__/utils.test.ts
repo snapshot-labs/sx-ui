@@ -20,6 +20,7 @@ describe('utils', () => {
 
       expect(metadata).toEqual({
         name: 'Test',
+        avatar: '',
         description: 'Test description',
         external_url: 'https://test.com',
         properties: {
