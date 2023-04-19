@@ -59,18 +59,23 @@ export function pickAuthenticatorAndStrategies(authenticators: string[], strateg
 export async function executionCall(
   baseUrl: string,
   method: 'execute' | 'executeQueuedProposal',
-  data: any
+  params: any
 ) {
-  const res = await fetch(`${baseUrl}/eth/execution/${method}`, {
+  const res = await fetch(`${baseUrl}/eth_rpc`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      method: method,
+      params,
+      id: null
+    })
   });
 
-  const { error, receipt } = await res.json();
+  const { error, result } = await res.json();
   if (error) throw new Error('Finalization failed');
 
-  return receipt;
+  return result;
 }
