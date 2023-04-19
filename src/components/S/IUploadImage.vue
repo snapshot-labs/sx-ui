@@ -4,13 +4,14 @@ const emit = defineEmits(['image-uploaded', 'image-remove']);
 const { upload, isUploadingImage } = useImageUpload();
 
 const fileInput = ref<HTMLInputElement | null>(null);
-function openFilePicker() {
-  fileInput.value?.click();
-}
-
 const uploadSuccess = ref(false);
 const previewFile = ref<File | undefined>(undefined);
 const previewUrl = ref<string | undefined>(undefined);
+
+function openFilePicker() {
+  if (isUploadingImage.value) return;
+  fileInput.value?.click();
+}
 
 function handleFileChange(e: Event) {
   uploadSuccess.value = false;
@@ -57,7 +58,7 @@ onBeforeUnmount(() => {
     ref="fileInput"
     type="file"
     accept="image/jpg, image/jpeg, image/png"
-    style="display: none"
+    class="hidden"
     @change="handleFileChange"
   />
 </template>

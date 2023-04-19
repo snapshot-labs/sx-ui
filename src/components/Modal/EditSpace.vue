@@ -41,9 +41,6 @@ async function handleSubmit() {
   sending.value = true;
 
   try {
-    // Upload avatar
-    console.log('avatarInput', avatarInput.value);
-    console.log('avatarInput?.value?.previewFile?', avatarInput?.value?.previewFile);
     if (avatarInput?.value?.previewFile) {
       await avatarInput?.value?.uploadFile();
     }
@@ -110,7 +107,16 @@ watch(
       @image-uploaded="url => (form.avatar = url)"
     >
       <template #avatar="{ uploading, previewUrl }">
+        <img
+          v-if="previewUrl"
+          :src="previewUrl"
+          class="w-full h-full !rounded-lg"
+          :class="{
+            'opacity-80': uploading
+          }"
+        />
         <Stamp
+          v-else
           :id="space.id"
           :size="80"
           class="pointer-events-none border-[4px] border-skin-bg !bg-skin-bg !rounded-lg group-hover:opacity-80"
@@ -121,9 +127,8 @@ watch(
         <div
           class="pointer-events-none absolute group-hover:visible inset-0 z-10 flex flex-row w-full h-full items-center content-center justify-center"
         >
-          <IH-pencil v-if="!uploading" class="invisible text-skin-link group-hover:visible" />
-          <UiLoading v-if="uploading" class="block bg-green z-5" />
-          <img v-if="previewUrl" :src="previewUrl" class="absolute w-full h-full z-3 !rounded-lg" />
+          <UiLoading v-if="uploading" class="block z-5" />
+          <IH-pencil v-else class="invisible text-skin-link group-hover:visible" />
         </div>
       </template>
     </SIUploadImage>

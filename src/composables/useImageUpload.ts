@@ -1,9 +1,8 @@
 import { ref } from 'vue';
 import { upload as pin } from '@snapshot-labs/pineapple';
 
-const isUploadingImage = ref(false);
-
 export function useImageUpload() {
+  const isUploadingImage = ref(false);
   const imageUploadError = ref('');
   const imageUrl = ref('');
   const imageName = ref('');
@@ -25,9 +24,7 @@ export function useImageUpload() {
     const formData = new FormData();
 
     // TODO: Additional Validations - File Size, File Type, Empty File, Hidden File
-
     if (!['image/jpeg', 'image/jpg', 'image/png'].includes(file.type)) {
-      // TODO: add i18n for errors
       imageUploadError.value = 'Unsupported file type';
       isUploadingImage.value = false;
       return;
