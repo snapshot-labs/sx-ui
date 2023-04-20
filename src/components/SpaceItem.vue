@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { Space } from '@/types';
 import { useSpacesStore } from '@/stores/spaces';
+import { Space } from '@/types';
 
 defineProps<{ space: Space }>();
 
