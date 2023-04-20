@@ -216,6 +216,7 @@ export function createActions(
     setVotingDelay: () => null,
     setMinVotingDuration: () => null,
     setMaxVotingDuration: () => null,
+    transferOwnership: () => null,
     getVotingPower: async (
       strategiesAddresses: string[],
       strategiesParams: any[],

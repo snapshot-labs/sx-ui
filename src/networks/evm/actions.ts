@@ -261,6 +261,15 @@ export function createActions(
         maxVotingDuration
       });
     },
+    transferOwnership: async (web3: Web3Provider, space: Space, owner: string) => {
+      await verifyNetwork(web3, chainId);
+
+      return client.transferOwnership({
+        signer: web3.getSigner(),
+        space: space.id,
+        owner
+      });
+    },
     send: (envelope: any) => ethSigClient.send(envelope),
     getVotingPower: async (
       strategiesAddresses: string[],

@@ -274,6 +274,16 @@ export function useActions() {
     uiStore.addPendingTransaction(receipt.hash, 'gor');
   }
 
+  async function transferOwnership(space: Space, owner: string) {
+    if (!web3.value.account) return await forceLogin();
+
+    const network = getNetwork(space.network);
+    const receipt = await network.actions.transferOwnership(auth.web3, space, owner);
+    console.log('Receipt', receipt);
+
+    uiStore.addPendingTransaction(receipt.hash, 'gor');
+  }
+
   const actions = {
     predictSpaceAddress,
     deployDependency,
@@ -287,7 +297,8 @@ export function useActions() {
     executeQueuedProposal,
     setVotingDelay,
     setMinVotingDuration,
-    setMaxVotingDuration
+    setMaxVotingDuration,
+    transferOwnership
   };
 
   return Object.fromEntries(

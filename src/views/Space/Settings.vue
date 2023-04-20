@@ -6,7 +6,8 @@ import { Space } from '@/types';
 const props = defineProps<{ space: Space }>();
 
 const { web3 } = useWeb3();
-const { setVotingDelay, setMinVotingDuration, setMaxVotingDuration } = useActions();
+const { setVotingDelay, setMinVotingDuration, setMaxVotingDuration, transferOwnership } =
+  useActions();
 
 const network = computed(() => getNetwork(props.space.network));
 const spaceIsEditable = computed(() =>
@@ -16,17 +17,19 @@ const spaceIsEditable = computed(() =>
 const settingsLoading = ref({
   votingDelay: false,
   minVotingPeriod: false,
-  maxVotingPeriod: false
+  maxVotingPeriod: false,
+  controller: false
 });
 
 async function handleSave(
-  field: 'votingDelay' | 'minVotingPeriod' | 'maxVotingPeriod',
+  field: 'votingDelay' | 'minVotingPeriod' | 'maxVotingPeriod' | 'controller',
   value: string
 ) {
   const fieldActions = {
     votingDelay: setVotingDelay,
     minVotingPeriod: setMinVotingDuration,
-    maxVotingPeriod: setMaxVotingDuration
+    maxVotingPeriod: setMaxVotingDuration,
+    controller: transferOwnership
   };
 
   const action = fieldActions[field];
@@ -35,7 +38,7 @@ async function handleSave(
   settingsLoading.value[field] = true;
 
   try {
-    await action(props.space, parseInt(value));
+    await action(props.space, field === 'controller' ? value : parseInt(value));
   } finally {
     settingsLoading.value[field] = false;
   }
@@ -102,11 +105,22 @@ async function handleSave(
     <div>
       <Label :label="'Controller'" sticky />
       <div class="py-3 mx-4">
-        <a :href="network.helpers.getExplorerUrl(space.controller, 'contract')" target="_blank">
-          <Stamp :id="space.controller" type="avatar" :size="18" class="mr-2 rounded-sm" />
-          {{ shorten(space.controller) }}
-          <IH-external-link class="inline-block" />
-        </a>
+        <UiEditable
+          :editable="spaceIsEditable"
+          :initial-value="space.controller"
+          :loading="settingsLoading.controller"
+          :definition="{
+            format: 'address',
+            examples: ['0x0000…']
+          }"
+          @save="value => handleSave('controller', value)"
+        >
+          <a :href="network.helpers.getExplorerUrl(space.controller, 'contract')" target="_blank">
+            <Stamp :id="space.controller" type="avatar" :size="18" class="mr-2 rounded-sm" />
+            {{ shorten(space.controller) }}
+            <IH-external-link class="inline-block" />
+          </a>
+        </UiEditable>
       </div>
     </div>
 
