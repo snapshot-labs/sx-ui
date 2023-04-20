@@ -23,7 +23,7 @@ const proposal = computed(() => proposalsStore.getProposal(space, id, networkId 
 const votingPowerDecimals = computed(() => {
   if (!proposal.value) return 0;
   return Math.max(
-    ...proposal.value.space.strategies_metadata.map(metadata => parseInt(metadata, 16)),
+    ...proposal.value.space.strategies_parsed_metadata.map(metadata => metadata.decimals),
     0
   );
 });
@@ -37,7 +37,10 @@ const discussion = computed(() => {
 const proposalMetadataUrl = computed(() => {
   if (!proposal.value) return null;
 
-  return sanitizeUrl(getUrl(proposal.value.metadata_uri));
+  const url = getUrl(proposal.value.metadata_uri);
+  if (!url) return null;
+
+  return sanitizeUrl(url);
 });
 
 async function getVotingPower() {
