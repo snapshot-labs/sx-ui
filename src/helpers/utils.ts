@@ -6,8 +6,8 @@ import { sanitizeUrl as baseSanitizeUrl } from '@braintree/sanitize-url';
 import networks from '@/helpers/networks.json';
 import pkg from '@/../package.json';
 import type { Web3Provider } from '@ethersproject/providers';
-import type { SpaceMetadata } from '@/types';
 import { upload as pin } from '@snapshot-labs/pineapple';
+import type { SpaceMetadata } from '@/types';
 
 const IPFS_GATEWAY: string = import.meta.env.VITE_IPFS_GATEWAY || 'https://cloudflare-ipfs.com';
 
