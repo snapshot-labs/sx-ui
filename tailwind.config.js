@@ -13,6 +13,7 @@ module.exports = {
         'skin-border': 'var(--border-color)',
         'skin-text': 'var(--text-color)',
         'skin-link': 'var(--link-color)',
+        'skin-tooltip': 'var(--tooltip-color)',
         'skin-bg': 'var(--bg-color)',
         'skin-block-bg': 'var(--block-bg)',
         'skin-active': 'var(--active-bg)',
