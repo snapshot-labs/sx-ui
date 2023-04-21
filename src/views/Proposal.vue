@@ -216,7 +216,7 @@ watch([() => web3.value.account, proposal], () => getVotingPower());
                   <IH-x class="inline-block" />
                 </UiButton>
               </UiTooltip>
-              <UiTooltip title="Abstain Abstain Abstain Abstain Abstain">
+              <UiTooltip title="Abstain">
                 <UiButton
                   class="w-full !text-white !bg-gray-500 !border-gray-500"
                   :primary="true"
