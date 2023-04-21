@@ -7,7 +7,7 @@ const props = withDefaults(
     position?: Placement;
   }>(),
   {
-    position: 'bottom'
+    position: 'top'
   }
 );
 
