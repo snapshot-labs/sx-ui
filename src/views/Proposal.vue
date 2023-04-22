@@ -89,10 +89,10 @@ watch([() => web3.value.account, proposal], () => getVotingPower());
 </script>
 
 <template>
-  <div class="flex flex-col md:flex-row">
+  <div class="flex flex-col">
     <UiLoading v-if="!proposal" class="ml-4 mt-3" />
     <template v-else>
-      <div class="flex-1">
+      <div class="flex-1 md:mr-[340px]">
         <div class="flex justify-between items-center mx-4 border-b">
           <router-link
             :to="{
@@ -168,7 +168,9 @@ watch([() => web3.value.account, proposal], () => getVotingPower());
           </div>
         </Container>
       </div>
-      <div class="flex-1 sticky top-[72px] self-start w-full md:max-w-[340px] p-4">
+      <div
+        class="static md:fixed md:top-[72px] md:right-0 w-full md:h-screen md:max-w-[340px] p-4 border-l"
+      >
         <VotingPowerIndicator
           v-if="web3.account"
           v-slot="props"
