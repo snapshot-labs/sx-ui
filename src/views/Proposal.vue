@@ -180,7 +180,7 @@ watch([() => web3.value.account, proposal], () => getVotingPower());
           :voting-powers="votingPowers"
           class="mb-2 mt-4 first:mt-1"
         >
-          <span class="block eyebrow text-[#6c727f]">Your voting power</span>
+          <h4 class="block eyebrow">Your voting power</h4>
           <div class="pt-2">
             <UiLoading v-if="loadingVotingPower" />
             <div v-else class="text-skin-link text-lg">
@@ -188,7 +188,7 @@ watch([() => web3.value.account, proposal], () => getVotingPower());
             </div>
           </div>
         </VotingPowerIndicator>
-        <span class="block eyebrow text-[#6c727f] mb-2 mt-4 first:mt-1">Cast your vote</span>
+        <h4 class="block eyebrow mb-2 mt-4 first:mt-1">Cast your vote</h4>
         <Vote v-if="proposal" :proposal="proposal">
           <div class="flex space-x-2 py-2">
             <UiTooltip title="For">
@@ -220,7 +220,7 @@ watch([() => web3.value.account, proposal], () => getVotingPower());
             </UiTooltip>
           </div>
         </Vote>
-        <span class="block eyebrow text-[#6c727f] mb-2 mt-4">Results</span>
+        <h4 class="block eyebrow mb-2 mt-4">Results</h4>
         <Results with-details :proposal="proposal" :decimals="votingPowerDecimals" />
       </div>
     </template>
