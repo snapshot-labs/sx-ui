@@ -19,7 +19,7 @@ const visible = ref(false);
 const { placement, x, y, strategy, middlewareData } = useFloating(referenceRef, floatingRef, {
   placement: props.position,
   whileElementsMounted: autoUpdate,
-  middleware: [offset(8), flip(), shift({ padding: 8 }), arrow({ element: arrowRef })]
+  middleware: [offset(10), flip(), shift({ padding: 8 }), arrow({ element: arrowRef })]
 });
 
 const arrowStyle = computed(() => {
