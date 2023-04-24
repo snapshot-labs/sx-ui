@@ -65,12 +65,8 @@ const grouped = computed(() => {
             </UiButton>
           </UiTooltip>
         </router-link>
-        <UiTooltip title="Edit space">
-          <UiButton
-            v-if="spaceIsEditable"
-            class="!px-0 w-[46px]"
-            @click="editSpaceModalOpen = true"
-          >
+        <UiTooltip v-if="spaceIsEditable" title="Edit space">
+          <UiButton class="!px-0 w-[46px]" @click="editSpaceModalOpen = true">
             <IH-cog class="inline-block" />
           </UiButton>
         </UiTooltip>
