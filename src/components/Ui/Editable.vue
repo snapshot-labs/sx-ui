@@ -28,7 +28,7 @@ function handleSave() {
 </script>
 
 <template>
-  <div class="flex items-center gap-2" :class="{ 'mt-2': editing }">
+  <div class="flex items-center gap-2 group w-fit" :class="{ 'mt-2': editing }">
     <UiLoading v-if="loading" />
     <template v-else>
       <SIString v-if="editing" v-model="inputValue" class="!mb-0" :definition="definition" />
@@ -42,7 +42,11 @@ function handleSave() {
         </button>
       </template>
       <template v-else>
-        <button v-if="editable" class="hover:opacity-80" @click="editing = !editing">
+        <button
+          v-if="editable"
+          class="hidden group-hover:block hover:opacity-80"
+          @click="editing = !editing"
+        >
           <IH-pencil />
         </button>
       </template>
