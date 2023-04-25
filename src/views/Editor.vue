@@ -189,7 +189,7 @@ watch(proposalData, () => {
         :body="proposals[proposalKey].body"
       />
 
-      <div v-else class="s-base mb-5">
+      <div v-else class="s-base mb-3">
         <div class="s-label" v-text="'Description'" />
         <textarea
           v-model="proposals[proposalKey].body"
@@ -217,7 +217,7 @@ watch(proposalData, () => {
             :key="executor"
             class="flex-auto flex items-center gap-2"
             :class="{
-              'border-green': executionStrategy?.address === executor,
+              'border-skin-link': executionStrategy?.address === executor,
               'text-skin-border': executionStrategy?.address !== executor
             }"
             @click="
