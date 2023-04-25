@@ -208,7 +208,7 @@ watch(proposalData, () => {
       </div>
       <div v-if="space">
         <h4 class="eyebrow mb-3">Execution</h4>
-        <div class="flex flex-col gap-2 mb-2">
+        <div class="flex flex-col gap-2 mb-3">
           <div v-if="supportedExecutionStrategies && !supportedExecutionStrategies.length">
             No supported execution strategies available.
           </div>
