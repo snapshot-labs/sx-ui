@@ -117,15 +117,15 @@ function handleStrategySave(value: Record<string, any>) {
         }"
         @click="addStrategy(strategy)"
       >
-        <div class="bg-skin-border">
+        <div class="flex items-center bg-skin-border">
           <component
             :is="strategy.icon ? strategy.icon : IHCode"
-            class="inline-block mt-4 mx-3 text-skin-link"
+            class="inline-block mx-3 text-skin-link"
           />
         </div>
         <div class="py-3 px-4">
           <h4 class="text-skin-link" v-text="strategy.name" />
-          <div v-if="strategy.about" class="mb-2 text-ellipsis" v-text="strategy.about" />
+          <div v-if="strategy.about" class="text-ellipsis" v-text="strategy.about" />
         </div>
       </button>
     </div>
