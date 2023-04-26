@@ -27,6 +27,8 @@ export type Connector =
 export type StrategyTemplate = {
   address: string;
   name: string;
+  about: string;
+  icon: string;
   type?: string;
   paramsDefinition: any;
   validate?: (params: Record<string, any>) => boolean;

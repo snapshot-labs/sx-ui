@@ -104,20 +104,25 @@ function handleStrategySave(value: Record<string, any>) {
     </div>
     <h4 class="eyebrow mb-2">Available</h4>
     <div v-if="availableStrategies.length === 0">No strategies available</div>
-    <div v-else class="flex flex-wrap gap-2">
+    <div v-else class="space-y-3">
       <button
         v-for="strategy in availableStrategies"
         :key="strategy.address"
         :disabled="limitReached || (unique && !!activeStrategiesMap[strategy.name])"
-        class="flex items-center rounded-lg border cursor-pointer px-3 py-2 text-skin-link"
+        class="flex rounded-lg border cursor-pointer w-full text-left items-stretch"
         :class="{
           'opacity-50 cursor-not-allowed':
             limitReached || (unique && !!activeStrategiesMap[strategy.name])
         }"
         @click="addStrategy(strategy)"
       >
-        <IH-plus-circle />
-        <div class="ml-2">{{ strategy.name }}</div>
+        <div class="bg-skin-border">
+          <component :is="strategy.icon" class="inline-block mt-4 mx-3 text-skin-link" />
+        </div>
+        <div class="py-3 px-4">
+          <h4 class="text-skin-link" v-text="strategy.name" />
+          <div><div class="mb-2 text-ellipsis" v-text="strategy.about" /></div>
+        </div>
       </button>
     </div>
     <teleport to="#modal">
