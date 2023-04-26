@@ -110,14 +110,14 @@ function handleStrategySave(value: Record<string, any>) {
         v-for="strategy in availableStrategies"
         :key="strategy.address"
         :disabled="limitReached || (unique && !!activeStrategiesMap[strategy.name])"
-        class="flex rounded-lg border cursor-pointer w-full text-left items-stretch"
+        class="flex flex-col md:flex-row rounded-lg border cursor-pointer w-full text-left items-stretch overflow-hidden"
         :class="{
           'opacity-50 cursor-not-allowed':
             limitReached || (unique && !!activeStrategiesMap[strategy.name])
         }"
         @click="addStrategy(strategy)"
       >
-        <div class="flex items-center bg-skin-border">
+        <div class="flex items-center justify-center min-h-[40px] bg-skin-border">
           <component
             :is="strategy.icon ? strategy.icon : IHCode"
             class="inline-block mx-3 text-skin-link"
