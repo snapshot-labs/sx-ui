@@ -106,15 +106,12 @@ watch(
         </div>
       </div>
       <div v-if="!activeStrategy" class="flex flex-wrap gap-2">
-        <button
+        <StrategyButton
           v-for="strategy in availableStrategies"
           :key="strategy.address"
-          class="flex items-center rounded-lg border cursor-pointer px-3 py-2 text-skin-link"
+          :strategy="strategy"
           @click="addStrategy(strategy)"
-        >
-          <IH-plus-circle />
-          <div class="ml-2">{{ strategy.name }}</div>
-        </button>
+        />
       </div>
       <div v-if="activeStrategy?.type === 'VotingPower'">
         <h3 class="eyebrow mb-2">Included strategies</h3>
