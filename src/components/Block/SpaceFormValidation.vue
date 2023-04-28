@@ -84,7 +84,7 @@ watch(
         {{ description }}
       </span>
       <div class="mb-3">
-        <div v-if="!activeStrategy">No strategies selected</div>
+        <div v-if="!activeStrategy">No strategy selected</div>
         <div
           v-else
           class="flex justify-between items-center rounded-lg border px-4 py-3 mb-3 text-skin-link"
