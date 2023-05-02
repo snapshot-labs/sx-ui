@@ -4,11 +4,8 @@ import Space from '@/views/Space.vue';
 import SpaceOverview from '@/views/Space/Overview.vue';
 import SpaceProposals from '@/views/Space/Proposals.vue';
 import SpaceSearchProposals from '@/views/Space/SearchProposals.vue';
-import Discussions from '@/views/Discussions/Discussions.vue';
-import Discussion from '@/views/Discussions/Discussion.vue';
-import Discuss from '@/views/Discussions/Discuss.vue';
-import NewCategory from '@/views/Discussions/NewCategory.vue';
-import Category from '@/views/Discussions/Category.vue';
+import Discussions from '@/views/Space/Discussions.vue';
+import Discussion from '@/views/Space/Discussion.vue';
 import SpaceSettings from '@/views/Space/Settings.vue';
 import SpaceTreasury from '@/views/Space/Treasury.vue';
 import SpaceDelegates from '@/views/Space/Delegates.vue';
@@ -35,10 +32,7 @@ const routes: any[] = [
       { path: 'treasury', name: 'space-treasury', component: SpaceTreasury },
       { path: 'delegates', name: 'space-delegates', component: SpaceDelegates },
       { path: 'discussions', name: 'space-discussions', component: Discussions },
-      { path: 'discussions/:category', name: 'discussions-category', component: Category },
-      { path: 'discussions/new-category', name: 'new-category', component: NewCategory },
-      { path: 'discussion/:discussion', name: 'discussion', component: Discussion },
-      { path: 'discussions/:category/discuss', name: 'discuss', component: Discuss }
+      { path: 'discussion/:discussion', name: 'discussion', component: Discussion }
     ]
   },
   {
