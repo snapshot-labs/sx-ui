@@ -13,10 +13,11 @@ function getErrorMessage(errorObject: ErrorObject): string {
       case 'address':
         return 'Must be a valid address.';
       case 'uint256':
+        return 'Must be a positive integer.';
       case 'int256':
-        return `Must be a valid ${errorObject.params.format} value.`;
+        return 'Must be an integer.';
       case 'ethValue':
-        return 'Must be a valid Ethereum value.';
+        return 'Must be a number.';
       default:
         return 'Invalid format.';
     }
