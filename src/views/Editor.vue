@@ -127,6 +127,14 @@ async function handleProposeClick() {
   }
 }
 
+async function handleExecutionStrategySelected(selectedExecutionStrategy: SelectedStrategy) {
+  if (executionStrategy.value?.address === selectedExecutionStrategy.address) {
+    executionStrategy.value = null;
+  } else {
+    executionStrategy.value = selectedExecutionStrategy;
+  }
+}
+
 async function getVotingPower() {
   if (!space.value || !web3.value.account) return;
 
@@ -259,17 +267,6 @@ watch(proposalData, () => {
         <h4 class="eyebrow mb-3">Execution</h4>
         <div class="flex flex-col gap-2 mb-3">
           <ExecutionButton
-            class="flex-auto flex items-center gap-2"
-            :class="{
-              'border-skin-link': executionStrategy === null,
-              'text-skin-border': executionStrategy !== null
-            }"
-            @click="executionStrategy = null"
-          >
-            <IH-cog />
-            No execution
-          </ExecutionButton>
-          <ExecutionButton
             v-for="(executor, i) in supportedExecutionStrategies"
             :key="executor"
             class="flex-auto flex items-center gap-2"
@@ -278,10 +275,10 @@ watch(proposalData, () => {
               'text-skin-border': executionStrategy?.address !== executor
             }"
             @click="
-              executionStrategy = {
+              handleExecutionStrategySelected({
                 address: executor,
                 type: space.executors_types[i]
-              }
+              })
             "
           >
             <IH-cog />
