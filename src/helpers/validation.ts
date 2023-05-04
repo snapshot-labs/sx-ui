@@ -33,6 +33,8 @@ export function validateForm(schema, form): Record<string, string> {
 
   ajv.addFormat('address', {
     validate: (value: string) => {
+      if (!value) return false;
+
       try {
         return !!validateAndParseAddress(value);
       } catch (err) {
