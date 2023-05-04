@@ -85,7 +85,6 @@ const canSubmit = computed(() => {
   return (
     !fetchingVotingPower.value &&
     votingPowerValid.value &&
-    proposals[proposalKey]?.executionStrategy &&
     Object.keys(formErrors.value).length === 0
   );
 });
@@ -96,7 +95,7 @@ if (!proposals[proposalKey]) {
 
 async function handleProposeClick() {
   const proposal = proposals[proposalKey];
-  if (!space.value || !proposal?.executionStrategy) return;
+  if (!space.value) return;
 
   sending.value = true;
 
@@ -109,8 +108,8 @@ async function handleProposeClick() {
         proposal.title,
         proposal.body,
         proposal.discussion,
-        proposal.executionStrategy.address,
-        proposal.execution
+        proposal.executionStrategy?.address ?? null,
+        proposal.executionStrategy?.address ? proposal.execution : []
       );
     } else {
       result = await propose(
@@ -118,8 +117,8 @@ async function handleProposeClick() {
         proposal.title,
         proposal.body,
         proposal.discussion,
-        proposal.executionStrategy.address,
-        proposal.execution
+        proposal.executionStrategy?.address ?? null,
+        proposal.executionStrategy?.address ? proposal.execution : []
       );
     }
     if (result) router.back();
@@ -259,9 +258,17 @@ watch(proposalData, () => {
       <div v-if="space">
         <h4 class="eyebrow mb-3">Execution</h4>
         <div class="flex flex-col gap-2 mb-3">
-          <div v-if="supportedExecutionStrategies && !supportedExecutionStrategies.length">
-            No supported execution strategies available.
-          </div>
+          <ExecutionButton
+            class="flex-auto flex items-center gap-2"
+            :class="{
+              'border-skin-link': executionStrategy === null,
+              'text-skin-border': executionStrategy !== null
+            }"
+            @click="executionStrategy = null"
+          >
+            <IH-cog />
+            No execution
+          </ExecutionButton>
           <ExecutionButton
             v-for="(executor, i) in supportedExecutionStrategies"
             :key="executor"
