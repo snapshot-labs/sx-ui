@@ -42,6 +42,10 @@ const steps = computed(() => {
     {
       id: 'DEPLOYING_SPACE',
       title: 'Deploying space'
+    },
+    {
+      id: 'INDEXING_SPACE',
+      title: 'Indexing space'
     }
   ];
 });
@@ -107,8 +111,16 @@ async function deploy() {
     const confirmedReceipt = await network.value.helpers.waitForTransaction(result);
     if (confirmedReceipt.status === 0) throw new Error('Transaction failed');
 
+    currentStep.value = currentStep.value + 1;
+  } catch {
+    failed.value = true;
+  }
+
+  try {
+    await network.value.helpers.waitForSpace(props.predictedSpaceAddress.toLowerCase());
+
     completed.value = true;
-    currentStep.value = steps.value.length;
+    currentStep.value = currentStep.value + 1;
   } catch {
     failed.value = true;
   }
@@ -121,16 +133,7 @@ onMounted(() => deploy());
   <div class="pt-5 max-w-[50rem] mx-auto px-4">
     <template v-if="completed">
       <h1>Space deployed</h1>
-      <div>
-        Soon it will be available
-        <router-link
-          :to="{
-            name: 'space-overview',
-            params: { id: `${networkId}:${predictedSpaceAddress?.toLowerCase()}` }
-          }"
-          text="here"
-        />.
-      </div>
+      <div>Space has been deployed.</div>
     </template>
     <template v-else-if="failed">
       <h1>Space deployment failed</h1>
@@ -164,6 +167,16 @@ onMounted(() => deploy());
           </a>
         </div>
       </div>
+    </div>
+    <div v-if="completed" class="mt-4">
+      You can now access your space
+      <router-link
+        :to="{
+          name: 'space-overview',
+          params: { id: `${networkId}:${predictedSpaceAddress?.toLowerCase()}` }
+        }"
+        text="here"
+      />.
     </div>
   </div>
 </template>
