@@ -41,6 +41,10 @@ const navigationConfig = computed(() => ({
       name: 'Proposals',
       icon: IHNewspaper
     },
+    delegates: {
+      name: 'Delegates',
+      icon: IHLightningBolt
+    },
     ...(space.value?.delegation_api_url
       ? {
           delegates: {
