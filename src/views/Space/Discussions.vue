@@ -7,11 +7,13 @@ import '@/helpers/highlight';
 <template>
   <div class="p-4 space-x-2 flex">
     <div class="flex-auto" />
-    <UiTooltip title="New discussion">
-      <UiButton class="!px-0 w-[46px]">
-        <IH-pencil-alt class="inline-block" />
-      </UiButton>
-    </UiTooltip>
+    <router-link :to="{ name: 'discuss' }">
+      <UiTooltip title="New discussion">
+        <UiButton class="!px-0 w-[46px]">
+          <IH-pencil-alt class="inline-block" />
+        </UiButton>
+      </UiTooltip>
+    </router-link>
   </div>
   <div class="space-y-4">
     <div>
