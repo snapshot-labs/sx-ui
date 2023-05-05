@@ -6,6 +6,8 @@ import SpaceProposals from '@/views/Space/Proposals.vue';
 import SpaceSearchProposals from '@/views/Space/SearchProposals.vue';
 import Discussions from '@/views/Space/Discussions.vue';
 import Discussion from '@/views/Space/Discussion.vue';
+import Discuss from '@/views/Space/Discuss.vue';
+import Delegates from '@/views/Space/Delegates.vue';
 import SpaceSettings from '@/views/Space/Settings.vue';
 import SpaceTreasury from '@/views/Space/Treasury.vue';
 import SpaceDelegates from '@/views/Space/Delegates.vue';
@@ -32,7 +34,9 @@ const routes: any[] = [
       { path: 'treasury', name: 'space-treasury', component: SpaceTreasury },
       { path: 'delegates', name: 'space-delegates', component: SpaceDelegates },
       { path: 'discussions', name: 'space-discussions', component: Discussions },
-      { path: 'discussion/:discussion', name: 'discussion', component: Discussion }
+      { path: 'discussion/:discussion', name: 'discussion', component: Discussion },
+      { path: 'discuss', name: 'discuss', component: Discuss },
+      { path: 'delegates', name: 'space-delegates', component: Delegates }
     ]
   },
   {
