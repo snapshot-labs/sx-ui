@@ -6,7 +6,11 @@ const props = defineProps<{ reply: any }>();
 
 <template>
   <div class="border-b py-4 flex">
-    <Stamp :id="reply.author" :size="44" class="mr-4 sticky z-10 top-[83px] lg:top-[84px]" />
+    <div class="mr-4">
+      <div class="w-[44px] sticky z-10 top-[83px] lg:top-[84px]">
+        <Stamp :id="reply.author" :size="44" />
+      </div>
+    </div>
     <div class="w-full">
       <div class="text-skin-text text-sm mb-2 space-x-2">
         <span v-text="shortenAddress(reply.author)" />
