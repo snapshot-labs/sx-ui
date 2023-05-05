@@ -93,7 +93,13 @@ const definition = computed(() => {
               minLength: 1
             }
           }
-        : {})
+        : {}),
+      delegationApiUrl: {
+        type: 'string',
+        format: 'uri',
+        title: 'Delegation API URL',
+        examples: ['https://api.thegraph.com/subgraphs/name/arr00/uniswap-governance-v2']
+      }
     }
   };
 });
