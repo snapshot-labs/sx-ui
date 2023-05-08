@@ -34,15 +34,15 @@ watch(
 <template>
   <div>
     <div v-text="definition.title" />
-    <div class="flex gap-3">
+    <div class="flex">
       <SBase :definition="{ title: 'Days' }" class="flex-1">
-        <input v-model="days" class="s-input" type="number" min="0" />
+        <input v-model="days" class="s-input !rounded-r-none" type="number" min="0" />
       </SBase>
       <SBase :definition="{ title: 'Hours' }" class="flex-1">
-        <input v-model="hours" class="s-input" type="number" min="0" />
+        <input v-model="hours" class="s-input !rounded-none" type="number" min="0" />
       </SBase>
       <SBase :definition="{ title: 'Minutes' }" class="flex-1">
-        <input v-model="minutes" class="s-input" type="number" min="0" />
+        <input v-model="minutes" class="s-input !rounded-l-none" type="number" min="0" />
       </SBase>
     </div>
   </div>
