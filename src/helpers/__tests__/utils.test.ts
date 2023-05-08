@@ -16,6 +16,7 @@ describe('utils', () => {
         votingPowerSymbol: 'VOTE',
         walletNetwork: 'gor',
         walletAddress: '0x000000000000000000000000000000000000dead',
+        delegationApiType: 'governor-subgraph',
         delegationApiUrl: 'https://thegraph.com/hosted-service/subgraph/arr00/uniswap-governance-v2'
       });
 
@@ -30,6 +31,7 @@ describe('utils', () => {
           twitter: 'SnapshotLabs',
           discord: 'snapshot',
           wallets: ['gor:0x000000000000000000000000000000000000dead'],
+          delegation_api_type: 'governor-subgraph',
           delegation_api_url:
             'https://thegraph.com/hosted-service/subgraph/arr00/uniswap-governance-v2'
         }

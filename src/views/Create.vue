@@ -71,7 +71,8 @@ const metadataForm: SpaceMetadata = reactive(
     votingPowerSymbol: '',
     walletNetwork: null,
     walletAddress: null,
-    delegationApiUrl: ''
+    delegationApiType: null,
+    delegationApiUrl: null
   })
 );
 const selectedNetworkId: Ref<NetworkID> = ref('gor');

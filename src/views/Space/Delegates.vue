@@ -6,7 +6,7 @@ import { Space } from '@/types';
 const props = defineProps<{ space: Space }>();
 
 const { loading, loadingMore, loaded, failed, hasMore, delegates, fetch, fetchMore } = useDelegates(
-  props.space.delegation_api_url
+  props.space.delegation_api_url as string
 );
 
 const currentNetwork = computed(() => {

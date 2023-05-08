@@ -13,7 +13,8 @@ const DEFAULT_FORM_STATE: SpaceMetadata = {
   votingPowerSymbol: '',
   walletNetwork: null,
   walletAddress: null,
-  delegationApiUrl: ''
+  delegationApiType: null,
+  delegationApiUrl: null
 };
 
 const props = defineProps<{
@@ -60,6 +61,7 @@ watch(
     form.discord = props.space.discord;
     form.twitter = props.space.twitter;
     form.votingPowerSymbol = props.space.voting_power_symbol;
+    form.delegationApiType = props.space.delegation_api_type;
     form.delegationApiUrl = props.space.delegation_api_url;
 
     const [walletNetwork, walletAddress] = props.space.wallet.split(':');

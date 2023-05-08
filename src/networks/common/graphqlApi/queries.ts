@@ -217,6 +217,7 @@ export const SPACE_QUERY = gql`
       discord
       voting_power_symbol
       wallet
+      delegation_api_type
       delegation_api_url
       controller
       voting_delay
