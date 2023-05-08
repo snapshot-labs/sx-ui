@@ -77,7 +77,9 @@ onMounted(() => {
               <h4 class="text-skin-link" v-text="shorten(delegate.id)" />
               <div class="text-sm" v-text="shorten(delegate.id)" />
             </div>
-            <div class="flex-col items-end text-right leading-[22px] w-auto md:w-[180px]">
+            <div
+              class="flex-col items-end text-right leading-[22px] w-auto md:w-[180px] hidden md:block"
+            >
               <h4
                 class="text-skin-link"
                 v-text="`${delegate.tokenHoldersRepresentedAmount} delegator(s)`"
