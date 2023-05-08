@@ -131,18 +131,8 @@ onMounted(() => deploy());
 
 <template>
   <div class="pt-5 max-w-[50rem] mx-auto px-4">
-    <template v-if="completed">
-      <h1>Space deployed</h1>
-      <div>Space has been deployed.</div>
-    </template>
-    <template v-else-if="failed">
-      <h1>Space deployment failed</h1>
-      <div>Please try again later.</div>
-    </template>
-    <template v-else>
-      <h1>Space is currently being deployed</h1>
-      <div>Do not refresh this page until process is complete.</div>
-    </template>
+    <h1>Create new space</h1>
+    <div>Do not refresh this page until process is complete.</div>
 
     <div class="flex flex-col mt-4">
       <div v-for="(step, i) in steps" :key="step.id" class="flex items-center gap-4 mb-3 last:mb-0">
