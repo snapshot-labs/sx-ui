@@ -233,7 +233,12 @@ export default defineComponent({
         You do not have enough voting power to create proposal in this space.
       </UiAlert>
       <h4 class="eyebrow mb-3">Context</h4>
-      <SIString v-model="proposal.title" :definition="TITLE_DEFINITION" :error="formErrors.title" />
+      <SIString
+        :key="proposalKey"
+        v-model="proposal.title"
+        :definition="TITLE_DEFINITION"
+        :error="formErrors.title"
+      />
       <div class="flex">
         <Link
           :is-active="!previewEnabled"
@@ -253,11 +258,12 @@ export default defineComponent({
         <div class="s-label" v-text="'Description'" />
         <textarea v-model="proposal.body" maxlength="9600" class="s-input mb-3 h-[160px]" />
         <SIString
+          :key="proposalKey"
           v-model="proposal.discussion"
           :definition="DISCUSSION_DEFINITION"
           :error="formErrors.discussion"
         />
-        <Preview :url="proposal.discussion" />
+        <Preview :key="proposalKey" :url="proposal.discussion" />
       </div>
       <div v-if="space">
         <h4 class="eyebrow mb-3">Execution</h4>
