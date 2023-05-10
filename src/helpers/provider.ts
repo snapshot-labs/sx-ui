@@ -8,7 +8,7 @@ export function getProvider(networkId: number): StaticJsonRpcProvider {
   let provider = providers[networkId];
 
   if (!provider) {
-    provider = new StaticJsonRpcProvider({ url, timeout: 25000 });
+    provider = new StaticJsonRpcProvider({ url, timeout: 25000 }, networkId);
     providers[networkId] = provider;
   }
 
