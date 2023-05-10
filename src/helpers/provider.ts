@@ -3,7 +3,7 @@ import { StaticJsonRpcProvider } from '@ethersproject/providers';
 const providers: Record<number, StaticJsonRpcProvider | undefined> = {};
 
 export function getProvider(networkId: number): StaticJsonRpcProvider {
-  const url = `https://rpc.brovider.xyz/${networkId}`;
+  const url = `https://rpc.snapshotx.xyz/${networkId}`;
 
   let provider = providers[networkId];
 
