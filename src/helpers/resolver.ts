@@ -1,4 +1,5 @@
 import { getProvider } from '@/helpers/provider';
+import { memoize } from '@/helpers/utils';
 import { NetworkID } from '@/types';
 
 const provider = getProvider(5);
@@ -7,23 +8,6 @@ type ResolvedName = {
   networkId: NetworkID;
   address: string;
 };
-
-function memoize<T extends any[], U>(fn: (...args: T) => U) {
-  const cache = new Map<string, any>();
-
-  return (...args: T): U => {
-    const key = JSON.stringify(args);
-
-    if (cache.has(key)) {
-      return cache.get(key);
-    }
-
-    const result = fn(...args);
-    cache.set(key, result);
-
-    return result;
-  };
-}
 
 function createResolver() {
   const cache = new Map<string, ResolvedName | null>();
