@@ -1,8 +1,9 @@
-import { getProvider } from '@/helpers/provider';
 import { memoize } from '@/helpers/utils';
+import { resolveName as resolveEnsName } from '@/helpers/ens';
 import { NetworkID } from '@/types';
 
-const provider = getProvider(5);
+const ENS_CHAIN_ID = 5;
+const ENS_NETWORK_ID = 'gor';
 
 type ResolvedName = {
   networkId: NetworkID;
@@ -22,14 +23,14 @@ function createResolver() {
   }
 
   async function resolveEns(id: string): Promise<ResolvedName | null> {
-    const resolvedAddress = await provider.resolveName(id);
+    const resolvedAddress = await resolveEnsName(id, ENS_CHAIN_ID);
 
     if (!resolvedAddress) {
       return null;
     }
 
     return {
-      networkId: 'gor',
+      networkId: ENS_NETWORK_ID,
       address: resolvedAddress.toLocaleLowerCase()
     };
   }
