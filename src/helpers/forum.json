@@ -23,57 +23,66 @@
   ],
   "discussions": [
     {
-      "author": "0xeF8305E140ac520225DAf050e2f71d5fBcC543e7",
+      "author": "0x72c7f49Ae7b664CC09f6891b68eedB08aA2FC15b",
       "title": "Deploy Uniswap v3 on Moonbeam (2023)",
-      "content": "We Michigan Blockchain 13 are submitting this proposal to reinstate the deployment of Uniswap v3 on Polkadot’s EVM-compatible parachain, Moonbeam.\n\nLast spring, the Uniswap DAO voted on this exact topic. The proposal advanced through Uni’s governance rails, receiving positive feedback from the community 1, progressing past the temperate check 4, and eventually passing with a near unanimous YES decision during the onchain vote 4. Nomad was the designated contract deployer and the appointed cross-chain messaging solution for that proposal. Illusory Systems (Nomad) received the Additional Use Grant, which can be seen on the v3-core-license-grants.uniswap.eth ENS subdomain 3. Although Nomad obtained the license exemption in May 2022, they never began v3 contract deployment on Moonbeam. This can generally be seen as fortuitous from Uniswap’s vantage point as the hiatus allowed Uniswap to avoid exposure to the Nomad bridge exploit on August 1, 2022.\n\nRecently, both the Uniswap 2 and Moonbeam communities have voiced interest in reinstating the previous proposal. As a result, we have conversed with key members of the Moonbeam ecosystem to formulate a reformed proposal with a couple of modifications to the previous proposal. This new proposal will contain updates regarding the architecture and activity on both Polkadot and Moonbeam. The previous $2.5M commitment by the Moonbeam foundation to the Uniswap Grants Program (UGP) has been omitted due to difficult market conditions, but there are liquidity incentives available through Moonbeam Foundation’s Level 3 6 grant process. This has the potential to qualify for the mentioned grant over the course of the next few months, allowing for more seamless liquidity bootstrapping on Moonbeam.\n\nIn accordance with Uniswap v3’s BSL expiration on April 1, 2023, the need to include a “License Exemption” clause is now void. Instead, a section called “Deployment Details” (see below section) has been added, which outlines the verbiage that will be added to the new uniswap.eth ENS subdomain titled v3-deployments.uniswap.eth. This subdomain will serve as an onchain register of all of the v3 deployments that have passed through Uni governance rails and are recognized as canonical deployments.",
+      "content": "We Michigan Blockchain 13 are submitting this proposal to reinstate the deployment of Uniswap v3 on Polkadot’s EVM-compatible parachain, Moonbeam.\n\nLast spring, the Uniswap DAO voted on this exact topic. The proposal advanced through Uni’s governance rails, receiving positive feedback from the community 1, progressing past the temperate check 4, and eventually passing with a near unanimous YES decision during the onchain vote 4. Nomad was the designated contract deployer and the appointed cross-chain messaging solution for that proposal. Illusory Systems (Nomad) received the Additional Use Grant, which can be seen on the v3-core-license-grants.uniswap.eth ENS subdomain 3.",
       "comments": 5,
-      "created": 1682690894
+      "created": 1682690894,
+      "score": 7890
     },
     {
       "author": "0xa872C2133e16705f54ee816C430cad6e6a299bB9",
       "title": "What do you think of the initial airdrop?",
       "content": "As you know, six months have passed since the airdrop. What do you think about it:\n\nWas it positive for the project?\nHave you achieved the initial objectives of the Governance group?\nDid the number of users increase?\n-It has been a success?\nShould it be repeated when it is one year old?\nIn my opinion, all the answers are yes. I hope many have the same opinion.\n\nI await your comments\nA hug to all",
       "comments": 6,
-      "created": 1682690894
+      "created": 1682690894,
+      "score": 4567
     },
     {
       "author": "0x14Ff0Bc9417B6796f79768729002A793b51205B8",
       "title": "Gauntlet: Delegation Migration / Consolidation",
       "content": "Hi all,\n\nIf we haven’t met, I head up Gauntlet’s 12 governance platform. I’m posting here with the hope that this reaches the relevant parties.\n\nAs it stands, Gauntlet currently has two addresses that have UNI delegated to it:\nEOA: 0x6626593C237f530D15aE9980A95ef938Ac15c35c 5\nMulti-Sig: 0x683a4F9915D6216f73d6Df50151725036bD26C02 4\n\nWe’re in the process of consolidating all delegations to one address (multi-sig). If you are currently delegating to the EOA, we are asking you to re-delegate to the multi-sig address.\n\nIf you have any questions, feel free to DM me here or on Twitter (@mattdobel, @gauntletnetwork).\n\nThanks for your support.",
       "comments": 7,
-      "created": 1682690894
+      "created": 1682690894,
+      "score": 1234
     }
   ],
   "replies": [
     {
       "author": "0xD299F46b223ba3047FEC3bA1D6D19f96D4f52127",
       "content": "Many thanks @litocoen for this proposal - much appreciated! Combined with @Milli3E‘s suggestion to consider / include LUSD as the most decentralized stablecoin, it‘s a wholehearted YES!",
-      "created": 1682690894
+      "created": 1682680894,
+      "score": 7890
     },
     {
       "author": "0x7f3c703cBcd18acf9B2D85BC4b59a770d2307Ae6",
       "content": "I find this suggestion very clever thanks @guil-lambert!\n\nI would have no objection against implementing the liquidity mining program this way.",
-      "created": 1682690894
+      "created": 1682570894,
+      "score": 3456
     },
     {
       "author": "0x830fB488E3Da47f2b12feeDE6AF5D00F1Eaa136A",
       "content": "These look like great thorough write-ups!\n\nAre the recent “Just in Time” liquidity attacks going to be gameable with the discussed implementations?",
-      "created": 1682690894
+      "created": 1682460894,
+      "score": 1012
     },
     {
-      "author": "0xD299F46b223ba3047FEC3bA1D6D19f96D4f52127",
+      "author": "0x1dF428833f2C9FB1eF098754e5D710432450d706",
       "content": "Many thanks @litocoen for this proposal - much appreciated! Combined with @Milli3E‘s suggestion to consider / include LUSD as the most decentralized stablecoin, it‘s a wholehearted YES!",
-      "created": 1682690894
+      "created": 1682350894,
+      "score": 789
     },
     {
-      "author": "0x7f3c703cBcd18acf9B2D85BC4b59a770d2307Ae6",
+      "author": "0xD9F5b7E51dB4aB88D9bDEF5D23fd984c17012fC2",
       "content": "I find this suggestion very clever thanks @guil-lambert!\n\nI would have no objection against implementing the liquidity mining program this way.",
-      "created": 1682690894
+      "created": 1682240894,
+      "score": -456
     },
     {
-      "author": "0x830fB488E3Da47f2b12feeDE6AF5D00F1Eaa136A",
+      "author": "0xEC6d36A487d85CF562B7b8464CE8dc60637362AC",
       "content": "These look like great thorough write-ups!\n\nAre the recent “Just in Time” liquidity attacks going to be gameable with the discussed implementations?",
-      "created": 1682690894
+      "created": 1682130894,
+      "score": -123
     }
   ]
 }
