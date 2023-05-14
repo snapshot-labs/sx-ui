@@ -10,15 +10,18 @@ const discussion = forum.discussions[id];
 
 <template>
   <div class="space-y-4">
-    <div>
-      <div class="mx-4 pt-5">
+    <div class="pt-5">
+      <div class="mx-4">
         <div>
           <h1 v-text="discussion.title" />
           <router-link :to="{ name: 'space-discussions' }">
             {{ forum.categories[0].title }}
           </router-link>
         </div>
-        <Reply :reply="discussion" />
+        <Reply :reply="discussion" class="border-b-0" />
+      </div>
+      <Label label="Replies" />
+      <div class="mx-4">
         <Reply v-for="(reply, i) in forum.replies" :key="i" :reply="reply" />
       </div>
     </div>
