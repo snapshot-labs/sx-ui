@@ -11,6 +11,7 @@ import IHLightningBolt from '~icons/heroicons-outline/lightning-bolt';
 import IHCog from '~icons/heroicons-outline/cog';
 import IHUsers from '~icons/heroicons-outline/users';
 import IHStop from '~icons/heroicons-outline/stop';
+import IHFolder from '~icons/heroicons-outline/folder';
 
 const route = useRoute();
 const uiStore = useUiStore();
@@ -32,23 +33,27 @@ const navigationConfig = computed(() => ({
       name: 'Overview',
       icon: IHGlobeAlt
     },
+    discussions: {
+      name: 'Discussions',
+      icon: IHFolder
+    },
     proposals: {
       name: 'Proposals',
       icon: IHNewspaper
     },
-    ...(treasury.value
-      ? {
-          treasury: {
-            name: 'Treasury',
-            icon: IHCash
-          }
-        }
-      : undefined),
     ...(space.value?.delegation_api_url
       ? {
           delegates: {
             name: 'Delegates',
             icon: IHLightningBolt
+          }
+        }
+      : undefined),
+    ...(treasury.value
+      ? {
+          treasury: {
+            name: 'Treasury',
+            icon: IHCash
           }
         }
       : undefined),

@@ -15,6 +15,9 @@ import Settings from '@/views/Settings.vue';
 import Contacts from '@/views/Settings/Contacts.vue';
 import Explore from '@/views/Explore.vue';
 import SettingsSpaces from '@/views/Settings/Spaces.vue';
+import Discussions from '@/views/Space/Discussions.vue';
+import Discussion from '@/views/Space/Discussion.vue';
+import Discuss from '@/views/Space/Discuss.vue';
 
 const routes: any[] = [
   { path: '/', name: 'home', component: Home },
@@ -28,7 +31,10 @@ const routes: any[] = [
       { path: 'search', name: 'space-search-proposals', component: SpaceSearchProposals },
       { path: 'settings', name: 'space-settings', component: SpaceSettings },
       { path: 'treasury', name: 'space-treasury', component: SpaceTreasury },
-      { path: 'delegates', name: 'space-delegates', component: SpaceDelegates }
+      { path: 'delegates', name: 'space-delegates', component: SpaceDelegates },
+      { path: 'discussions', name: 'space-discussions', component: Discussions },
+      { path: 'discussion/:discussion', name: 'discussion', component: Discussion },
+      { path: 'discuss', name: 'discuss', component: Discuss }
     ]
   },
   {
