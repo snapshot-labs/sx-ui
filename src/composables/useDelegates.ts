@@ -10,6 +10,7 @@ type ApiDelegate = {
 };
 
 type Delegate = ApiDelegate & {
+  name: string | null;
   delegatorsPercentage: number;
   votesPercentage: number;
 };
