@@ -1,5 +1,6 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core';
 import gql from 'graphql-tag';
+import { getNames } from '@/helpers/ens';
 
 type ApiDelegate = {
   id: string;
@@ -83,6 +84,9 @@ export function useDelegates(delegationApiUrl: string) {
 
     const governanceData = data.governance as Governance;
     const delegatesData = data.delegates as ApiDelegate[];
+    const addresses = delegatesData.map(delegate => delegate.id);
+
+    const names = await getNames(addresses);
 
     const newDelegates = delegatesData.map((delegate: ApiDelegate) => {
       const delegatorsPercentage =
@@ -93,6 +97,7 @@ export function useDelegates(delegationApiUrl: string) {
         (Number(delegate.delegatedVotes) / Number(governanceData.delegatedVotes)) * 100;
 
       return {
+        name: names[delegate.id] || null,
         ...delegate,
         delegatorsPercentage,
         votesPercentage
