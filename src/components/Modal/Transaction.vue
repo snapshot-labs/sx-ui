@@ -27,6 +27,7 @@ const showPicker = ref(false);
 const pickerField: Ref<string | null> = ref(null);
 const searchValue = ref('');
 const ignoreFormUpdates = ref(true);
+const addressInvalid = ref(false);
 const showAbiInput = ref(false);
 const abiStr = ref('');
 
@@ -57,8 +58,8 @@ const definition = computed(() => {
   return {};
 });
 
-const errors = computed(() =>
-  validateForm(
+const errors = computed(() => {
+  const formErrors = validateForm(
     {
       type: 'object',
       properties: {
@@ -78,8 +79,14 @@ const errors = computed(() =>
       additionalProperties: true
     },
     { to: form.to, amount: form.amount }
-  )
-);
+  );
+
+  if (addressInvalid.value) {
+    formErrors.to = 'No contract found at this address.';
+  }
+
+  return formErrors;
+});
 const argsErrors = computed(() => validateForm(definition.value, form.args));
 
 function handlePickerClick(field: string) {
@@ -112,20 +119,26 @@ function handleMethodChange() {
 async function handleToChange(to: string) {
   form.abi = [];
   abiStr.value = '';
+  addressInvalid.value = false;
   showAbiInput.value = false;
-  if (isAddress(to)) {
-    loading.value = true;
-    const provider = getProvider(5);
+
+  if (!isAddress(to)) return;
+
+  loading.value = true;
+  const provider = getProvider(5);
+
+  try {
     const code = await provider.getCode(to);
-    if (code !== '0x') {
-      console.log('Address is valid');
-      try {
-        form.abi = await getABI(to);
-      } catch (e) {
-        showAbiInput.value = true;
-        console.log(e);
-      }
+    if (code === '0x') {
+      addressInvalid.value = true;
+      return;
     }
+
+    form.abi = await getABI(to);
+  } catch (e) {
+    console.log(e);
+    showAbiInput.value = true;
+  } finally {
     loading.value = false;
   }
 }
@@ -211,7 +224,12 @@ watch(
     <template v-if="showPicker">
       <BlockContactPicker :loading="false" :search-value="searchValue" @pick="handlePickerSelect" />
     </template>
-    <div v-else class="s-box p-4">
+    <div
+      v-show="
+        !showPicker /* has to use v-show so dirty flag works, need to find a better way to handle it */
+      "
+      class="s-box p-4"
+    >
       <div class="relative">
         <UiLoading v-if="loading" class="absolute top-[14px] right-3 z-10" />
         <SIAddress
