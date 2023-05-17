@@ -88,6 +88,9 @@ const errors = computed(() => {
   return formErrors;
 });
 const argsErrors = computed(() => validateForm(definition.value, form.args));
+const formValid = computed(
+  () => Object.keys(errors.value).length === 0 && Object.keys(argsErrors.value).length === 0
+);
 
 function handlePickerClick(field: string) {
   showPicker.value = true;
@@ -274,7 +277,7 @@ watch(
       </div>
     </div>
     <template v-if="!showPicker" #footer>
-      <UiButton class="w-full" @click="handleSubmit">Confirm</UiButton>
+      <UiButton class="w-full" :disabled="!formValid" @click="handleSubmit">Confirm</UiButton>
     </template>
   </UiModal>
 </template>
