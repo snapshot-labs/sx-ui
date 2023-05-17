@@ -67,6 +67,10 @@ const errors = computed(() => {
           type: 'string',
           format: 'address'
         },
+        abi: {
+          type: 'string',
+          format: 'abi'
+        },
         ...(currentMethod.value?.payable
           ? {
               amount: {
@@ -78,7 +82,7 @@ const errors = computed(() => {
       },
       additionalProperties: true
     },
-    { to: form.to, amount: form.amount }
+    { to: form.to, abi: showAbiInput.value ? abiStr.value : undefined, amount: form.amount }
   );
 
   if (addressInvalid.value) {
@@ -173,6 +177,7 @@ watch(
 watch(abiStr, value => {
   try {
     const abi = JSON.parse(value);
+    if (abi.length === 0) return;
     new Interface(abi);
     form.abi = abi;
     showAbiInput.value = false;
@@ -250,10 +255,16 @@ watch(
           @pick="handlePickerClick('to')"
         />
       </div>
-      <div v-if="showAbiInput" class="s-base">
-        <div class="s-label" v-text="'ABI'" />
-        <textarea v-model="abiStr" class="s-input mb-3 h-[140px]" />
-      </div>
+      <SIText
+        v-if="showAbiInput"
+        v-model="abiStr"
+        :error="errors.abi"
+        :definition="{
+          type: 'string',
+          format: 'abi',
+          title: 'ABI'
+        }"
+      />
       <div v-if="methods.length > 0" class="s-base">
         <div class="s-label" v-text="'Method'" />
         <select v-model="form.method" class="s-input h-[45px]">
