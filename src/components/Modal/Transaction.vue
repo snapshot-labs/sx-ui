@@ -89,7 +89,10 @@ const errors = computed(() => {
 });
 const argsErrors = computed(() => validateForm(definition.value, form.args));
 const formValid = computed(
-  () => Object.keys(errors.value).length === 0 && Object.keys(argsErrors.value).length === 0
+  () =>
+    form.abi.length > 0 &&
+    Object.keys(errors.value).length === 0 &&
+    Object.keys(argsErrors.value).length === 0
 );
 
 function handlePickerClick(field: string) {
