@@ -149,9 +149,13 @@ export function createActions(
     ) => {
       await verifyNetwork(web3, chainId);
 
+      const code = await provider.getCode(account);
+      const isContract = code !== '0x';
+
       const { useRelayer, authenticator, strategies } = pickAuthenticatorAndStrategies(
         space.authenticators,
-        space.voting_power_validation_strategy_strategies
+        space.voting_power_validation_strategy_strategies,
+        isContract
       );
 
       let selectedExecutionStrategy;
@@ -200,9 +204,13 @@ export function createActions(
     ) {
       await verifyNetwork(web3, chainId);
 
+      const code = await provider.getCode(account);
+      const isContract = code !== '0x';
+
       const { useRelayer, authenticator } = pickAuthenticatorAndStrategies(
         space.authenticators,
-        space.voting_power_validation_strategy_strategies
+        space.voting_power_validation_strategy_strategies,
+        isContract
       );
 
       let selectedExecutionStrategy;
@@ -245,9 +253,13 @@ export function createActions(
 
       if (choice < 1 || choice > 3) throw new Error('Invalid chocie');
 
+      const code = await provider.getCode(account);
+      const isContract = code !== '0x';
+
       const { useRelayer, authenticator, strategies } = pickAuthenticatorAndStrategies(
         proposal.space.authenticators,
-        proposal.strategies
+        proposal.strategies,
+        isContract
       );
 
       let convertedChoice: Choice = 0;
