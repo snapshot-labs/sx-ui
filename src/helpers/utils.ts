@@ -285,3 +285,9 @@ export async function imageUpload(file: File) {
     console.error(err);
   }
 }
+
+export async function sleep(ms) {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+}
