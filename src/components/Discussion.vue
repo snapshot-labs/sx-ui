@@ -14,7 +14,7 @@ defineProps<{ discussion: any }>();
       <h3 class="text-skin-link" v-text="discussion.title" />
       <div class="text-skin-text space-x-2">
         <IH-annotation class="inline-block" />
-        <span>{{ _n(discussion.reply_count) }} replies</span>
+        <span>{{ _n(discussion.discussion_count) }} replies</span>
       </div>
     </router-link>
   </div>
