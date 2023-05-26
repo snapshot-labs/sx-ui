@@ -44,7 +44,23 @@
       "content": "Hi all,\n\nIf we haven’t met, I head up Gauntlet’s 12 governance platform. I’m posting here with the hope that this reaches the relevant parties.\n\nAs it stands, Gauntlet currently has two addresses that have UNI delegated to it:\nEOA: 0x6626593C237f530D15aE9980A95ef938Ac15c35c 5\nMulti-Sig: 0x683a4F9915D6216f73d6Df50151725036bD26C02 4\n\nWe’re in the process of consolidating all delegations to one address (multi-sig). If you are currently delegating to the EOA, we are asking you to re-delegate to the multi-sig address.\n\nIf you have any questions, feel free to DM me here or on Twitter (@mattdobel, @gauntletnetwork).\n\nThanks for your support.",
       "comments": 7,
       "created": 1682690894,
-      "score": 1234
+      "score": 0
+    },
+    {
+      "author": "0x72c7f49Ae7b664CC09f6891b68eedB08aA2FC15b",
+      "title": "Deploy Uniswap v3 on Moonbeam (2023)",
+      "content": "We Michigan Blockchain 13 are submitting this proposal to reinstate the deployment of Uniswap v3 on Polkadot’s EVM-compatible parachain, Moonbeam.\n\nLast spring, the Uniswap DAO voted on this exact topic. The proposal advanced through Uni’s governance rails, receiving positive feedback from the community 1, progressing past the temperate check 4, and eventually passing with a near unanimous YES decision during the onchain vote 4. Nomad was the designated contract deployer and the appointed cross-chain messaging solution for that proposal. Illusory Systems (Nomad) received the Additional Use Grant, which can be seen on the v3-core-license-grants.uniswap.eth ENS subdomain 3.",
+      "comments": 5,
+      "created": 1682690894,
+      "score": 123
+    },
+    {
+      "author": "0xa872C2133e16705f54ee816C430cad6e6a299bB9",
+      "title": "What do you think of the initial airdrop?",
+      "content": "As you know, six months have passed since the airdrop. What do you think about it:\n\nWas it positive for the project?\nHave you achieved the initial objectives of the Governance group?\nDid the number of users increase?\n-It has been a success?\nShould it be repeated when it is one year old?\nIn my opinion, all the answers are yes. I hope many have the same opinion.\n\nI await your comments\nA hug to all",
+      "comments": 6,
+      "created": 1682690894,
+      "score": -4567
     }
   ],
   "replies": [
