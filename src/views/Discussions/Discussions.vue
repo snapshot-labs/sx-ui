@@ -77,24 +77,12 @@ onMounted(() => {
           :to="{ name: 'discussions-category', params: { category: category.category_id } }"
           class="flex justify-between items-center mx-4 py-3 border-b"
         >
-          <div>
-            <div
-              class="w-[48px] h-[48px] bg-skin-border rounded-lg items-center justify-center flex mr-3"
-            >
-              <IH-folder class="inline-block" />
-            </div>
-          </div>
           <div class="flex-1">
             <h3 class="text-skin-link" v-text="category.name" />
             <div class="text-skin-text space-x-2">
+              <IH-annotation class="inline-block" />
               <span>{{ _n(category.discussion_count) }} discussion(s)</span>
             </div>
-          </div>
-          <div>
-            <span
-              v-if="category.discussion_count > 4"
-              class="w-[8px] h-[8px] bg-blue rounded-full inline-block mb-1"
-            />
           </div>
         </router-link>
       </div>
