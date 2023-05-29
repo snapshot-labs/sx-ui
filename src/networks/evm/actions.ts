@@ -84,7 +84,8 @@ export function createActions(
 
       const pinned = await helpers.pin(
         createErc1155Metadata(params.metadata, {
-          executionStrategies: params.executionStrategies.map(config => config.address)
+          execution_strategies: params.executionStrategies.map(config => config.address),
+          execution_strategies_types: params.executionStrategies.map(config => config.type)
         })
       );
 
@@ -129,7 +130,8 @@ export function createActions(
 
       const pinned = await helpers.pin(
         createErc1155Metadata(metadata, {
-          executionStrategies: space.executors
+          execution_strategies: space.executors,
+          execution_strategies_types: space.executors_types
         })
       );
 
@@ -305,6 +307,7 @@ export function createActions(
       );
 
       return executionCall(manaUrl, 'executeQueuedProposal', {
+        space: proposal.space.id,
         executionStrategy: proposal.execution_strategy,
         executionParams: executionData.executionParams[0]
       });
