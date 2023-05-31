@@ -25,7 +25,7 @@ const availableNetworks = enabledNetworks.map(id => ({
         v-for="network in availableNetworks"
         :key="network.id"
         :class="{ 'border-skin-link': network.id === modelValue }"
-        class="flex items-center rounded-lg border px-4 py-3 text-skin-link"
+        class="flex items-center rounded-lg border px-4 py-3 text-skin-link cursor-pointer"
         @click="emit('update:modelValue', network.id)"
       >
         <Stamp :id="ETH_CONTRACT" type="token" :size="32" class="mr-3" />
