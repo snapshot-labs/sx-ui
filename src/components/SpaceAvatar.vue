@@ -11,9 +11,11 @@ const props = withDefaults(
   }
 );
 
-const avatarHash = computed(() => sha3.sha3_256(props.space.avatar).slice(0, 16));
+const cb = computed(() =>
+  props.space.avatar ? sha3.sha3_256(props.space.avatar).slice(0, 16) : undefined
+);
 </script>
 
 <template>
-  <Stamp :id="space.id" :size="size" :cb="avatarHash" type="space-sx" />
+  <Stamp :id="space.id" :size="size" :cb="cb" type="space-sx" />
 </template>
