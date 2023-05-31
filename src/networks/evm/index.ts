@@ -11,12 +11,12 @@ const METADATA = {
   gor: {
     name: 'Ethereum Goerli',
     chainId: 5,
-    apiUrl: 'https://api.studio.thegraph.com/query/41343/sekhmet-sx-goerli/version/latest'
+    apiUrl: 'https://api.studio.thegraph.com/query/23545/sx-goerli/version/latest'
   },
   sep: {
     name: 'Ethereum Sepolia',
     chainId: 11155111,
-    apiUrl: 'https://api.studio.thegraph.com/query/41343/sekhmet-sx-sepolia/version/latest'
+    apiUrl: 'https://api.studio.thegraph.com/query/23545/sx-sepolia/version/latest'
   }
 };
 
