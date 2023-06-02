@@ -93,7 +93,7 @@ onMounted(() => {
           <div>
             <span
               v-if="category.discussion_count > 4"
-              class="w-[8px] h-[8px] bg-red rounded-full inline-block"
+              class="w-[8px] h-[8px] bg-blue rounded-full inline-block mb-1"
             />
           </div>
         </router-link>
