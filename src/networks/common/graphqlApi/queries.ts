@@ -111,7 +111,11 @@ export const PROPOSALS_QUERY = gql`
     proposals(
       first: $first
       skip: $skip
-      where: { metadata_not: null, space: $space, title_contains_nocase: $searchQuery }
+      where: {
+        metadata_not: null
+        space: $space
+        metadata_: { title_contains_nocase: $searchQuery }
+      }
       orderBy: created
       orderDirection: desc
     ) {
