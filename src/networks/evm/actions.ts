@@ -318,7 +318,7 @@ export function createActions(
         convertToMetaTransactions(proposal.execution)
       );
 
-      return executionCall(manaUrl, 'execute', {
+      return executionCall(manaUrl, chainId, 'execute', {
         space: proposal.space.id,
         proposalId: proposal.proposal_id,
         executionParams: executionData.executionParams[0]
@@ -333,7 +333,7 @@ export function createActions(
         convertToMetaTransactions(proposal.execution)
       );
 
-      return executionCall(manaUrl, 'executeQueuedProposal', {
+      return executionCall(manaUrl, chainId, 'executeQueuedProposal', {
         space: proposal.space.id,
         executionStrategy: proposal.execution_strategy,
         executionParams: executionData.executionParams[0]

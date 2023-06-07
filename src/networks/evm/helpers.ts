@@ -60,10 +60,11 @@ export function pickAuthenticatorAndStrategies(
 
 export async function executionCall(
   baseUrl: string,
+  chainId: number,
   method: 'execute' | 'executeQueuedProposal',
   params: any
 ) {
-  const res = await fetch(`${baseUrl}/eth_rpc`, {
+  const res = await fetch(`${baseUrl}/eth_rpc/${chainId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
