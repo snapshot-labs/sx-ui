@@ -4,6 +4,7 @@ import {
   getEvmStrategy,
   evmGoerli,
   evmSepolia,
+  evmLineaGoerli,
   EvmNetworkConfig
 } from '@snapshot-labs/sx';
 import { createErc1155Metadata, verifyNetwork } from '@/helpers/utils';
@@ -18,7 +19,8 @@ type Choice = 0 | 1 | 2;
 
 const CONFIGS: Record<number, EvmNetworkConfig> = {
   5: evmGoerli,
-  11155111: evmSepolia
+  11155111: evmSepolia,
+  59140: evmLineaGoerli
 };
 
 export function createActions(

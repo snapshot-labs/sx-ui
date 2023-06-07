@@ -17,6 +17,11 @@ const METADATA = {
     name: 'Ethereum Sepolia',
     chainId: 11155111,
     apiUrl: 'https://api.studio.thegraph.com/query/23545/sx-sepolia/version/latest'
+  },
+  'linea-testnet': {
+    name: 'Linea Testnet',
+    chainId: 59140,
+    apiUrl: 'https://api.studio.thegraph.com/query/23545/sx-sepolia/version/latest'
   }
 };
 
