@@ -53,11 +53,13 @@ onMounted(() => {
         </UiButton>
       </UiTooltip>
     </router-link>
-    <UiTooltip title="Settings">
-      <UiButton class="!px-0 w-[46px]">
-        <IH-cog class="inline-block" />
-      </UiButton>
-    </UiTooltip>
+    <router-link :to="{ name: 'discussions-settings' }">
+      <UiTooltip title="Settings">
+        <UiButton class="!px-0 w-[46px]">
+          <IH-cog class="inline-block" />
+        </UiButton>
+      </UiTooltip>
+    </router-link>
   </div>
   <div class="space-y-4">
     <div>

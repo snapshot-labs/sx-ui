@@ -7,6 +7,7 @@ import SpaceSearchProposals from '@/views/Space/SearchProposals.vue';
 import Discussions from '@/views/Discussions/Discussions.vue';
 import Discussion from '@/views/Discussions/Discussion.vue';
 import Discuss from '@/views/Discussions/Discuss.vue';
+import DiscussionsSettings from '@/views/Discussions/Settings.vue';
 import NewCategory from '@/views/Discussions/NewCategory.vue';
 import Category from '@/views/Discussions/Category.vue';
 import SpaceSettings from '@/views/Space/Settings.vue';
@@ -38,7 +39,17 @@ const routes: any[] = [
       { path: 'discussions/:category', name: 'discussions-category', component: Category },
       { path: 'discussions/new-category', name: 'new-category', component: NewCategory },
       { path: 'discussion/:discussion', name: 'discussion', component: Discussion },
-      { path: 'discussions/:category/discuss', name: 'discuss', component: Discuss }
+      { path: 'discussions/:category/discuss', name: 'discuss', component: Discuss },
+      {
+        path: 'discussions/settings',
+        name: 'discussions-settings',
+        component: DiscussionsSettings
+      },
+      {
+        path: 'discussions/:category/settings',
+        name: 'discussions-category-settings',
+        component: DiscussionsSettings
+      }
     ]
   },
   {
