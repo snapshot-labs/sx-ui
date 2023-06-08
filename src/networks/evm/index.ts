@@ -1,7 +1,7 @@
 import { createApi } from '../common/graphqlApi';
 import { createActions } from './actions';
 import * as constants from './constants';
-import { pinPineapple } from '@/helpers/pin';
+import { pinGraph } from '@/helpers/pin';
 import { getProvider } from '@/helpers/provider';
 import networks from '@/helpers/networks.json';
 import { Network } from '@/networks/types';
@@ -32,7 +32,7 @@ export function createEvmNetwork(networkId: NetworkID): Network {
   const api = createApi(apiUrl, networkId);
 
   const helpers = {
-    pin: pinPineapple,
+    pin: pinGraph,
     waitForTransaction: (txId: string) => provider.waitForTransaction(txId),
     waitForSpace: (spaceAddress: string, interval = 5000): Promise<Space> =>
       new Promise(resolve => {
