@@ -21,7 +21,7 @@ const METADATA = {
   'linea-testnet': {
     name: 'Linea Testnet',
     chainId: 59140,
-    apiUrl: 'https://api.studio.thegraph.com/query/23545/sx-sepolia/version/latest'
+    apiUrl: 'https://thegraph.goerli.zkevm.consensys.net/subgraphs/name/snapshot-labs/sx-subgraph'
   }
 };
 
