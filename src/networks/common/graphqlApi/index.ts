@@ -107,8 +107,6 @@ export function createApi(uri: string, networkId: NetworkID): NetworkApi {
       proposal: Proposal,
       { limit, skip = 0 }: PaginationOpts
     ): Promise<Vote[]> => {
-      console.log('loadProposalVotes', proposal, limit, skip);
-
       const { data } = await apollo.query({
         query: VOTES_QUERY,
         variables: {
