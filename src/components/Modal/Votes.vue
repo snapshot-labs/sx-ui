@@ -23,13 +23,18 @@ const { open } = toRefs(props);
 
 const network = computed(() => getNetwork(props.proposal.network));
 
-watch(open, async () => {
-  if (open.value === false) return;
+function reset() {
+  votes.value = [];
+  loaded.value = false;
+  loadingMore.value = false;
+  hasMore.value = false;
+}
 
+async function loadVotes() {
   votes.value = await network.value.api.loadProposalVotes(props.proposal, { limit: LIMIT });
   hasMore.value = votes.value.length === LIMIT;
   loaded.value = true;
-});
+}
 
 async function handleEndReached() {
   if (loadingMore.value || !hasMore.value) return;
@@ -43,6 +48,28 @@ async function handleEndReached() {
   votes.value = [...votes.value, ...newVotes];
   loadingMore.value = false;
 }
+
+watch([open, () => props.proposal.id], ([toOpen, toId], [, fromId]) => {
+  if (toOpen === false) return;
+  if (loaded.value && toId === fromId) return;
+
+  loadVotes();
+});
+
+onMounted(() => {
+  if (!open.value) return;
+
+  loadVotes();
+});
+
+watch(
+  () => props.proposal.id,
+  (toId, fromId) => {
+    if (toId === fromId) return;
+
+    reset();
+  }
+);
 </script>
 
 <template>
@@ -57,7 +84,8 @@ async function handleEndReached() {
           <div
             v-for="(vote, i) in votes"
             :key="i"
-            class="py-3 px-4 border-b last:border-b-0 relative"
+            class="py-3 px-4 border-b relative"
+            :class="{ 'last:border-b-0': !loadingMore }"
           >
             <div
               class="absolute choice-bg top-0 bottom-0 right-0 opacity-10"
