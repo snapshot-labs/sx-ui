@@ -62,7 +62,7 @@ watchEffect(() => {
 
 <template>
   <div>
-    <div class="relative bg-skin-border h-[140px] -mb-[70px] top-[-1px] cover">
+    <div class="relative bg-skin-border h-[140px] -mb-[70px] top-[-1px]">
       <div class="absolute right-4 top-4 space-x-2">
         <router-link :to="{ name: 'editor' }">
           <UiTooltip title="New proposal">
