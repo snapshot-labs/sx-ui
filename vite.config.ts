@@ -64,6 +64,7 @@ export default defineConfig({
   },
   build: {
     target,
+    sourcemap: true,
     commonjsOptions: {
       include: [/sx.js/, /node_modules/],
       transformMixedEsModules: true
