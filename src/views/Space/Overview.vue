@@ -56,7 +56,7 @@ const grouped = computed(() => {
 });
 
 watchEffect(() => {
-  setTitle(`Overview - ${props.space.name}`);
+  setTitle(props.space.name);
 });
 </script>
 
