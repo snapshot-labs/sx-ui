@@ -2,6 +2,7 @@
 import { useContactsStore } from '@/stores/contacts';
 import { shorten, shortenAddress } from '@/helpers/utils';
 
+const { setTitle } = useTitle();
 const contactsStore = useContactsStore();
 
 const modalState: Ref<{
@@ -20,6 +21,10 @@ function handleContactEdit(contact) {
   modalState.value.editContact = contact;
   modalOpen.value.editContact = true;
 }
+
+watchEffect(() => {
+  setTitle('Contacts');
+});
 </script>
 
 <template>

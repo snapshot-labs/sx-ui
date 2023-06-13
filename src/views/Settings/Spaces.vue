@@ -3,10 +3,15 @@ import { onMounted } from 'vue';
 import { useWeb3 } from '@/composables/useWeb3';
 import { useSpaces } from '@/composables/useSpaces';
 
+const { setTitle } = useTitle();
 const { web3Account } = useWeb3();
 const { loaded, spaces, fetch } = useSpaces();
 
 onMounted(() => fetch({ controller: web3Account.value }));
+
+watchEffect(() => {
+  setTitle('My spaces');
+});
 </script>
 
 <template>
