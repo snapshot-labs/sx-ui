@@ -4,7 +4,7 @@ import { Menu, MenuButton, MenuItems } from '@headlessui/vue';
 
 <template>
   <Menu as="div" class="relative">
-    <MenuButton as="template">
+    <MenuButton as="template" class="cursor-pointer">
       <slot name="button" />
     </MenuButton>
     <transition
