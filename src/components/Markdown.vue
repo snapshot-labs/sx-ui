@@ -60,12 +60,12 @@ const parsed = computed(() => remarkable.render(props.body));
   line-height: 1.3;
   word-wrap: break-word;
 
-  ::before {
+  &::before {
     display: table;
     content: '';
   }
 
-  ::after {
+  &::after {
     display: table;
     clear: both;
     content: '';
