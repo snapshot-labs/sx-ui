@@ -5,7 +5,7 @@ import { Menu, MenuButton, MenuItems } from '@headlessui/vue';
 <template>
   <Menu as="div" class="relative">
     <MenuButton as="template">
-      <IH-dots-vertical class="text-skin-link" />
+      <slot name="button" />
     </MenuButton>
     <transition
       enter-active-class="transition duration-100 ease-out"
@@ -18,7 +18,7 @@ import { Menu, MenuButton, MenuItems } from '@headlessui/vue';
       <MenuItems
         class="absolute right-0 mt-2 origin-top-right rounded-md bg-skin-border text-skin-link shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
       >
-        <slot />
+        <slot name="items" />
       </MenuItems>
     </transition>
   </Menu>
