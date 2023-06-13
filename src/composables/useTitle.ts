@@ -1,6 +1,6 @@
 const DEFAULT_TITLE = 'Snapshot X';
 
-export function useTitle() {
+export function useTitle(title?: string) {
   const setTitle = (newTitle: string) => {
     document.title = newTitle;
   };
@@ -8,6 +8,10 @@ export function useTitle() {
   onBeforeUnmount(() => {
     document.title = DEFAULT_TITLE;
   });
+
+  if (title) {
+    setTitle(title);
+  }
 
   return {
     setTitle
