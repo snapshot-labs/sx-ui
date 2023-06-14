@@ -5,6 +5,7 @@ import SpaceOverview from '@/views/Space/Overview.vue';
 import SpaceProposals from '@/views/Space/Proposals.vue';
 import SpaceSearchProposals from '@/views/Space/SearchProposals.vue';
 import Discussions from '@/views/Discussions/Discussions.vue';
+import DiscussionsSettings from '@/views/Discussions/Settings.vue';
 import Discussion from '@/views/Discussions/Discussion.vue';
 import Discuss from '@/views/Discussions/Discuss.vue';
 import NewCategory from '@/views/Discussions/NewCategory.vue';
@@ -35,7 +36,17 @@ const routes: any[] = [
       { path: 'treasury', name: 'space-treasury', component: SpaceTreasury },
       { path: 'delegates', name: 'space-delegates', component: SpaceDelegates },
       { path: 'discussions', name: 'space-discussions', component: Discussions },
+      {
+        path: 'discussions/settings',
+        name: 'discussions-settings',
+        component: DiscussionsSettings
+      },
       { path: 'discussions/:category', name: 'discussions-category', component: Category },
+      {
+        path: 'discussions/:category/settings',
+        name: 'discussions-category-settings',
+        component: DiscussionsSettings
+      },
       { path: 'discussions/new-category', name: 'new-category', component: NewCategory },
       { path: 'discussion/:discussion', name: 'discussion', component: Discussion },
       { path: 'discussions/:category/discuss', name: 'discuss', component: Discuss }
