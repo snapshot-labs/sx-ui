@@ -62,7 +62,9 @@ watchEffect(() => {
 
 <template>
   <div>
-    <div class="relative bg-skin-border h-[140px] -mb-[70px] top-[-1px]">
+    <div
+      class="relative bg-skin-border h-[140px] -mb-[86px] md:-mb-[70px] top-[-1px] overflow-hidden"
+    >
       <div class="w-full h-[140px] overflow-hidden">
         <SpaceCover
           v-if="props.space.cover"
@@ -70,6 +72,7 @@ watchEffect(() => {
           class="!rounded-none w-full min-h-full object-cover"
         />
       </div>
+      <div class="relative bg-skin-bg h-[16px] top-[-16px] rounded-t-[16px] md:hidden" />
       <div class="absolute right-4 top-4 space-x-2">
         <router-link :to="{ name: 'editor' }">
           <UiTooltip title="New proposal">
