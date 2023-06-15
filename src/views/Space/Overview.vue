@@ -101,7 +101,7 @@ watchEffect(() => {
             :space="space"
             :size="90"
             type="space-sx"
-            class="mb-2 border-[4px] border-skin-bg !bg-skin-border !rounded-lg"
+            class="relative mb-2 border-[4px] border-skin-bg !bg-skin-border !rounded-lg left-[-4px]"
           />
         </router-link>
         <h1 v-text="space.name" />
