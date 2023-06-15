@@ -15,7 +15,7 @@ type PendingTransaction = {
   createdAt: number;
 };
 
-const PENDING_TRANSACTIONS_TIMEOUT = 5 * 60 * 1000;
+const PENDING_TRANSACTIONS_TIMEOUT = 10 * 60 * 1000;
 const PENDING_TRANSACTIONS_STORAGE_KEY = 'pendingTransactions';
 
 function updateStorage(pendingTransactions: PendingTransaction[]) {
