@@ -63,9 +63,9 @@ watchEffect(() => {
 <template>
   <div>
     <div
-      class="relative bg-skin-border h-[140px] -mb-[86px] md:-mb-[70px] top-[-1px] overflow-hidden"
+      class="relative bg-skin-border h-[156px] md:h-[140px] -mb-[86px] md:-mb-[70px] top-[-1px] overflow-hidden"
     >
-      <div class="w-full h-[140px] overflow-hidden">
+      <div class="w-full h-full overflow-hidden">
         <SpaceCover
           v-if="props.space.cover"
           :space="props.space"
