@@ -18,6 +18,8 @@ function getErrorMessage(errorObject: ErrorObject): string {
         return 'Must be a valid address.';
       case 'abi':
         return 'Must be a valid ABI.';
+      case 'handle':
+        return 'Must be a handle, not full URL.';
       case 'uint256':
         return 'Must be a positive integer.';
       case 'int256':
@@ -72,6 +74,14 @@ export function validateForm(
 
   ajv.addFormat('stamp', {
     validate: () => true
+  });
+
+  ajv.addFormat('handle', {
+    validate: (value: string) => {
+      if (!value) return false;
+
+      return !value.match(/https?:\/\//);
+    }
   });
 
   ajv.addFormat('long', {
