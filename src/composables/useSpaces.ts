@@ -52,12 +52,23 @@ export function useSpaces() {
       enabledNetworks.map(async id => {
         const network = getNetwork(id);
 
+        const requestFilter = {
+          ...filter
+        };
+
+        if (requestFilter?.id_in) {
+          const filtered = requestFilter.id_in.filter(spaceId => spaceId.startsWith(`${id}:`));
+          if (filtered.length === 0) return [];
+
+          requestFilter.id_in = filtered.map(spaceId => spaceId.split(':')[1]);
+        }
+
         return network.api.loadSpaces(
           {
             skip: 0,
             limit: SPACES_LIMIT
           },
-          filter
+          requestFilter
         );
       })
     );
