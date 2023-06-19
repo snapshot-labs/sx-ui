@@ -18,8 +18,12 @@ function getErrorMessage(errorObject: ErrorObject): string {
         return 'Must be a valid address.';
       case 'abi':
         return 'Must be a valid ABI.';
-      case 'handle':
-        return 'Must be a handle, not full URL.';
+      case 'twitter-handle':
+        return 'Must be a valid Twitter handle.';
+      case 'github-handle':
+        return 'Must be a valid GitHub handle.';
+      case 'discord-handle':
+        return 'Must be a valid Discord handle.';
       case 'uint256':
         return 'Must be a positive integer.';
       case 'int256':
@@ -76,11 +80,27 @@ export function validateForm(
     validate: () => true
   });
 
-  ajv.addFormat('handle', {
+  ajv.addFormat('twitter-handle', {
     validate: (value: string) => {
       if (!value) return false;
 
-      return !value.match(/https?:\/\//);
+      return !!value.match(/^[a-zA-Z0-9_]+$/);
+    }
+  });
+
+  ajv.addFormat('github-handle', {
+    validate: (value: string) => {
+      if (!value) return false;
+
+      return !!value.match(/^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$/);
+    }
+  });
+
+  ajv.addFormat('discord-handle', {
+    validate: (value: string) => {
+      if (!value) return false;
+
+      return !!value.match(/^[a-zA-Z0-9_]+$/);
     }
   });
 

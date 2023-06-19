@@ -57,19 +57,19 @@ const definition = computed(() => {
       },
       github: {
         type: 'string',
-        format: 'handle',
+        format: 'github-handle',
         title: 'GitHub',
         examples: ['GitHub handle']
       },
       twitter: {
         type: 'string',
-        format: 'handle',
+        format: 'twitter-handle',
         title: 'Twitter',
         examples: ['Twitter handle']
       },
       discord: {
         type: 'string',
-        format: 'handle',
+        format: 'discord-handle',
         title: 'Discord',
         examples: ['Discord handle']
       },
