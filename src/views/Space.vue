@@ -30,7 +30,7 @@ watch(
 watchEffect(() => {
   if (!space.value) return setFavicon(null);
 
-  const faviconUrl = getStampUrl('space-sx', space.value.id, 32, getCacheHash(space.value.avatar));
+  const faviconUrl = getStampUrl('space-sx', space.value.id, 16, getCacheHash(space.value.avatar));
   setFavicon(faviconUrl);
 });
 </script>
