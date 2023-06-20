@@ -357,8 +357,8 @@ export function createActions(
     vetoProposal: async (web3: Web3Provider, proposal: Proposal) => {
       await verifyNetwork(web3, chainId);
 
-      return executionCall(manaUrl, chainId, 'vetoProposal', {
-        space: proposal.space.id,
+      return client.vetoExecution({
+        signer: web3.getSigner(),
         executionStrategy: proposal.execution_strategy,
         executionHash: proposal.execution_hash
       });
