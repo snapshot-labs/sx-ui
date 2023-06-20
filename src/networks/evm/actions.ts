@@ -354,6 +354,15 @@ export function createActions(
         executionParams: executionData.executionParams[0]
       });
     },
+    vetoProposal: async (web3: Web3Provider, proposal: Proposal) => {
+      await verifyNetwork(web3, chainId);
+
+      return executionCall(manaUrl, chainId, 'vetoProposal', {
+        space: proposal.space.id,
+        executionStrategy: proposal.execution_strategy,
+        executionHash: proposal.execution_hash
+      });
+    },
     setVotingDelay: async (web3: Web3Provider, space: Space, votingDelay: number) => {
       await verifyNetwork(web3, chainId);
 

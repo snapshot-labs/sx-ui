@@ -61,7 +61,7 @@ export function pickAuthenticatorAndStrategies(
 export async function executionCall(
   baseUrl: string,
   chainId: number,
-  method: 'execute' | 'executeQueuedProposal',
+  method: 'execute' | 'executeQueuedProposal' | 'vetoProposal',
   params: any
 ) {
   const res = await fetch(`${baseUrl}/eth_rpc/${chainId}`, {
