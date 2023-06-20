@@ -23,7 +23,7 @@ function getErrorMessage(errorObject: ErrorObject): string {
       case 'github-handle':
         return 'Must be a valid GitHub handle.';
       case 'discord-handle':
-        return 'Must be a valid Discord handle.';
+        return 'Must be a valid Discord handle or invite code.';
       case 'uint256':
         return 'Must be a positive integer.';
       case 'int256':

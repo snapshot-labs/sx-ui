@@ -71,7 +71,7 @@ const definition = computed(() => {
         type: 'string',
         format: 'discord-handle',
         title: 'Discord',
-        examples: ['Discord handle']
+        examples: ['Discord handle or invite code']
       },
       votingPowerSymbol: {
         type: 'string',
