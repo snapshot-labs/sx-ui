@@ -100,7 +100,7 @@ export function validateForm(
     validate: (value: string) => {
       if (!value) return false;
 
-      return !!value.match(/^[a-zA-Z0-9_]+$/);
+      return !!value.match(/^[a-zA-Z0-9-]+$/);
     }
   });
 
