@@ -81,10 +81,11 @@ watchEffect(() => {
       <div class="flex flex-row p-4 space-x-2">
         <UiSelect
           v-model="filter"
+          gap="12px"
           :items="[
-            { key: 'all', label: 'All', indicator: 'bg-blue' },
-            { key: 'active', label: 'Active', indicator: 'bg-green' },
+            { key: 'all', label: 'All' },
             { key: 'pending', label: 'Pending', indicator: 'bg-yellow-500' },
+            { key: 'active', label: 'Active', indicator: 'bg-green' },
             { key: 'closed', label: 'Closed', indicator: 'bg-red' }
           ]"
         />
