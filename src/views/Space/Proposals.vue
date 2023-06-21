@@ -82,6 +82,7 @@ watchEffect(() => {
         <UiSelect
           v-model="filter"
           gap="12px"
+          placement="left"
           :items="[
             { key: 'all', label: 'All' },
             { key: 'pending', label: 'Pending', indicator: 'bg-yellow-500' },

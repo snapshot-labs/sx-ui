@@ -8,7 +8,7 @@ withDefaults(
   }>(),
   {
     gap: '8px',
-    placement: 'left'
+    placement: 'right'
   }
 );
 </script>
