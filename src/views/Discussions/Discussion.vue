@@ -54,8 +54,8 @@ onMounted(() => {
     <UiLoading v-if="loadingDiscussion && !loadedDiscussion" class="block p-4" />
     <div v-else-if="loadedDiscussion" class="space-y-4">
       <div class="pt-4">
-        <div class="mx-4">
-          <div>
+        <div>
+          <div class="mx-4">
             <router-link
               :to="{
                 name: 'discussions-category',
@@ -78,7 +78,7 @@ onMounted(() => {
           <IH-exclamation-circle class="inline-block mr-2" />
           There are no replies.
         </div>
-        <div v-else-if="loadedReplies" class="mx-4">
+        <div v-else-if="loadedReplies">
           <Reply
             v-for="(reply, i) in replies"
             :key="i"

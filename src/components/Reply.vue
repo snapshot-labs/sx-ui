@@ -12,29 +12,64 @@ defineProps<{ reply: any; isAuthor: boolean }>();
 </script>
 
 <template>
-  <div class="border-b py-4">
-    <div class="flex">
-      <Score :discussion="reply" class="mr-3" />
-      <div class="w-full">
-        <div class="flex text-skin-text text-sm mb-2">
-          <div class="flex-1 space-x-2">
-            <router-link :to="{ name: 'user', params: { id: reply.author } }" class="space-x-2">
-              <Stamp :id="reply.author" :size="24" />
-              <span v-text="shortenAddress(reply.author)" />
-            </router-link>
-            <IS-pencil v-if="isAuthor" class="inline-block" />
-            <span v-text="_rt(1e9)" />
+  <div class="group mx-4 border-b">
+    <div class="py-4">
+      <div class="flex">
+        <Score :discussion="reply" class="mr-3" />
+        <div class="w-full">
+          <div class="flex text-skin-text text-sm mb-2">
+            <div class="flex-1 space-x-2">
+              <router-link :to="{ name: 'user', params: { id: reply.author } }" class="space-x-2">
+                <Stamp :id="reply.author" :size="24" />
+                <span v-text="shortenAddress(reply.author)" />
+              </router-link>
+              <IS-pencil v-if="isAuthor" class="inline-block" />
+              <span v-text="_rt(1e9)" />
+            </div>
+          </div>
+          <Markdown :body="reply.content" class="max-w-[650px] py-1 text-[20px]" />
+          <div class="text-sm space-x-2">
+            <a @click="toggleReplyForm"> <IS-reply class="inline-block" /> Reply </a>
+            <a v-if="reply.reply_count">
+              <IH-annotation class="inline-block" /> {{ reply.reply_count }} replies
+            </a>
           </div>
         </div>
-        <Markdown :body="reply.content" class="max-w-[650px] py-1 text-[20px]" />
-        <div class="text-sm space-x-2">
-          <a @click="toggleReplyForm"> <IS-reply class="inline-block" /> Reply </a>
-          <a v-if="reply.reply_count">
-            <IH-annotation class="inline-block" /> {{ reply.reply_count }} replies
-          </a>
+        <div class="invisible group-hover:visible">
+          <UiDropdown>
+            <template #button>
+              <IH-dots-horizontal class="inline-block" />
+            </template>
+            <template #items>
+              <UiDropdownItem v-slot="{ active }">
+                <button
+                  class="flex items-center gap-2"
+                  :class="{ 'opacity-80': active }"
+                >
+                  <IS-cursor-click :width="16" /> Pin
+                </button>
+              </UiDropdownItem>
+              <UiDropdownItem v-slot="{ active }">
+                <button
+                  class="flex items-center gap-2"
+                  :class="{ 'opacity-80': active }"
+                >
+                  <IS-pencil :width="16" /> Edit
+                </button>
+              </UiDropdownItem>
+              <UiDropdownItem v-slot="{ active }">
+                <button
+                  class="flex items-center gap-2"
+                  :class="{ 'opacity-80': active }"
+                >
+                  <IS-trash :width="16" /> Delete
+                </button>
+              </UiDropdownItem>
+            </template>
+          </UiDropdown>
         </div>
       </div>
+      <ReplyForm v-if="replyFormOpen" :reply="reply" />
     </div>
-    <ReplyForm v-if="replyFormOpen" :reply="reply" />
   </div>
 </template>
