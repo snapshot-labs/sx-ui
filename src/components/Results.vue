@@ -74,9 +74,12 @@ const visibleResults = computed(() =>
             v-if="result.choice === 1"
             class="text-white w-[14px] h-[14px] mt-[2px] ml-[2px]"
           />
-          <IH-x v-if="result.choice === 2" class="text-white w-[14px] h-[14px] mt-[2px] ml-[2px]" />
+          <IH-x
+            v-else-if="result.choice === 2"
+            class="text-white w-[14px] h-[14px] mt-[2px] ml-[2px]"
+          />
           <IH-arrow-sm-right
-            v-if="result.choice === 3"
+            v-else-if="result.choice === 3"
             class="text-white w-[14px] h-[14px] mt-[2px] ml-[2px]"
           />
         </div>
@@ -85,7 +88,7 @@ const visibleResults = computed(() =>
             `${_n(Number(result.score) / 10 ** decimals)} ${proposal.space.voting_power_symbol}`
           "
         />
-        <span v-text="`${_n(result.progress)}%`" />
+        <span class="text-skin-text" v-text="`${_n(result.progress)}%`" />
       </div>
     </div>
     <div
