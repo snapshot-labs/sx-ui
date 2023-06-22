@@ -7,6 +7,10 @@ const props = withDefaults(
     showTitle?: boolean;
     form: any;
     id?: string;
+    space?: {
+      id: string;
+      cover: string;
+    };
   }>(),
   {
     showTitle: true
@@ -57,18 +61,21 @@ const definition = computed(() => {
       },
       github: {
         type: 'string',
+        format: 'github-handle',
         title: 'GitHub',
         examples: ['GitHub handle']
       },
       twitter: {
         type: 'string',
+        format: 'twitter-handle',
         title: 'Twitter',
         examples: ['Twitter handle']
       },
       discord: {
         type: 'string',
+        format: 'discord-handle',
         title: 'Discord',
-        examples: ['Discord handle']
+        examples: ['Discord handle or invite code']
       },
       votingPowerSymbol: {
         type: 'string',
@@ -138,7 +145,8 @@ onMounted(() => {
 
 <template>
   <h3 v-if="showTitle" class="mb-4">Space profile</h3>
-  <div class="s-box">
+  <SIStampCover v-model="(form as any).cover" :space="space" />
+  <div class="s-box p-4 -mt-[80px]">
     <SIObject
       :model-value="form"
       :error="formErrors"

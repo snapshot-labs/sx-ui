@@ -1,9 +1,13 @@
 <script setup lang="ts">
-const props = withDefaults(
+import { getStampUrl } from '@/helpers/utils';
+
+withDefaults(
   defineProps<{
-    type?: 'avatar' | 'space' | 'space-sx' | 'token';
+    type?: 'avatar' | 'space' | 'space-sx' | 'space-cover-sx' | 'token';
     id: string;
     size?: number;
+    width?: number;
+    height?: number;
     cb?: string;
   }>(),
   {
@@ -11,20 +15,19 @@ const props = withDefaults(
     size: 22
   }
 );
-
-const src = computed(() => {
-  const cacheParam = props.cb ? `&cb=${props.cb}` : '';
-  return `https://cdn.stamp.fyi/${props.type}/${props.id}?s=${Number(props.size) * 2}${cacheParam}`;
-});
 </script>
 
 <template>
   <img
-    :src="src"
+    :src="getStampUrl(type, id, width && height ? { width, height } : size, cb)"
     class="rounded-full inline-block bg-[color:var(--border-color)]"
-    :style="{
-      width: `${size}px`,
-      height: `${size}px`
-    }"
+    :style="
+      !width && !height
+        ? {
+            width: `${size}px`,
+            height: `${size}px`
+          }
+        : {}
+    "
   />
 </template>

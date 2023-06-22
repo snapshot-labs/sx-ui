@@ -12,6 +12,7 @@ export type SelectedStrategy = {
 export type SpaceMetadata = {
   name: string;
   avatar: string;
+  cover: string;
   description: string;
   externalUrl: string;
   twitter: string;
@@ -43,6 +44,7 @@ export type Space = {
   network: NetworkID;
   name: string;
   avatar: string;
+  cover: string;
   about?: string;
   external_url: string;
   delegation_api_type: string | null;
@@ -78,6 +80,7 @@ export type Proposal = {
   quorum: number;
   space: {
     id: string;
+    avatar: string;
     controller: string;
     voting_power_symbol: string;
     authenticators: string[];

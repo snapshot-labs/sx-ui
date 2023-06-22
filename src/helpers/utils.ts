@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import updateLocale from 'dayjs/plugin/updateLocale';
 import duration from 'dayjs/plugin/duration';
+import sha3 from 'js-sha3';
 import { sanitizeUrl as baseSanitizeUrl } from '@braintree/sanitize-url';
 import networks from '@/helpers/networks.json';
 import pkg from '@/../package.json';
@@ -286,6 +287,7 @@ export function createErc1155Metadata(
       delegation_api_type: metadata.delegationApiType,
       delegation_api_url: metadata.delegationApiUrl,
       voting_power_symbol: metadata.votingPowerSymbol,
+      cover: metadata.cover,
       github: metadata.github,
       twitter: metadata.twitter,
       discord: metadata.discord,
@@ -305,6 +307,28 @@ export function getSalt() {
   crypto.getRandomValues(buffer);
 
   return `0x${buffer.reduce((acc, val) => acc + val.toString(16).padStart(2, '0'), '')}`;
+}
+
+export function getCacheHash(value?: string) {
+  return value ? sha3.sha3_256(value).slice(0, 16) : undefined;
+}
+
+export function getStampUrl(
+  type: 'avatar' | 'space' | 'space-sx' | 'space-cover-sx' | 'token',
+  id: string,
+  size: number | { width: number; height: number },
+  hash?: string
+) {
+  let sizeParam = '';
+  if (typeof size === 'number') {
+    sizeParam = `?s=${size * 2}`;
+  } else {
+    sizeParam = `?w=${size.width}&h=${size.height}`;
+  }
+
+  const cacheParam = hash ? `&cb=${hash}` : '';
+
+  return `https://cdn.stamp.fyi/${type}/${id}${sizeParam}${cacheParam}`;
 }
 
 export async function imageUpload(file: File) {

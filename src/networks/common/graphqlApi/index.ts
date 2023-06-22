@@ -33,6 +33,7 @@ function formatSpace(space: ApiSpace, networkId: NetworkID): Space {
     network: networkId,
     name: space.metadata.name,
     avatar: space.metadata.avatar,
+    cover: space.metadata.cover,
     about: space.metadata.about,
     external_url: space.metadata.external_url,
     github: space.metadata.github,
@@ -63,6 +64,7 @@ function formatProposal(
     ...proposal,
     space: {
       id: proposal.space.id,
+      avatar: proposal.space.metadata.avatar,
       controller: proposal.space.controller,
       authenticators: proposal.space.authenticators,
       voting_power_symbol: proposal.space.metadata.voting_power_symbol,
@@ -141,15 +143,32 @@ export function createApi(uri: string, networkId: NetworkID): NetworkApi {
     loadProposals: async (
       spaceId: string,
       { limit, skip = 0 }: PaginationOpts,
+      filter: 'all' | 'active' | 'pending' | 'closed' = 'all',
       searchQuery = ''
     ): Promise<Proposal[]> => {
+      const now = Date.now();
+
+      const filters: Record<string, any> = {};
+      if (filter === 'active') {
+        filters.start_lte = Math.floor(now / 1000);
+        filters.max_end_gte = Math.floor(now / 1000);
+      } else if (filter === 'pending') {
+        filters.start_gt = Math.floor(now / 1000);
+      } else if (filter === 'closed') {
+        filters.max_end_lt = Math.floor(now / 1000);
+      }
+
       const { data } = await apollo.query({
         query: PROPOSALS_QUERY,
         variables: {
-          space: spaceId,
-          searchQuery,
           first: limit,
-          skip
+          skip,
+          where: {
+            space: spaceId,
+            cancelled: false,
+            metadata_: { title_contains_nocase: searchQuery },
+            ...filters
+          }
         }
       });
 

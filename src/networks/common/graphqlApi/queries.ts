@@ -6,6 +6,7 @@ const SPACE_FRAGMENT = gql`
     metadata {
       name
       avatar
+      cover
       about
       external_url
       github
@@ -52,6 +53,7 @@ const PROPOSAL_FRAGMENT = gql`
       authenticators
       metadata {
         id
+        avatar
         voting_power_symbol
         executors
         executors_types
@@ -109,19 +111,8 @@ export const PROPOSAL_QUERY = gql`
 `;
 
 export const PROPOSALS_QUERY = gql`
-  query ($first: Int!, $skip: Int!, $space: String!, $searchQuery: String) {
-    proposals(
-      first: $first
-      skip: $skip
-      where: {
-        metadata_: {}
-        space: $space
-        cancelled: false
-        metadata_: { title_contains_nocase: $searchQuery }
-      }
-      orderBy: created
-      orderDirection: desc
-    ) {
+  query ($first: Int!, $skip: Int!, $where: Proposal_filter) {
+    proposals(first: $first, skip: $skip, where: $where, orderBy: created, orderDirection: desc) {
       ...proposalFragment
     }
   }
