@@ -328,7 +328,7 @@ export default defineComponent({
               {{ network.constants.EXECUTORS[space.executors_types[i]] }}
               execution strategy ({{ shortenAddress(executor) }})
             </span>
-            <IH-check v-if="executionStrategy?.address === executor" class="float-right" />
+            <IH-check v-if="executionStrategy?.address === executor" />
           </ExecutionButton>
         </div>
         <BlockExecutionEditable
