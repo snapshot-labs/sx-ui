@@ -9,6 +9,23 @@ export function useMarkdownEditor(
   editorRef: Ref<HTMLTextAreaElement | null>,
   handler: ChangeHandler
 ) {
+  const shortcuts = {
+    b: bold,
+    i: italic,
+    k: link
+  };
+
+  watch(editorRef, el => {
+    if (!el) return;
+
+    el.addEventListener('keydown', (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && shortcuts[e.key]) {
+        e.preventDefault();
+        shortcuts[e.key]();
+      }
+    });
+  });
+
   function scheduleSelection(start: number, end: number) {
     requestAnimationFrame(() => {
       if (editorRef.value) editorRef.value.setSelectionRange(start, end);
