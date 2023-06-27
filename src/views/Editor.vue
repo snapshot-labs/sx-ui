@@ -297,31 +297,39 @@ export default defineComponent({
         :body="proposal.body"
       />
       <div v-else>
-        <div class="flex justify-end gap-1 py-1 px-2 border rounded-t-lg">
-          <button
-            class="p-1 w-[26px] h-[26px] leading-[18px] hover:text-skin-link rounded focus:ring-1"
-            @click="editor.heading"
-          >
-            H
-          </button>
-          <button
-            class="p-1 w-[26px] h-[26px] leading-[18px] font-bold hover:text-skin-link rounded focus:ring-1"
-            @click="editor.bold"
-          >
-            B
-          </button>
-          <button
-            class="p-1 w-[26px] h-[26px] leading-[18px] italic hover:text-skin-link rounded focus:ring-1"
-            @click="editor.italic"
-          >
-            I
-          </button>
-          <button
-            class="p-1 w-[26px] h-[26px] leading-[18px] italic hover:text-skin-link rounded focus:ring-1"
-            @click="editor.link"
-          >
-            <IH-link class="w-[18px] h-[18px]" />
-          </button>
+        <div class="flex justify-end gap-1 py-2 px-3 border rounded-t-lg">
+          <UiTooltip title="Add heading text">
+            <button
+              class="p-1 w-[26px] h-[26px] leading-[18px] hover:text-skin-link rounded focus-visible:ring-1"
+              @click="editor.heading"
+            >
+              H
+            </button>
+          </UiTooltip>
+          <UiTooltip title="Add bold text">
+            <button
+              class="p-1 w-[26px] h-[26px] leading-[18px] font-bold hover:text-skin-link rounded focus-visible:ring-1"
+              @click="editor.bold"
+            >
+              B
+            </button>
+          </UiTooltip>
+          <UiTooltip title="Add italic text">
+            <button
+              class="p-1 w-[26px] h-[26px] leading-[18px] italic hover:text-skin-link rounded focus-visible:ring-1"
+              @click="editor.italic"
+            >
+              I
+            </button>
+          </UiTooltip>
+          <UiTooltip title="Add a link">
+            <button
+              class="p-1 w-[26px] h-[26px] leading-[18px] italic hover:text-skin-link rounded focus-visible:ring-1"
+              @click="editor.link"
+            >
+              <IH-link class="w-[18px] h-[18px]" />
+            </button>
+          </UiTooltip>
         </div>
         <div class="s-base mb-3">
           <div class="s-label" v-text="'Description'" />
