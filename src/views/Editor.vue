@@ -297,7 +297,7 @@ export default defineComponent({
         :body="proposal.body"
       />
       <div v-else>
-        <div class="flex gap-1 mb-2">
+        <div class="flex justify-end gap-1 py-1 px-2 border rounded-t-lg">
           <button
             class="p-1 w-[26px] h-[26px] leading-[18px] hover:text-skin-link rounded focus:ring-1"
             @click="editor.heading"
@@ -329,7 +329,7 @@ export default defineComponent({
             ref="editorRef"
             v-model="proposal.body"
             maxlength="9600"
-            class="s-input mb-3 h-[200px]"
+            class="s-input mb-3 h-[200px] !rounded-t-none"
           />
           <SIString
             :key="proposalKey || ''"
