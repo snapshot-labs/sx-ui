@@ -20,6 +20,12 @@ const DISCUSSION_DEFINITION = {
 
 const { setTitle } = useTitle();
 const { proposals, createDraft } = useEditor();
+const editorRef = ref<HTMLTextAreaElement | null>(null);
+const editor = useMarkdownEditor(editorRef, value => {
+  if (!proposal.value) return;
+
+  proposal.value.body = value;
+});
 const { param } = useRouteParser('id');
 const { resolved, address, networkId } = useResolve(param);
 const route = useRoute();
@@ -290,17 +296,49 @@ export default defineComponent({
         class="px-3 py-2 border rounded-lg mb-5 min-h-[200px]"
         :body="proposal.body"
       />
-
-      <div v-else class="s-base mb-3">
-        <div class="s-label" v-text="'Description'" />
-        <textarea v-model="proposal.body" maxlength="9600" class="s-input mb-3 h-[200px]" />
-        <SIString
-          :key="proposalKey || ''"
-          v-model="proposal.discussion"
-          :definition="DISCUSSION_DEFINITION"
-          :error="formErrors.discussion"
-        />
-        <Preview :key="proposalKey || ''" :url="proposal.discussion" />
+      <div v-else>
+        <div class="flex gap-1 mb-2">
+          <button
+            class="p-1 w-[26px] h-[26px] leading-[18px] hover:text-skin-link rounded focus:ring-1"
+            @click="editor.heading"
+          >
+            H
+          </button>
+          <button
+            class="p-1 w-[26px] h-[26px] leading-[18px] font-bold hover:text-skin-link rounded focus:ring-1"
+            @click="editor.bold"
+          >
+            B
+          </button>
+          <button
+            class="p-1 w-[26px] h-[26px] leading-[18px] italic hover:text-skin-link rounded focus:ring-1"
+            @click="editor.italic"
+          >
+            I
+          </button>
+          <button
+            class="p-1 w-[26px] h-[26px] leading-[18px] italic hover:text-skin-link rounded focus:ring-1"
+            @click="editor.link"
+          >
+            <IH-link class="w-[18px] h-[18px]" />
+          </button>
+        </div>
+        <div class="s-base mb-3">
+          <div class="s-label" v-text="'Description'" />
+          <textarea
+            ref="editorRef"
+            v-model="proposal.body"
+            maxlength="9600"
+            class="s-input mb-3 h-[200px]"
+          />
+          <SIString
+            :key="proposalKey || ''"
+            v-model="proposal.discussion"
+            :definition="DISCUSSION_DEFINITION"
+            :error="formErrors.discussion"
+          />
+          <Preview :key="proposalKey || ''" :url="proposal.discussion" />
+        </div>
       </div>
       <div
         v-if="
