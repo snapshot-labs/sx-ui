@@ -331,7 +331,7 @@ export default defineComponent({
               I
             </button>
           </UiTooltip>
-          <UiTooltip title="Add a link">
+          <UiTooltip title="Add a link" class="w-[26px] h-[26px]">
             <button
               class="p-1 w-[26px] h-[26px] leading-[18px] italic hover:text-skin-link rounded focus-visible:ring-1"
               @click="editor.link"
@@ -339,20 +339,35 @@ export default defineComponent({
               <IH-link class="w-[18px] h-[18px]" />
             </button>
           </UiTooltip>
+          <UiTooltip title="Add an image" class="w-[26px] h-[26px]">
+            <label
+              class="flex justify-center p-1 w-[26px] h-[26px] leading-[18px] italic hover:text-skin-link rounded focus-visible:ring-1"
+            >
+              <input
+                ref="editorFileInputRef"
+                type="file"
+                accept="image/*"
+                class="hidden"
+                :disabled="editor.uploading.value"
+              />
+              <UiLoading
+                v-if="editor.uploading.value"
+                :width="14"
+                :height="14"
+                class="inline-block"
+              />
+              <IS-photo v-else class="w-[18px] h-[18px]" />
+            </label>
+          </UiTooltip>
         </div>
         <div class="s-base">
           <textarea
             ref="editorRef"
             v-model="proposal.body"
             maxlength="9600"
-            class="s-input h-[200px] !rounded-none !mb-0 !pt-[15px]"
+            class="s-input h-[200px] !rounded-t-none !mb-0 !pt-[15px]"
           />
         </div>
-        <label class="block py-1 px-3 border rounded-b-lg text-[14px]">
-          <input ref="editorFileInputRef" type="file" accept="image/*" class="hidden" />
-          <template v-if="editor.uploading.value">Uploading...</template>
-          <template v-else>Upload images by dragging and dropping them or clicking here.</template>
-        </label>
       </div>
       <div class="s-base">
         <SIString
