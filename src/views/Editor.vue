@@ -341,12 +341,11 @@ export default defineComponent({
           </UiTooltip>
         </div>
         <div class="s-base">
-          <div class="s-label" v-text="'Description'" />
           <textarea
             ref="editorRef"
             v-model="proposal.body"
             maxlength="9600"
-            class="s-input h-[200px] !rounded-none !mb-0"
+            class="s-input h-[200px] !rounded-none !mb-0 !pt-[15px]"
           />
         </div>
         <label class="block py-1 px-3 border rounded-b-lg text-[14px]">
