@@ -43,6 +43,8 @@ export function useMarkdownEditor(
       if (!el.files) return;
 
       uploadFile(el.files[0]);
+
+      el.value = '';
     });
   });
 
