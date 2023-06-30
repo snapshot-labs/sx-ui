@@ -1,4 +1,4 @@
-import { getUrl, imageUpload } from '@/helpers/utils';
+import { imageUpload } from '@/helpers/utils';
 
 type Formatting = {
   prefix: string;
@@ -180,7 +180,7 @@ export function useMarkdownEditor(
       if (!image) return;
 
       insertFormatting({
-        prefix: `![${file.name}](${getUrl(image.url)})`,
+        prefix: `![${file.name}](${image.url})`,
         suffix: ''
       });
 
