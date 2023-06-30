@@ -1,3 +1,4 @@
+import { useUiStore } from '@/stores/ui';
 import { imageUpload } from '@/helpers/utils';
 
 type Formatting = {
@@ -18,6 +19,8 @@ export function useMarkdownEditor(
     i: italic,
     k: link
   };
+
+  const uiStore = useUiStore();
 
   const hovered = ref(false);
   const uploading = ref(false);
@@ -185,6 +188,10 @@ export function useMarkdownEditor(
       });
 
       editorRef.value?.focus();
+    } catch (e) {
+      uiStore.addNotification('error', 'Failed to upload image.');
+
+      console.error('Failed to upload image', e);
     } finally {
       uploading.value = false;
     }
