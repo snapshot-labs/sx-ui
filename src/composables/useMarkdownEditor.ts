@@ -182,7 +182,7 @@ export function useMarkdownEditor(
 
     try {
       const image = await imageUpload(file);
-      if (!image) return;
+      if (!image) throw new Error('Image not uploaded');
 
       insertFormatting({
         prefix: `![${file.name}](${image.url})`,
