@@ -24,11 +24,6 @@ export default {
       chains: [5],
       optionalChains: [1, 11155111],
       methods: ['eth_sendTransaction', 'eth_signTypedData_v4'],
-      rpcMap: {
-        '1': 'https://rpc.snapshot.org/1',
-        '5': 'https://rpc.snapshot.org/5',
-        '11155111': 'https://rpc.snapshot.org/11155111'
-      },
       showQrModal: true
     }
   },
