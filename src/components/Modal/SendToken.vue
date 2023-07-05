@@ -18,7 +18,7 @@ const RECIPIENT_DEFINITION = {
   type: 'string',
   format: 'ens-or-address',
   title: 'Recipient',
-  examples: ['Address']
+  examples: ['Address or ENS']
 };
 
 const formValidator = getValidator({
