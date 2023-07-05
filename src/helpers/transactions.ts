@@ -103,6 +103,10 @@ export async function createSendNftTransaction({
 export async function createContractCallTransaction({ form }): Promise<ContractCallTransaction> {
   const args: Record<string, any> = Object.values(form.args);
 
+  let recipientAddress = form.to;
+  const resolvedTo = await resolver.resolveName(form.to);
+  if (resolvedTo?.address) recipientAddress = resolvedTo.address;
+
   const iface = new Interface(form.abi);
 
   const methodAbi = Object.values(iface.functions).find(fn => fn.name === form.method);
@@ -122,7 +126,7 @@ export async function createContractCallTransaction({ form }): Promise<ContractC
 
   return {
     _type: 'contractCall',
-    to: form.to,
+    to: recipientAddress,
     data,
     value: iface.getFunction(form.method).payable
       ? parseUnits(form.amount.toString(), 18).toString()

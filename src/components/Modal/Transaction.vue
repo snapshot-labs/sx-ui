@@ -6,6 +6,7 @@ import { createContractCallTransaction } from '@/helpers/transactions';
 import { abiToDefinition, clone } from '@/helpers/utils';
 import { getValidator } from '@/helpers/validation';
 import { getProvider } from '@/helpers/provider';
+import { resolver } from '@/helpers/resolver';
 
 const DEFAULT_FORM_STATE = {
   to: '',
@@ -30,6 +31,8 @@ const ignoreFormUpdates = ref(true);
 const addressInvalid = ref(false);
 const showAbiInput = ref(false);
 const abiStr = ref('');
+const formValidated = ref(false);
+const formErrors = ref({} as Record<string, any>);
 const argsValidated = ref(false);
 const argsErrors = ref({} as Record<string, any>);
 
@@ -62,11 +65,12 @@ const definition = computed(() => {
 
 const formValidator = computed(() =>
   getValidator({
+    $async: true,
     type: 'object',
     properties: {
       to: {
         type: 'string',
-        format: 'address'
+        format: 'ens-or-address'
       },
       abi: {
         type: 'string',
@@ -87,21 +91,18 @@ const formValidator = computed(() =>
 const argsValidator = computed(() => getValidator(definition.value));
 
 const errors = computed(() => {
-  const formErrors = formValidator.value.validate({
-    to: form.to,
-    abi: showAbiInput.value ? abiStr.value : undefined,
-    amount: form.amount
-  });
+  const errors = { ...formErrors.value };
 
   if (addressInvalid.value) {
-    formErrors.to = 'No contract found at this address.';
+    errors.to = 'No contract found at this address.';
   }
 
-  return formErrors;
+  return errors;
 });
 const formValid = computed(
   () =>
     form.abi.length > 0 &&
+    formValidated.value &&
     Object.keys(errors.value).length === 0 &&
     argsValidated.value &&
     Object.keys(argsErrors.value).length === 0
@@ -140,19 +141,26 @@ async function handleToChange(to: string) {
   addressInvalid.value = false;
   showAbiInput.value = false;
 
-  if (!isAddress(to)) return;
+  let contractAddress = to;
+  const resolvedTo = await resolver.resolveName(form.to);
+  if (resolvedTo?.address) contractAddress = resolvedTo.address;
+
+  if (!isAddress(contractAddress)) {
+    console.log('not an address');
+    return;
+  }
 
   loading.value = true;
   const provider = getProvider(5);
 
   try {
-    const code = await provider.getCode(to);
+    const code = await provider.getCode(contractAddress);
     if (code === '0x') {
       addressInvalid.value = true;
       return;
     }
 
-    form.abi = await getABI(to);
+    form.abi = await getABI(contractAddress);
   } catch (e) {
     console.log(e);
     showAbiInput.value = true;
@@ -224,6 +232,17 @@ watchEffect(async () => {
 
   argsErrors.value = await argsValidator.value.validateAsync(form.args);
   argsValidated.value = true;
+});
+
+watchEffect(async () => {
+  formValidated.value = false;
+
+  formErrors.value = await formValidator.value.validateAsync({
+    to: form.to,
+    abi: showAbiInput.value ? abiStr.value : undefined,
+    amount: form.amount
+  });
+  formValidated.value = true;
 });
 </script>
 
