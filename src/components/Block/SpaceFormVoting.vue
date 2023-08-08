@@ -26,18 +26,15 @@ const definition = {
   properties: {
     votingDelay: {
       type: 'number',
-      format: 'duration',
-      title: 'Voting delay'
+      title: 'Voting delay in blocks'
     },
     minVotingDuration: {
       type: 'number',
-      format: 'duration',
-      title: 'Min. voting duration'
+      title: 'Min. voting duration in blocks'
     },
     maxVotingDuration: {
       type: 'number',
-      format: 'duration',
-      title: 'Max. voting duration'
+      title: 'Max. voting duration in blocks'
     },
     ...(!evmNetworks.includes(props.selectedNetworkId) && {
       proposalThreshold: {
@@ -58,6 +55,11 @@ const definition = {
 
 const formErrors = computed(() => {
   const errors = validateForm(definition, props.form);
+
+  if (props.form.minVotingDuration > props.form.maxVotingDuration) {
+    errors.maxVotingDuration =
+      'Max. voting duration must be equal to or greater than min. voting duration.';
+  }
 
   emit('errors', errors);
 

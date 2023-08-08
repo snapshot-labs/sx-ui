@@ -112,6 +112,7 @@ export type NetworkActions = {
   receiveProposal(web3: Web3Provider, proposal: Proposal);
   executeTransactions(web3: Web3Provider, proposal: Proposal);
   executeQueuedProposal(web3: Web3Provider, proposal: Proposal);
+  vetoProposal(web3: Web3Provider, proposal: Proposal);
   setVotingDelay(web3: Web3Provider, space: Space, votingDelay: number);
   setMinVotingDuration(web3: Web3Provider, space: Space, minVotingDuration: number);
   setMaxVotingDuration(web3: Web3Provider, space: Space, maxVotingDuration: number);
@@ -121,7 +122,7 @@ export type NetworkActions = {
     strategiesParams: any[],
     strategiesMetadata: StrategyParsedMetadata[],
     voterAddress: string,
-    timestamp: number
+    block: number
   ): Promise<VotingPower[]>;
   send(envelope: any): Promise<any>;
 };
@@ -132,11 +133,12 @@ export type NetworkApi = {
   loadProposals(
     spaceId: string,
     paginationOpts: PaginationOpts,
-    filter?: 'all' | 'active' | 'pending' | 'closed',
+    currentBlock: number,
+    filter?: 'any' | 'active' | 'pending' | 'closed',
     searchQuery?: string
   ): Promise<Proposal[]>;
-  loadProposalsSummary(spaceId: string, limit: number): Promise<Proposal[]>;
-  loadProposal(spaceId: string, proposalId: number): Promise<Proposal | null>;
+  loadProposalsSummary(spaceId: string, currentBlock: number, limit: number): Promise<Proposal[]>;
+  loadProposal(spaceId: string, proposalId: number, currentBlock: number): Promise<Proposal | null>;
   loadSpaces(paginationOpts: PaginationOpts, filter?: SpacesFilter): Promise<Space[]>;
   loadSpace(spaceId: string): Promise<Space | null>;
   loadUser(userId: string): Promise<User>;
@@ -155,6 +157,7 @@ export type Network = {
   baseChainId: number;
   baseNetworkId?: NetworkID;
   hasReceive: boolean;
+  supportsSimulation: boolean;
   managerConnectors: Connector[];
   actions: NetworkActions;
   api: NetworkApi;

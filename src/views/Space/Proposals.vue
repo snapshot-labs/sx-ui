@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useProposalsStore } from '@/stores/proposals';
 import { getNetwork } from '@/networks';
+import { getProvider } from '@/helpers/provider';
 import { Space } from '@/types';
 import { VotingPower } from '@/networks/types';
 
@@ -12,7 +13,7 @@ const proposalsStore = useProposalsStore();
 
 const votingPowers = ref([] as VotingPower[]);
 const loadingVotingPower = ref(true);
-const filter = ref('all' as 'all' | 'active' | 'pending' | 'closed');
+const filter = ref('any' as 'any' | 'active' | 'pending' | 'closed');
 
 const proposalsRecord = computed(
   () => proposalsStore.proposals[`${props.space.network}:${props.space.id}`]
@@ -35,12 +36,14 @@ async function getVotingPower() {
 
   loadingVotingPower.value = true;
   try {
+    const currentBlock = await getProvider(network.baseChainId).getBlockNumber();
+
     votingPowers.value = await network.actions.getVotingPower(
       props.space.strategies,
       props.space.strategies_params,
       props.space.strategies_parsed_metadata,
       web3.value.account,
-      Math.floor(Date.now() / 1000)
+      currentBlock
     );
   } catch (e) {
     console.warn('Failed to load voting power', e);
@@ -84,7 +87,7 @@ watchEffect(() => {
           gap="12px"
           placement="left"
           :items="[
-            { key: 'all', label: 'All' },
+            { key: 'any', label: 'Any' },
             { key: 'pending', label: 'Pending', indicator: 'bg-yellow-500' },
             { key: 'active', label: 'Active', indicator: 'bg-green' },
             { key: 'closed', label: 'Closed', indicator: 'bg-red' }

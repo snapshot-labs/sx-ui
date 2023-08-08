@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useSpacesStore } from '@/stores/spaces';
 import { getNetwork } from '@/networks';
+import { getProvider } from '@/helpers/provider';
 import { omit, shortenAddress } from '@/helpers/utils';
 import { validateForm } from '@/helpers/validation';
 import { SelectedStrategy } from '@/types';
@@ -20,6 +21,14 @@ const DISCUSSION_DEFINITION = {
 
 const { setTitle } = useTitle();
 const { proposals, createDraft } = useEditor();
+const editorContainerRef = ref<HTMLDivElement | null>(null);
+const editorFileInputRef = ref<HTMLInputElement | null>(null);
+const editorRef = ref<HTMLTextAreaElement | null>(null);
+const editor = useMarkdownEditor(editorRef, editorFileInputRef, editorContainerRef, value => {
+  if (!proposal.value) return;
+
+  proposal.value.body = value;
+});
 const { param } = useRouteParser('id');
 const { resolved, address, networkId } = useResolve(param);
 const route = useRoute();
@@ -159,13 +168,14 @@ async function getVotingPower() {
   fetchingVotingPower.value = true;
   try {
     const network = getNetwork(space.value.network);
+    const currentBlock = await getProvider(network.baseChainId).getBlockNumber();
 
     const votingPowers = await network.actions.getVotingPower(
       space.value.voting_power_validation_strategy_strategies,
       space.value.voting_power_validation_strategy_strategies_params,
       [],
       web3.value.account,
-      Math.floor(Date.now() / 1000)
+      currentBlock
     );
 
     const currentVotingPower = votingPowers.reduce((a, b) => a + b.value, 0n);
@@ -266,11 +276,10 @@ export default defineComponent({
         </div>
       </div>
     </nav>
-    <Container v-if="proposal" class="pt-5 s-box">
+    <Container v-if="proposal" class="pt-5 max-w-[630px] mx-0 md:mx-auto s-box">
       <UiAlert v-if="!fetchingVotingPower && !votingPowerValid" type="error" class="mb-4">
         You do not have enough voting power to create proposal in this space.
       </UiAlert>
-      <h4 class="eyebrow mb-3">Context</h4>
       <SIString
         :key="proposalKey || ''"
         v-model="proposal.title"
@@ -280,7 +289,7 @@ export default defineComponent({
       <div class="flex">
         <Link
           :is-active="!previewEnabled"
-          text="Editor"
+          text="Write"
           class="pr-3"
           @click="previewEnabled = false"
         />
@@ -291,10 +300,78 @@ export default defineComponent({
         class="px-3 py-2 border rounded-lg mb-5 min-h-[200px]"
         :body="proposal.body"
       />
-
-      <div v-else class="s-base mb-3">
-        <div class="s-label" v-text="'Description'" />
-        <textarea v-model="proposal.body" maxlength="9600" class="s-input mb-3 h-[160px]" />
+      <div
+        v-else
+        ref="editorContainerRef"
+        class="rounded-lg mb-3"
+        :class="{
+          'ring-2': editor.hovered.value
+        }"
+      >
+        <div class="flex justify-end gap-1 py-2 px-3 border rounded-t-lg">
+          <UiTooltip title="Add heading text">
+            <button
+              class="p-1 w-[26px] h-[26px] leading-[18px] hover:text-skin-link rounded focus-visible:ring-1"
+              @click="editor.heading"
+            >
+              H
+            </button>
+          </UiTooltip>
+          <UiTooltip title="Add bold text">
+            <button
+              class="p-1 w-[26px] h-[26px] leading-[18px] font-bold hover:text-skin-link rounded focus-visible:ring-1"
+              @click="editor.bold"
+            >
+              B
+            </button>
+          </UiTooltip>
+          <UiTooltip title="Add italic text">
+            <button
+              class="p-1 w-[26px] h-[26px] leading-[18px] italic hover:text-skin-link rounded focus-visible:ring-1"
+              @click="editor.italic"
+            >
+              <span class="mono !text-[17px] !font-normal">I</span>
+            </button>
+          </UiTooltip>
+          <UiTooltip title="Add a link" class="w-[26px] h-[26px]">
+            <button
+              class="p-1 w-[26px] h-[26px] leading-[18px] italic hover:text-skin-link rounded focus-visible:ring-1"
+              @click="editor.link"
+            >
+              <IS-link class="w-[18px] h-[18px]" />
+            </button>
+          </UiTooltip>
+          <UiTooltip title="Add an image" class="w-[26px] h-[26px]">
+            <label
+              class="flex justify-center p-1 w-[26px] h-[26px] leading-[18px] italic hover:text-skin-link rounded focus-visible:ring-1"
+            >
+              <input
+                ref="editorFileInputRef"
+                type="file"
+                accept="image/*"
+                class="hidden"
+                :disabled="editor.uploading.value"
+              />
+              <UiLoading
+                v-if="editor.uploading.value"
+                :width="14"
+                :height="14"
+                class="inline-block"
+              />
+              <IS-photo v-else class="w-[18px] h-[18px]" />
+            </label>
+          </UiTooltip>
+        </div>
+        <div class="s-base">
+          <textarea
+            ref="editorRef"
+            v-model="proposal.body"
+            maxlength="9600"
+            class="s-input h-[200px] !rounded-t-none !mb-0 !pt-[15px]"
+          />
+        </div>
+      </div>
+      <div class="s-base mb-4">
         <SIString
           :key="proposalKey || ''"
           v-model="proposal.discussion"
@@ -311,15 +388,12 @@ export default defineComponent({
           supportedExecutionStrategies.length > 0
         "
       >
-        <h4 class="eyebrow mb-3">Execution</h4>
-        <div class="flex flex-col gap-2 mb-3">
+        <h4 class="eyebrow mb-2">Execution</h4>
+        <div class="border rounded-lg mb-3">
           <ExecutionButton
             v-for="(executor, i) in supportedExecutionStrategies"
             :key="executor"
             class="flex-auto flex items-center gap-2"
-            :class="{
-              'border-skin-link': executionStrategy?.address === executor
-            }"
             @click="
               handleExecutionStrategySelected({
                 address: executor,
@@ -327,10 +401,13 @@ export default defineComponent({
               })
             "
           >
-            <IH-cog />
-            {{ network.constants.EXECUTORS[space.executors_types[i]] }} execution strategy ({{
-              shortenAddress(executor)
-            }})
+            <IH-chip />
+            <span class="flex-1">
+              {{ network.constants.EXECUTORS[space.executors_types[i]] }}
+              execution strategy
+              <span class="hidden sm:inline-block">({{ shortenAddress(executor) }})</span>
+            </span>
+            <IH-check v-if="executionStrategy?.address === executor" />
           </ExecutionButton>
         </div>
         <BlockExecutionEditable

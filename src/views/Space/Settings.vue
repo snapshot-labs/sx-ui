@@ -65,8 +65,7 @@ watchEffect(() => {
             :initial-value="space.voting_delay"
             :loading="settingsLoading.votingDelay"
             :definition="{
-              type: 'integer',
-              format: 'duration'
+              type: 'integer'
             }"
             @save="value => handleSave('votingDelay', value.toString())"
           >
@@ -80,9 +79,14 @@ watchEffect(() => {
             :initial-value="space.min_voting_period"
             :loading="settingsLoading.minVotingPeriod"
             :definition="{
-              type: 'integer',
-              format: 'duration'
+              type: 'integer'
             }"
+            :custom-error-validation="
+              value =>
+                Number(value) > space.max_voting_period
+                  ? 'Must be equal to or lower than max. voting period'
+                  : undefined
+            "
             @save="value => handleSave('minVotingPeriod', value.toString())"
           >
             <h4 class="text-skin-link text-md" v-text="_d(space.min_voting_period) || 'No min.'" />
@@ -95,9 +99,14 @@ watchEffect(() => {
             :initial-value="space.max_voting_period"
             :loading="settingsLoading.maxVotingPeriod"
             :definition="{
-              type: 'integer',
-              format: 'duration'
+              type: 'integer'
             }"
+            :custom-error-validation="
+              value =>
+                Number(value) < space.min_voting_period
+                  ? 'Must be equal to or higher than min. voting period'
+                  : undefined
+            "
             @save="value => handleSave('maxVotingPeriod', value.toString())"
           >
             <h4 class="text-skin-link text-md" v-text="_d(space.max_voting_period)" />

@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { getNetwork } from '@/networks';
+import { useMetaStore } from '@/stores/meta';
 import { Space, Proposal as ProposalType } from '@/types';
 
 const PROPOSALS_LIMIT = 20;
 
 const props = defineProps<{ space: Space }>();
 
+const metaStore = useMetaStore();
 const { setTitle } = useTitle();
 const route = useRoute();
 
@@ -25,7 +27,8 @@ async function fetch() {
     {
       limit: PROPOSALS_LIMIT
     },
-    'all',
+    metaStore.currentBlocks.get(props.space.network) || 0,
+    'any',
     query.value
   );
 
@@ -42,7 +45,8 @@ async function fetchMore() {
       limit: PROPOSALS_LIMIT,
       skip: proposals.value.length
     },
-    'all',
+    metaStore.currentBlocks.get(props.space.network) || 0,
+    'any',
     query.value
   );
 
