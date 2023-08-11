@@ -34,7 +34,9 @@ const CATEGORY_FRAGMENT = gql`
     category_id
     name
     about
+    parent
     discussion_count
+    category_count
   }
 `;
 
@@ -47,6 +49,7 @@ const DISCUSSION_FRAGMENT = gql`
     author
     score
     reply_count
+    parent
     category {
       id
       category_id
@@ -56,21 +59,12 @@ const DISCUSSION_FRAGMENT = gql`
 `;
 
 export const CATEGORIES_QUERY = gql`
-  query {
-    categories(where: { parent: 0 }) {
+  query ($parent: String) {
+    categories(where: { parent: $parent }) {
       ...categoryFragment
     }
   }
   ${CATEGORY_FRAGMENT}
-`;
-
-export const LATEST_DISCUSSIONS_QUERY = gql`
-  query {
-    discussions(first: 5, where: { parent: 0 }, orderBy: discussion_id, orderDirection: desc) {
-      ...discussionFragment
-    }
-  }
-  ${DISCUSSION_FRAGMENT}
 `;
 
 export const DISCUSSIONS_QUERY = gql`

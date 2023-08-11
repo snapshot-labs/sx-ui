@@ -1,75 +1,105 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { shortenAddress, _rt } from '@/helpers/utils';
+import { apollo, DISCUSSIONS_QUERY } from '@/helpers/api';
 
+const props = defineProps<{ reply: any; discussion: any }>();
+
+const loading = ref<boolean>(false);
+const loaded = ref<boolean>(false);
 const replyFormOpen = ref(false);
+const repliesOpen = ref(false);
+const replies = ref({});
 
 function toggleReplyForm() {
   replyFormOpen.value = !replyFormOpen.value;
 }
 
-defineProps<{ reply: any; isAuthor: boolean }>();
+function toggleReplies() {
+  repliesOpen.value = !repliesOpen.value;
+
+  if (repliesOpen.value === true && !loaded.value && !loading.value) {
+    loadReplies();
+  }
+}
+
+async function loadReplies() {
+  loading.value = true;
+
+  const { data } = await apollo.query({
+    query: DISCUSSIONS_QUERY,
+    variables: {
+      parent: parseInt(props.reply.discussion_id)
+    }
+  });
+
+  replies.value = data.discussions;
+  loading.value = false;
+  loaded.value = true;
+}
 </script>
 
 <template>
-  <div class="group mx-4 border-b">
-    <div class="py-4">
-      <div class="flex">
-        <Score :discussion="reply" class="mr-3" />
-        <div class="w-full">
-          <div class="flex text-skin-text text-sm mb-2">
-            <div class="flex-1 space-x-2">
-              <router-link :to="{ name: 'user', params: { id: reply.author } }" class="space-x-2">
-                <Stamp :id="reply.author" :size="24" />
-                <span v-text="shortenAddress(reply.author)" />
-              </router-link>
-              <IS-pencil v-if="isAuthor" class="inline-block" />
-              <span v-text="_rt(1e9)" />
+  <div class="flex">
+    <div class="px-2" />
+    <div class="flex-grow">
+      <div class="py-4 group border-b" :class="{ '!border-b-0': !reply.parent }">
+        <div class="flex mr-4">
+          <Score :discussion="reply" class="mr-3" />
+          <div class="w-full">
+            <div class="flex text-skin-text text-sm mb-2">
+              <div class="flex-1 space-x-2">
+                <router-link :to="{ name: 'user', params: { id: reply.author } }" class="space-x-2">
+                  <Stamp :id="reply.author" :size="24" />
+                  <span v-text="shortenAddress(reply.author)" />
+                </router-link>
+                <IS-pencil v-if="discussion?.author === reply.author" class="inline-block" />
+                <span v-text="_rt(1e9)" />
+              </div>
+            </div>
+            <Markdown :body="reply.content" class="max-w-[650px] py-1 text-[20px]" />
+            <div class="text-sm space-x-2">
+              <a @click="toggleReplyForm"> <IS-reply class="inline-block" /> Reply </a>
+              <a v-if="reply.reply_count && reply.parent" @click="toggleReplies">
+                <IH-annotation class="inline-block" /> {{ reply.reply_count }} replies
+              </a>
             </div>
           </div>
-          <Markdown :body="reply.content" class="max-w-[650px] py-1 text-[20px]" />
-          <div class="text-sm space-x-2">
-            <a @click="toggleReplyForm"> <IS-reply class="inline-block" /> Reply </a>
-            <a v-if="reply.reply_count">
-              <IH-annotation class="inline-block" /> {{ reply.reply_count }} replies
-            </a>
+          <div class="invisible group-hover:visible">
+            <UiDropdown>
+              <template #button>
+                <IH-dots-horizontal class="inline-block" />
+              </template>
+              <template #items>
+                <UiDropdownItem v-slot="{ active }">
+                  <button class="flex items-center gap-2" :class="{ 'opacity-80': active }">
+                    <IS-cursor-click :width="16" /> Pin
+                  </button>
+                </UiDropdownItem>
+                <UiDropdownItem v-slot="{ active }">
+                  <button class="flex items-center gap-2" :class="{ 'opacity-80': active }">
+                    <IS-pencil :width="16" /> Edit
+                  </button>
+                </UiDropdownItem>
+                <UiDropdownItem v-slot="{ active }">
+                  <button class="flex items-center gap-2" :class="{ 'opacity-80': active }">
+                    <IS-trash :width="16" /> Delete
+                  </button>
+                </UiDropdownItem>
+              </template>
+            </UiDropdown>
           </div>
         </div>
-        <div class="invisible group-hover:visible">
-          <UiDropdown>
-            <template #button>
-              <IH-dots-horizontal class="inline-block" />
-            </template>
-            <template #items>
-              <UiDropdownItem v-slot="{ active }">
-                <button
-                  class="flex items-center gap-2"
-                  :class="{ 'opacity-80': active }"
-                >
-                  <IS-cursor-click :width="16" /> Pin
-                </button>
-              </UiDropdownItem>
-              <UiDropdownItem v-slot="{ active }">
-                <button
-                  class="flex items-center gap-2"
-                  :class="{ 'opacity-80': active }"
-                >
-                  <IS-pencil :width="16" /> Edit
-                </button>
-              </UiDropdownItem>
-              <UiDropdownItem v-slot="{ active }">
-                <button
-                  class="flex items-center gap-2"
-                  :class="{ 'opacity-80': active }"
-                >
-                  <IS-trash :width="16" /> Delete
-                </button>
-              </UiDropdownItem>
-            </template>
-          </UiDropdown>
+        <ReplyForm v-if="replyFormOpen" :reply="reply" />
+      </div>
+      <div v-if="repliesOpen">
+        <div v-if="loading" class="ml-4 py-4 border-b">
+          <UiLoading />
+        </div>
+        <div v-else>
+          <Reply v-for="(r, i) in replies" :key="i" :reply="r" :discussion="discussion" />
         </div>
       </div>
-      <ReplyForm v-if="replyFormOpen" :reply="reply" />
     </div>
   </div>
 </template>

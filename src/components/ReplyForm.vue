@@ -19,7 +19,7 @@ async function handleSubmit() {
     category: props.reply.category.category_id,
     title: '',
     content: content.value,
-    parent: props.reply.discussion_id
+    parent: parseInt(props.reply.discussion_id)
   });
 
   content.value = '';

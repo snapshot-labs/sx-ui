@@ -2,7 +2,6 @@
 import { ref } from 'vue';
 import { faker } from '@faker-js/faker';
 import { discuss } from '@/helpers/highlight';
-import { sleep } from '@/helpers/utils';
 
 const { web3 } = useWeb3();
 const router = useRouter();
@@ -28,18 +27,16 @@ async function handleSubmit() {
     parent: 0
   });
 
-  await sleep(2e3);
-
   loading.value = false;
   console.log('Result', result);
-  router.push({ name: 'discussions-category' });
+  router.push({ name: 'space-discussions' });
 }
 </script>
 
 <template>
   <div class="p-4 space-x-2 flex">
     <div class="flex-auto flex items-center space-x-3">
-      <router-link :to="{ name: 'discussions-category' }">
+      <router-link :to="{ name: 'space-discussions' }">
         <UiButton class="!px-0 w-[46px]">
           <IH-arrow-narrow-left class="inline-block" />
         </UiButton>

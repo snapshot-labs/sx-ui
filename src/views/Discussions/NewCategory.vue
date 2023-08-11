@@ -2,9 +2,11 @@
 import { ref } from 'vue';
 import { faker } from '@faker-js/faker';
 import { addCategory } from '@/helpers/highlight';
-import { sleep } from '@/helpers/utils';
 
 const router = useRouter();
+const route = useRoute();
+
+const parent = (route.params.parent as string) || '0';
 
 const category = ref({
   name: faker.lorem.sentence({ min: 1, max: 3 }).slice(0, -1),
@@ -18,14 +20,12 @@ async function handleSubmit() {
   const result = await addCategory({
     name: category.value.name,
     about: category.value.about,
-    parent: 0
+    parent: parseInt(parent)
   });
-
-  await sleep(2e3);
 
   console.log('Result', result);
   loading.value = false;
-  router.push({ name: 'space-discussions' });
+  router.push({ name: 'space-discussions', params: { category: parent } });
 }
 </script>
 

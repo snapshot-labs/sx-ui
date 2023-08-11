@@ -4,12 +4,11 @@ import Space from '@/views/Space.vue';
 import SpaceOverview from '@/views/Space/Overview.vue';
 import SpaceProposals from '@/views/Space/Proposals.vue';
 import SpaceSearchProposals from '@/views/Space/SearchProposals.vue';
-import Discussions from '@/views/Discussions/Discussions.vue';
 import DiscussionsSettings from '@/views/Discussions/Settings.vue';
 import Discussion from '@/views/Discussions/Discussion.vue';
 import Discuss from '@/views/Discussions/Discuss.vue';
 import NewCategory from '@/views/Discussions/NewCategory.vue';
-import Category from '@/views/Discussions/Category.vue';
+import Discussions from '@/views/Discussions/Discussions.vue';
 import SpaceSettings from '@/views/Space/Settings.vue';
 import SpaceTreasury from '@/views/Space/Treasury.vue';
 import SpaceDelegates from '@/views/Space/Delegates.vue';
@@ -35,21 +34,15 @@ const routes: any[] = [
       { path: 'settings', name: 'space-settings', component: SpaceSettings },
       { path: 'treasury', name: 'space-treasury', component: SpaceTreasury },
       { path: 'delegates', name: 'space-delegates', component: SpaceDelegates },
-      { path: 'discussions', name: 'space-discussions', component: Discussions },
-      {
-        path: 'discussions/settings',
-        name: 'discussions-settings',
-        component: DiscussionsSettings
-      },
-      { path: 'discussions/:category', name: 'discussions-category', component: Category },
+      { path: 'discussions/:category?', name: 'space-discussions', component: Discussions },
       {
         path: 'discussions/:category/settings',
         name: 'discussions-category-settings',
         component: DiscussionsSettings
       },
-      { path: 'discussions/new-category', name: 'new-category', component: NewCategory },
+      { path: 'discussions/new-category/:parent?', name: 'new-category', component: NewCategory },
       { path: 'discussion/:discussion', name: 'discussion', component: Discussion },
-      { path: 'discussions/:category/discuss', name: 'discuss', component: Discuss }
+      { path: 'discussions/:category/new', name: 'discuss', component: Discuss }
     ]
   },
   {

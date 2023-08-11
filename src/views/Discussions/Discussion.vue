@@ -58,7 +58,7 @@ onMounted(() => {
           <div class="mx-4">
             <router-link
               :to="{
-                name: 'discussions-category',
+                name: 'space-discussions',
                 params: { category: discussion.category.category_id }
               }"
               class="text-skin-text inline-block mb-2"
@@ -67,7 +67,7 @@ onMounted(() => {
             </router-link>
             <h1 v-text="discussion.title" />
           </div>
-          <Reply :reply="discussion" class="border-b-0" />
+          <Reply :reply="discussion" :discussion="discussion" class="border-b-0" />
         </div>
         <Label label="Top replies" />
         <UiLoading v-if="loadingReplies && !loadedReplies" class="block p-4" />
@@ -79,12 +79,7 @@ onMounted(() => {
           There are no replies.
         </div>
         <div v-else-if="loadedReplies">
-          <Reply
-            v-for="(reply, i) in replies"
-            :key="i"
-            :reply="reply"
-            :is-author="discussion.author === reply.author"
-          />
+          <Reply v-for="(reply, i) in replies" :key="i" :reply="reply" :discussion="discussion" />
         </div>
       </div>
     </div>

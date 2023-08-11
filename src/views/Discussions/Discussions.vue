@@ -1,11 +1,18 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { _n } from '@/helpers/utils';
-import { apollo, CATEGORIES_QUERY, LATEST_DISCUSSIONS_QUERY } from '@/helpers/api';
+import { apollo, CATEGORIES_QUERY, CATEGORY_QUERY, DISCUSSIONS_QUERY } from '@/helpers/api';
 import { Space } from '@/types';
 
 defineProps<{ space: Space }>();
 
+const route = useRoute();
+
+const categoryId = (route.params.category as string) || '0';
+
+const category = ref<any>({});
+const loading = ref<boolean>(false);
+const loaded = ref<boolean>(false);
 const loadingCategories = ref<boolean>(false);
 const loadingDiscussions = ref<boolean>(false);
 const loadedCategories = ref<boolean>(false);
@@ -17,7 +24,10 @@ async function loadCategories() {
   loadingCategories.value = true;
 
   const { data } = await apollo.query({
-    query: CATEGORIES_QUERY
+    query: CATEGORIES_QUERY,
+    variables: {
+      parent: `0x1/${categoryId}`
+    }
   });
 
   categories.value = data.categories;
@@ -29,7 +39,11 @@ async function loadDiscussions() {
   loadingDiscussions.value = true;
 
   const { data } = await apollo.query({
-    query: LATEST_DISCUSSIONS_QUERY
+    query: DISCUSSIONS_QUERY,
+    variables: {
+      category: categoryId === '0' ? undefined : `0x1/${categoryId}`,
+      parent: 0
+    }
   });
 
   discussions.value = data.discussions;
@@ -37,23 +51,63 @@ async function loadDiscussions() {
   loadedDiscussions.value = true;
 }
 
-onMounted(() => {
-  loadCategories();
+async function loadCategory() {
+  loading.value = true;
+
+  const { data } = await apollo.query({
+    query: CATEGORY_QUERY,
+    variables: {
+      id: `0x1/${categoryId}`
+    }
+  });
+
+  category.value = data.category;
+  loading.value = false;
+  loaded.value = true;
+}
+
+onMounted(async () => {
   loadDiscussions();
+
+  if (categoryId !== '0') {
+    await loadCategory();
+  }
+
+  if (category.value.category_count || categoryId === '0') {
+    loadCategories();
+  }
 });
 </script>
 
 <template>
   <div class="p-4 space-x-2 flex">
-    <div class="flex-auto" />
-    <router-link :to="{ name: 'new-category' }">
+    <div class="flex-auto">
+      <div v-if="category.parent" class="flex items-center space-x-3">
+        <router-link
+          :to="{ name: 'space-discussions', params: { category: category.parent.slice(4) } }"
+        >
+          <UiButton class="!px-0 w-[46px]">
+            <IH-arrow-narrow-left class="inline-block" />
+          </UiButton>
+        </router-link>
+        <h3 v-text="category.name" />
+      </div>
+    </div>
+    <router-link :to="{ name: 'discuss', params: { category: categoryId } }">
+      <UiTooltip title="New discussion">
+        <UiButton class="!px-0 w-[46px]">
+          <IH-pencil-alt class="inline-block" />
+        </UiButton>
+      </UiTooltip>
+    </router-link>
+    <router-link :to="{ name: 'new-category', params: { parent: categoryId } }">
       <UiTooltip title="New category">
         <UiButton class="!px-0 w-[46px]">
           <IH-plus-sm class="inline-block" />
         </UiButton>
       </UiTooltip>
     </router-link>
-    <router-link :to="{ name: 'discussions-settings' }">
+    <router-link :to="{ name: 'discussions-category-settings', params: { category: categoryId } }">
       <UiTooltip title="Settings">
         <UiButton class="!px-0 w-[46px]">
           <IH-cog class="inline-block" />
@@ -62,7 +116,7 @@ onMounted(() => {
     </router-link>
   </div>
   <div class="space-y-4">
-    <div>
+    <div v-if="category.category_count || categoryId === '0'">
       <Label label="Categories" sticky />
       <UiLoading v-if="loadingCategories && !loadedCategories" class="px-4 py-3 block" />
       <div
@@ -74,9 +128,9 @@ onMounted(() => {
       </div>
       <div v-else>
         <router-link
-          v-for="(category, i) in categories"
+          v-for="(c, i) in categories"
           :key="i"
-          :to="{ name: 'discussions-category', params: { category: category.category_id } }"
+          :to="{ name: 'space-discussions', params: { category: c.category_id } }"
           class="flex justify-between items-center mx-4 py-3 border-b"
         >
           <div>
@@ -87,9 +141,9 @@ onMounted(() => {
             </div>
           </div>
           <div class="flex-1">
-            <h3 class="text-skin-link" v-text="category.name" />
+            <h3 class="text-skin-link" v-text="c.name" />
             <div class="text-skin-text space-x-2">
-              <span>{{ _n(category.discussion_count) }} discussion(s)</span>
+              <span>{{ _n(c.discussion_count) }} discussion(s)</span>
             </div>
           </div>
           <div>
