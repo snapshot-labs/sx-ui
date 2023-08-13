@@ -1,7 +1,7 @@
 import fetch from 'cross-fetch';
 import { pin } from '@snapshot-labs/pineapple';
 
-const HIGHLIGHT_URL = `${import.meta.env.VITE_API_URL}/relayer`;
+const HIGHLIGHT_URL = `${import.meta.env.VITE_API_URL}/highlight/relayer`;
 
 export async function invoke(agent, method, args: any, url = HIGHLIGHT_URL) {
   const init = {
