@@ -6,7 +6,7 @@ const route = useRoute();
 
 const id = route.params.discussion as string;
 
-const discussion = ref({});
+const discussion = ref<any>({});
 const replies = ref([]);
 const loadingDiscussion = ref<boolean>(false);
 const loadedDiscussion = ref<boolean>(false);
@@ -56,13 +56,8 @@ onMounted(() => {
       <div>
         <div>
           <div class="px-4 pt-4 pb-0">
-            <div class="inline-block flex items-center mb-3 space-x-1">
-              <router-link :to="{ name: 'space-discussions' }" class="text-skin-link inline-block">
-                <div class="flex items-center">
-                  <IH-home class="inline-block w-[18px] h-[18px]" />
-                </div>
-              </router-link>
-              <IH-chevron-right class="inline-block w-[14px] h-[14px]" />
+            <h1 v-text="discussion.title" />
+            <div class="inline-block flex items-center space-x-1">
               <router-link
                 :to="{
                   name: 'space-discussions',
@@ -76,7 +71,6 @@ onMounted(() => {
                 </div>
               </router-link>
             </div>
-            <h1 v-text="discussion.title" />
           </div>
           <Reply :reply="discussion" :discussion="discussion" class="border-b-0" />
         </div>
