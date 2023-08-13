@@ -53,18 +53,29 @@ onMounted(() => {
   <div>
     <UiLoading v-if="loadingDiscussion && !loadedDiscussion" class="block p-4" />
     <div v-else-if="loadedDiscussion" class="space-y-4">
-      <div class="pt-4">
+      <div>
         <div>
-          <div class="mx-4">
-            <router-link
-              :to="{
-                name: 'space-discussions',
-                params: { category: discussion.category.category_id }
-              }"
-              class="text-skin-text inline-block mb-2"
-            >
-              <IH-folder class="inline-block" /> {{ discussion.category.name }}
-            </router-link>
+          <div class="px-4 pt-4 pb-0">
+            <div class="inline-block flex items-center mb-3 space-x-1">
+              <router-link :to="{ name: 'space-discussions' }" class="text-skin-link inline-block">
+                <div class="flex items-center">
+                  <IH-home class="inline-block w-[18px] h-[18px]" />
+                </div>
+              </router-link>
+              <IH-chevron-right class="inline-block w-[14px] h-[14px]" />
+              <router-link
+                :to="{
+                  name: 'space-discussions',
+                  params: { category: discussion.category.category_id }
+                }"
+                class="text-skin-link inline-block"
+              >
+                <div class="flex items-center">
+                  <IH-folder class="inline-block w-[18px] h-[18px] mr-2" />
+                  <h4 class="text-skin-link" v-text="discussion.category.name" />
+                </div>
+              </router-link>
+            </div>
             <h1 v-text="discussion.title" />
           </div>
           <Reply :reply="discussion" :discussion="discussion" class="border-b-0" />

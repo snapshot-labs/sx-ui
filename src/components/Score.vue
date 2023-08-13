@@ -15,13 +15,13 @@ async function handleVote(choice: number) {
   loading.value = true;
   const account = web3.value.account;
 
-  const result = await vote({
+  const receipt = await vote({
     author: account,
     discussion: props.discussion.discussion_id,
     choice
   });
 
-  console.log('Result', result);
+  console.log('Receipt', receipt);
   if (voted(props.discussion.id)) {
     score.value -= voted(props.discussion.id);
   }

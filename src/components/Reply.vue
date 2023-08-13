@@ -59,10 +59,10 @@ async function loadReplies() {
             </div>
             <Markdown :body="reply.content" class="max-w-[650px] py-1 text-[20px]" />
             <div class="text-sm space-x-2">
-              <a @click="toggleReplyForm"> <IS-reply class="inline-block" /> Reply </a>
               <a v-if="reply.reply_count && reply.parent" @click="toggleReplies">
-                <IH-annotation class="inline-block" /> {{ reply.reply_count }} replies
+                <IH-reply class="inline-block" /> {{ reply.reply_count }} Replies
               </a>
+              <a @click="toggleReplyForm"> <IH-annotation class="inline-block" /> Reply </a>
             </div>
           </div>
           <div class="invisible group-hover:visible">

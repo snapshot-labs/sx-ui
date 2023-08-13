@@ -6,6 +6,7 @@ import { Space } from '@/types';
 
 defineProps<{ space: Space }>();
 
+const router = useRouter();
 const route = useRoute();
 
 const categoryId = (route.params.category as string) || '0';
@@ -100,20 +101,43 @@ onMounted(async () => {
         </UiButton>
       </UiTooltip>
     </router-link>
-    <router-link :to="{ name: 'new-category', params: { parent: categoryId } }">
-      <UiTooltip title="New category">
+    <UiDropdown>
+      <template #button>
         <UiButton class="!px-0 w-[46px]">
-          <IH-plus-sm class="inline-block" />
+          <IH-dots-horizontal class="inline-block" />
         </UiButton>
-      </UiTooltip>
-    </router-link>
-    <router-link :to="{ name: 'discussions-category-settings', params: { category: categoryId } }">
-      <UiTooltip title="Settings">
-        <UiButton class="!px-0 w-[46px]">
-          <IH-cog class="inline-block" />
-        </UiButton>
-      </UiTooltip>
-    </router-link>
+      </template>
+      <template #items>
+        <UiDropdownItem v-slot="{ active }">
+          <button
+            class="flex items-center gap-2"
+            :class="{ 'opacity-80': active }"
+            @click="router.push({ name: 'new-category', params: { parent: categoryId } })"
+          >
+            <IH-plus-sm class="inline-block" /> Create category
+          </button>
+        </UiDropdownItem>
+        <UiDropdownItem v-slot="{ active }">
+          <button
+            class="flex items-center gap-2"
+            :class="{ 'opacity-80': active }"
+            @click="
+              router.push({
+                name: 'discussions-category-settings',
+                params: { category: categoryId }
+              })
+            "
+          >
+            <IS-pencil :width="16" /> Edit category
+          </button>
+        </UiDropdownItem>
+        <UiDropdownItem v-slot="{ active }">
+          <button class="flex items-center gap-2" :class="{ 'opacity-80': active }">
+            <IS-trash :width="16" /> Delete category
+          </button>
+        </UiDropdownItem>
+      </template>
+    </UiDropdown>
   </div>
   <div class="space-y-4">
     <div v-if="category.category_count || categoryId === '0'">

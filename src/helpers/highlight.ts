@@ -12,24 +12,18 @@ export async function invoke(agent, method, args: any, url = HIGHLIGHT_URL) {
     },
     body: JSON.stringify({
       jsonrpc: '2.0',
-      method: 'post_joint',
+      method: 'relay',
       params: {
-        unit: {
-          version: '0x1',
-          messages: [
-            {
-              type: 'INVOKE_FUNCTION',
-              payload: {
-                agent,
-                method,
-                args
-              }
+        messages: [
+          {
+            type: 'INVOKE_FUNCTION',
+            payload: {
+              agent,
+              method,
+              args
             }
-          ],
-          timestamp: ~~(Date.now() / 1e3),
-          parent_units: [],
-          signature: []
-        }
+          }
+        ]
       },
       id: null
     })

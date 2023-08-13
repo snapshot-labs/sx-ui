@@ -17,15 +17,16 @@ const loading = ref<boolean>(false);
 async function handleSubmit() {
   loading.value = true;
 
-  const result = await addCategory({
+  const receipt = await addCategory({
     name: category.value.name,
     about: category.value.about,
     parent: parseInt(parent)
   });
 
-  console.log('Result', result);
+  console.log('Receipt', receipt);
   loading.value = false;
-  router.push({ name: 'space-discussions', params: { category: parent } });
+
+  await router.push({ name: 'space-discussions', params: { category: parent } });
 }
 </script>
 

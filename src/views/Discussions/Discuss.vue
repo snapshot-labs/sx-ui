@@ -29,7 +29,8 @@ async function handleSubmit() {
 
   loading.value = false;
   console.log('Result', result);
-  router.push({ name: 'space-discussions' });
+
+  await router.push({ name: 'space-discussions', params: { category } });
 }
 </script>
 
