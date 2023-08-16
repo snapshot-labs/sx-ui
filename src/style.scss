@@ -180,10 +180,12 @@ a,
 
 .dark .hero {
   background-image: url('@/assets/grid-dark.svg');
+  background-position: bottom;
 }
 
 .light .hero {
   background-image: url('@/assets/grid-light.svg');
+  background-position: bottom;
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -266,4 +268,8 @@ a,
 
 .s-dialog {
   z-index: 41 !important;
+}
+
+.tag {
+  @apply border rounded-full text-[16px] py-[5px] px-2;
 }
