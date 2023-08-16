@@ -5,6 +5,7 @@ import { enabledNetworks, getNetwork } from '@/networks';
 
 export const useMetaStore = defineStore('meta', () => {
   const loaded = ref(false);
+  const currentTs = ~~(Date.now() / 1e3);
   const currentBlocks = ref(new Map<NetworkID, number>());
 
   async function fetchBlocks() {
@@ -25,6 +26,7 @@ export const useMetaStore = defineStore('meta', () => {
 
   return {
     loaded,
+    currentTs,
     currentBlocks,
     fetchBlocks
   };
