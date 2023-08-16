@@ -15,6 +15,7 @@ import { executionCall, getExecutionData, pickAuthenticatorAndStrategies } from 
 import type { Web3Provider } from '@ethersproject/providers';
 import type { NetworkActions, NetworkHelpers, StrategyConfig, VotingPower } from '@/networks/types';
 import type { MetaTransaction } from '@snapshot-labs/sx/dist/utils/encoding/execution-hash';
+import { vote as serviceVote } from '@/helpers/service';
 import type { Space, Proposal, SpaceMetadata, StrategyParsedMetadata } from '@/types';
 
 type Choice = 0 | 1 | 2;
@@ -289,7 +290,7 @@ export function createActions(
 
       const isContract = await getIsContract(account);
 
-      const { useRelayer, authenticator, strategies } = pickAuthenticatorAndStrategies(
+      const { authenticator, strategies } = pickAuthenticatorAndStrategies(
         proposal.space.authenticators,
         proposal.strategies,
         isContract
@@ -306,25 +307,14 @@ export function createActions(
         strategies,
         proposal: proposal.proposal_id,
         choice: convertedChoice,
-        metadataUri: ''
+        metadataUri: '',
+        chainId
       };
 
-      if (useRelayer) {
-        return ethSigClient.vote({
-          signer: web3.getSigner(),
-          data
-        });
-      }
-
-      return client.vote(
-        {
-          signer: web3.getSigner(),
-          envelope: {
-            data
-          }
-        },
-        { noWait: isContract }
-      );
+      return serviceVote({
+        signer: web3.getSigner(),
+        data
+      });
     },
     finalizeProposal: () => null,
     receiveProposal: () => null,
