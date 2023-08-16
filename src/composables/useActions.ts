@@ -81,7 +81,9 @@ export function useActions() {
     if (await handleCommitEnvelope(envelope, networkId)) return;
 
     // TODO: unify send/soc to both return txHash under same property
-    if (envelope.signatureData || envelope.sig) {
+    if (envelope.signatureData?.types?.Vote) {
+      console.log('Receipt', envelope.signatureData);
+    } else if (envelope.signatureData || envelope.sig) {
       const receipt = await network.actions.send(envelope);
 
       console.log('Receipt', receipt);
