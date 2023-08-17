@@ -23,16 +23,16 @@ const labels = {
 
 const metaStore = useMetaStore();
 
-function getEstimatedTsFromBlock(network, blockNum) {
+function getTsFromBlock(network, blockNum) {
   const networkBlockNum = metaStore.currentBlocks.get(network) || 0;
   const blockDiff = networkBlockNum - blockNum;
 
-  if (blockDiff > 0) return metaStore.currentTs - METADATA[network].blockTime * blockDiff;
-  if (blockDiff < 0) return metaStore.currentTs + METADATA[network].blockTime * Math.abs(blockDiff);
-  return metaStore.currentTs;
+  return metaStore.currentTs.valueOf() - METADATA[network].blockTime * blockDiff;
 }
 
 const states = computed(() => {
+  const network = props.proposal.network;
+
   if (props.proposal.min_end === props.proposal.max_end) {
     return [
       {
@@ -42,12 +42,12 @@ const states = computed(() => {
       {
         id: 'start',
         block_number: props.proposal.start,
-        value: getEstimatedTsFromBlock(props.proposal.network, props.proposal.start)
+        value: getTsFromBlock(network, props.proposal.start)
       },
       {
         id: 'end',
         block_number: props.proposal.min_end,
-        value: getEstimatedTsFromBlock(props.proposal.network, props.proposal.min_end)
+        value: getTsFromBlock(network, props.proposal.min_end)
       }
     ];
   }
@@ -60,17 +60,17 @@ const states = computed(() => {
     {
       id: 'start',
       block_number: props.proposal.start,
-      value: getEstimatedTsFromBlock(props.proposal.network, props.proposal.start)
+      value: getTsFromBlock(network, props.proposal.start)
     },
     {
       id: 'min_end',
       block_number: props.proposal.min_end,
-      value: getEstimatedTsFromBlock(props.proposal.network, props.proposal.min_end)
+      value: getTsFromBlock(network, props.proposal.min_end)
     },
     {
       id: 'max_end',
       block_number: props.proposal.max_end,
-      value: getEstimatedTsFromBlock(props.proposal.network, props.proposal.max_end)
+      value: getTsFromBlock(network, props.proposal.max_end)
     }
   ];
 });
