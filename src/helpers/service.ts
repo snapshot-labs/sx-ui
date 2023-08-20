@@ -1,4 +1,5 @@
-import { pin } from '@snapshot-labs/pineapple';
+// import { pin } from '@snapshot-labs/pineapple';
+import { vote as hlVote } from './highlight';
 
 export const baseDomain = {
   name: 'snapshot-x',
@@ -47,8 +48,18 @@ export async function vote({ signer, data }): Promise<any> {
     message
   };
 
-  const file = await pin(signatureData);
-  console.log('IPFS CID', file.cid);
+  const receipt = await hlVote(
+    data.space,
+    voter,
+    data.proposal,
+    data.choice,
+    data.chainId,
+    signature
+  );
+  console.log('Receipt', receipt);
+
+  // const file = await pin(signatureData);
+  // console.log('IPFS CID', file.cid);
 
   return { signatureData, data };
 }
