@@ -43,7 +43,7 @@ watch(route, () => {
     class="font-serif text-base min-h-screen bg-skin-bg text-skin-text antialiased"
   >
     <UiLoading v-if="app.loading || !app.init || !metaStore.loaded" class="overlay big" />
-    <div v-else class="pb-6 flex">
+    <div v-else class="flex">
       <Sidebar class="lg:visible" :class="{ invisible: !uiStore.sidebarOpen }" />
       <Topnav @toggle="uiStore.toggleSidebar" />
       <Nav />
@@ -61,7 +61,7 @@ watch(route, () => {
           'translate-x-[72px] lg:translate-x-0': uiStore.sidebarOpen
         }"
       >
-        <router-view class="flex-auto mt-[72px] ml-0 lg:ml-[72px]" />
+        <router-view class="flex-auto mt-[72px] ml-0 lg:ml-[72px] pb-6" />
       </div>
     </div>
     <Notifications />

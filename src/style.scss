@@ -175,17 +175,22 @@ a,
 
 .hero {
   background-repeat: repeat;
-  background-position: top center;
+  background-position: top left;
+}
+
+.gard {
+  background-image: radial-gradient(
+      rgba(0, 0, 0, 0),
+      var(--bg-color)
+  ), url('@/assets/grid-dark.svg') !important;
 }
 
 .dark .hero {
   background-image: url('@/assets/grid-dark.svg');
-  background-position: bottom;
 }
 
 .light .hero {
   background-image: url('@/assets/grid-light.svg');
-  background-position: bottom;
 }
 
 .no-scrollbar::-webkit-scrollbar {
