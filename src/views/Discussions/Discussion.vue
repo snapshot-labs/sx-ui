@@ -74,7 +74,15 @@ onMounted(() => {
           </div>
           <Reply :reply="discussion" :discussion="discussion" class="border-b-0" />
         </div>
-        <Label label="Top replies" />
+        <h4
+          class="eyebrow border-b py-2 px-4 text-skin-text sticky z-10 top-[71px] lg:top-[72px] bg-skin-bg flex"
+        >
+          <span class="flex-grow">Replies</span>
+          <div>
+            Sort by <span class="text-skin-link">New</span>
+            <IS-chevron-down class="inline-block text-skin-link mb-[2px]" />
+          </div>
+        </h4>
         <UiLoading v-if="loadingReplies && !loadedReplies" class="block p-4" />
         <div
           v-else-if="loadingReplies && replies.length === 0"

@@ -28,6 +28,15 @@ export async function loadDiscussionVotes(voter: string) {
   return data.votes;
 }
 
+const USER_FRAGMENT = gql`
+  fragment userFragment on User {
+    id
+    name
+    discussion_count
+    vote_count
+  }
+`;
+
 const CATEGORY_FRAGMENT = gql`
   fragment categoryFragment on Category {
     id
@@ -46,7 +55,9 @@ const DISCUSSION_FRAGMENT = gql`
     discussion_id
     title
     content
-    author
+    author {
+      ...userFragment
+    }
     score
     reply_count
     parent
@@ -56,11 +67,12 @@ const DISCUSSION_FRAGMENT = gql`
       name
     }
   }
+  ${USER_FRAGMENT}
 `;
 
 export const CATEGORIES_QUERY = gql`
-  query ($parent: String) {
-    categories(where: { parent: $parent }) {
+  query ($first: Int, $parent: String) {
+    categories(first: $first, where: { parent: $parent }) {
       ...categoryFragment
     }
   }
@@ -68,8 +80,9 @@ export const CATEGORIES_QUERY = gql`
 `;
 
 export const DISCUSSIONS_QUERY = gql`
-  query ($category: String, $parent: Int) {
+  query ($first: Int, $category: String, $parent: Int) {
     discussions(
+      first: $first
       where: { category: $category, parent: $parent }
       orderBy: score
       orderDirection: desc

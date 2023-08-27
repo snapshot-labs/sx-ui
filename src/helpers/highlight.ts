@@ -50,6 +50,20 @@ export async function addCategory(data) {
   return await invoke('0x2', 'authenticate', argsAuth);
 }
 
+export async function editProfile(data) {
+  const metadata = {
+    name: data.name,
+    about: data.about
+  };
+
+  const { cid } = await pin(metadata);
+
+  const metadataURI = `ipfs://${cid}`;
+  const args = [data.user, metadataURI];
+
+  return await invoke('0x4', 'edit_profile', args);
+}
+
 export async function discuss(data) {
   const metadata = {
     title: data.title,

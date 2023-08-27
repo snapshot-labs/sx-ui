@@ -9,6 +9,7 @@ import IHNewspaper from '~icons/heroicons-outline/newspaper';
 import IHCash from '~icons/heroicons-outline/cash';
 import IHCog from '~icons/heroicons-outline/cog';
 import IHUsers from '~icons/heroicons-outline/users';
+import IHUser from '~icons/heroicons-outline/user';
 import IHStop from '~icons/heroicons-outline/stop';
 import IHAnnotation from '~icons/heroicons-outline/annotation';
 import IHLightningBolt from '~icons/heroicons-outline/lightning-bolt';
@@ -66,6 +67,10 @@ const navigationConfig = computed(() => ({
     spaces: {
       name: 'My spaces',
       icon: IHStop
+    },
+    profile: {
+      name: 'My profile',
+      icon: IHUser
     },
     contacts: {
       name: 'Contacts',

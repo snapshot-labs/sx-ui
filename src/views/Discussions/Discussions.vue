@@ -27,6 +27,7 @@ async function loadCategories() {
   const { data } = await apollo.query({
     query: CATEGORIES_QUERY,
     variables: {
+      first: 4,
       parent: `0x1/${categoryId}`
     }
   });
@@ -42,6 +43,7 @@ async function loadDiscussions() {
   const { data } = await apollo.query({
     query: DISCUSSIONS_QUERY,
     variables: {
+      first: 5,
       category: categoryId === '0' ? undefined : `0x1/${categoryId}`,
       parent: 0
     }
@@ -180,7 +182,15 @@ onMounted(async () => {
       </div>
     </div>
     <div>
-      <Label label="Latest discussions" sticky />
+      <h4
+        class="eyebrow border-b py-2 px-4 text-skin-text sticky z-10 top-[71px] lg:top-[72px] bg-skin-bg flex"
+      >
+        <span class="flex-grow">Discussions</span>
+        <div>
+          Sort by <span class="text-skin-link">New</span>
+          <IS-chevron-down class="inline-block text-skin-link mb-[2px]" />
+        </div>
+      </h4>
       <UiLoading v-if="loadingDiscussions && !loadedDiscussions" class="px-4 py-3 block" />
       <div
         v-else-if="loadedDiscussions && discussions.length === 0"

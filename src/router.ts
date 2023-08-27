@@ -9,6 +9,7 @@ import Discussion from '@/views/Discussions/Discussion.vue';
 import Discuss from '@/views/Discussions/Discuss.vue';
 import NewCategory from '@/views/Discussions/NewCategory.vue';
 import Discussions from '@/views/Discussions/Discussions.vue';
+import Profile from '@/views/Settings/Profile.vue';
 import SpaceSettings from '@/views/Space/Settings.vue';
 import SpaceTreasury from '@/views/Space/Treasury.vue';
 import SpaceDelegates from '@/views/Space/Delegates.vue';
@@ -59,7 +60,8 @@ const routes: any[] = [
     component: Settings,
     children: [
       { path: '', name: 'settings-spaces', component: SettingsSpaces },
-      { path: 'contacts', name: 'settings-contacts', component: Contacts }
+      { path: 'contacts', name: 'settings-contacts', component: Contacts },
+      { path: 'profile', name: 'settings-profile', component: Profile }
     ]
   },
   { path: '/explore', name: 'explore', component: Explore }

@@ -49,11 +49,16 @@ async function loadReplies() {
           <div class="w-full">
             <div class="flex text-skin-text text-sm mb-2">
               <div class="flex-1 space-x-2">
-                <router-link :to="{ name: 'user', params: { id: reply.author } }" class="space-x-2">
-                  <Stamp :id="reply.author" :size="24" />
-                  <span v-text="shortenAddress(reply.author)" />
+                <router-link
+                  :to="{ name: 'user', params: { id: reply.author.id } }"
+                  class="space-x-2"
+                >
+                  <Stamp :id="reply.author.id" :size="24" />
+                  <span
+                    v-text="reply.author.name ? reply.author.name : shortenAddress(reply.author.id)"
+                  />
                 </router-link>
-                <IS-pencil v-if="discussion?.author === reply.author" class="inline-block" />
+                <IS-pencil v-if="discussion?.author.id === reply.author.id" class="inline-block" />
                 <span v-text="_rt(1e9)" />
               </div>
             </div>
