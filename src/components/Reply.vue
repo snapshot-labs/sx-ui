@@ -59,7 +59,7 @@ async function loadReplies() {
                   />
                 </router-link>
                 <IS-pencil v-if="discussion?.author.id === reply.author.id" class="inline-block" />
-                <span v-text="_rt(1e9)" />
+                <span v-text="_rt(1693250154)" />
               </div>
             </div>
             <Markdown :body="reply.content" class="max-w-[650px] py-1 text-[20px]" />

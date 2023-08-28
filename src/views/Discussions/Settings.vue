@@ -1,9 +1,3 @@
-<script setup lang="ts">
-const route = useRoute();
-
-const category = parseInt(route.params.category as string);
-</script>
-
 <template>
   <div class="p-4 space-x-2 flex">
     <div class="flex-auto flex items-center space-x-3">
@@ -16,59 +10,22 @@ const category = parseInt(route.params.category as string);
     </div>
   </div>
   <div>
-    <div class="px-4 mb-4">
-      <div class="flex align-middle">
-        <IH-refresh class="inline-block my-1 mr-2" /> Sync with parent category?
-        <div class="rounded-full w-[36px] h-[24px] p-[3px] bg-skin-text inline-block ml-4">
-          <span class="rounded-full w-[18px] h-[18px] bg-skin-bg block" />
-        </div>
-      </div>
+    <Label label="Permissions" sticky class="mb-4" />
+    <div>
+      <h3 class="px-4">Who can add a topic?</h3>
+      <CategoryValidations />
     </div>
     <div>
-      <Label label="Who can add a discussion?" sticky />
-      <div class="flex flex-row flex-wrap gap-4 p-4">
-        <div class="border border-skin-link rounded-lg px-4 py-3 w-[240px] h-[60px]">
-          <b>Anyone</b>
-        </div>
-        <div class="border rounded-lg px-4 py-3 w-[240px] h-[60px]">
-          <b>Need to hold a token</b>
-        </div>
-        <div class="border rounded-lg px-4 py-3 w-[240px] h-[60px]">
-          <b>Need to hold an NFT</b>
-        </div>
-      </div>
+      <h3 class="px-4">Who can comment?</h3>
+      <CategoryValidations />
     </div>
     <div>
-      <Label label="Who can reply?" sticky />
-      <div class="flex flex-row flex-wrap gap-4 p-4">
-        <div class="border border-skin-link rounded-lg px-4 py-3 w-[240px] h-[60px]">
-          <b>Anyone</b>
-        </div>
-        <div class="border rounded-lg px-4 py-3 w-[240px] h-[60px]">
-          <b>Need to hold a token</b>
-        </div>
-        <div class="border rounded-lg px-4 py-3 w-[240px] h-[60px]">
-          <b>Need to hold an NFT</b>
-        </div>
-      </div>
+      <h3 class="px-4">Who can vote?</h3>
+      <CategoryValidations />
     </div>
     <div>
-      <Label label="Who can vote?" sticky />
-      <div class="flex flex-row flex-wrap gap-4 p-4">
-        <div class="border border-skin-link rounded-lg px-4 py-3 w-[240px] h-[60px]">
-          <b>Anyone</b>
-        </div>
-        <div class="border rounded-lg px-4 py-3 w-[240px] h-[60px]">
-          <b>Need to hold a token</b>
-        </div>
-        <div class="border rounded-lg px-4 py-3 w-[240px] h-[60px]">
-          <b>Need to hold an NFT</b>
-        </div>
-      </div>
-    </div>
-    <div>
-      <Label label="What's the voting power?" sticky />
-      <div class="flex flex-row flex-wrap gap-4 p-4">
+      <h3 class="px-4">How voting power works?</h3>
+      <div class="flex flex-row flex-wrap gap-3 p-4">
         <div class="border border-skin-link rounded-lg px-4 py-3 w-[240px] h-[60px]">
           <b>1 per account</b>
         </div>

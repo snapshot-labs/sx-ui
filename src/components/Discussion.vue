@@ -15,7 +15,7 @@ defineProps<{ discussion: any }>();
       <div class="text-skin-text space-x-2">
         <Stamp :id="discussion.author.id" :size="18" class="mr-1" />
         <IH-annotation class="inline-block" />
-        <span>{{ _n(discussion.reply_count) }} replies</span>
+        <span>{{ _n(discussion.reply_count) }} comments</span>
       </div>
     </router-link>
   </div>

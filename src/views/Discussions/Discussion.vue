@@ -77,7 +77,7 @@ onMounted(() => {
         <h4
           class="eyebrow border-b py-2 px-4 text-skin-text sticky z-10 top-[71px] lg:top-[72px] bg-skin-bg flex"
         >
-          <span class="flex-grow">Replies</span>
+          <span class="flex-grow">Comments</span>
           <div>
             Sort by <span class="text-skin-link">New</span>
             <IS-chevron-down class="inline-block text-skin-link mb-[2px]" />
@@ -89,7 +89,7 @@ onMounted(() => {
           class="px-4 py-3 flex items-center text-skin-link"
         >
           <IH-exclamation-circle class="inline-block mr-2" />
-          There are no replies.
+          There are no comments.
         </div>
         <div v-else-if="loadedReplies">
           <Reply v-for="(reply, i) in replies" :key="i" :reply="reply" :discussion="discussion" />

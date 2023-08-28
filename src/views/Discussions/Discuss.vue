@@ -42,7 +42,7 @@ async function handleSubmit() {
           <IH-arrow-narrow-left class="inline-block" />
         </UiButton>
       </router-link>
-      <h3 v-text="'New discussion'" />
+      <h3 v-text="'New topic'" />
     </div>
   </div>
   <div class="s-box max-w-[650px] px-4">

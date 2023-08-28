@@ -97,7 +97,7 @@ onMounted(async () => {
       </div>
     </div>
     <router-link :to="{ name: 'discuss', params: { category: categoryId } }">
-      <UiTooltip title="New discussion">
+      <UiTooltip title="New topic">
         <UiButton class="!px-0 w-[46px]">
           <IH-pencil-alt class="inline-block" />
         </UiButton>
@@ -114,9 +114,18 @@ onMounted(async () => {
           <button
             class="flex items-center gap-2"
             :class="{ 'opacity-80': active }"
+            @click="router.push({ name: 'space-roles' })"
+          >
+            <IS-users :width="16" /> Roles
+          </button>
+        </UiDropdownItem>
+        <UiDropdownItem v-slot="{ active }">
+          <button
+            class="flex items-center gap-2"
+            :class="{ 'opacity-80': active }"
             @click="router.push({ name: 'new-category', params: { parent: categoryId } })"
           >
-            <IH-plus-sm class="inline-block" /> Create category
+            <IH-plus :width="16" /> Create category
           </button>
         </UiDropdownItem>
         <UiDropdownItem v-slot="{ active }">
@@ -169,7 +178,7 @@ onMounted(async () => {
           <div class="flex-1">
             <h3 class="text-skin-link" v-text="c.name" />
             <div class="text-skin-text space-x-2">
-              <span>{{ _n(c.discussion_count) }} discussion(s)</span>
+              <span>{{ _n(c.discussion_count) }} topic(s)</span>
             </div>
           </div>
           <div>
@@ -185,7 +194,7 @@ onMounted(async () => {
       <h4
         class="eyebrow border-b py-2 px-4 text-skin-text sticky z-10 top-[71px] lg:top-[72px] bg-skin-bg flex"
       >
-        <span class="flex-grow">Discussions</span>
+        <span class="flex-grow">Topics</span>
         <div>
           Sort by <span class="text-skin-link">New</span>
           <IS-chevron-down class="inline-block text-skin-link mb-[2px]" />
@@ -197,7 +206,7 @@ onMounted(async () => {
         class="px-4 py-3 flex items-center text-skin-link"
       >
         <IH-exclamation-circle class="inline-block mr-2" />
-        There are no discussions.
+        There are no topics.
       </div>
       <div v-else>
         <Discussion v-for="(discussion, i) in discussions" :key="i" :discussion="discussion" />
