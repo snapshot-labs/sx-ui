@@ -57,6 +57,11 @@ async function loadReplies() {
                   <span
                     v-text="reply.author.name ? reply.author.name : shortenAddress(reply.author.id)"
                   />
+                  <span
+                    class="bg-skin-border text-skin-link rounded-md inline-block px-[6px] text-center text-[14px]"
+                  >
+                    {{ reply.author.vote_count + reply.author.discussion_count }}
+                  </span>
                 </router-link>
                 <IS-pencil v-if="discussion?.author.id === reply.author.id" class="inline-block" />
                 <span v-text="_rt(1693250154)" />
