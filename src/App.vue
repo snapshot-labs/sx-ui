@@ -17,8 +17,8 @@ const skin = computed(() => userSkin.value);
 const scrollDisabled = computed(() => modalOpen.value || uiStore.sidebarOpen);
 
 onMounted(async () => {
-  // metaStore.fetchBlocks();
   metaStore.loaded = true;
+  // metaStore.fetchBlocks();
   uiStore.restorePendingTransactions();
   await init();
 });
