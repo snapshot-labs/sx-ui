@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { _t } from '@/helpers/utils';
 import { Proposal } from '@/types';
-import { useMetaStore } from '@/stores/meta';
 import { METADATA } from '@/networks/evm';
 
 const props = defineProps<{
@@ -27,7 +26,7 @@ function getTsFromBlock(network, blockNum) {
   const networkBlockNum = metaStore.currentBlocks.get(network) || 0;
   const blockDiff = networkBlockNum - blockNum;
 
-  return metaStore.currentTs.valueOf() - METADATA[network].blockTime * blockDiff;
+  return (metaStore.currentTs.get(network) || 0) - METADATA[network].blockTime * blockDiff;
 }
 
 const states = computed(() => {

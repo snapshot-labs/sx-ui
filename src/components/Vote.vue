@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { _t } from '@/helpers/utils';
-import { useUiStore } from '@/stores/ui';
 import { getNetwork } from '@/networks';
 import { Proposal as ProposalType } from '@/types';
 
