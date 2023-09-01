@@ -19,7 +19,7 @@ async function loadDiscussion() {
   const { data } = await apollo.query({
     query: DISCUSSION_QUERY,
     variables: {
-      id: `0x1/${id}`
+      id: `discussions/${id}`
     }
   });
 

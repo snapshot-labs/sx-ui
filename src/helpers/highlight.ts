@@ -42,12 +42,9 @@ export async function addCategory(data) {
   const { cid } = await pin(metadata);
 
   const metadataURI = `ipfs://${cid}`;
-  const target = '0x1';
-  const methodSelector = 'add_category';
   const args = [data.parent, metadataURI];
-  const argsAuth = [target, methodSelector, args];
 
-  return await invoke('0x2', 'authenticate', argsAuth);
+  return await invoke('discussions', 'add_category', args);
 }
 
 export async function editProfile(data) {
@@ -61,7 +58,7 @@ export async function editProfile(data) {
   const metadataURI = `ipfs://${cid}`;
   const args = [data.user, metadataURI];
 
-  return await invoke('0x4', 'edit_profile', args);
+  return await invoke('profiles', 'edit_profile', args);
 }
 
 export async function discuss(data) {
@@ -73,19 +70,13 @@ export async function discuss(data) {
   const { cid } = await pin(metadata);
 
   const metadataURI = `ipfs://${cid}`;
-  const target = '0x1';
-  const methodSelector = 'discuss';
   const args = [data.author, data.category, data.parent, metadataURI];
-  const argsAuth = [target, methodSelector, args];
 
-  return await invoke('0x2', 'authenticate', argsAuth);
+  return await invoke('discussions', 'discuss', args);
 }
 
 export async function vote(data) {
-  const target = '0x1';
-  const methodSelector = 'vote';
   const args = [data.author, data.discussion, data.choice];
-  const argsAuth = [target, methodSelector, args];
 
-  return await invoke('0x2', 'authenticate', argsAuth);
+  return await invoke('discussions', 'vote', args);
 }

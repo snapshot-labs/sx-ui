@@ -28,7 +28,7 @@ async function loadCategories() {
     query: CATEGORIES_QUERY,
     variables: {
       first: 4,
-      parent: `0x1/${categoryId}`
+      parent: `discussions/${categoryId}`
     }
   });
 
@@ -44,7 +44,7 @@ async function loadDiscussions() {
     query: DISCUSSIONS_QUERY,
     variables: {
       first: 5,
-      category: categoryId === '0' ? undefined : `0x1/${categoryId}`,
+      category: categoryId === '0' ? undefined : `discussions/${categoryId}`,
       parent: 0
     }
   });
@@ -60,7 +60,7 @@ async function loadCategory() {
   const { data } = await apollo.query({
     query: CATEGORY_QUERY,
     variables: {
-      id: `0x1/${categoryId}`
+      id: `discussions/${categoryId}`
     }
   });
 
