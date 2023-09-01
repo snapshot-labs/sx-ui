@@ -7,6 +7,9 @@ const props = defineProps<{ proposal: ProposalType }>();
 
 const uiStore = useUiStore();
 const { votes } = useAccount();
+const { getTsFromBlock } = useMetaStore();
+
+const start = getTsFromBlock(props.proposal.network, props.proposal.start);
 
 const isSupported = computed(() => {
   const network = getNetwork(props.proposal.network);
@@ -35,7 +38,7 @@ const isSupported = computed(() => {
     You have already voted for this proposal
   </slot>
   <slot v-else-if="!proposal.has_started" name="waiting">
-    Voting for this proposal hasn't started yet. Voting will start {{ _t(proposal.start) }}.
+    Voting for this proposal hasn't started yet. Voting will start {{ _t(start) }}.
   </slot>
 
   <slot v-else-if="proposal.has_ended || proposal.executed" name="ended">

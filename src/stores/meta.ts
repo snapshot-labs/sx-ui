@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { NetworkID } from '@/types';
 import { getProvider } from '@/helpers/provider';
 import { getNetwork } from '@/networks';
+import { METADATA } from '@/networks/evm';
 
 export const useMetaStore = defineStore('meta', () => {
   const currentTs = ref(new Map<NetworkID, number>());
@@ -21,9 +22,17 @@ export const useMetaStore = defineStore('meta', () => {
     }
   }
 
+  function getTsFromBlock(network, blockNum) {
+    const networkBlockNum = currentBlocks.value.get(network) || 0;
+    const blockDiff = networkBlockNum - blockNum;
+
+    return (currentTs.value.get(network) || 0) - METADATA[network].blockTime * blockDiff;
+  }
+
   return {
     currentTs,
     currentBlocks,
-    fetchBlock
+    fetchBlock,
+    getTsFromBlock
   };
 });
