@@ -30,7 +30,7 @@ export async function invoke(agent, method, args: any, url = HIGHLIGHT_URL) {
   };
 
   const res = await fetch(url, init);
-  return (await res.json()).result;
+  return (await res.json()).result?.last_event_id;
 }
 
 export async function addCategory(data) {
