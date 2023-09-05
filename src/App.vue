@@ -1,10 +1,6 @@
 <script setup lang="ts">
-import { useUiStore } from '@/stores/ui';
-import { useMetaStore } from '@/stores/meta';
-
 const route = useRoute();
 const uiStore = useUiStore();
-const metaStore = useMetaStore();
 const { modalOpen } = useModal();
 const { userSkin } = useUserSkin();
 const { init, app } = useApp();
@@ -17,8 +13,6 @@ const skin = computed(() => userSkin.value);
 const scrollDisabled = computed(() => modalOpen.value || uiStore.sidebarOpen);
 
 onMounted(async () => {
-  metaStore.loaded = true;
-  // metaStore.fetchBlocks();
   uiStore.restorePendingTransactions();
   await init();
 });
