@@ -37,7 +37,7 @@ watch(route, () => {
     :class="{ [skin]: true, 'overflow-hidden': scrollDisabled }"
     class="font-serif text-base min-h-screen bg-skin-bg text-skin-text antialiased"
   >
-    <UiLoading v-if="app.loading || !app.init || !metaStore.loaded" class="overlay big" />
+    <UiLoading v-if="app.loading || !app.init" class="overlay big" />
     <div v-else class="pb-6 flex">
       <Sidebar class="lg:visible" :class="{ invisible: !uiStore.sidebarOpen }" />
       <Topnav @toggle="uiStore.toggleSidebar" />
