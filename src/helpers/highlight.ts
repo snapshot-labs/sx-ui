@@ -33,5 +33,5 @@ export async function invoke(agent, method, args: any, url = HIGHLIGHT_URL) {
 }
 
 export async function vote(space, voter, proposalId, choice, chainId, sig) {
-  return invoke('0x3', 'vote', [space, voter, proposalId, choice, chainId, sig]);
+  return invoke('votes', 'vote', [space, voter, proposalId, choice, chainId, sig]);
 }
