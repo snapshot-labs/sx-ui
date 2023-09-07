@@ -79,8 +79,6 @@ export type NetworkActions = {
       votingDelay: number;
       minVotingDuration: number;
       maxVotingDuration: number;
-      proposalThreshold: bigint;
-      quorum?: bigint;
       authenticators: StrategyConfig[];
       validationStrategy: StrategyConfig;
       votingStrategies: StrategyConfig[];

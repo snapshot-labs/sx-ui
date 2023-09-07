@@ -4,6 +4,7 @@ import updateLocale from 'dayjs/plugin/updateLocale';
 import duration from 'dayjs/plugin/duration';
 import sha3 from 'js-sha3';
 import { sanitizeUrl as baseSanitizeUrl } from '@braintree/sanitize-url';
+import { validateAndParseAddress } from 'starknet';
 import networks from '@/helpers/networks.json';
 import pkg from '@/../package.json';
 import type { Web3Provider } from '@ethersproject/providers';
@@ -299,12 +300,16 @@ export function createErc1155Metadata(
 }
 
 export function compareAddresses(a: string, b: string): boolean {
+  if (a.length > 42 && b.length > 42) {
+    return validateAndParseAddress(a) === validateAndParseAddress(b);
+  }
+
   // TODO: in future ignore padding as well
   return a.toLowerCase() === b.toLowerCase();
 }
 
 export function getSalt() {
-  const buffer = new Uint8Array(32);
+  const buffer = new Uint8Array(30);
   crypto.getRandomValues(buffer);
 
   return `0x${buffer.reduce((acc, val) => acc + val.toString(16).padStart(2, '0'), '')}`;

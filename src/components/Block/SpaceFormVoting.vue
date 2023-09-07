@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { validateForm } from '@/helpers/validation';
-import { evmNetworks } from '@/networks';
 import type { NetworkID } from '@/types';
 
 const props = defineProps<{
@@ -16,13 +15,7 @@ const definition = {
   type: 'object',
   title: 'SpaceSettings',
   additionalProperties: true,
-  required: [
-    'votingDelay',
-    'minVotingDuration',
-    'maxVotingDuration',
-    'proposalThreshold',
-    ...(!evmNetworks.includes(props.selectedNetworkId) ? ['quorum'] : [])
-  ],
+  required: ['votingDelay', 'minVotingDuration', 'maxVotingDuration'],
   properties: {
     votingDelay: {
       type: 'number',
@@ -35,21 +28,7 @@ const definition = {
     maxVotingDuration: {
       type: 'number',
       title: 'Max. voting duration in blocks'
-    },
-    ...(!evmNetworks.includes(props.selectedNetworkId) && {
-      proposalThreshold: {
-        type: 'string',
-        format: 'uint256',
-        title: 'Proposal threshold',
-        examples: ['1']
-      },
-      quorum: {
-        type: 'string',
-        format: 'uint256',
-        title: 'Quorum',
-        examples: ['1']
-      }
-    })
+    }
   }
 };
 

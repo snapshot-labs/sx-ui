@@ -11,7 +11,13 @@ import {
 } from '@snapshot-labs/sx';
 import { createErc1155Metadata, verifyNetwork } from '@/helpers/utils';
 import { convertToMetaTransactions } from '@/helpers/transactions';
-import { executionCall, getExecutionData, pickAuthenticatorAndStrategies } from './helpers';
+import { getExecutionData, createStrategyPicker } from '@/networks/common/helpers';
+import { executionCall } from './helpers';
+import {
+  RELAYER_AUTHENTICATORS,
+  SUPPORTED_AUTHENTICATORS,
+  SUPPORTED_STRATEGIES
+} from './constants';
 import type { Web3Provider } from '@ethersproject/providers';
 import type { NetworkActions, NetworkHelpers, StrategyConfig, VotingPower } from '@/networks/types';
 import type { MetaTransaction } from '@snapshot-labs/sx/dist/utils/encoding/execution-hash';
@@ -34,6 +40,12 @@ export function createActions(
 ): NetworkActions {
   const networkConfig = CONFIGS[chainId];
   const manaUrl: string = import.meta.env.VITE_MANA_URL || 'http://localhost:3000';
+
+  const pickAuthenticatorAndStrategies = createStrategyPicker({
+    supportedAuthenticators: SUPPORTED_AUTHENTICATORS,
+    supportedStrategies: SUPPORTED_STRATEGIES,
+    relayerAuthenticators: RELAYER_AUTHENTICATORS
+  });
 
   const client = new clients.EvmEthereumTx({ networkConfig });
   const ethSigClient = new clients.EvmEthereumSig({
@@ -82,8 +94,6 @@ export function createActions(
         votingDelay: number;
         minVotingDuration: number;
         maxVotingDuration: number;
-        proposalThreshold: bigint;
-        quorum: bigint;
         authenticators: StrategyConfig[];
         validationStrategy: StrategyConfig;
         votingStrategies: StrategyConfig[];
@@ -134,7 +144,7 @@ export function createActions(
         }
       });
 
-      return { hash: response.txId };
+      return { txId: response.txId };
     },
     setMetadata: async (web3: Web3Provider, space: Space, metadata: SpaceMetadata) => {
       await verifyNetwork(web3, chainId);

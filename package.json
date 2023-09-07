@@ -22,7 +22,7 @@
   "prettier": "@snapshot-labs/prettier-config",
   "dependencies": {
     "@apollo/client": "^3.7.1",
-    "@argent/get-starknet": "^5.2.0",
+    "@argent/get-starknet": "^6.4.7",
     "@braintree/sanitize-url": "^6.0.0",
     "@ensdomains/eth-ens-namehash": "^2.0.15",
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
@@ -54,7 +54,7 @@
     "pinia": "^2.0.23",
     "remarkable": "^2.0.1",
     "scrollmonitor": "^1.2.9",
-    "starknet": "5.0.1",
+    "starknet": "5.19.1",
     "stream-browserify": "^3.0.0",
     "unplugin-auto-import": "^0.15.2",
     "util": "^0.12.5",
