@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import { getNetwork } from '@/networks';
-import { shortenAddress } from '@/helpers/utils';
-import choices from '@/helpers/choices.json';
+import { shortenAddress, _n } from '@/helpers/utils';
 import { NetworkID, Proposal as ProposalType, Vote } from '@/types';
+
+const choices = {
+  '1': 'For',
+  '0': 'Against',
+  '2': 'Abstain'
+};
 
 const LIMIT = 20;
 
@@ -95,19 +100,25 @@ watch(
               }"
               :class="`_${vote.choice}`"
             />
-            <Stamp :id="vote.voter.id" :size="24" class="mr-2" />
+            <Stamp :id="vote.voter" :size="24" class="mr-2" />
             <router-link
               :to="{
                 name: 'user',
                 params: {
-                  id: `${proposal.network}:${vote.voter.id}`
+                  id: `${proposal.network}:${vote.voter}`
                 }
               }"
               @click="$emit('close')"
             >
-              {{ vote.voter.name || shortenAddress(vote.voter.id) }}
+              {{ vote.voter.name || shortenAddress(vote.voter) }}
             </router-link>
-            <div class="absolute right-4 top-3 text-skin-link" v-text="choices[vote.choice]" />
+            <div class="absolute right-4 top-3 text-skin-link space-x-3">
+              <span>{{ choices[vote.choice] }}</span>
+              <span>
+                {{ _n(vote.vp) }}
+                {{ proposal.space.voting_power_symbol }}
+              </span>
+            </div>
           </div>
         </BlockInfiniteScroller>
       </div>
