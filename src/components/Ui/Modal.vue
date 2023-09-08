@@ -31,7 +31,7 @@ watch(open, (val, prev) => {
   <transition name="fade">
     <div v-if="open" class="modal mx-auto">
       <div class="backdrop" @click="$emit('close')" />
-      <div class="shell overflow-hidden relative rounded-none md:rounded-lg">
+      <div class="shell overflow-hidden relative rounded-t-lg md:rounded-lg">
         <div v-if="$slots.header" class="border-b py-3 text-center">
           <slot name="header" />
         </div>
@@ -87,11 +87,12 @@ watch(open, (val, prev) => {
 
     @media (max-width: 767px) {
       border: 0;
+      border-top: 1px solid var(--border-color);
       width: 100% !important;
       max-width: 100% !important;
       max-height: 100% !important;
-      min-height: 100% !important;
-      margin-bottom: 0 !important;
+      position: absolute;
+      bottom: 0;
 
       .modal-body {
         max-height: 100% !important;
