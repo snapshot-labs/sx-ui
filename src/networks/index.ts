@@ -23,3 +23,12 @@ export const getNetwork = (id: NetworkID) => {
 
   throw new Error(`Unknown network ${id}`);
 };
+
+/**
+ * supportsNullCurrent return true if the network supports null current to be used for computing current voting power
+ * @param networkId Network ID
+ * @returns boolean true if the network supports null current
+ */
+export const supportsNullCurrent = (networkID: NetworkID) => {
+  return !evmNetworks.includes(networkID);
+};

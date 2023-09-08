@@ -443,8 +443,10 @@ export function createActions(
       strategiesParams: any[],
       strategiesMetadata: StrategyParsedMetadata[],
       voterAddress: string,
-      block: number
+      block: number | null
     ): Promise<VotingPower[]> => {
+      if (block === null) throw new Error('EVM requires block number to be defined');
+
       return Promise.all(
         strategiesAddresses.map(async (address, i) => {
           const strategy = getEvmStrategy(address, networkConfig);

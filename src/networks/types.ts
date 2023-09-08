@@ -120,7 +120,7 @@ export type NetworkActions = {
     strategiesParams: any[],
     strategiesMetadata: StrategyParsedMetadata[],
     voterAddress: string,
-    block: number
+    current: number | null
   ): Promise<VotingPower[]>;
   send(envelope: any): Promise<any>;
 };

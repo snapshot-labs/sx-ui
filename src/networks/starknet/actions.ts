@@ -225,19 +225,8 @@ export function createActions(
       strategiesParams: any[],
       strategiesMetadata: StrategyParsedMetadata[],
       voterAddress: string,
-      timestamp: number
+      timestamp: number | null
     ): Promise<VotingPower[]> => {
-      const offsetsLength = parseInt(strategiesParams[0], 16);
-      const offsets = strategiesParams
-        .slice(1, offsetsLength + 1)
-        .map(offset => parseInt(offset, 16));
-      const elementsLength = strategiesParams.length - offsetsLength - 1;
-      const elements = strategiesParams.slice(offsetsLength + 1);
-      const params2D = offsets.map((offset, index) => {
-        const last = index === offsetsLength - 1 ? elementsLength : offsets[index + 1];
-        return elements.slice(offset, last);
-      });
-
       return Promise.all(
         strategiesAddresses.map(async (address, i) => {
           const strategy = getStarknetStrategy(address, defaultNetwork);
@@ -248,7 +237,7 @@ export function createActions(
             voterAddress,
             null,
             timestamp,
-            params2D[i],
+            strategiesParams[i].split(','),
             {
               ...clientConfig,
               networkConfig: defaultNetwork
@@ -260,7 +249,7 @@ export function createActions(
             value,
             decimals: strategiesMetadata[i]?.decimals ?? 0,
             symbol: strategiesMetadata[i]?.symbol ?? '',
-            token: null
+            token: strategiesMetadata[i]?.token ?? null
           };
         })
       );

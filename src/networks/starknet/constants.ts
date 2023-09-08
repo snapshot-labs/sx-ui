@@ -1,6 +1,8 @@
 import { CallData, uint256 } from 'starknet';
+import { shorten } from '@/helpers/utils';
 import { StrategyConfig } from '../types';
 
+import IHCode from '~icons/heroicons-outline/code';
 import IHLightningBolt from '~icons/heroicons-outline/lightning-bolt';
 
 export const API_URL = 'http://localhost:3000';
@@ -10,7 +12,8 @@ export const SUPPORTED_AUTHENTICATORS = {
 };
 
 export const SUPPORTED_STRATEGIES = {
-  '0x4ad4a117a2b047fc3e25bf52791bc8f29a0871ac3c41a3e176f18c8a1087815': true
+  '0x4ad4a117a2b047fc3e25bf52791bc8f29a0871ac3c41a3e176f18c8a1087815': true,
+  '0x2581d59cc3961ea2db43e7fca258823c01165b1455e91d4186255e14f7d540a': true
 };
 
 export const SUPPORTED_EXECUTORS = {};
@@ -111,6 +114,50 @@ export const EDITOR_VOTING_STRATEGIES = [
           maxLength: 6,
           title: 'Symbol',
           examples: ['e.g. VP']
+        }
+      }
+    }
+  },
+
+  {
+    address: '0x2581d59cc3961ea2db43e7fca258823c01165b1455e91d4186255e14f7d540a',
+    name: 'Delegated ERC20 Token',
+    about:
+      'A strategy that allows delegated balances of Compound style checkpoint tokens to be used as voting power.',
+    icon: IHCode,
+    generateSummary: (params: Record<string, any>) =>
+      `(${shorten(params.contractAddress)}, ${params.decimals})`,
+    generateParams: (params: Record<string, any>) => [params.contractAddress],
+    generateMetadata: (params: Record<string, any>) => ({
+      name: 'Delegated Comp Token',
+      properties: {
+        symbol: params.symbol,
+        decimals: parseInt(params.decimals),
+        token: params.contractAddress
+      }
+    }),
+    paramsDefinition: {
+      type: 'object',
+      title: 'Params',
+      additionalProperties: false,
+      required: ['contractAddress', 'decimals'],
+      properties: {
+        contractAddress: {
+          type: 'string',
+          format: 'address',
+          title: 'Token address',
+          examples: ['0x0000…']
+        },
+        decimals: {
+          type: 'integer',
+          title: 'Decimals',
+          examples: ['18']
+        },
+        symbol: {
+          type: 'string',
+          maxLength: 6,
+          title: 'Symbol',
+          examples: ['e.g. COMP']
         }
       }
     }
