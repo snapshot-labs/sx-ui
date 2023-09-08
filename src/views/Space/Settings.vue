@@ -134,7 +134,7 @@ watchEffect(() => {
           <a :href="network.helpers.getExplorerUrl(space.controller, 'contract')" target="_blank">
             <Stamp :id="space.controller" type="avatar" :size="18" class="mr-2 rounded-sm" />
             {{ shorten(space.controller) }}
-            <IH-external-link class="inline-block" />
+            <IH-arrow-sm-right class="inline-block -rotate-45" />
           </a>
         </UiEditable>
       </div>
@@ -147,7 +147,7 @@ watchEffect(() => {
           <h4 class="flex-auto" v-text="network.constants.AUTHS[auth]" />
           <div>
             <Stamp :id="auth" type="avatar" :size="18" class="mr-2 rounded-sm" />
-            {{ shorten(auth) }} <IH-external-link class="inline-block" />
+            {{ shorten(auth) }} <IH-arrow-sm-right class="inline-block -rotate-45" />
           </div>
         </a>
       </div>
@@ -172,7 +172,8 @@ watchEffect(() => {
               :size="18"
               class="mr-2 rounded-sm"
             />
-            {{ shorten(space.validation_strategy) }} <IH-external-link class="inline-block" />
+            {{ shorten(space.validation_strategy) }}
+            <IH-arrow-sm-right class="inline-block -rotate-45" />
           </div>
         </a>
       </div>
@@ -189,7 +190,7 @@ watchEffect(() => {
           <h4 class="flex-auto" v-text="network.constants.STRATEGIES[strategy]" />
           <div>
             <Stamp :id="strategy" type="avatar" :size="18" class="mr-2 rounded-sm" />
-            {{ shorten(strategy) }} <IH-external-link class="inline-block" />
+            {{ shorten(strategy) }} <IH-arrow-sm-right class="inline-block -rotate-45" />
           </div>
         </a>
       </div>
@@ -213,7 +214,7 @@ watchEffect(() => {
           />
           <div>
             <Stamp :id="executor" type="avatar" :size="18" class="mr-2 rounded-sm" />
-            {{ shorten(executor) }} <IH-external-link class="inline-block" />
+            {{ shorten(executor) }} <IH-arrow-sm-right class="inline-block -rotate-45" />
           </div>
         </a>
       </div>
