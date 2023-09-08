@@ -3,12 +3,14 @@ import { shorten } from '@/helpers/utils';
 import { StrategyConfig } from '../types';
 
 import IHCode from '~icons/heroicons-outline/code';
+import IHCube from '~icons/heroicons-outline/cube';
 import IHLightningBolt from '~icons/heroicons-outline/lightning-bolt';
 
 export const API_URL = 'http://localhost:3000';
 
 export const SUPPORTED_AUTHENTICATORS = {
-  '0x6c363a572f7f86b58fff89abf6f924cb75e97a92af2b2acbdd0156ddd18761d': true
+  '0x6c363a572f7f86b58fff89abf6f924cb75e97a92af2b2acbdd0156ddd18761d': true,
+  '0x52a8c751db001ed116d2194521331426910cd800a656d57b575929e1058b35b': true
 };
 
 export const SUPPORTED_STRATEGIES = {
@@ -47,6 +49,14 @@ export const EDITOR_AUTHENTICATORS = [
   {
     address: '0x6c363a572f7f86b58fff89abf6f924cb75e97a92af2b2acbdd0156ddd18761d',
     name: 'Vanilla',
+    paramsDefinition: null
+  },
+  {
+    address: '0x52a8c751db001ed116d2194521331426910cd800a656d57b575929e1058b35b',
+    name: 'Starknet transaction',
+    about:
+      'Will authenticate a user by checking if the caller address corresponds to the author or voter address.',
+    icon: IHCube,
     paramsDefinition: null
   }
 ];
