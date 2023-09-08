@@ -164,6 +164,7 @@ export type Network = {
     SUPPORTED_AUTHENTICATORS: { [key: string]: boolean };
     SUPPORTED_STRATEGIES: { [key: string]: boolean };
     SUPPORTED_EXECUTORS: { [key: string]: boolean };
+    RELAYER_AUTHENTICATORS: { [key: string]: 'evm' | 'starknet' | undefined };
     AUTHS: { [key: string]: string };
     PROPOSAL_VALIDATIONS: { [key: string]: string };
     STRATEGIES: { [key: string]: string };

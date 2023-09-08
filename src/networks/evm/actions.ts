@@ -174,7 +174,7 @@ export function createActions(
 
       const isContract = await getIsContract(account);
 
-      const { useRelayer, authenticator, strategies } = pickAuthenticatorAndStrategies(
+      const { relayerType, authenticator, strategies } = pickAuthenticatorAndStrategies(
         space.authenticators,
         space.voting_power_validation_strategy_strategies,
         isContract
@@ -201,7 +201,7 @@ export function createActions(
         metadataUri: `ipfs://${cid}`
       };
 
-      if (useRelayer) {
+      if (relayerType === 'evm') {
         return ethSigClient.propose({
           signer: web3.getSigner(),
           data
@@ -233,7 +233,7 @@ export function createActions(
 
       const isContract = await getIsContract(account);
 
-      const { useRelayer, authenticator } = pickAuthenticatorAndStrategies(
+      const { relayerType, authenticator } = pickAuthenticatorAndStrategies(
         space.authenticators,
         space.voting_power_validation_strategy_strategies,
         isContract
@@ -260,7 +260,7 @@ export function createActions(
         metadataUri: `ipfs://${cid}`
       };
 
-      if (useRelayer) {
+      if (relayerType === 'evm') {
         return ethSigClient.updateProposal({
           signer: web3.getSigner(),
           data
@@ -299,7 +299,7 @@ export function createActions(
 
       const isContract = await getIsContract(account);
 
-      const { useRelayer, authenticator, strategies } = pickAuthenticatorAndStrategies(
+      const { relayerType, authenticator, strategies } = pickAuthenticatorAndStrategies(
         proposal.space.authenticators,
         proposal.strategies,
         isContract
@@ -319,7 +319,7 @@ export function createActions(
         metadataUri: ''
       };
 
-      if (useRelayer) {
+      if (relayerType === 'evm') {
         return ethSigClient.vote({
           signer: web3.getSigner(),
           data

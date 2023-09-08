@@ -20,7 +20,9 @@ export const SUPPORTED_STRATEGIES = {
 
 export const SUPPORTED_EXECUTORS = {};
 
-export const RELAYER_AUTHENTICATORS = {};
+export const RELAYER_AUTHENTICATORS = {
+  '0x256cd338bb24decbfaf05366b540c2b0fb9c504475d4b3baba01e6975cf2a6e': 'starknet'
+} as const;
 
 export const AUTHS = {
   '0x6c363a572f7f86b58fff89abf6f924cb75e97a92af2b2acbdd0156ddd18761d': 'Vanilla',

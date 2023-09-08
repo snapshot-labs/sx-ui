@@ -31,7 +31,7 @@ export function createStrategyPicker({
 }: {
   supportedAuthenticators: Record<string, boolean | undefined>;
   supportedStrategies: Record<string, boolean | undefined>;
-  relayerAuthenticators: Record<string, boolean | undefined>;
+  relayerAuthenticators: Record<string, 'evm' | 'starknet' | undefined>;
 }) {
   return function pick(authenticators: string[], strategies: string[], isContract = false) {
     const candidateAuthenticators = authenticators.filter(
@@ -52,7 +52,7 @@ export function createStrategyPicker({
     }
 
     return {
-      useRelayer: !!relayerAuthenticators[authenticator],
+      relayerType: relayerAuthenticators[authenticator],
       authenticator,
       strategies: selectedStrategies
     };

@@ -117,12 +117,12 @@ export function createActions(
       executionStrategy: string | null,
       transactions: MetaTransaction[]
     ) => {
-      const { useRelayer, authenticator, strategies } = pickAuthenticatorAndStrategies(
+      const { relayerType, authenticator, strategies } = pickAuthenticatorAndStrategies(
         space.authenticators,
         space.strategies
       );
 
-      if (useRelayer) await verifyNetwork(web3, l1ChainId);
+      if (relayerType === 'evm') await verifyNetwork(web3, l1ChainId);
 
       let selectedExecutionStrategy;
       if (executionStrategy) {
@@ -156,12 +156,12 @@ export function createActions(
       executionStrategy: string | null,
       transactions: MetaTransaction[]
     ) {
-      const { useRelayer, authenticator } = pickAuthenticatorAndStrategies(
+      const { relayerType, authenticator } = pickAuthenticatorAndStrategies(
         space.authenticators,
         space.voting_power_validation_strategy_strategies
       );
 
-      if (useRelayer) await verifyNetwork(web3, l1ChainId);
+      if (relayerType === 'evm') await verifyNetwork(web3, l1ChainId);
 
       let selectedExecutionStrategy;
       if (executionStrategy) {
@@ -194,12 +194,12 @@ export function createActions(
       });
     },
     vote: async (web3: any, account: string, proposal: Proposal, choice: number) => {
-      const { useRelayer, authenticator, strategies } = pickAuthenticatorAndStrategies(
+      const { relayerType, authenticator, strategies } = pickAuthenticatorAndStrategies(
         proposal.space.authenticators,
         proposal.strategies
       );
 
-      if (useRelayer) await verifyNetwork(web3, l1ChainId);
+      if (relayerType === 'evm') await verifyNetwork(web3, l1ChainId);
 
       return client.vote(web3.provider.account, {
         data: {

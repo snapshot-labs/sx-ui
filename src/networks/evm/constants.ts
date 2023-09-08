@@ -30,8 +30,8 @@ export const SUPPORTED_EXECUTORS = {
 };
 
 export const RELAYER_AUTHENTICATORS = {
-  '0x5f9b7d78c9a37a439d78f801e0e339c6e711e260': true
-};
+  '0x5f9b7d78c9a37a439d78f801e0e339c6e711e260': 'evm'
+} as const;
 
 export const AUTHS = {
   '0x5f9b7d78c9a37a439d78f801e0e339c6e711e260': 'Ethereum signature',
