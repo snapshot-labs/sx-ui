@@ -4,12 +4,14 @@ import { StrategyConfig } from '../types';
 
 import IHCode from '~icons/heroicons-outline/code';
 import IHCube from '~icons/heroicons-outline/cube';
+import IHPencil from '~icons/heroicons-outline/pencil';
 import IHLightningBolt from '~icons/heroicons-outline/lightning-bolt';
 
 export const API_URL = 'http://localhost:3000';
 
 export const SUPPORTED_AUTHENTICATORS = {
   '0x6c363a572f7f86b58fff89abf6f924cb75e97a92af2b2acbdd0156ddd18761d': true,
+  '0x256cd338bb24decbfaf05366b540c2b0fb9c504475d4b3baba01e6975cf2a6e': true,
   '0x52a8c751db001ed116d2194521331426910cd800a656d57b575929e1058b35b': true
 };
 
@@ -59,6 +61,13 @@ export const EDITOR_AUTHENTICATORS = [
     about:
       'Will authenticate a user by checking if the caller address corresponds to the author or voter address.',
     icon: IHCube,
+    paramsDefinition: null
+  },
+  {
+    address: '0x256cd338bb24decbfaf05366b540c2b0fb9c504475d4b3baba01e6975cf2a6e',
+    name: 'Starknet signature',
+    about: 'Will authenticate a user based on an EIP-712 message signed by a Starknet private key.',
+    icon: IHPencil,
     paramsDefinition: null
   }
 ];

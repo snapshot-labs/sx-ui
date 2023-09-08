@@ -32,6 +32,7 @@ export function createActions(
   });
 
   const client = new clients.StarkNetTx(clientConfig);
+  const starkSigClient = new clients.StarkNetSig(clientConfig);
 
   return {
     async predictSpaceAddress(web3: any, { salt }) {
@@ -137,14 +138,23 @@ export function createActions(
         };
       }
 
+      const data = {
+        space: space.id,
+        authenticator,
+        strategies,
+        executionStrategy: selectedExecutionStrategy,
+        metadataUri: `ipfs://${cid}`
+      };
+
+      if (relayerType === 'starknet') {
+        return starkSigClient.propose({
+          signer: web3.provider.account,
+          data
+        });
+      }
+
       return client.propose(web3.provider.account, {
-        data: {
-          space: space.id,
-          authenticator,
-          strategies,
-          executionStrategy: selectedExecutionStrategy,
-          metadataUri: `ipfs://${cid}`
-        }
+        data
       });
     },
     async updateProposal(
@@ -176,14 +186,23 @@ export function createActions(
         };
       }
 
+      const data = {
+        space: space.id,
+        proposal: proposalId,
+        authenticator,
+        executionStrategy: selectedExecutionStrategy,
+        metadataUri: `ipfs://${cid}`
+      };
+
+      if (relayerType === 'starknet') {
+        return starkSigClient.updateProposal({
+          signer: web3.provider.account,
+          data
+        });
+      }
+
       return client.updateProposal(web3.provider.account, {
-        data: {
-          space: space.id,
-          proposal: proposalId,
-          authenticator,
-          executionStrategy: selectedExecutionStrategy,
-          metadataUri: `ipfs://${cid}`
-        }
+        data
       });
     },
     cancelProposal: (web3: any, proposal: Proposal) => {
@@ -201,14 +220,23 @@ export function createActions(
 
       if (relayerType === 'evm') await verifyNetwork(web3, l1ChainId);
 
+      const data = {
+        space: proposal.space.id,
+        authenticator,
+        strategies,
+        proposal: proposal.proposal_id,
+        choice
+      };
+
+      if (relayerType === 'starknet') {
+        return starkSigClient.vote({
+          signer: web3.provider.account,
+          data
+        });
+      }
+
       return client.vote(web3.provider.account, {
-        data: {
-          space: proposal.space.id,
-          authenticator,
-          strategies,
-          proposal: proposal.proposal_id,
-          choice
-        }
+        data
       });
     },
     finalizeProposal: () => null,
@@ -254,6 +282,6 @@ export function createActions(
         })
       );
     },
-    send: async () => null
+    send: (envelope: any) => starkSigClient.send(envelope)
   };
 }
