@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { validateForm } from '@/helpers/validation';
+import { getCurrentName } from '@/helpers/utils';
+import { getNetwork } from '@/networks';
 import type { NetworkID } from '@/types';
 
 const props = defineProps<{
@@ -11,29 +13,33 @@ const emit = defineEmits<{
   (e: 'errors', value: any);
 }>();
 
-const definition = {
-  type: 'object',
-  title: 'SpaceSettings',
-  additionalProperties: true,
-  required: ['votingDelay', 'minVotingDuration', 'maxVotingDuration'],
-  properties: {
-    votingDelay: {
-      type: 'number',
-      title: 'Voting delay in blocks'
-    },
-    minVotingDuration: {
-      type: 'number',
-      title: 'Min. voting duration in blocks'
-    },
-    maxVotingDuration: {
-      type: 'number',
-      title: 'Max. voting duration in blocks'
+const definition = computed(() => {
+  const network = getNetwork(props.selectedNetworkId);
+
+  return {
+    type: 'object',
+    title: 'SpaceSettings',
+    additionalProperties: true,
+    required: ['votingDelay', 'minVotingDuration', 'maxVotingDuration'],
+    properties: {
+      votingDelay: {
+        type: 'number',
+        title: `Voting delay in ${getCurrentName(network.currentUnit)}`
+      },
+      minVotingDuration: {
+        type: 'number',
+        title: `Min. voting duration in ${getCurrentName(network.currentUnit)}`
+      },
+      maxVotingDuration: {
+        type: 'number',
+        title: `Max. voting duration in ${getCurrentName(network.currentUnit)}`
+      }
     }
-  }
-};
+  };
+});
 
 const formErrors = computed(() => {
-  const errors = validateForm(definition, props.form);
+  const errors = validateForm(definition.value, props.form);
 
   if (props.form.minVotingDuration > props.form.maxVotingDuration) {
     errors.maxVotingDuration =

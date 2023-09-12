@@ -76,6 +76,7 @@ export function createEvmNetwork(networkId: NetworkID): Network {
   return {
     name,
     avatar,
+    currentUnit: 'block',
     baseChainId: chainId,
     hasReceive: false,
     supportsSimulation: ['gor', 'sep', 'matic', 'arb1'].includes(networkId),

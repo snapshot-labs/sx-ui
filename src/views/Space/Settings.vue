@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { shorten, _n, compareAddresses } from '@/helpers/utils';
+import { shorten, _n, compareAddresses, getCurrentName } from '@/helpers/utils';
 import { getNetwork } from '@/networks';
 import { Space } from '@/types';
 
@@ -57,7 +57,7 @@ watchEffect(() => {
       <Label :label="'Voting'" sticky />
       <div class="mx-4 pt-3">
         <div class="mb-3">
-          <div class="s-label !mb-0">Voting delay in blocks</div>
+          <div class="s-label !mb-0">Voting delay in {{ getCurrentName(network.currentUnit) }}</div>
           <UiEditable
             :editable="isController"
             :initial-value="space.voting_delay"
@@ -71,7 +71,9 @@ watchEffect(() => {
           </UiEditable>
         </div>
         <div class="mb-3">
-          <div class="s-label !mb-0">Min. voting period in blocks</div>
+          <div class="s-label !mb-0">
+            Min. voting period in {{ getCurrentName(network.currentUnit) }}
+          </div>
           <UiEditable
             :editable="isController"
             :initial-value="space.min_voting_period"
@@ -91,7 +93,9 @@ watchEffect(() => {
           </UiEditable>
         </div>
         <div class="mb-3">
-          <div class="s-label !mb-0">Max. voting period in blocks</div>
+          <div class="s-label !mb-0">
+            Max. voting period in {{ getCurrentName(network.currentUnit) }}
+          </div>
           <UiEditable
             :editable="isController"
             :initial-value="space.max_voting_period"

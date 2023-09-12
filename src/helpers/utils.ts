@@ -103,6 +103,11 @@ export function _n(value: any, notation: 'standard' | 'compact' = 'standard') {
   return formatter.format(value);
 }
 
+export function getCurrentName(currentUnit: 'block' | 'second') {
+  if (currentUnit === 'block') return 'blocks';
+  return 'seconds';
+}
+
 export function _c(value: string | bigint, decimals = 18) {
   const raw = BigInt(value);
   const parsed = Number(raw) / 10 ** decimals;

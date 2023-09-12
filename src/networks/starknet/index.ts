@@ -45,6 +45,7 @@ export function createStarknetNetwork(networkId: NetworkID): Network {
   return {
     name: 'Starknet (testnet)',
     avatar: 'ipfs://bafkreihbjafyh7eud7r6e5743esaamifcttsvbspfwcrfoc5ykodjdi67m',
+    currentUnit: 'second',
     baseChainId: l1ChainId,
     baseNetworkId: 'gor',
     hasReceive: true,

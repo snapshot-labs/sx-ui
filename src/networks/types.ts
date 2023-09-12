@@ -152,6 +152,7 @@ export type NetworkHelpers = {
 export type Network = {
   name: string;
   avatar: string;
+  currentUnit: 'block' | 'second';
   baseChainId: number;
   baseNetworkId?: NetworkID;
   hasReceive: boolean;
