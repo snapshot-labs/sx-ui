@@ -12,6 +12,7 @@ import {
 import { createErc1155Metadata, verifyNetwork } from '@/helpers/utils';
 import { convertToMetaTransactions } from '@/helpers/transactions';
 import { getExecutionData, createStrategyPicker } from '@/networks/common/helpers';
+import { EVM_CONNECTORS } from '@/networks/common/constants';
 import { executionCall } from './helpers';
 import {
   RELAYER_AUTHENTICATORS,
@@ -19,7 +20,13 @@ import {
   SUPPORTED_STRATEGIES
 } from './constants';
 import type { Web3Provider } from '@ethersproject/providers';
-import type { NetworkActions, NetworkHelpers, StrategyConfig, VotingPower } from '@/networks/types';
+import type {
+  Connector,
+  NetworkActions,
+  NetworkHelpers,
+  StrategyConfig,
+  VotingPower
+} from '@/networks/types';
 import type { MetaTransaction } from '@snapshot-labs/sx/dist/utils/encoding/execution-hash';
 import type { Space, Proposal, SpaceMetadata, StrategyParsedMetadata } from '@/types';
 
@@ -44,7 +51,8 @@ export function createActions(
   const pickAuthenticatorAndStrategies = createStrategyPicker({
     supportedAuthenticators: SUPPORTED_AUTHENTICATORS,
     supportedStrategies: SUPPORTED_STRATEGIES,
-    relayerAuthenticators: RELAYER_AUTHENTICATORS
+    relayerAuthenticators: RELAYER_AUTHENTICATORS,
+    managerConnectors: EVM_CONNECTORS
   });
 
   const client = new clients.EvmEthereumTx({ networkConfig });
@@ -164,6 +172,7 @@ export function createActions(
     },
     propose: async (
       web3: Web3Provider,
+      connectorType: Connector,
       account: string,
       space: Space,
       cid: string,
@@ -174,11 +183,12 @@ export function createActions(
 
       const isContract = await getIsContract(account);
 
-      const { relayerType, authenticator, strategies } = pickAuthenticatorAndStrategies(
-        space.authenticators,
-        space.voting_power_validation_strategy_strategies,
+      const { relayerType, authenticator, strategies } = pickAuthenticatorAndStrategies({
+        authenticators: space.authenticators,
+        strategies: space.voting_power_validation_strategy_strategies,
+        connectorType,
         isContract
-      );
+      });
 
       let selectedExecutionStrategy;
       if (executionStrategy) {
@@ -222,6 +232,7 @@ export function createActions(
     },
     async updateProposal(
       web3: Web3Provider,
+      connectorType: Connector,
       account: string,
       space: Space,
       proposalId: number,
@@ -233,11 +244,12 @@ export function createActions(
 
       const isContract = await getIsContract(account);
 
-      const { relayerType, authenticator } = pickAuthenticatorAndStrategies(
-        space.authenticators,
-        space.voting_power_validation_strategy_strategies,
+      const { relayerType, authenticator } = pickAuthenticatorAndStrategies({
+        authenticators: space.authenticators,
+        strategies: space.voting_power_validation_strategy_strategies,
+        connectorType,
         isContract
-      );
+      });
 
       let selectedExecutionStrategy;
       if (executionStrategy) {
@@ -292,18 +304,25 @@ export function createActions(
         { noWait: isContract }
       );
     },
-    vote: async (web3: Web3Provider, account: string, proposal: Proposal, choice: number) => {
+    vote: async (
+      web3: Web3Provider,
+      connectorType: Connector,
+      account: string,
+      proposal: Proposal,
+      choice: number
+    ) => {
       await verifyNetwork(web3, chainId);
 
       if (choice < 1 || choice > 3) throw new Error('Invalid chocie');
 
       const isContract = await getIsContract(account);
 
-      const { relayerType, authenticator, strategies } = pickAuthenticatorAndStrategies(
-        proposal.space.authenticators,
-        proposal.strategies,
+      const { relayerType, authenticator, strategies } = pickAuthenticatorAndStrategies({
+        authenticators: proposal.space.authenticators,
+        strategies: proposal.strategies,
+        connectorType,
         isContract
-      );
+      });
 
       let convertedChoice: Choice = 0;
       if (choice === 1) convertedChoice = 1;

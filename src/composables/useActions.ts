@@ -150,14 +150,18 @@ export function useActions() {
 
   async function vote(proposal: Proposal, choice: Choice) {
     if (!web3.value.account) return await forceLogin();
-    // TODO: supported web3 provider depends on the authenticator used
-    // if (web3.value.type === 'argentx') throw new Error('ArgentX is not supported');
 
     const network = getNetwork(proposal.network);
 
     await wrapPromise(
       proposal.network,
-      network.actions.vote(auth.web3, web3.value.account, proposal, choice)
+      network.actions.vote(
+        auth.web3,
+        web3.value.type as Connector,
+        web3.value.account,
+        proposal,
+        choice
+      )
     );
 
     uiStore.addPendingVote(proposal.id);
@@ -175,7 +179,6 @@ export function useActions() {
       forceLogin();
       return false;
     }
-    // if (web3.value.type === 'argentx') throw new Error('ArgentX is not supported');
 
     const network = getNetwork(space.network);
 
@@ -197,6 +200,7 @@ export function useActions() {
       space.network,
       network.actions.propose(
         auth.web3,
+        web3.value.type as Connector,
         web3.value.account,
         space,
         pinned.cid,
@@ -221,7 +225,6 @@ export function useActions() {
       forceLogin();
       return false;
     }
-    // if (web3.value.type === 'argentx') throw new Error('ArgentX is not supported');
 
     const network = getNetwork(space.network);
 
@@ -243,6 +246,7 @@ export function useActions() {
       space.network,
       network.actions.updateProposal(
         auth.web3,
+        web3.value.type as Connector,
         web3.value.account,
         space,
         proposalId,
@@ -257,9 +261,12 @@ export function useActions() {
 
   async function cancelProposal(proposal: Proposal) {
     if (!web3.value.account) return await forceLogin();
-    // if (web3.value.type === 'argentx') throw new Error('ArgentX is not supported');
 
     const network = getNetwork(proposal.network);
+    if (!network.managerConnectors.includes(web3.value.type as Connector)) {
+      throw new Error(`${web3.value.type} is not supported for this actions`);
+    }
+
     const receipt = await network.actions.cancelProposal(auth.web3, proposal);
     console.log('Receipt', receipt);
 
@@ -336,6 +343,10 @@ export function useActions() {
     if (!web3.value.account) return await forceLogin();
 
     const network = getNetwork(space.network);
+    if (!network.managerConnectors.includes(web3.value.type as Connector)) {
+      throw new Error(`${web3.value.type} is not supported for this actions`);
+    }
+
     const receipt = await network.actions.setVotingDelay(auth.web3, space, votingDelay);
     console.log('Receipt', receipt);
 
@@ -348,6 +359,10 @@ export function useActions() {
     if (!web3.value.account) return await forceLogin();
 
     const network = getNetwork(space.network);
+    if (!network.managerConnectors.includes(web3.value.type as Connector)) {
+      throw new Error(`${web3.value.type} is not supported for this actions`);
+    }
+
     const receipt = await network.actions.setMinVotingDuration(auth.web3, space, minVotingDuration);
     console.log('Receipt', receipt);
 
@@ -360,6 +375,10 @@ export function useActions() {
     if (!web3.value.account) return await forceLogin();
 
     const network = getNetwork(space.network);
+    if (!network.managerConnectors.includes(web3.value.type as Connector)) {
+      throw new Error(`${web3.value.type} is not supported for this actions`);
+    }
+
     const receipt = await network.actions.setMaxVotingDuration(auth.web3, space, maxVotingDuration);
     console.log('Receipt', receipt);
 
@@ -372,6 +391,10 @@ export function useActions() {
     if (!web3.value.account) return await forceLogin();
 
     const network = getNetwork(space.network);
+    if (!network.managerConnectors.includes(web3.value.type as Connector)) {
+      throw new Error(`${web3.value.type} is not supported for this actions`);
+    }
+
     const receipt = await network.actions.transferOwnership(auth.web3, space, owner);
     console.log('Receipt', receipt);
 

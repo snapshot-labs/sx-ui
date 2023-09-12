@@ -1,5 +1,6 @@
 import { TransactionFinalityStatus } from 'starknet';
 import { createApi } from '../common/graphqlApi';
+import { STARKNET_CONNECTORS } from '../common/constants';
 import { createActions } from './actions';
 import { createProvider } from './provider';
 import * as constants from './constants';
@@ -50,7 +51,7 @@ export function createStarknetNetwork(networkId: NetworkID): Network {
     baseNetworkId: 'gor',
     hasReceive: true,
     supportsSimulation: true,
-    managerConnectors: ['argentx'],
+    managerConnectors: STARKNET_CONNECTORS,
     actions: createActions(provider, helpers, { l1ChainId }),
     api,
     constants,

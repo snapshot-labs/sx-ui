@@ -89,6 +89,7 @@ export type NetworkActions = {
   setMetadata(web3: Web3Provider, space: Space, metadata: SpaceMetadata);
   propose(
     web3: Web3Provider,
+    connectorType: Connector,
     account: string,
     space: Space,
     cid: string,
@@ -97,6 +98,7 @@ export type NetworkActions = {
   );
   updateProposal(
     web3: Web3Provider,
+    connectorType: Connector,
     account: string,
     space: Space,
     proposalId: number,
@@ -105,7 +107,13 @@ export type NetworkActions = {
     transactions: MetaTransaction[]
   );
   cancelProposal(web3: Web3Provider, proposal: Proposal);
-  vote(web3: Web3Provider, account: string, proposal: Proposal, choice: Choice);
+  vote(
+    web3: Web3Provider,
+    connectorType: Connector,
+    account: string,
+    proposal: Proposal,
+    choice: Choice
+  );
   finalizeProposal(web3: Web3Provider, proposal: Proposal);
   receiveProposal(web3: Web3Provider, proposal: Proposal);
   executeTransactions(web3: Web3Provider, proposal: Proposal);

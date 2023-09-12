@@ -1,6 +1,7 @@
 import { defaultNetwork, clients, getStarknetStrategy } from '@snapshot-labs/sx';
 import { createErc1155Metadata, verifyNetwork } from '@/helpers/utils';
 import { getExecutionData, createStrategyPicker } from '@/networks/common/helpers';
+import { STARKNET_CONNECTORS } from '@/networks/common/constants';
 import {
   RELAYER_AUTHENTICATORS,
   SUPPORTED_AUTHENTICATORS,
@@ -8,7 +9,13 @@ import {
 } from './constants';
 import type { Provider } from 'starknet';
 import type { MetaTransaction } from '@snapshot-labs/sx/dist/utils/encoding/execution-hash';
-import type { NetworkActions, NetworkHelpers, StrategyConfig, VotingPower } from '@/networks/types';
+import type {
+  Connector,
+  NetworkActions,
+  NetworkHelpers,
+  StrategyConfig,
+  VotingPower
+} from '@/networks/types';
 import type { Space, SpaceMetadata, StrategyParsedMetadata, Proposal } from '@/types';
 
 export function createActions(
@@ -28,7 +35,8 @@ export function createActions(
   const pickAuthenticatorAndStrategies = createStrategyPicker({
     supportedAuthenticators: SUPPORTED_AUTHENTICATORS,
     supportedStrategies: SUPPORTED_STRATEGIES,
-    relayerAuthenticators: RELAYER_AUTHENTICATORS
+    relayerAuthenticators: RELAYER_AUTHENTICATORS,
+    managerConnectors: STARKNET_CONNECTORS
   });
 
   const client = new clients.StarkNetTx(clientConfig);
@@ -112,16 +120,18 @@ export function createActions(
     },
     propose: async (
       web3: any,
+      connectorType: Connector,
       account: string,
       space: Space,
       cid: string,
       executionStrategy: string | null,
       transactions: MetaTransaction[]
     ) => {
-      const { relayerType, authenticator, strategies } = pickAuthenticatorAndStrategies(
-        space.authenticators,
-        space.strategies
-      );
+      const { relayerType, authenticator, strategies } = pickAuthenticatorAndStrategies({
+        authenticators: space.authenticators,
+        strategies: space.strategies,
+        connectorType
+      });
 
       if (relayerType === 'evm') await verifyNetwork(web3, l1ChainId);
 
@@ -159,6 +169,7 @@ export function createActions(
     },
     async updateProposal(
       web3: any,
+      connectorType: Connector,
       account: string,
       space: Space,
       proposalId: number,
@@ -166,10 +177,11 @@ export function createActions(
       executionStrategy: string | null,
       transactions: MetaTransaction[]
     ) {
-      const { relayerType, authenticator } = pickAuthenticatorAndStrategies(
-        space.authenticators,
-        space.voting_power_validation_strategy_strategies
-      );
+      const { relayerType, authenticator } = pickAuthenticatorAndStrategies({
+        authenticators: space.authenticators,
+        strategies: space.voting_power_validation_strategy_strategies,
+        connectorType
+      });
 
       if (relayerType === 'evm') await verifyNetwork(web3, l1ChainId);
 
@@ -212,11 +224,18 @@ export function createActions(
         proposal: proposal.proposal_id
       });
     },
-    vote: async (web3: any, account: string, proposal: Proposal, choice: number) => {
-      const { relayerType, authenticator, strategies } = pickAuthenticatorAndStrategies(
-        proposal.space.authenticators,
-        proposal.strategies
-      );
+    vote: async (
+      web3: any,
+      connectorType: Connector,
+      account: string,
+      proposal: Proposal,
+      choice: number
+    ) => {
+      const { relayerType, authenticator, strategies } = pickAuthenticatorAndStrategies({
+        authenticators: proposal.space.authenticators,
+        strategies: proposal.strategies,
+        connectorType
+      });
 
       if (relayerType === 'evm') await verifyNetwork(web3, l1ChainId);
 
