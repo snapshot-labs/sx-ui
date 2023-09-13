@@ -11,6 +11,7 @@ export const API_URL = 'http://localhost:3000';
 
 export const SUPPORTED_AUTHENTICATORS = {
   '0x7ea118e919c2d693f6c6d4643caae86814e8a7c06a77c33799e8d5f8a544a2': true,
+  '0x6584c1eacea3c9721242ea4a795cfd4d63be30943d9686a64bfedf04765cd5c': true,
   '0xb321c09ee9851c125bd4213de71ebd03c07813556bae5d4700968df42ee476': true,
   '0x53c66d5b61f7b7f8a3871908b16d6e199ed401b706fb042a006d53f97ec2958': true
 };
@@ -23,7 +24,8 @@ export const SUPPORTED_STRATEGIES = {
 export const SUPPORTED_EXECUTORS = {};
 
 export const RELAYER_AUTHENTICATORS = {
-  '0xb321c09ee9851c125bd4213de71ebd03c07813556bae5d4700968df42ee476': 'starknet'
+  '0xb321c09ee9851c125bd4213de71ebd03c07813556bae5d4700968df42ee476': 'starknet',
+  '0x6584c1eacea3c9721242ea4a795cfd4d63be30943d9686a64bfedf04765cd5c': 'evm'
 } as const;
 
 export const AUTHS = {
@@ -67,6 +69,14 @@ export const EDITOR_AUTHENTICATORS = [
     address: '0xb321c09ee9851c125bd4213de71ebd03c07813556bae5d4700968df42ee476',
     name: 'Starknet signature',
     about: 'Will authenticate a user based on an EIP-712 message signed by a Starknet private key.',
+    icon: IHPencil,
+    paramsDefinition: null
+  },
+  {
+    address: '0x6584c1eacea3c9721242ea4a795cfd4d63be30943d9686a64bfedf04765cd5c',
+    name: 'Ethereum signature',
+    about:
+      'Will authenticate a user based on an EIP-712 message signed by an Ethereum private key.',
     icon: IHPencil,
     paramsDefinition: null
   }

@@ -41,6 +41,7 @@ export function createActions(
 
   const client = new clients.StarkNetTx(clientConfig);
   const starkSigClient = new clients.StarkNetSig(clientConfig);
+  const ethSigClient = new clients.EthereumSig(clientConfig);
 
   return {
     async predictSpaceAddress(web3: any, { salt }) {
@@ -161,6 +162,11 @@ export function createActions(
           signer: web3.provider.account,
           data
         });
+      } else if (relayerType === 'evm') {
+        return ethSigClient.propose({
+          signer: web3.getSigner(),
+          data
+        });
       }
 
       return client.propose(web3.provider.account, {
@@ -211,6 +217,11 @@ export function createActions(
           signer: web3.provider.account,
           data
         });
+      } else if (relayerType === 'evm') {
+        return ethSigClient.updateProposal({
+          signer: web3.getSigner(),
+          data
+        });
       }
 
       return client.updateProposal(web3.provider.account, {
@@ -250,6 +261,11 @@ export function createActions(
       if (relayerType === 'starknet') {
         return starkSigClient.vote({
           signer: web3.provider.account,
+          data
+        });
+      } else if (relayerType === 'evm') {
+        return ethSigClient.vote({
+          signer: web3.getSigner(),
           data
         });
       }
@@ -301,6 +317,6 @@ export function createActions(
         })
       );
     },
-    send: (envelope: any) => starkSigClient.send(envelope)
+    send: (envelope: any) => starkSigClient.send(envelope) // TODO: extract it out of client to common helper
   };
 }
