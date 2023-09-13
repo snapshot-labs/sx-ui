@@ -1,32 +1,32 @@
 <script setup lang="ts">
 import { _n } from '@/helpers/utils';
-import { vote } from '@/helpers/highlight';
+import { client } from '@/helpers/client';
 import { useAccount } from '@/composables/useAccount';
 
-const props = defineProps<{ discussion: any }>();
+const props = defineProps<{ topic: any }>();
 
 const { web3 } = useWeb3();
-const { discussionsVotes, voted } = useAccount();
+const { topicVotes, voted } = useAccount();
 
 const loading = ref<boolean>(false);
-const score = ref<number>(props.discussion.score);
+const score = ref<number>(props.topic.score);
 
 async function handleVote(choice: number) {
   loading.value = true;
   const account = web3.value.account;
 
-  const receipt = await vote({
-    author: account,
-    discussion: props.discussion.discussion_id,
+  const receipt = await client.discussions.vote({
+    voter: account,
+    topic: props.topic.id,
     choice
   });
 
   console.log('Receipt', receipt);
-  if (voted(props.discussion.id)) {
-    score.value -= voted(props.discussion.id);
+  if (voted(props.topic.id)) {
+    score.value -= voted(props.topic.id);
   }
   score.value += choice;
-  discussionsVotes.value[props.discussion.id] = choice;
+  topicVotes.value[props.topic.id] = choice;
   loading.value = false;
 }
 </script>
@@ -37,7 +37,7 @@ async function handleVote(choice: number) {
       <IH-chevron-up
         class="inline-block w-[20px] h-[20px] text-skin-text hover:text-green"
         :class="{
-          'text-green': voted(discussion.id) === 1 && !loading
+          'text-green': voted(topic.id) === 1 && !loading
         }"
       />
     </a>
@@ -49,7 +49,7 @@ async function handleVote(choice: number) {
       <IH-chevron-down
         class="inline-block w-[20px] h-[20px] text-skin-text hover:text-red"
         :class="{
-          'text-red': voted(discussion.id) === -1 && !loading
+          'text-red': voted(topic.id) === -1 && !loading
         }"
       />
     </a>

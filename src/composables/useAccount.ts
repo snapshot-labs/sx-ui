@@ -1,9 +1,9 @@
 import { enabledNetworks, getNetwork } from '@/networks';
 import type { Vote } from '@/types';
-import { loadDiscussionVotes } from '@/helpers/api';
+import { loadTopicVotes } from '@/helpers/api';
 
 const votes: Ref<Record<string, Vote>> = ref({});
-const discussionsVotes: Ref<Record<string, number>> = ref({});
+const topicVotes: Ref<Record<string, number>> = ref({});
 
 export function useAccount() {
   const { web3 } = useWeb3();
@@ -18,16 +18,16 @@ export function useAccount() {
       })
     );
 
-    discussionsVotes.value = Object.fromEntries(
-      (await loadDiscussionVotes(account)).map(vote => [vote.discussion.id, vote.choice])
+    topicVotes.value = Object.fromEntries(
+      (await loadTopicVotes(account)).map(vote => [vote.topic.id, vote.choice])
     );
 
     votes.value = allNetworkVotes.reduce((acc, b) => ({ ...acc, ...b }));
   }
 
-  function voted(discussion) {
-    return discussionsVotes.value[discussion] && discussionsVotes.value[discussion];
+  function voted(topic) {
+    return topicVotes.value[topic] && topicVotes.value[topic];
   }
 
-  return { account: web3.value.account, loadVotes, votes, discussionsVotes, voted };
+  return { account: web3.value.account, loadVotes, votes, topicVotes, voted };
 }

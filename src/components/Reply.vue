@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { shortenAddress, _rt } from '@/helpers/utils';
-import { apollo, DISCUSSIONS_QUERY } from '@/helpers/api';
+import { apollo, TOPICS_QUERY } from '@/helpers/api';
 
 const props = defineProps<{ reply: any; discussion: any }>();
 
@@ -27,9 +27,9 @@ async function loadReplies() {
   loading.value = true;
 
   const { data } = await apollo.query({
-    query: DISCUSSIONS_QUERY,
+    query: TOPICS_QUERY,
     variables: {
-      parent: parseInt(props.reply.discussion_id)
+      parent: parseInt(props.reply.id)
     }
   });
 
@@ -45,7 +45,7 @@ async function loadReplies() {
     <div class="flex-grow">
       <div class="py-4 group border-b" :class="{ '!border-b-0': !reply.parent }">
         <div class="flex mr-4">
-          <Score :discussion="reply" class="mr-3" />
+          <Score :topic="reply" class="mr-3" />
           <div class="w-full">
             <div class="flex text-skin-text text-sm mb-2">
               <div class="flex-1 space-x-2">
@@ -60,7 +60,7 @@ async function loadReplies() {
                   <span
                     class="bg-skin-border text-skin-link rounded-md inline-block px-[6px] text-center text-[14px]"
                   >
-                    {{ reply.author.vote_count + reply.author.discussion_count }}
+                    {{ reply.author.vote_count + reply.author.topic_count }}
                   </span>
                 </router-link>
                 <IS-pencil v-if="discussion?.author.id === reply.author.id" class="inline-block" />

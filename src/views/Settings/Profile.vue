@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { faker } from '@faker-js/faker';
-import { editProfile } from '@/helpers/highlight';
 
 const { web3 } = useWeb3();
 
@@ -15,6 +14,7 @@ async function handleSubmit() {
   loading.value = true;
   const account = web3.value.account;
 
+  /*
   const receipt = await editProfile({
     user: account,
     name: profile.value.name,
@@ -22,6 +22,7 @@ async function handleSubmit() {
   });
 
   console.log('Receipt', receipt);
+  */
   loading.value = false;
 }
 </script>

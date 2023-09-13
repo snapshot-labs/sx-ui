@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { faker } from '@faker-js/faker';
-import { addCategory } from '@/helpers/highlight';
+import { client } from '@/helpers/client';
 
 const router = useRouter();
 const route = useRoute();
 
-const parent = (route.params.parent as string) || '0';
+const parent = parseInt((route.params.parent as string) || '0');
 
 const category = ref({
   name: faker.lorem.sentence({ min: 1, max: 3 }).slice(0, -1),
@@ -17,10 +17,10 @@ const loading = ref<boolean>(false);
 async function handleSubmit() {
   loading.value = true;
 
-  const receipt = await addCategory({
+  const receipt = await client.discussions.addCategory({
     name: category.value.name,
     about: category.value.about,
-    parent: parseInt(parent)
+    parent
   });
 
   console.log('Receipt', receipt);

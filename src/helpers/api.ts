@@ -17,22 +17,22 @@ export const apollo = new ApolloClient({
   }
 });
 
-export async function loadDiscussionVotes(voter: string) {
+export async function loadTopicVotes(voter: string) {
   const { data } = await apollo.query({
-    query: VOTES_QUERY,
+    query: TOPIC_VOTES_QUERY,
     variables: {
       voter
     }
   });
 
-  return data.votes;
+  return data.topicvotes;
 }
 
 const USER_FRAGMENT = gql`
   fragment userFragment on User {
     id
     name
-    discussion_count
+    topic_count
     vote_count
   }
 `;
@@ -40,19 +40,17 @@ const USER_FRAGMENT = gql`
 const CATEGORY_FRAGMENT = gql`
   fragment categoryFragment on Category {
     id
-    category_id
     name
     about
     parent
-    discussion_count
+    topic_count
     category_count
   }
 `;
 
-const DISCUSSION_FRAGMENT = gql`
-  fragment discussionFragment on Discussion {
+const TOPIC_FRAGMENT = gql`
+  fragment topicFragment on Topic {
     id
-    discussion_id
     title
     content
     author {
@@ -63,7 +61,6 @@ const DISCUSSION_FRAGMENT = gql`
     parent
     category {
       id
-      category_id
       name
     }
   }
@@ -71,7 +68,7 @@ const DISCUSSION_FRAGMENT = gql`
 `;
 
 export const CATEGORIES_QUERY = gql`
-  query ($first: Int, $parent: String) {
+  query ($first: Int, $parent: Int) {
     categories(first: $first, where: { parent: $parent }) {
       ...categoryFragment
     }
@@ -79,27 +76,27 @@ export const CATEGORIES_QUERY = gql`
   ${CATEGORY_FRAGMENT}
 `;
 
-export const DISCUSSIONS_QUERY = gql`
+export const TOPICS_QUERY = gql`
   query ($first: Int, $category: String, $parent: Int) {
-    discussions(
+    topics(
       first: $first
       where: { category: $category, parent: $parent }
       orderBy: score
       orderDirection: desc
     ) {
-      ...discussionFragment
+      ...topicFragment
     }
   }
-  ${DISCUSSION_FRAGMENT}
+  ${TOPIC_FRAGMENT}
 `;
 
-export const DISCUSSION_QUERY = gql`
+export const TOPIC_QUERY = gql`
   query ($id: String!) {
-    discussion(id: $id) {
-      ...discussionFragment
+    topic(id: $id) {
+      ...topicFragment
     }
   }
-  ${DISCUSSION_FRAGMENT}
+  ${TOPIC_FRAGMENT}
 `;
 
 export const CATEGORY_QUERY = gql`
@@ -111,12 +108,12 @@ export const CATEGORY_QUERY = gql`
   ${CATEGORY_FRAGMENT}
 `;
 
-export const VOTES_QUERY = gql`
+export const TOPIC_VOTES_QUERY = gql`
   query ($voter: String!) {
-    votes(where: { voter: $voter }) {
+    topicvotes(where: { voter: $voter }) {
       id
       choice
-      discussion {
+      topic {
         id
       }
     }

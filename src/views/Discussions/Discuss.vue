@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { faker } from '@faker-js/faker';
-import { discuss } from '@/helpers/highlight';
+import { client } from '@/helpers/client';
 
 const { web3 } = useWeb3();
 const router = useRouter();
@@ -19,7 +19,7 @@ async function handleSubmit() {
   loading.value = true;
   const account = web3.value.account;
 
-  const result = await discuss({
+  const result = await client.discussions.addTopic({
     author: account,
     category,
     title: discussion.value.title,

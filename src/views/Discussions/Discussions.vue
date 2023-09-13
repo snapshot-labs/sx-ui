@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { _n } from '@/helpers/utils';
-import { apollo, CATEGORIES_QUERY, CATEGORY_QUERY, DISCUSSIONS_QUERY } from '@/helpers/api';
+import { apollo, CATEGORIES_QUERY, CATEGORY_QUERY, TOPICS_QUERY } from '@/helpers/api';
 import { Space } from '@/types';
 
 defineProps<{ space: Space }>();
@@ -15,11 +15,11 @@ const category = ref<any>({});
 const loading = ref<boolean>(false);
 const loaded = ref<boolean>(false);
 const loadingCategories = ref<boolean>(false);
-const loadingDiscussions = ref<boolean>(false);
+const loadingTopics = ref<boolean>(false);
 const loadedCategories = ref<boolean>(false);
-const loadedDiscussions = ref<boolean>(false);
+const loadedTopics = ref<boolean>(false);
 const categories = ref<any[]>([]);
-const discussions = ref<any[]>([]);
+const topics = ref<any[]>([]);
 
 async function loadCategories() {
   loadingCategories.value = true;
@@ -27,8 +27,7 @@ async function loadCategories() {
   const { data } = await apollo.query({
     query: CATEGORIES_QUERY,
     variables: {
-      first: 4,
-      parent: `discussions/${categoryId}`
+      parent: parseInt(categoryId)
     }
   });
 
@@ -37,21 +36,21 @@ async function loadCategories() {
   loadedCategories.value = true;
 }
 
-async function loadDiscussions() {
-  loadingDiscussions.value = true;
+async function loadTopics() {
+  loadingTopics.value = true;
 
   const { data } = await apollo.query({
-    query: DISCUSSIONS_QUERY,
+    query: TOPICS_QUERY,
     variables: {
       first: 5,
-      category: categoryId === '0' ? undefined : `discussions/${categoryId}`,
+      category: categoryId === '0' ? undefined : categoryId,
       parent: 0
     }
   });
 
-  discussions.value = data.discussions;
-  loadingDiscussions.value = false;
-  loadedDiscussions.value = true;
+  topics.value = data.topics;
+  loadingTopics.value = false;
+  loadedTopics.value = true;
 }
 
 async function loadCategory() {
@@ -59,9 +58,7 @@ async function loadCategory() {
 
   const { data } = await apollo.query({
     query: CATEGORY_QUERY,
-    variables: {
-      id: `discussions/${categoryId}`
-    }
+    variables: { id: categoryId }
   });
 
   category.value = data.category;
@@ -70,7 +67,7 @@ async function loadCategory() {
 }
 
 onMounted(async () => {
-  loadDiscussions();
+  loadTopics();
 
   if (categoryId !== '0') {
     await loadCategory();
@@ -134,7 +131,7 @@ onMounted(async () => {
             :class="{ 'opacity-80': active }"
             @click="
               router.push({
-                name: 'discussions-category-settings',
+                name: 'topics-category-settings',
                 params: { category: categoryId }
               })
             "
@@ -165,7 +162,7 @@ onMounted(async () => {
         <router-link
           v-for="(c, i) in categories"
           :key="i"
-          :to="{ name: 'space-discussions', params: { category: c.category_id } }"
+          :to="{ name: 'space-discussions', params: { category: c.id } }"
           class="flex justify-between items-center mx-4 py-3 border-b"
         >
           <div>
@@ -178,12 +175,12 @@ onMounted(async () => {
           <div class="flex-1">
             <h3 class="text-skin-link" v-text="c.name" />
             <div class="text-skin-text space-x-2">
-              <span>{{ _n(c.discussion_count) }} topic(s)</span>
+              <span>{{ _n(c.topic_count) }} topic(s)</span>
             </div>
           </div>
           <div>
             <span
-              v-if="category.discussion_count > 4"
+              v-if="category.topic_count > 4"
               class="w-[8px] h-[8px] bg-blue rounded-full inline-block mb-1"
             />
           </div>
@@ -200,16 +197,16 @@ onMounted(async () => {
           <IS-chevron-down class="inline-block text-skin-link mb-[2px]" />
         </div>
       </h4>
-      <UiLoading v-if="loadingDiscussions && !loadedDiscussions" class="px-4 py-3 block" />
+      <UiLoading v-if="loadingTopics && !loadedTopics" class="px-4 py-3 block" />
       <div
-        v-else-if="loadedDiscussions && discussions.length === 0"
+        v-else-if="loadedTopics && topics.length === 0"
         class="px-4 py-3 flex items-center text-skin-link"
       >
         <IH-exclamation-circle class="inline-block mr-2" />
         There are no topics.
       </div>
       <div v-else>
-        <Discussion v-for="(discussion, i) in discussions" :key="i" :discussion="discussion" />
+        <Topic v-for="(topic, i) in topics" :key="i" :topic="topic" />
       </div>
     </div>
   </div>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { faker } from '@faker-js/faker';
-import { discuss } from '@/helpers/highlight';
+import { client } from '@/helpers/client';
 
 const props = defineProps<{ reply: any }>();
 
@@ -14,12 +14,12 @@ async function handleSubmit() {
   loading.value = true;
   const account = web3.value.account;
 
-  const result = await discuss({
+  const result = await client.discussions.addTopic({
     author: account,
-    category: props.reply.category.category_id,
+    category: props.reply.category.id,
     title: '',
     content: content.value,
-    parent: parseInt(props.reply.discussion_id)
+    parent: parseInt(props.reply.id)
   });
 
   content.value = '';

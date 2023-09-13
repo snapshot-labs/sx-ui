@@ -44,7 +44,7 @@ const routes: any[] = [
         component: DiscussionsSettings
       },
       { path: 'discussions/new-category/:parent?', name: 'new-category', component: NewCategory },
-      { path: 'discussion/:discussion', name: 'discussion', component: Discussion },
+      { path: 'topic/:topic', name: 'topic', component: Discussion },
       { path: 'discussions/:category/new', name: 'discuss', component: Discuss }
     ]
   },
