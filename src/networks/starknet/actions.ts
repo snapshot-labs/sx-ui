@@ -1,4 +1,5 @@
 import { defaultNetwork, clients, getStarknetStrategy } from '@snapshot-labs/sx';
+import { MANA_URL } from '@/helpers/mana';
 import { createErc1155Metadata, verifyNetwork } from '@/helpers/utils';
 import { getExecutionData, createStrategyPicker } from '@/networks/common/helpers';
 import { STARKNET_CONNECTORS } from '@/networks/common/constants';
@@ -23,12 +24,11 @@ export function createActions(
   helpers: NetworkHelpers,
   { l1ChainId }: { l1ChainId: number }
 ): NetworkActions {
-  const manaUrl: string = import.meta.env.VITE_MANA_URL || 'http://localhost:3000';
   const ethUrl: string = import.meta.env.VITE_ETH_RPC_URL;
 
   const clientConfig = {
     starkProvider,
-    manaUrl,
+    manaUrl: MANA_URL,
     ethUrl
   };
 
@@ -42,6 +42,7 @@ export function createActions(
   const client = new clients.StarkNetTx(clientConfig);
   const starkSigClient = new clients.StarkNetSig(clientConfig);
   const ethSigClient = new clients.EthereumSig(clientConfig);
+  const ethTxClient = new clients.EthereumTx(clientConfig);
 
   return {
     async predictSpaceAddress(web3: any, { salt }) {
@@ -134,7 +135,9 @@ export function createActions(
         connectorType
       });
 
-      if (relayerType === 'evm') await verifyNetwork(web3, l1ChainId);
+      if (relayerType && ['evm', 'evm-tx'].includes(relayerType)) {
+        await verifyNetwork(web3, l1ChainId);
+      }
 
       let selectedExecutionStrategy;
       if (executionStrategy) {
@@ -167,6 +170,8 @@ export function createActions(
           signer: web3.getSigner(),
           data
         });
+      } else if (relayerType === 'evm-tx') {
+        return ethTxClient.initializePropose(web3.getSigner(), data);
       }
 
       return client.propose(web3.provider.account, {
@@ -189,7 +194,9 @@ export function createActions(
         connectorType
       });
 
-      if (relayerType === 'evm') await verifyNetwork(web3, l1ChainId);
+      if (relayerType && ['evm', 'evm-tx'].includes(relayerType)) {
+        await verifyNetwork(web3, l1ChainId);
+      }
 
       let selectedExecutionStrategy;
       if (executionStrategy) {
@@ -222,6 +229,8 @@ export function createActions(
           signer: web3.getSigner(),
           data
         });
+      } else if (relayerType === 'evm-tx') {
+        return ethTxClient.initializeUpdateProposal(web3.getSigner(), data);
       }
 
       return client.updateProposal(web3.provider.account, {
@@ -248,7 +257,9 @@ export function createActions(
         connectorType
       });
 
-      if (relayerType === 'evm') await verifyNetwork(web3, l1ChainId);
+      if (relayerType && ['evm', 'evm-tx'].includes(relayerType)) {
+        await verifyNetwork(web3, l1ChainId);
+      }
 
       const data = {
         space: proposal.space.id,
@@ -268,6 +279,8 @@ export function createActions(
           signer: web3.getSigner(),
           data
         });
+      } else if (relayerType === 'evm-tx') {
+        return ethTxClient.initializeVote(web3.getSigner(), data);
       }
 
       return client.vote(web3.provider.account, {

@@ -34,7 +34,7 @@ export function createStrategyPicker({
 }: {
   supportedAuthenticators: Record<string, boolean | undefined>;
   supportedStrategies: Record<string, boolean | undefined>;
-  relayerAuthenticators: Record<string, 'evm' | 'starknet' | undefined>;
+  relayerAuthenticators: Record<string, 'evm' | 'evm-tx' | 'starknet' | undefined>;
   managerConnectors: Connector[];
 }) {
   return function pick({
@@ -76,7 +76,7 @@ export function createStrategyPicker({
         const relayerType = relayerAuthenticators[authenticator];
 
         let connectors: Connector[] = [];
-        if (relayerType === 'evm') connectors = EVM_CONNECTORS;
+        if (relayerType && ['evm', 'evm-tx'].includes(relayerType)) connectors = EVM_CONNECTORS;
         else if (relayerType === 'starknet') connectors = STARKNET_CONNECTORS;
         else connectors = managerConnectors;
 

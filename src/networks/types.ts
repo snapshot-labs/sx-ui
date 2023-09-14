@@ -161,6 +161,7 @@ export type Network = {
   name: string;
   avatar: string;
   currentUnit: 'block' | 'second';
+  chainId: number | string;
   baseChainId: number;
   baseNetworkId?: NetworkID;
   hasReceive: boolean;
@@ -172,7 +173,7 @@ export type Network = {
     SUPPORTED_AUTHENTICATORS: { [key: string]: boolean };
     SUPPORTED_STRATEGIES: { [key: string]: boolean };
     SUPPORTED_EXECUTORS: { [key: string]: boolean };
-    RELAYER_AUTHENTICATORS: { [key: string]: 'evm' | 'starknet' | undefined };
+    RELAYER_AUTHENTICATORS: { [key: string]: 'evm' | 'evm-tx' | 'starknet' | undefined };
     AUTHS: { [key: string]: string };
     PROPOSAL_VALIDATIONS: { [key: string]: string };
     STRATEGIES: { [key: string]: string };

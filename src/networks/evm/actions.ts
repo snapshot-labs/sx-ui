@@ -9,11 +9,11 @@ import {
   evmLineaGoerli,
   EvmNetworkConfig
 } from '@snapshot-labs/sx';
+import { MANA_URL, executionCall } from '@/helpers/mana';
 import { createErc1155Metadata, verifyNetwork } from '@/helpers/utils';
 import { convertToMetaTransactions } from '@/helpers/transactions';
 import { getExecutionData, createStrategyPicker } from '@/networks/common/helpers';
 import { EVM_CONNECTORS } from '@/networks/common/constants';
-import { executionCall } from './helpers';
 import {
   RELAYER_AUTHENTICATORS,
   SUPPORTED_AUTHENTICATORS,
@@ -46,7 +46,6 @@ export function createActions(
   chainId: number
 ): NetworkActions {
   const networkConfig = CONFIGS[chainId];
-  const manaUrl: string = import.meta.env.VITE_MANA_URL || 'http://localhost:3000';
 
   const pickAuthenticatorAndStrategies = createStrategyPicker({
     supportedAuthenticators: SUPPORTED_AUTHENTICATORS,
@@ -58,7 +57,7 @@ export function createActions(
   const client = new clients.EvmEthereumTx({ networkConfig });
   const ethSigClient = new clients.EvmEthereumSig({
     networkConfig,
-    manaUrl
+    manaUrl: MANA_URL
   });
 
   const getIsContract = async (address: string) => {
@@ -366,7 +365,7 @@ export function createActions(
         convertToMetaTransactions(proposal.execution)
       );
 
-      return executionCall(manaUrl, chainId, 'execute', {
+      return executionCall(chainId, 'execute', {
         space: proposal.space.id,
         proposalId: proposal.proposal_id,
         executionParams: executionData.executionParams[0]
@@ -381,7 +380,7 @@ export function createActions(
         convertToMetaTransactions(proposal.execution)
       );
 
-      return executionCall(manaUrl, chainId, 'executeQueuedProposal', {
+      return executionCall(chainId, 'executeQueuedProposal', {
         space: proposal.space.id,
         executionStrategy: proposal.execution_strategy,
         executionParams: executionData.executionParams[0]
