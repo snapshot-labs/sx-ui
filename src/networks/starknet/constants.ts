@@ -7,7 +7,7 @@ import IHCube from '~icons/heroicons-outline/cube';
 import IHPencil from '~icons/heroicons-outline/pencil';
 import IHLightningBolt from '~icons/heroicons-outline/lightning-bolt';
 
-export const API_URL = 'http://localhost:3000';
+export const API_URL = 'https://api-1.snapshotx.xyz';
 
 export const SUPPORTED_AUTHENTICATORS = {
   '0x7ea118e919c2d693f6c6d4643caae86814e8a7c06a77c33799e8d5f8a544a2': true,
