@@ -38,7 +38,7 @@ export function createStarknetNetwork(networkId: NetworkID): Network {
       if (type === 'token') dataType = 'token';
       else if (['address', 'contract'].includes(type)) dataType = 'contract';
 
-      const subdomain = networkId === 'sn-tn1' ? 'testnet' : 'testnet-2';
+      const subdomain = networkId === 'sn-tn' ? 'testnet' : 'testnet-2';
       return `https://${subdomain}.starkscan.co/${dataType}/${id}`;
     }
   };
