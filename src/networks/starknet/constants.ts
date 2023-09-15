@@ -43,7 +43,7 @@ export const PROPOSAL_VALIDATIONS = {
 export const STRATEGIES = {
   '0x510d1e6d386a2adcfc6f2a57f80c4c4268baeccbd4a09334e843b17ce9225ee': 'Vanilla',
   '0x297fb0104d8be6c86f168bf1dcdc28b0625d2b06108c3c46194aa4415f2e2ec': 'Merkle whitelist',
-  '0x619040eb54857252396d0bf337dc7a7f98182fa015c11578201105038106cb7': 'Delegated ERC20 Token'
+  '0x619040eb54857252396d0bf337dc7a7f98182fa015c11578201105038106cb7': 'ERC-20 Votes (EIP-5805)'
 };
 
 export const EXECUTORS = {
@@ -152,15 +152,15 @@ export const EDITOR_VOTING_STRATEGIES = [
 
   {
     address: '0x619040eb54857252396d0bf337dc7a7f98182fa015c11578201105038106cb7',
-    name: 'Delegated ERC20 Token',
+    name: 'ERC-20 Votes (EIP-5805)',
     about:
-      'A strategy that allows delegated balances of Compound style checkpoint tokens to be used as voting power.',
+      'A strategy that allows delegated balances of OpenZeppelin style checkpoint tokens to be used as voting power.',
     icon: IHCode,
     generateSummary: (params: Record<string, any>) =>
       `(${shorten(params.contractAddress)}, ${params.decimals})`,
     generateParams: (params: Record<string, any>) => [params.contractAddress],
     generateMetadata: (params: Record<string, any>) => ({
-      name: 'Delegated Comp Token',
+      name: 'ERC-20 Votes (EIP-5805)',
       properties: {
         symbol: params.symbol,
         decimals: parseInt(params.decimals),
