@@ -49,14 +49,16 @@ export function useActions() {
     // TODO: it should work with WalletConnect, should be done before L1 transaction is broadcasted
     const network = getNetwork(networkId);
 
-    if (envelope?.signatureData?.commitTxId && network.baseNetworkId) {
+    if (envelope?.signatureData?.commitHash && network.baseNetworkId) {
       await registerTransaction(network.chainId, {
         type: envelope.signatureData.primaryType,
         hash: envelope.signatureData.commitHash,
         payload: envelope.data
       });
 
-      uiStore.addPendingTransaction(envelope.signatureData.commitTxId, network.baseNetworkId);
+      if (envelope.signatureData.commitTxId) {
+        uiStore.addPendingTransaction(envelope.signatureData.commitTxId, network.baseNetworkId);
+      }
 
       uiStore.addNotification(
         'success',

@@ -18,6 +18,7 @@ import type {
   VotingPower
 } from '@/networks/types';
 import type { Space, SpaceMetadata, StrategyParsedMetadata, Proposal } from '@/types';
+import { getProvider } from '@/helpers/provider';
 
 export function createActions(
   starkProvider: Provider,
@@ -25,6 +26,8 @@ export function createActions(
   { l1ChainId }: { l1ChainId: number }
 ): NetworkActions {
   const ethUrl: string = import.meta.env.VITE_ETH_RPC_URL;
+
+  const l1Provider = getProvider(l1ChainId);
 
   const clientConfig = {
     starkProvider,
@@ -38,6 +41,11 @@ export function createActions(
     relayerAuthenticators: RELAYER_AUTHENTICATORS,
     managerConnectors: STARKNET_CONNECTORS
   });
+
+  const getIsContract = async (address: string) => {
+    const code = await l1Provider.getCode(address);
+    return code !== '0x';
+  };
 
   const client = new clients.StarkNetTx(clientConfig);
   const starkSigClient = new clients.StarkNetSig(clientConfig);
@@ -171,7 +179,8 @@ export function createActions(
           data
         });
       } else if (relayerType === 'evm-tx') {
-        return ethTxClient.initializePropose(web3.getSigner(), data);
+        const isContract = await getIsContract(account);
+        return ethTxClient.initializePropose(web3.getSigner(), data, { noWait: isContract });
       }
 
       return client.propose(web3.provider.account, {
@@ -230,7 +239,8 @@ export function createActions(
           data
         });
       } else if (relayerType === 'evm-tx') {
-        return ethTxClient.initializeUpdateProposal(web3.getSigner(), data);
+        const isContract = await getIsContract(account);
+        return ethTxClient.initializeUpdateProposal(web3.getSigner(), data, { noWait: isContract });
       }
 
       return client.updateProposal(web3.provider.account, {
@@ -280,7 +290,8 @@ export function createActions(
           data
         });
       } else if (relayerType === 'evm-tx') {
-        return ethTxClient.initializeVote(web3.getSigner(), data);
+        const isContract = await getIsContract(account);
+        return ethTxClient.initializeVote(web3.getSigner(), data, { noWait: isContract });
       }
 
       return client.vote(web3.provider.account, {
