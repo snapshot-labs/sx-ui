@@ -15,6 +15,7 @@ const emit = defineEmits<{
 
 const definition = computed(() => {
   const network = getNetwork(props.selectedNetworkId);
+  const useDuration = network.currentUnit === 'second';
 
   return {
     type: 'object',
@@ -24,15 +25,24 @@ const definition = computed(() => {
     properties: {
       votingDelay: {
         type: 'number',
-        title: `Voting delay in ${getCurrentName(network.currentUnit)}`
+        format: useDuration ? 'duration' : undefined,
+        title: useDuration
+          ? 'Voting delay'
+          : `Voting delay in ${getCurrentName(network.currentUnit)}`
       },
       minVotingDuration: {
         type: 'number',
-        title: `Min. voting duration in ${getCurrentName(network.currentUnit)}`
+        format: useDuration ? 'duration' : undefined,
+        title: useDuration
+          ? 'Min. voting duration'
+          : `Min. voting duration in ${getCurrentName(network.currentUnit)}`
       },
       maxVotingDuration: {
         type: 'number',
-        title: `Max. voting duration in ${getCurrentName(network.currentUnit)}`
+        format: useDuration ? 'duration' : undefined,
+        title: useDuration
+          ? 'Max. voting duration'
+          : `Max. voting duration in ${getCurrentName(network.currentUnit)}`
       }
     }
   };
