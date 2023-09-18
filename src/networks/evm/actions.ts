@@ -15,6 +15,7 @@ import { convertToMetaTransactions } from '@/helpers/transactions';
 import { getExecutionData, createStrategyPicker } from '@/networks/common/helpers';
 import { EVM_CONNECTORS } from '@/networks/common/constants';
 import {
+  CONTRACT_SUPPORTED_AUTHENTICATORS,
   RELAYER_AUTHENTICATORS,
   SUPPORTED_AUTHENTICATORS,
   SUPPORTED_STRATEGIES
@@ -50,6 +51,7 @@ export function createActions(
   const pickAuthenticatorAndStrategies = createStrategyPicker({
     supportedAuthenticators: SUPPORTED_AUTHENTICATORS,
     supportedStrategies: SUPPORTED_STRATEGIES,
+    contractSupportedAuthenticators: CONTRACT_SUPPORTED_AUTHENTICATORS,
     relayerAuthenticators: RELAYER_AUTHENTICATORS,
     managerConnectors: EVM_CONNECTORS
   });

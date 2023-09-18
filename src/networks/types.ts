@@ -171,6 +171,7 @@ export type Network = {
   api: NetworkApi;
   constants: {
     SUPPORTED_AUTHENTICATORS: { [key: string]: boolean };
+    CONTRACT_SUPPORTED_AUTHENTICATORS: { [key: string]: boolean };
     SUPPORTED_STRATEGIES: { [key: string]: boolean };
     SUPPORTED_EXECUTORS: { [key: string]: boolean };
     RELAYER_AUTHENTICATORS: { [key: string]: 'evm' | 'evm-tx' | 'starknet' | undefined };
