@@ -2,7 +2,7 @@ import { defaultNetwork, clients, getStarknetStrategy } from '@snapshot-labs/sx'
 import { MANA_URL } from '@/helpers/mana';
 import { createErc1155Metadata, verifyNetwork } from '@/helpers/utils';
 import { getExecutionData, createStrategyPicker } from '@/networks/common/helpers';
-import { STARKNET_CONNECTORS } from '@/networks/common/constants';
+import { EVM_CONNECTORS, STARKNET_CONNECTORS } from '@/networks/common/constants';
 import {
   CONTRACT_SUPPORTED_AUTHENTICATORS,
   RELAYER_AUTHENTICATORS,
@@ -45,7 +45,9 @@ export function createActions(
     lowPriorityAuthenticators: ['evm-tx']
   });
 
-  const getIsContract = async (address: string) => {
+  const getIsContract = async (connectorType: Connector, address: string) => {
+    if (!EVM_CONNECTORS.includes(connectorType)) return false;
+
     const code = await l1Provider.getCode(address);
     return code !== '0x';
   };
@@ -140,7 +142,7 @@ export function createActions(
       executionStrategy: string | null,
       transactions: MetaTransaction[]
     ) => {
-      const isContract = await getIsContract(account);
+      const isContract = await getIsContract(connectorType, account);
 
       const { relayerType, authenticator, strategies } = pickAuthenticatorAndStrategies({
         authenticators: space.authenticators,
@@ -202,7 +204,7 @@ export function createActions(
       executionStrategy: string | null,
       transactions: MetaTransaction[]
     ) {
-      const isContract = await getIsContract(account);
+      const isContract = await getIsContract(connectorType, account);
 
       const { relayerType, authenticator } = pickAuthenticatorAndStrategies({
         authenticators: space.authenticators,
@@ -268,7 +270,7 @@ export function createActions(
       proposal: Proposal,
       choice: number
     ) => {
-      const isContract = await getIsContract(account);
+      const isContract = await getIsContract(connectorType, account);
 
       const { relayerType, authenticator, strategies } = pickAuthenticatorAndStrategies({
         authenticators: proposal.space.authenticators,
