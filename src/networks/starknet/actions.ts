@@ -281,7 +281,7 @@ export function createActions(
     vetoProposal: () => null,
     setVotingDelay: async (web3: any, space: Space, votingDelay: number) => {
       return client.setVotingDelay({
-        signer: web3.getSigner(),
+        signer: web3.provider.account,
         space: space.id,
         votingDelay
       });
