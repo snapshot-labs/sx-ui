@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useClipboard } from '@vueuse/core';
-import { _n, _c, shorten, sanitizeUrl, getUrl } from '@/helpers/utils';
+import { _n, _c, shorten, sanitizeUrl } from '@/helpers/utils';
 import { getNetwork } from '@/networks';
 import { ETH_CONTRACT } from '@/helpers/constants';
 import { NetworkID, Space, Transaction, SelectedStrategy } from '@/types';
@@ -176,7 +176,7 @@ watchEffect(() => {
           >
             <div class="flex-auto flex items-center min-w-0">
               <Stamp
-                :id="`${treasury.shortName}:${asset.contractAddress}`"
+                :id="`${treasury.networkId}:${asset.contractAddress}`"
                 type="token"
                 :size="32"
                 :network="treasury.network"
@@ -234,7 +234,7 @@ watchEffect(() => {
         :open="modalOpen.tokens"
         :address="treasury.wallet"
         :network="treasury.network"
-        :network-short-name="treasury.shortName"
+        :network-id="treasury.networkId"
         @close="modalOpen.tokens = false"
         @add="addTx"
       />

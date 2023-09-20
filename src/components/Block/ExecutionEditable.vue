@@ -37,7 +37,7 @@ const currentTreasury = computed(() =>
     ? {
         wallet: props.selectedExecutionStrategy.address,
         network: network.value.baseChainId,
-        shortName: props.space?.network
+        networkId: props.space?.network
       }
     : treasury.value
 );
@@ -178,11 +178,11 @@ watch(txs, () => {
     </div>
     <teleport to="#modal">
       <ModalSendToken
-        v-if="currentTreasury && currentTreasury.shortName"
+        v-if="currentTreasury && currentTreasury.networkId"
         :open="modalOpen.sendToken"
         :address="currentTreasury.wallet"
         :network="currentTreasury.network"
-        :network-short-name="currentTreasury.shortName"
+        :network-id="currentTreasury.networkId"
         :initial-state="modalState.sendToken"
         @close="modalOpen.sendToken = false"
         @add="addTx"

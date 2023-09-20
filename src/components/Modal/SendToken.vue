@@ -36,7 +36,7 @@ const props = defineProps<{
   open: boolean;
   address: string;
   network: number;
-  networkShortName: string;
+  networkId: string;
   initialState?: any;
 }>();
 
@@ -216,7 +216,7 @@ watchEffect(async () => {
         :assets="allAssets"
         :address="address"
         :network="network"
-        :network-short-name="networkShortName"
+        :network-id="networkId"
         :loading="loading"
         :search-value="searchValue"
         @pick="
@@ -248,7 +248,7 @@ watchEffect(async () => {
           <div class="flex items-center">
             <Stamp
               v-if="currentToken"
-              :id="`${networkShortName}:${currentToken.contractAddress}`"
+              :id="`${networkId}:${currentToken.contractAddress}`"
               type="token"
               class="mr-2"
               :size="20"
