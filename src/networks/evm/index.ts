@@ -28,7 +28,6 @@ export const METADATA: Record<string, Metadata> = {
   },
   arb1: {
     name: 'Arbitrum One',
-    ticker: 'ARB',
     chainId: 42161,
     apiUrl: 'https://api.studio.thegraph.com/query/23545/sx-arbitrum/version/latest',
     avatar: 'ipfs://bafkreic2p3zzafvz34y4tnx2kaoj6osqo66fpdo3xnagocil452y766gdq',
