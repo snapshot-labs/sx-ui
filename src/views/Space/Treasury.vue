@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useClipboard } from '@vueuse/core';
-import { _n, _c, shorten, sanitizeUrl } from '@/helpers/utils';
+import { _n, _c, shorten, sanitizeUrl, getUrl } from '@/helpers/utils';
 import { getNetwork } from '@/networks';
 import { ETH_CONTRACT } from '@/helpers/constants';
 import { NetworkID, Space, Transaction, SelectedStrategy } from '@/types';
@@ -175,7 +175,14 @@ watchEffect(() => {
             class="mx-4 py-3 border-b flex"
           >
             <div class="flex-auto flex items-center min-w-0">
-              <Stamp :id="asset.contractAddress" type="token" :size="32" />
+              <img
+                v-if="asset.logo && asset.contractAddress === ETH_CONTRACT"
+                :src="getUrl(asset.logo) || ''"
+                width="32"
+                height="32"
+                class="rounded-full"
+              />
+              <Stamp v-else :id="asset.contractAddress" type="token" :size="32" />
               <div class="flex flex-col ml-3 leading-[22px] min-w-0 pr-2 md:pr-0">
                 <h4 v-text="asset.symbol" />
                 <div class="text-sm truncate" v-text="asset.name" />
