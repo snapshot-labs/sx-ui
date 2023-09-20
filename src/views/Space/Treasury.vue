@@ -176,7 +176,7 @@ watchEffect(() => {
           >
             <div class="flex-auto flex items-center min-w-0">
               <Stamp
-                :id="`eip155:${treasury.network}:${asset.contractAddress}`"
+                :id="`${treasury.shortName}:${asset.contractAddress}`"
                 type="token"
                 :size="32"
                 :network="treasury.network"
