@@ -234,6 +234,7 @@ watchEffect(() => {
         :open="modalOpen.tokens"
         :address="treasury.wallet"
         :network="treasury.network"
+        :network-short-name="treasury.shortName"
         @close="modalOpen.tokens = false"
         @add="addTx"
       />
