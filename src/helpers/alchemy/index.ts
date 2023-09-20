@@ -124,7 +124,7 @@ export async function getBalances(
       name: baseToken.name,
       symbol: baseToken.symbol,
       decimals: 18,
-      logo: baseToken.logo ?? null,
+      logo: null,
       contractAddress: ETH_CONTRACT,
       tokenBalance: ethBalance,
       price: 0,

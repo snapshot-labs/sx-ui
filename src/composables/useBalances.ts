@@ -14,7 +14,7 @@ export function useBalances() {
   async function loadBalances(address: string, networkId: number) {
     const metadata = metadataByChainId.get(networkId);
     const baseToken = metadata?.ticker
-      ? { name: metadata.name, symbol: metadata.ticker, logo: metadata.avatar }
+      ? { name: metadata.name, symbol: metadata.ticker }
       : { name: 'Ethereum', symbol: 'ETH' };
 
     const data = await getBalances(address, networkId, baseToken);

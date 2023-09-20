@@ -175,14 +175,12 @@ watchEffect(() => {
             class="mx-4 py-3 border-b flex"
           >
             <div class="flex-auto flex items-center min-w-0">
-              <img
-                v-if="asset.logo && asset.contractAddress === ETH_CONTRACT"
-                :src="getUrl(asset.logo) || ''"
-                width="32"
-                height="32"
-                class="rounded-full"
+              <Stamp
+                :id="`eip155:${treasury.network}:${asset.contractAddress}`"
+                type="token"
+                :size="32"
+                :network="treasury.network"
               />
-              <Stamp v-else :id="asset.contractAddress" type="token" :size="32" />
               <div class="flex flex-col ml-3 leading-[22px] min-w-0 pr-2 md:pr-0">
                 <h4 v-text="asset.symbol" />
                 <div class="text-sm truncate" v-text="asset.name" />
