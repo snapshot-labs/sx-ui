@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import { getNetwork } from '@/networks';
 import { NetworkID, Space } from '@/types';
-import { useSpaces } from '@/composables/useSpaces';
 import pkg from '../../package.json';
 
 export const useSpacesStore = defineStore('spaces', () => {
