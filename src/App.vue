@@ -37,6 +37,7 @@ watch(route, () => {
 watch(isSwiping, () => {
   if (
     isSwiping.value &&
+    !modalOpen.value &&
     ((direction.value === 'RIGHT' && !uiStore.sidebarOpen) ||
       (direction.value === 'LEFT' && uiStore.sidebarOpen))
   ) {
