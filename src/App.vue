@@ -35,7 +35,11 @@ watch(route, () => {
 });
 
 watch(isSwiping, () => {
-  if (isSwiping.value && direction.value === 'RIGHT' && !uiStore.sidebarOpen) {
+  if (
+    isSwiping.value &&
+    ((direction.value === 'RIGHT' && !uiStore.sidebarOpen) ||
+      (direction.value === 'LEFT' && uiStore.sidebarOpen))
+  ) {
     uiStore.toggleSidebar();
   }
 });
