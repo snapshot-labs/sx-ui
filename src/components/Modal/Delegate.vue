@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { clone } from '@/helpers/utils';
 import { getValidator } from '@/helpers/validation';
+import { NetworkID, Space } from '@/types';
 
 const DEFAULT_FORM_STATE = {
   delegatee: ''
@@ -8,6 +9,7 @@ const DEFAULT_FORM_STATE = {
 
 const props = defineProps<{
   open: boolean;
+  space: Space;
   initialState?: any;
 }>();
 
@@ -32,16 +34,31 @@ const formValidator = getValidator({
   }
 });
 
+const { delegate } = useActions();
+
 const form: {
   delegatee: string;
 } = reactive(clone(DEFAULT_FORM_STATE));
 const formValidated = ref(false);
 const showPicker = ref(false);
 const searchValue = ref('');
+const sending = ref(false);
 const formErrors = ref({} as Record<string, any>);
 
-function handleSubmit() {
-  // emit('close');
+async function handleSubmit() {
+  if (!props.space.delegation_contract) return;
+  sending.value = true;
+
+  try {
+    const [networkId] = props.space.delegation_contract.split(':');
+
+    await delegate(props.space, networkId as NetworkID, form.delegatee);
+    emit('close');
+  } catch (e) {
+    console.log('delegation failed', e);
+  } finally {
+    sending.value = false;
+  }
 }
 
 watch(
@@ -102,7 +119,12 @@ watchEffect(async () => {
       />
     </div>
     <template v-if="!showPicker" #footer>
-      <UiButton class="w-full" :disabled="Object.keys(formErrors).length > 0" @click="handleSubmit">
+      <UiButton
+        class="w-full"
+        :loading="sending"
+        :disabled="Object.keys(formErrors).length > 0"
+        @click="handleSubmit"
+      >
         Confirm
       </UiButton>
     </template>

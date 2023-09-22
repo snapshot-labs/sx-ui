@@ -99,7 +99,7 @@ watchEffect(() => {
       </div>
     </div>
     <teleport to="#modal">
-      <ModalDelegate :open="delegateModalOpen" @close="delegateModalOpen = false" />
+      <ModalDelegate :open="delegateModalOpen" :space="space" @close="delegateModalOpen = false" />
     </teleport>
   </template>
 </template>
