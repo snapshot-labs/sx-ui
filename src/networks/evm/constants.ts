@@ -54,7 +54,7 @@ export const STRATEGIES = {
 };
 
 export const EXECUTORS = {
-  SimpleQuorumAvatar: 'Avatar',
+  SimpleQuorumAvatar: 'Safe module (Zodiac)',
   SimpleQuorumTimelock: 'Timelock'
 };
 
