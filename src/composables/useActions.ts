@@ -433,7 +433,7 @@ export function useActions() {
   async function delegate(space: Space, networkId: NetworkID, delegatee: string) {
     if (!web3.value.account) return await forceLogin();
 
-    const network = getNetwork(space.network);
+    const network = getNetwork(networkId);
 
     const receipt = await network.actions.delegate(auth.web3, space, networkId, delegatee);
     console.log('Receipt', receipt);
