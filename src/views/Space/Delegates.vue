@@ -45,9 +45,9 @@ watchEffect(() => {
     No delegation API configured.
   </div>
   <template v-else>
-    <div class="p-4 space-x-2 flex">
+    <div v-if="space.delegation_contract" class="p-4 space-x-2 flex">
       <div class="flex-auto" />
-      <UiTooltip v-if="space.delegation_contract" title="Delegate">
+      <UiTooltip title="Delegate">
         <UiButton class="!px-0 w-[46px]" @click="delegateModalOpen = true">
           <IH-user-add class="inline-block" />
         </UiButton>
