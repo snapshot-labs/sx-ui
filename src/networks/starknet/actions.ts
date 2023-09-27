@@ -171,7 +171,14 @@ export function createActions(
       const data = {
         space: space.id,
         authenticator,
-        strategies,
+        strategies: strategies.map((strategy, i) => {
+          const strategyMetadataPayload = space.strategies_parsed_metadata[i].payload;
+
+          return {
+            ...strategy,
+            metadata: strategyMetadataPayload ? JSON.parse(strategyMetadataPayload) : null
+          };
+        }),
         executionStrategy: selectedExecutionStrategy,
         metadataUri: `ipfs://${cid}`
       };
@@ -286,7 +293,14 @@ export function createActions(
       const data = {
         space: proposal.space.id,
         authenticator,
-        strategies,
+        strategies: strategies.map((strategy, i) => {
+          const strategyMetadataPayload = proposal.space.strategies_parsed_metadata[i].payload;
+
+          return {
+            ...strategy,
+            metadata: strategyMetadataPayload ? JSON.parse(strategyMetadataPayload) : null
+          };
+        }),
         proposal: proposal.proposal_id,
         choice
       };
@@ -357,10 +371,12 @@ export function createActions(
           const strategy = getStarknetStrategy(address, defaultNetwork);
           if (!strategy) return { address, value: 0n, decimals: 0, token: null, symbol: '' };
 
+          const strategyMetadataPayload = strategiesMetadata[i].payload;
+
           const value = await strategy.getVotingPower(
             address,
             voterAddress,
-            null,
+            strategyMetadataPayload ? JSON.parse(strategyMetadataPayload) : null,
             timestamp,
             strategiesParams[i].split(','),
             {

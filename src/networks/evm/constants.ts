@@ -150,6 +150,53 @@ export const EDITOR_VOTING_STRATEGIES = [
     }
   },
   {
+    address: '0x3cee21a33751a2722413ff62dec3dec48e7748a4',
+    name: 'Whitelist',
+    generateSummary: (params: Record<string, any>) => {
+      const length = params.whitelist.split('\n').length;
+
+      return `(${length} ${length === 1 ? 'address' : 'addresses'})`;
+    },
+    generateParams: (params: Record<string, any>) => {
+      const whitelist = params.whitelist.split('\n').map((item: string) => {
+        const [addr, vp] = item.split(':');
+        return { addr, vp: BigInt(vp) };
+      });
+
+      const abiCoder = new AbiCoder();
+      return [abiCoder.encode(['tuple(address addr, uint256 vp)[]'], [whitelist])];
+    },
+    generateMetadata: (params: Record<string, any>) => {
+      return {
+        name: 'Whitelist',
+        properties: {
+          symbol: params.symbol,
+          decimals: 0
+        }
+      };
+    },
+    paramsDefinition: {
+      type: 'object',
+      title: 'Params',
+      additionalProperties: false,
+      required: [],
+      properties: {
+        symbol: {
+          type: 'string',
+          maxLength: 6,
+          title: 'Symbol',
+          examples: ['e.g. VP']
+        },
+        whitelist: {
+          type: 'string',
+          format: 'long',
+          title: 'Whitelist',
+          examples: ['0x556B14CbdA79A36dC33FcD461a04A5BCb5dC2A70:40']
+        }
+      }
+    }
+  },
+  {
     address: '0x2c8631584474e750cedf2fb6a904f2e84777aefe',
     name: 'ERC-20 Votes (EIP-5805)',
     about:

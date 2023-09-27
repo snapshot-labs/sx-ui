@@ -37,6 +37,7 @@ export type StrategyParsedMetadata = {
   decimals: number;
   symbol: string;
   token: string | null;
+  payload: string | null;
 };
 
 export type Space = {

@@ -35,6 +35,7 @@ const SPACE_FRAGMENT = gql`
         decimals
         symbol
         token
+        payload
       }
     }
     authenticators
@@ -64,6 +65,7 @@ const PROPOSAL_FRAGMENT = gql`
           decimals
           symbol
           token
+          payload
         }
       }
     }
