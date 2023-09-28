@@ -38,6 +38,14 @@ const SPACE_FRAGMENT = gql`
         payload
       }
     }
+    voting_power_validation_strategies_parsed_metadata {
+      data {
+        decimals
+        symbol
+        token
+        payload
+      }
+    }
     authenticators
     proposal_count
     vote_count
@@ -61,6 +69,14 @@ const PROPOSAL_FRAGMENT = gql`
         executors_types
       }
       strategies_parsed_metadata {
+        data {
+          decimals
+          symbol
+          token
+          payload
+        }
+      }
+      voting_power_validation_strategies_parsed_metadata {
         data {
           decimals
           symbol

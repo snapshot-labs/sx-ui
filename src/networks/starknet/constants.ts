@@ -1,6 +1,7 @@
 import { CallData, uint256 } from 'starknet';
 import { utils } from '@snapshot-labs/sx';
 import { shorten } from '@/helpers/utils';
+import { pinPineapple } from '@/helpers/pin';
 import { StrategyConfig } from '../types';
 
 import IHCode from '~icons/heroicons-outline/code';
@@ -114,6 +115,22 @@ export const EDITOR_PROPOSAL_VALIDATIONS = [
         allowed_strategies: strategies
       });
     },
+    generateMetadata: async (params: Record<string, any>) => {
+      const strategiesMetadata = await Promise.all(
+        params.strategies.map(async (strategy: StrategyConfig) => {
+          if (!strategy.generateMetadata) return;
+
+          const metadata = await strategy.generateMetadata(strategy.params);
+          const pinned = await pinPineapple(metadata);
+
+          return `ipfs://${pinned.cid}`;
+        })
+      );
+
+      return {
+        strategies_metadata: strategiesMetadata
+      };
+    },
     paramsDefinition: {
       type: 'object',
       title: 'Params',
@@ -179,7 +196,7 @@ export const EDITOR_VOTING_STRATEGIES = [
 
       return [utils.merkle.generateMerkleRoot(leaves.map((leaf: utils.merkle.Leaf) => leaf.hash))];
     },
-    generateMetadata: (params: Record<string, any>) => {
+    generateMetadata: async (params: Record<string, any>) => {
       const tree = params.whitelist.split('\n').map((item: string) => {
         const [address, votingPower] = item.split(':');
         const type = address.length === 42 ? 1 : 0;
@@ -191,12 +208,14 @@ export const EDITOR_VOTING_STRATEGIES = [
         };
       });
 
+      const pinned = await pinPineapple({ tree });
+
       return {
         name: 'Whitelist',
         properties: {
           symbol: params.symbol,
           decimals: 0,
-          payload: JSON.stringify({ tree })
+          payload: `ipfs://${pinned.cid}`
         }
       };
     },
