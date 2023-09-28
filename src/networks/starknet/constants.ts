@@ -178,6 +178,8 @@ export const EDITOR_VOTING_STRATEGIES = [
   {
     address: '0x297fb0104d8be6c86f168bf1dcdc28b0625d2b06108c3c46194aa4415f2e2ec',
     name: 'Whitelist',
+    about:
+      'A strategy that defines a list of addresses each with designated voting power, using a Merkle tree for verification.',
     generateSummary: (params: Record<string, any>) => {
       const length = params.whitelist.split('\n').length;
 

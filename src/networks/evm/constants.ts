@@ -152,6 +152,7 @@ export const EDITOR_VOTING_STRATEGIES = [
   {
     address: '0x3cee21a33751a2722413ff62dec3dec48e7748a4',
     name: 'Whitelist',
+    about: 'A strategy that defines a list of addresses each with designated voting power.',
     generateSummary: (params: Record<string, any>) => {
       const length = params.whitelist.split('\n').length;
 
