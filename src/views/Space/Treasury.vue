@@ -198,9 +198,14 @@ watchEffect(() => {
             <div class="flex-col items-end text-right leading-[22px] w-auto md:w-[180px]">
               <h4
                 class="text-skin-link"
-                v-text="_c(asset.tokenBalance || 0n, asset.decimals || 0)"
+                v-text="
+                  `${_c(asset.tokenBalance || 0n, asset.decimals || 0)} ${shorten(
+                    asset.symbol,
+                    'symbol'
+                  )}`
+                "
               />
-              <div v-if="asset.price" class="text-sm" v-text="`$${_n(asset.price)}`" />
+              <div v-if="asset.value" class="text-sm" v-text="`$${_n(asset.value)}`" />
             </div>
           </a>
         </div>
