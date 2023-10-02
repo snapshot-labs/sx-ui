@@ -129,7 +129,7 @@ function handleValueUpdate(value) {
   if (value === '') {
     form.amount = '';
   } else if (currentToken.value) {
-    form.amount = value / currentToken.value.price;
+    form.amount = parseFloat((value / currentToken.value.price).toFixed(6));
   }
 }
 
@@ -175,9 +175,10 @@ watch([() => props.address, () => props.network], ([address, network]) => {
 });
 
 watch(currentToken, token => {
-  if (!token || typeof form.amount === 'string') return;
+  if (!token || form.amount === '') return;
 
-  form.value = parseFloat((form.amount * token.price).toFixed(2));
+  const amount = typeof form.amount === 'string' ? parseFloat(form.amount) : form.amount;
+  form.value = parseFloat((amount * token.price).toFixed(2));
 });
 
 watchEffect(async () => {
