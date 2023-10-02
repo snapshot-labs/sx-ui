@@ -181,7 +181,7 @@ watchEffect(() => {
                 :network="treasury.network"
               />
               <div class="flex flex-col ml-3 leading-[22px] min-w-0 pr-2 md:pr-0">
-                <h4 v-text="asset.symbol" />
+                <h4 class="truncate" v-text="asset.symbol" />
                 <div class="text-sm truncate text-skin-text" v-text="asset.name" />
               </div>
             </div>
@@ -191,13 +191,21 @@ watchEffect(() => {
             >
               <h4 class="text-skin-link" v-text="`$${_n(asset.price)}`" />
               <div v-if="asset.change" class="text-sm">
-                <div v-if="asset.change > 0" class="text-green" v-text="`+${_n(asset.change)}%`" />
-                <div v-if="asset.change < 0" class="text-red" v-text="`${_n(asset.change)}%`" />
+                <div
+                  v-if="asset.change > 0"
+                  class="text-green"
+                  v-text="`+${_n(asset.change, 'standard', { maximumFractionDigits: 2 })}%`"
+                />
+                <div
+                  v-if="asset.change < 0"
+                  class="text-red"
+                  v-text="`${_n(asset.change, 'standard', { maximumFractionDigits: 2 })}%`"
+                />
               </div>
             </div>
             <div class="flex-col items-end text-right leading-[22px] w-auto md:w-[180px]">
               <h4
-                class="text-skin-link"
+                class="text-skin-link truncate"
                 v-text="
                   `${_c(asset.tokenBalance || 0n, asset.decimals || 0)} ${shorten(
                     asset.symbol,
@@ -205,7 +213,11 @@ watchEffect(() => {
                   )}`
                 "
               />
-              <div v-if="asset.value" class="text-sm" v-text="`$${_n(asset.value)}`" />
+              <div
+                v-if="asset.value"
+                class="text-sm text-skin-text"
+                v-text="`$${_n(asset.value)}`"
+              />
             </div>
           </a>
         </div>
