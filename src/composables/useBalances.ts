@@ -10,7 +10,7 @@ import {
 const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3/simple';
 const COINGECKO_PARAMS = '&vs_currencies=usd&include_24hr_change=true';
 
-const metadataByChainId = new Map(
+export const METADATA_BY_CHAIN_ID = new Map(
   Object.entries(METADATA).map(([, metadata]) => [metadata.chainId, metadata])
 );
 
@@ -41,7 +41,7 @@ export function useBalances() {
   }
 
   async function loadBalances(address: string, networkId: number) {
-    const metadata = metadataByChainId.get(networkId);
+    const metadata = METADATA_BY_CHAIN_ID.get(networkId);
     const baseToken = metadata?.ticker
       ? { name: metadata.name, symbol: metadata.ticker }
       : { name: 'Ethereum', symbol: 'ETH' };

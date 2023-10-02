@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { formatUnits } from '@ethersproject/units';
+import { METADATA_BY_CHAIN_ID } from '@/composables/useBalances';
 import { createSendTokenTransaction } from '@/helpers/transactions';
 import { ETH_CONTRACT } from '@/helpers/constants';
 import { clone } from '@/helpers/utils';
@@ -67,11 +68,13 @@ const currentToken = computed(() => {
   let token = assetsMap.value?.get(form.token);
   if (!token) token = customTokens.value.find(existing => existing.contractAddress === form.token);
 
+  const metadata = METADATA_BY_CHAIN_ID[props.network];
+
   if (!token) {
     return {
       decimals: 18,
-      name: 'Ether',
-      symbol: 'ETH',
+      name: metadata?.name ?? 'Ethereum',
+      symbol: metadata?.ticker ?? 'ETH',
       contractAddress: ETH_CONTRACT,
       logo: null,
       tokenBalance: '0x0',
