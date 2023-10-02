@@ -68,7 +68,7 @@ const currentToken = computed(() => {
   let token = assetsMap.value?.get(form.token);
   if (!token) token = customTokens.value.find(existing => existing.contractAddress === form.token);
 
-  const metadata = METADATA_BY_CHAIN_ID[props.network];
+  const metadata = METADATA_BY_CHAIN_ID.get(props.network);
 
   if (!token) {
     return {
