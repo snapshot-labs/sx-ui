@@ -246,14 +246,14 @@ watchEffect(() => {
                   class="flex items-center gap-2"
                   :class="{ 'opacity-80': active }"
                 >
-                  <IS-arrow-top-right-on-square :width="16" />
+                  <IH-arrow-sm-right class="-rotate-45" :width="16" />
                   View metadata
                 </a>
               </UiDropdownItem>
             </template>
           </UiDropdown>
         </div>
-        <Container class="pt-5 max-w-[630px] mx-0 md:mx-auto">
+        <Container class="pt-5 !max-w-[630px] mx-0 md:mx-auto">
           <div>
             <h1 class="mb-4 text-[36px]">
               {{ proposal.title || `Proposal #${proposal.proposal_id}` }}
@@ -361,7 +361,7 @@ watchEffect(() => {
             </UiTooltip>
           </div>
         </Vote>
-        <template v-if="!proposal.cancelled">
+        <template v-if="!proposal.cancelled && proposal.has_started">
           <h4 class="block eyebrow mb-2 mt-4">Results</h4>
           <Results with-details :proposal="proposal" :decimals="votingPowerDecimals" />
         </template>

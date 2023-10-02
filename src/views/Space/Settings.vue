@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { shorten, _n, compareAddresses } from '@/helpers/utils';
+import { shorten, _d, compareAddresses } from '@/helpers/utils';
 import { getNetwork } from '@/networks';
 import { Space } from '@/types';
 
@@ -7,6 +7,7 @@ const props = defineProps<{ space: Space }>();
 
 const { setTitle } = useTitle();
 const { web3 } = useWeb3();
+const { getDurationFromCurrent } = useMetaStore();
 const { setVotingDelay, setMinVotingDuration, setMaxVotingDuration, transferOwnership } =
   useActions();
 
@@ -19,6 +20,15 @@ const settingsLoading = ref({
   maxVotingPeriod: false,
   controller: false
 });
+
+function currentToMinutesOnly(value: number) {
+  const duration = getDurationFromCurrent(props.space.network, value);
+  return Math.round(duration / 60) * 60;
+}
+
+function formatCurrentValue(value: number) {
+  return _d(currentToMinutesOnly(value));
+}
 
 async function handleSave(
   field: 'votingDelay' | 'minVotingPeriod' | 'maxVotingPeriod' | 'controller',
@@ -57,27 +67,32 @@ watchEffect(() => {
       <Label :label="'Voting'" sticky />
       <div class="mx-4 pt-3">
         <div class="mb-3">
-          <div class="s-label !mb-0">Voting delay in blocks</div>
+          <div class="s-label !mb-0">Voting delay</div>
           <UiEditable
             :editable="isController"
-            :initial-value="space.voting_delay"
+            :initial-value="currentToMinutesOnly(space.voting_delay)"
             :loading="settingsLoading.votingDelay"
             :definition="{
-              type: 'integer'
+              type: 'integer',
+              format: 'duration'
             }"
             @save="value => handleSave('votingDelay', value.toString())"
           >
-            <h4 class="text-skin-link text-md" v-text="_n(space.voting_delay) || 'No delay'" />
+            <h4
+              class="text-skin-link text-md"
+              v-text="formatCurrentValue(space.voting_delay) || 'No delay'"
+            />
           </UiEditable>
         </div>
         <div class="mb-3">
-          <div class="s-label !mb-0">Min. voting period in blocks</div>
+          <div class="s-label !mb-0">Min. voting period</div>
           <UiEditable
             :editable="isController"
-            :initial-value="space.min_voting_period"
+            :initial-value="currentToMinutesOnly(space.min_voting_period)"
             :loading="settingsLoading.minVotingPeriod"
             :definition="{
-              type: 'integer'
+              type: 'integer',
+              format: 'duration'
             }"
             :custom-error-validation="
               value =>
@@ -87,17 +102,21 @@ watchEffect(() => {
             "
             @save="value => handleSave('minVotingPeriod', value.toString())"
           >
-            <h4 class="text-skin-link text-md" v-text="_n(space.min_voting_period) || 'No min.'" />
+            <h4
+              class="text-skin-link text-md"
+              v-text="formatCurrentValue(space.min_voting_period) || 'No min.'"
+            />
           </UiEditable>
         </div>
         <div class="mb-3">
-          <div class="s-label !mb-0">Max. voting period in blocks</div>
+          <div class="s-label !mb-0">Max. voting period</div>
           <UiEditable
             :editable="isController"
-            :initial-value="space.max_voting_period"
+            :initial-value="currentToMinutesOnly(space.max_voting_period)"
             :loading="settingsLoading.maxVotingPeriod"
             :definition="{
-              type: 'integer'
+              type: 'integer',
+              format: 'duration'
             }"
             :custom-error-validation="
               value =>
@@ -107,7 +126,10 @@ watchEffect(() => {
             "
             @save="value => handleSave('maxVotingPeriod', value.toString())"
           >
-            <h4 class="text-skin-link text-md" v-text="_n(space.max_voting_period)" />
+            <h4
+              class="text-skin-link text-md"
+              v-text="formatCurrentValue(space.max_voting_period)"
+            />
           </UiEditable>
         </div>
         <div v-if="space.proposal_threshold !== '0'" class="mb-3">
@@ -134,7 +156,7 @@ watchEffect(() => {
           <a :href="network.helpers.getExplorerUrl(space.controller, 'contract')" target="_blank">
             <Stamp :id="space.controller" type="avatar" :size="18" class="mr-2 rounded-sm" />
             {{ shorten(space.controller) }}
-            <IH-external-link class="inline-block" />
+            <IH-arrow-sm-right class="inline-block -rotate-45" />
           </a>
         </UiEditable>
       </div>
@@ -147,7 +169,7 @@ watchEffect(() => {
           <h4 class="flex-auto" v-text="network.constants.AUTHS[auth]" />
           <div>
             <Stamp :id="auth" type="avatar" :size="18" class="mr-2 rounded-sm" />
-            {{ shorten(auth) }} <IH-external-link class="inline-block" />
+            {{ shorten(auth) }} <IH-arrow-sm-right class="inline-block -rotate-45" />
           </div>
         </a>
       </div>
@@ -172,7 +194,8 @@ watchEffect(() => {
               :size="18"
               class="mr-2 rounded-sm"
             />
-            {{ shorten(space.validation_strategy) }} <IH-external-link class="inline-block" />
+            {{ shorten(space.validation_strategy) }}
+            <IH-arrow-sm-right class="inline-block -rotate-45" />
           </div>
         </a>
       </div>
@@ -189,7 +212,7 @@ watchEffect(() => {
           <h4 class="flex-auto" v-text="network.constants.STRATEGIES[strategy]" />
           <div>
             <Stamp :id="strategy" type="avatar" :size="18" class="mr-2 rounded-sm" />
-            {{ shorten(strategy) }} <IH-external-link class="inline-block" />
+            {{ shorten(strategy) }} <IH-arrow-sm-right class="inline-block -rotate-45" />
           </div>
         </a>
       </div>
@@ -213,7 +236,7 @@ watchEffect(() => {
           />
           <div>
             <Stamp :id="executor" type="avatar" :size="18" class="mr-2 rounded-sm" />
-            {{ shorten(executor) }} <IH-external-link class="inline-block" />
+            {{ shorten(executor) }} <IH-arrow-sm-right class="inline-block -rotate-45" />
           </div>
         </a>
       </div>

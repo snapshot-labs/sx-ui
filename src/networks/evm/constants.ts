@@ -17,6 +17,10 @@ export const SUPPORTED_AUTHENTICATORS = {
   '0x5f9b7d78c9a37a439d78f801e0e339c6e711e260': true
 };
 
+export const CONTRACT_SUPPORTED_AUTHENTICATORS = {
+  '0xba06e6ccb877c332181a6867c05c8b746a21aed1': true
+};
+
 export const SUPPORTED_STRATEGIES = {
   '0xc1245c5dca7885c73e32294140f1e5d30688c202': true,
   '0x0c2de612982efd102803161fc7c74cca15db932c': true,
@@ -30,8 +34,8 @@ export const SUPPORTED_EXECUTORS = {
 };
 
 export const RELAYER_AUTHENTICATORS = {
-  '0x5f9b7d78c9a37a439d78f801e0e339c6e711e260': true
-};
+  '0x5f9b7d78c9a37a439d78f801e0e339c6e711e260': 'evm'
+} as const;
 
 export const AUTHS = {
   '0x5f9b7d78c9a37a439d78f801e0e339c6e711e260': 'Ethereum signature',
@@ -44,13 +48,13 @@ export const PROPOSAL_VALIDATIONS = {
 
 export const STRATEGIES = {
   '0xc1245c5dca7885c73e32294140f1e5d30688c202': 'Vanilla',
-  '0x0c2de612982efd102803161fc7c74cca15db932c': 'Delegated Comp Token',
-  '0x2c8631584474e750cedf2fb6a904f2e84777aefe': 'OpenZeppelin Votes',
+  '0x2c8631584474e750cedf2fb6a904f2e84777aefe': 'ERC-20 Votes (EIP-5805)',
+  '0x0c2de612982efd102803161fc7c74cca15db932c': 'ERC-20 Votes Comp (EIP-5805)',
   '0x3cee21a33751a2722413ff62dec3dec48e7748a4': 'Whitelist'
 };
 
 export const EXECUTORS = {
-  SimpleQuorumAvatar: 'Avatar',
+  SimpleQuorumAvatar: 'Safe module (Zodiac)',
   SimpleQuorumTimelock: 'Timelock'
 };
 
@@ -146,16 +150,16 @@ export const EDITOR_VOTING_STRATEGIES = [
     }
   },
   {
-    address: '0x0c2de612982efd102803161fc7c74cca15db932c',
-    name: 'Delegated Comp Token',
+    address: '0x2c8631584474e750cedf2fb6a904f2e84777aefe',
+    name: 'ERC-20 Votes (EIP-5805)',
     about:
-      'A strategy that allows delegated balances of Compound style checkpoint tokens to be used as voting power.',
+      'A strategy that allows delegated balances of OpenZeppelin style checkpoint tokens to be used as voting power.',
     icon: IHCode,
     generateSummary: (params: Record<string, any>) =>
       `(${shorten(params.contractAddress)}, ${params.decimals})`,
     generateParams: (params: Record<string, any>) => [params.contractAddress],
     generateMetadata: (params: Record<string, any>) => ({
-      name: 'Delegated Comp Token',
+      name: 'ERC-20 Votes (EIP-5805)',
       properties: {
         symbol: params.symbol,
         decimals: parseInt(params.decimals),
@@ -189,16 +193,16 @@ export const EDITOR_VOTING_STRATEGIES = [
     }
   },
   {
-    address: '0x2c8631584474e750cedf2fb6a904f2e84777aefe',
-    name: 'OpenZeppelin Votes',
+    address: '0x0c2de612982efd102803161fc7c74cca15db932c',
+    name: 'ERC-20 Votes Comp (EIP-5805)',
     about:
-      'A strategy that allows delegated balances of OpenZeppelin style checkpoint tokens to be used as voting power.',
+      'A strategy that allows delegated balances of Compound style checkpoint tokens to be used as voting power.',
     icon: IHCode,
     generateSummary: (params: Record<string, any>) =>
       `(${shorten(params.contractAddress)}, ${params.decimals})`,
     generateParams: (params: Record<string, any>) => [params.contractAddress],
     generateMetadata: (params: Record<string, any>) => ({
-      name: 'OpenZeppelin Votes',
+      name: 'ERC-20 Votes Comp (EIP-5805)',
       properties: {
         symbol: params.symbol,
         decimals: parseInt(params.decimals),
@@ -237,7 +241,7 @@ export const EDITOR_EXECUTION_STRATEGIES = [
   {
     address: '',
     type: 'SimpleQuorumAvatar',
-    name: 'Safe module (Zodiac)',
+    name: EXECUTORS.SimpleQuorumAvatar,
     about:
       'An execution strategy that allows proposals to execute transactions from a specified target Avatar contract, the most popular one being a Safe.',
     icon: IHUserCircle,
@@ -283,7 +287,7 @@ export const EDITOR_EXECUTION_STRATEGIES = [
   {
     address: '',
     type: 'SimpleQuorumTimelock',
-    name: 'Timelock',
+    name: EXECUTORS.SimpleQuorumTimelock,
     about:
       'Timelock implementation with a specified delay that queues proposal transactions for execution and includes an optional role to veto queued proposals.',
     icon: IHClock,

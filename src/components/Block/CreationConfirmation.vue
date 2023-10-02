@@ -52,7 +52,9 @@ const steps = computed(() => {
 
 async function deploy() {
   const dependenciesSteps = props.executionStrategies.filter(strategy => strategy.deploy);
-  const executionStrategies = [] as StrategyConfig[];
+  const executionStrategies = props.executionStrategies.filter(
+    strategy => !strategy.deploy
+  ) as StrategyConfig[];
 
   for (let i = 0; i < dependenciesSteps.length; i++) {
     const strategy = dependenciesSteps[i];
@@ -153,7 +155,7 @@ onMounted(() => deploy());
             :href="network.helpers.getExplorerUrl(txIds[step.id], 'transaction')"
           >
             {{ shorten(txIds[step.id]) }}
-            <IH-external-link class="inline-block ml-1" />
+            <IH-arrow-sm-right class="inline-block ml-1 -rotate-45" />
           </a>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { createApi } from '../common/graphqlApi';
+import { EVM_CONNECTORS } from '../common/constants';
 import { createActions } from './actions';
 import * as constants from './constants';
 import { pinGraph } from '@/helpers/pin';
@@ -7,9 +8,19 @@ import networks from '@/helpers/networks.json';
 import { Network } from '@/networks/types';
 import { NetworkID, Space } from '@/types';
 
-export const METADATA = {
+type Metadata = {
+  name: string;
+  ticker?: string;
+  chainId: number;
+  apiUrl: string;
+  avatar: string;
+  blockTime: number;
+};
+
+export const METADATA: Record<string, Metadata> = {
   matic: {
     name: 'Polygon',
+    ticker: 'MATIC',
     chainId: 137,
     apiUrl: 'https://api.studio.thegraph.com/query/23545/sx-polygon/version/latest',
     avatar: 'ipfs://bafkreihcx4zkpfjfcs6fazjp6lcyes4pdhqx3uvnjuo5uj2dlsjopxv5am',
@@ -76,10 +87,12 @@ export function createEvmNetwork(networkId: NetworkID): Network {
   return {
     name,
     avatar,
+    currentUnit: 'block',
+    chainId,
     baseChainId: chainId,
     hasReceive: false,
     supportsSimulation: ['gor', 'sep', 'matic', 'arb1'].includes(networkId),
-    managerConnectors: ['injected', 'walletconnect', 'walletlink', 'portis', 'gnosis'],
+    managerConnectors: EVM_CONNECTORS,
     actions: createActions(provider, helpers, chainId),
     api,
     constants,

@@ -1,7 +1,7 @@
 // UI
 export type NotificationType = 'error' | 'warning' | 'success';
 
-export type NetworkID = 'gor' | 'sep' | 'linea-testnet' | 'sn-tn2' | 'matic' | 'arb1';
+export type NetworkID = 'gor' | 'sep' | 'linea-testnet' | 'sn-tn' | 'sn-tn2' | 'matic' | 'arb1';
 export type Choice = 1 | 2 | 3;
 
 export type SelectedStrategy = {
@@ -23,14 +23,14 @@ export type SpaceMetadata = {
   walletAddress: string | null;
   delegationApiType: string | null;
   delegationApiUrl: string | null;
+  delegationContractNetwork: NetworkID | null;
+  delegationContractAddress: string | null;
 };
 
 export type SpaceSettings = {
   votingDelay: number;
   minVotingDuration: number;
   maxVotingDuration: number;
-  proposalThreshold: string;
-  quorum?: string;
 };
 
 export type StrategyParsedMetadata = {
@@ -49,6 +49,7 @@ export type Space = {
   external_url: string;
   delegation_api_type: string | null;
   delegation_api_url: string | null;
+  delegation_contract: string | null;
   twitter: string;
   github: string;
   discord: string;

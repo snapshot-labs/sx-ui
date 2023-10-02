@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import { useIntervalFn } from '@vueuse/core';
 import { getNetwork } from '@/networks';
 import { compareAddresses, shorten } from '@/helpers/utils';
 import { Proposal as ProposalType } from '@/types';
@@ -101,8 +100,8 @@ async function handleVetoProposalClick() {
         :href="baseNetwork.helpers.getExplorerUrl(proposal.execution_tx, 'transaction')"
       >
         {{ shorten(proposal.execution_tx) }}
-        <IH-external-link class="inline-block ml-1"
-      /></a>
+        <IH-arrow-sm-right class="inline-block ml-1 -rotate-45" />
+      </a>
     </div>
     <div v-else-if="proposal.veto_tx">
       Proposal has been vetoed at
@@ -112,8 +111,8 @@ async function handleVetoProposalClick() {
         :href="baseNetwork.helpers.getExplorerUrl(proposal.veto_tx, 'transaction')"
       >
         {{ shorten(proposal.veto_tx) }}
-        <IH-external-link class="inline-block ml-1"
-      /></a>
+        <IH-arrow-sm-right class="inline-block ml-1 -rotate-45" />
+      </a>
     </div>
     <template v-else>
       <UiButton

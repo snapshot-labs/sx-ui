@@ -39,7 +39,7 @@ const PAGES = [
   }
 ] as const;
 
-type PageID = typeof PAGES[number]['id'];
+type PageID = (typeof PAGES)[number]['id'];
 
 const { setTitle } = useTitle();
 const { predictSpaceAddress } = useActions();
@@ -74,7 +74,9 @@ const metadataForm: SpaceMetadata = reactive(
     walletNetwork: null,
     walletAddress: null,
     delegationApiType: null,
-    delegationApiUrl: null
+    delegationApiUrl: null,
+    delegationContractNetwork: null,
+    delegationContractAddress: null
   })
 );
 const selectedNetworkId: Ref<NetworkID> = ref(enabledNetworks[0]);
@@ -86,9 +88,7 @@ const settingsForm: SpaceSettings = reactive(
   clone({
     votingDelay: 0,
     minVotingDuration: 0,
-    maxVotingDuration: 86400,
-    proposalThreshold: '1',
-    quorum: '1'
+    maxVotingDuration: 86400
   })
 );
 const controller = ref(web3.value.account);
