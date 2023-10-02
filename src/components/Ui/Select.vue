@@ -7,6 +7,7 @@ type Item = {
 
 const props = defineProps<{
   modelValue: string;
+  title: string;
   items: Item[];
   gap?: string;
   placement?: 'left' | 'right';
@@ -26,7 +27,7 @@ const currentItem = computed(() => props.items.find(item => item.key === props.m
         class="flex items-center gap-2 relative rounded-full leading-[100%] border button px-[16px] min-w-[76px] h-[42px] top-1 outline-0 text-skin-link bg-skin-bg"
       >
         <div class="absolute top-[-10px] bg-skin-bg px-1 left-[12px] text-[16px] text-skin-text">
-          Status
+          {{ title }}
         </div>
         <template v-if="currentItem">
           <div

@@ -152,6 +152,7 @@ export type Vote = {
   choice: number;
   vp: number;
   created: number;
+  tx: string;
 };
 
 export type Draft = {

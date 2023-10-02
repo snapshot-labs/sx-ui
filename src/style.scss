@@ -118,13 +118,13 @@ a,
 
 .choice-bg {
   &._1 {
-    @apply bg-green;
+    @apply bg-choice-for;
   }
   &._2 {
-    @apply bg-red;
+    @apply bg-choice-against;
   }
   &._3 {
-    @apply bg-gray-500;
+    @apply bg-choice-abstain;
   }
   &._quorum {
     @apply bg-skin-border;
