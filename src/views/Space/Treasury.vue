@@ -189,7 +189,10 @@ watchEffect(() => {
               v-if="asset.price"
               class="flex-col items-end text-right leading-[22px] w-[180px] hidden md:block"
             >
-              <h4 class="text-skin-link" v-text="`$${_n(asset.price)}`" />
+              <h4
+                class="text-skin-link"
+                v-text="`$${_n(asset.price, 'standard', { maximumFractionDigits: 2 })}`"
+              />
               <div v-if="asset.change" class="text-sm">
                 <div
                   v-if="asset.change > 0"
@@ -216,7 +219,7 @@ watchEffect(() => {
               <div
                 v-if="asset.value"
                 class="text-sm text-skin-text"
-                v-text="`$${_n(asset.value)}`"
+                v-text="`$${_n(asset.value, 'standard', { maximumFractionDigits: 2 })}`"
               />
             </div>
           </a>
