@@ -1,23 +1,24 @@
-<script setup lang="ts">
-type Item = {
-  key: string;
+<script setup lang="ts" generic="T extends string | number, U extends readonly Item<T>[]">
+export type Item<T extends string | number> = {
+  key: T;
   label: string;
   indicator?: string;
 };
 
 const props = defineProps<{
-  modelValue: string;
+  modelValue: U[number]['key'];
   title: string;
-  items: Item[];
+  items: U;
   gap?: string;
   placement?: 'left' | 'right';
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void;
+  (e: 'update:modelValue', value: U[number]['key']): void;
 }>();
 
 const currentItem = computed(() => props.items.find(item => item.key === props.modelValue));
+const items = computed(() => props.items);
 </script>
 
 <template>
