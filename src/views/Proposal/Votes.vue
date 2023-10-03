@@ -22,6 +22,12 @@ const sortBy = ref('vp-desc' as 'vp-desc' | 'vp-asc' | 'created-desc' | 'created
 const choiceFilter = ref('any' as 'any' | 'for' | 'against' | 'abstain');
 
 const network = computed(() => getNetwork(props.proposal.network));
+const votingPowerDecimals = computed(() => {
+  return Math.max(
+    ...props.proposal.space.strategies_parsed_metadata.map(metadata => metadata.decimals),
+    0
+  );
+});
 
 function reset() {
   votes.value = [];
@@ -145,7 +151,7 @@ watch([sortBy, choiceFilter], () => {
           <div class="text-skin-link" v-text="CHOICES[vote.choice]" />
           <div class="flex-1 text-end">
             <div class="text-skin-link">
-              {{ _n(vote.vp) }} {{ proposal.space.voting_power_symbol }}
+              {{ _n(vote.vp / 10 ** votingPowerDecimals) }} {{ proposal.space.voting_power_symbol }}
             </div>
             <div class="text-sm">{{ _n((vote.vp / proposal.scores_total) * 100) }}%</div>
           </div>
