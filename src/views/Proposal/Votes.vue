@@ -10,10 +10,6 @@ const props = defineProps<{
   proposal: ProposalType;
 }>();
 
-defineEmits<{
-  (e: 'close');
-}>();
-
 const votes: Ref<Vote[]> = ref([]);
 const loaded = ref(false);
 const loadingMore = ref(false);
@@ -45,6 +41,14 @@ async function loadVotes() {
   );
   hasMore.value = votes.value.length === LIMIT;
   loaded.value = true;
+}
+
+function handleSortChange(type: 'vp' | 'created') {
+  if (sortBy.value.startsWith(type)) {
+    sortBy.value = sortBy.value.endsWith('desc') ? `${type}-asc` : `${type}-desc`;
+  } else {
+    sortBy.value = `${type}-desc`;
+  }
 }
 
 async function handleEndReached() {
@@ -98,29 +102,48 @@ watch([sortBy, choiceFilter], () => {
         { key: 'abstain', label: 'Abstain', indicator: 'bg-choice-abstain' }
       ]"
     />
-    <UiSelect
-      v-model="sortBy"
-      title="Sort by"
-      gap="12px"
-      placement="right"
-      :items="[
-        { key: 'vp-desc', label: 'Voting Power - High to low' },
-        { key: 'vp-asc', label: 'Voting Power - Low to high' },
-        { key: 'created-desc', label: 'Vote time - Newest first' },
-        { key: 'created-asc', label: 'Vote time - Oldest first' }
-      ]"
-    />
   </div>
 
   <BlockInfiniteScroller :loading-more="loadingMore" @end-reached="handleEndReached">
-    <table class="text-right w-full">
+    <table class="text-right w-full table-fixed">
+      <colgroup>
+        <col class="w-[50%] lg:w-[40%]" />
+        <col class="w-[25%] lg:w-[20%]" />
+        <col class="w-[25%] lg:w-[20%]" />
+        <col class="w-[60px] lg:w-[20%]" />
+        <col class="w-[0px] lg:w-[100px]" />
+      </colgroup>
       <thead>
         <tr class="border-b">
           <th class="text-left pl-4 eyebrow text-skin-text pb-2">Votes</th>
-          <th class="eyebrow text-skin-text hidden lg:table-cell">Date</th>
-          <th class="eyebrow text-skin-text">Choice</th>
-          <th class="eyebrow text-skin-text">Voting Power</th>
-          <th class="w-[60px] lg:w-[80px]" />
+          <th class="eyebrow text-skin-text">
+            <div
+              class="flex justify-end items-center"
+              :class="{
+                'text-skin-link': sortBy === 'created-desc' || sortBy === 'created-asc'
+              }"
+              @click="handleSortChange('created')"
+            >
+              <span>Date</span>
+              <IH-arrow-sm-down v-if="sortBy === 'created-desc'" />
+              <IH-arrow-sm-up v-else />
+            </div>
+          </th>
+          <th class="eyebrow text-skin-text hidden lg:table-cell">Choice</th>
+          <th class="eyebrow text-skin-text">
+            <div
+              class="flex justify-end items-center"
+              :class="{
+                'text-skin-link': sortBy === 'vp-desc' || sortBy === 'vp-asc'
+              }"
+              @click="handleSortChange('vp')"
+            >
+              <span class="truncate pl-2">Voting Power</span>
+              <IH-arrow-sm-down v-if="sortBy === 'vp-desc'" />
+              <IH-arrow-sm-up v-else />
+            </div>
+          </th>
+          <th />
         </tr>
       </thead>
       <td v-if="!loaded" colspan="5">
@@ -134,7 +157,7 @@ watch([sortBy, choiceFilter], () => {
           <tr v-for="(vote, i) in votes" :key="i" class="border-b relative">
             <td class="text-left flex items-center pl-4 py-3">
               <Stamp :id="vote.voter.id" :size="36" class="mr-3" />
-              <div>
+              <div class="truncate">
                 <router-link
                   :to="{
                     name: 'user',
@@ -142,17 +165,16 @@ watch([sortBy, choiceFilter], () => {
                       id: `${proposal.network}:${vote.voter.id}`
                     }
                   }"
-                  @click="$emit('close')"
                 >
                   {{ vote.voter.name || shortenAddress(vote.voter.id) }}
                 </router-link>
               </div>
             </td>
-            <td class="hidden lg:table-cell">{{ _rt(vote.created) }}</td>
-            <td>
+            <td class="pr-2">{{ _rt(vote.created) }}</td>
+            <td class="hidden lg:table-cell">
               <div class="text-skin-link" v-text="CHOICES[vote.choice]" />
             </td>
-            <td>
+            <td class="pr-2">
               <div class="text-skin-link">
                 {{ _n(vote.vp / 10 ** votingPowerDecimals) }}
                 {{ proposal.space.voting_power_symbol }}
