@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getNetwork } from '@/networks';
-import { shortenAddress, _rt, _n, shorten } from '@/helpers/utils';
+import { shortenAddress, _rt, _n } from '@/helpers/utils';
 import { CHOICES } from '@/helpers/constants';
 import { Proposal as ProposalType, Vote } from '@/types';
 
@@ -111,60 +111,86 @@ watch([sortBy, choiceFilter], () => {
       ]"
     />
   </div>
-  <Label label="Votes" sticky />
-  <UiLoading v-if="!loaded" class="p-4 block text-center" />
-  <div v-else-if="votes.length > 0">
-    <BlockInfiniteScroller :loading-more="loadingMore" @end-reached="handleEndReached">
-      <div
-        v-for="(vote, i) in votes"
-        :key="i"
-        class="py-3 px-4 border-b relative"
-        :class="{ 'last:border-b-0': !loadingMore }"
-      >
-        <div class="flex items-center justify-space-between relative z-[1]">
-          <Stamp :id="vote.voter.id" :size="36" class="mr-3" />
-          <div>
-            <router-link
-              :to="{
-                name: 'user',
-                params: {
-                  id: `${proposal.network}:${vote.voter.id}`
-                }
-              }"
-              @click="$emit('close')"
-            >
-              {{ vote.voter.name || shortenAddress(vote.voter.id) }}
-            </router-link>
-            <div class="text-sm">
-              {{ _rt(vote.created) }} at
-              <a
-                class="inline-flex items-center"
-                target="_blank"
-                :href="network.helpers.getExplorerUrl(vote.tx, 'transaction')"
-              >
-                {{ shorten(vote.tx) }}
-                <IH-arrow-sm-right class="inline-block ml-1 -rotate-45" />
-              </a>
-            </div>
-          </div>
-          <div class="flex-[4]"></div>
-          <div class="text-skin-link" v-text="CHOICES[vote.choice]" />
-          <div class="flex-1 text-end">
-            <div class="text-skin-link">
-              {{ _n(vote.vp / 10 ** votingPowerDecimals) }} {{ proposal.space.voting_power_symbol }}
-            </div>
-            <div class="text-sm">{{ _n((vote.vp / proposal.scores_total) * 100) }}%</div>
-          </div>
+
+  <BlockInfiniteScroller :loading-more="loadingMore" @end-reached="handleEndReached">
+    <table class="text-right w-full">
+      <thead>
+        <tr class="border-b">
+          <th class="text-left pl-4 eyebrow text-skin-text pb-2">Votes</th>
+          <th class="eyebrow text-skin-text hidden lg:table-cell">Date</th>
+          <th class="eyebrow text-skin-text">Choice</th>
+          <th class="eyebrow text-skin-text">Voting Power</th>
+          <th class="w-[60px] lg:w-[80px]" />
+        </tr>
+      </thead>
+      <td v-if="!loaded" colspan="5">
+        <UiLoading class="p-4 block text-center" />
+      </td>
+      <template v-else>
+        <div v-if="votes.length === 0" class="p-4 text-center col-span-full">
+          There isn't any votes yet!
         </div>
-        <div
-          class="absolute choice-bg top-0 bottom-0 right-0 opacity-10 pointer-events-none"
-          :style="{
-            width: `${((100 / proposal.scores_total) * vote.vp).toFixed(2)}%`
-          }"
-          :class="`_${vote.choice}`"
-        />
-      </div>
-    </BlockInfiniteScroller>
-  </div>
-  <div v-else class="p-4 text-center">There isn't any votes yet!</div>
+        <tbody>
+          <tr v-for="(vote, i) in votes" :key="i" class="border-b relative">
+            <td class="text-left flex items-center pl-4 py-3">
+              <Stamp :id="vote.voter.id" :size="36" class="mr-3" />
+              <div>
+                <router-link
+                  :to="{
+                    name: 'user',
+                    params: {
+                      id: `${proposal.network}:${vote.voter.id}`
+                    }
+                  }"
+                  @click="$emit('close')"
+                >
+                  {{ vote.voter.name || shortenAddress(vote.voter.id) }}
+                </router-link>
+              </div>
+            </td>
+            <td class="hidden lg:table-cell">{{ _rt(vote.created) }}</td>
+            <td>
+              <div class="text-skin-link" v-text="CHOICES[vote.choice]" />
+            </td>
+            <td>
+              <div class="text-skin-link">
+                {{ _n(vote.vp / 10 ** votingPowerDecimals) }}
+                {{ proposal.space.voting_power_symbol }}
+              </div>
+              <div class="text-sm">{{ _n((vote.vp / proposal.scores_total) * 100) }}%</div>
+            </td>
+            <td>
+              <div class="flex justify-end pr-4">
+                <UiDropdown>
+                  <template #button>
+                    <IH-dots-vertical class="text-skin-link" />
+                  </template>
+                  <template #items>
+                    <UiDropdownItem v-slot="{ active }">
+                      <a
+                        :href="network.helpers.getExplorerUrl(vote.tx, 'transaction')"
+                        target="_blank"
+                        class="flex items-center gap-2"
+                        :class="{ 'opacity-80': active }"
+                      >
+                        <IH-arrow-sm-right class="-rotate-45" :width="16" />
+                        View on block explorer
+                      </a>
+                    </UiDropdownItem>
+                  </template>
+                </UiDropdown>
+              </div>
+            </td>
+            <div
+              class="absolute choice-bg top-0 bottom-0 right-0 opacity-10 pointer-events-none"
+              :style="{
+                width: `${((100 / proposal.scores_total) * vote.vp).toFixed(2)}%`
+              }"
+              :class="`_${vote.choice}`"
+            />
+          </tr>
+        </tbody>
+      </template>
+    </table>
+  </BlockInfiniteScroller>
 </template>
