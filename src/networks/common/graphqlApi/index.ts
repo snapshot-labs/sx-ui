@@ -11,7 +11,7 @@ import {
 } from './queries';
 import { SX_VOTES_QUERY, apollo as api } from '@/helpers/api';
 import { PaginationOpts, SpacesFilter, NetworkApi } from '@/networks/types';
-import { getNames } from '@/helpers/ens';
+// import { getNames } from '@/helpers/ens';
 import { Space, Proposal, Vote, User, Transaction, NetworkID } from '@/types';
 import { ApiSpace, ApiProposal } from './types';
 
@@ -121,10 +121,10 @@ export function createApi(uri: string, networkId: NetworkID): NetworkApi {
         }
       });
 
-      const addresses = data.sxvotes.map(vote => vote.voter);
-      const names = await getNames(addresses);
+      // const addresses = data.votes.map(vote => vote.voter);
+      // const names = await getNames(addresses);
 
-      return data.sxvotes.map(vote => {
+      return data.votes.map(vote => {
         // vote.voter.name = names[vote.voter] || null;
         return vote;
       });
@@ -138,7 +138,7 @@ export function createApi(uri: string, networkId: NetworkID): NetworkApi {
       });
 
       return Object.fromEntries(
-        data.sxvotes.map(vote => [`${networkId}:${vote.space}/${vote.proposal}`, vote])
+        data.votes.map(vote => [`${networkId}:${vote.space}/${vote.proposal}`, vote])
       );
     },
     loadProposals: async (

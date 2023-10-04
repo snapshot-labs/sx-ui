@@ -19,7 +19,7 @@ export const apollo = new ApolloClient({
 
 export const SX_VOTES_QUERY = gql`
   query ($first: Int!, $skip: Int!, $space: String, $proposal: Int) {
-    sxvotes(
+    votes(
       first: $first
       skip: $skip
       where: { space: $space, proposal: $proposal }
