@@ -4,6 +4,13 @@ import Space from '@/views/Space.vue';
 import SpaceOverview from '@/views/Space/Overview.vue';
 import SpaceProposals from '@/views/Space/Proposals.vue';
 import SpaceSearch from '@/views/Space/Search.vue';
+import DiscussionsSettings from '@/views/Discussions/Settings.vue';
+import Discussion from '@/views/Discussions/Discussion.vue';
+import Discuss from '@/views/Discussions/Discuss.vue';
+import NewCategory from '@/views/Discussions/NewCategory.vue';
+import Discussions from '@/views/Discussions/Discussions.vue';
+import Roles from '@/views/Roles.vue';
+import Profile from '@/views/Settings/Profile.vue';
 import SpaceSettings from '@/views/Space/Settings.vue';
 import SpaceTreasury from '@/views/Space/Treasury.vue';
 import SpaceDelegates from '@/views/Space/Delegates.vue';
@@ -28,7 +35,17 @@ const routes: any[] = [
       { path: 'search', name: 'space-search', component: SpaceSearch },
       { path: 'settings', name: 'space-settings', component: SpaceSettings },
       { path: 'treasury', name: 'space-treasury', component: SpaceTreasury },
-      { path: 'delegates', name: 'space-delegates', component: SpaceDelegates }
+      { path: 'delegates', name: 'space-delegates', component: SpaceDelegates },
+      { path: 'roles', name: 'space-roles', component: Roles },
+      { path: 'discussions/:category?', name: 'space-discussions', component: Discussions },
+      {
+        path: 'discussions/:category/settings',
+        name: 'discussions-category-settings',
+        component: DiscussionsSettings
+      },
+      { path: 'discussions/new-category/:parent?', name: 'new-category', component: NewCategory },
+      { path: 'topic/:topic', name: 'topic', component: Discussion },
+      { path: 'discussions/:category/new', name: 'discuss', component: Discuss }
     ]
   },
   {
@@ -45,7 +62,8 @@ const routes: any[] = [
     component: Settings,
     children: [
       { path: '', name: 'settings-spaces', component: SettingsSpaces },
-      { path: 'contacts', name: 'settings-contacts', component: Contacts }
+      { path: 'contacts', name: 'settings-contacts', component: Contacts },
+      { path: 'profile', name: 'settings-profile', component: Profile }
     ]
   },
   { path: '/explore', name: 'explore', component: Explore }

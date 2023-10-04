@@ -31,9 +31,11 @@ export async function loadTopicVotes(voter: string) {
 const USER_FRAGMENT = gql`
   fragment userFragment on User {
     id
-    name
     topic_count
-    vote_count
+    topic_vote_count
+    profile {
+      name
+    }
   }
 `;
 
@@ -77,7 +79,7 @@ export const CATEGORIES_QUERY = gql`
 `;
 
 export const TOPICS_QUERY = gql`
-  query ($first: Int, $category: String, $parent: Int) {
+  query ($first: Int, $category: Int, $parent: Int) {
     topics(
       first: $first
       where: { category: $category, parent: $parent }
@@ -91,7 +93,7 @@ export const TOPICS_QUERY = gql`
 `;
 
 export const TOPIC_QUERY = gql`
-  query ($id: String!) {
+  query ($id: Int!) {
     topic(id: $id) {
       ...topicFragment
     }
@@ -100,7 +102,7 @@ export const TOPIC_QUERY = gql`
 `;
 
 export const CATEGORY_QUERY = gql`
-  query ($id: String!) {
+  query ($id: Int!) {
     category(id: $id) {
       ...categoryFragment
     }

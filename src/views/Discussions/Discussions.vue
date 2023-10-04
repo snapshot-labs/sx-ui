@@ -9,7 +9,7 @@ defineProps<{ space: Space }>();
 const router = useRouter();
 const route = useRoute();
 
-const categoryId = (route.params.category as string) || '0';
+const categoryId = parseInt((route.params.category as string) || '0');
 
 const category = ref<any>({});
 const loading = ref<boolean>(false);
@@ -27,7 +27,7 @@ async function loadCategories() {
   const { data } = await apollo.query({
     query: CATEGORIES_QUERY,
     variables: {
-      parent: parseInt(categoryId)
+      parent: categoryId
     }
   });
 
@@ -43,7 +43,7 @@ async function loadTopics() {
     query: TOPICS_QUERY,
     variables: {
       first: 5,
-      category: categoryId === '0' ? undefined : categoryId,
+      category: categoryId === 0 ? undefined : categoryId,
       parent: 0
     }
   });
@@ -69,11 +69,11 @@ async function loadCategory() {
 onMounted(async () => {
   loadTopics();
 
-  if (categoryId !== '0') {
+  if (categoryId !== 0) {
     await loadCategory();
   }
 
-  if (category.value.category_count || categoryId === '0') {
+  if (category.value.category_count || categoryId === 0) {
     loadCategories();
   }
 });
@@ -148,7 +148,7 @@ onMounted(async () => {
     </UiDropdown>
   </div>
   <div class="space-y-4">
-    <div v-if="category.category_count || categoryId === '0'">
+    <div v-if="category.category_count || categoryId === 0">
       <Label label="Categories" sticky />
       <UiLoading v-if="loadingCategories && !loadedCategories" class="px-4 py-3 block" />
       <div

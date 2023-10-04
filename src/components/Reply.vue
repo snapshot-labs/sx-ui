@@ -60,7 +60,7 @@ async function loadReplies() {
                   <span
                     class="bg-skin-border text-skin-link rounded-md inline-block px-[6px] text-center text-[14px]"
                   >
-                    {{ reply.author.vote_count + reply.author.topic_count }}
+                    {{ reply.author.topic_vote_count + reply.author.topic_count }}
                   </span>
                 </router-link>
                 <IS-pencil v-if="discussion?.author.id === reply.author.id" class="inline-block" />
