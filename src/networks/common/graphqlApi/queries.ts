@@ -26,8 +26,16 @@ const SPACE_FRAGMENT = gql`
     max_voting_period
     proposal_threshold
     validation_strategy
+    validation_strategy_params
     voting_power_validation_strategy_strategies
     voting_power_validation_strategy_strategies_params
+    voting_power_validation_strategies_parsed_metadata {
+      data {
+        decimals
+        symbol
+        token
+      }
+    }
     strategies
     strategies_params
     strategies_parsed_metadata {

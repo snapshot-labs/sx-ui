@@ -60,6 +60,10 @@ const navigationConfig = computed(() => ({
           settings: {
             name: 'Settings',
             icon: IHCog
+          },
+          'edit-settings': {
+            name: 'Edit settings',
+            icon: IHCog
           }
         }
       : undefined)

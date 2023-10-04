@@ -74,6 +74,7 @@ export type Space = {
   max_voting_period: number;
   proposal_threshold: string;
   validation_strategy: string;
+  validation_strategy_params: string;
   voting_power_validation_strategy_strategies: string[];
   voting_power_validation_strategy_strategies_params: string[];
   voting_power_validation_strategies_parsed_metadata: StrategyParsedMetadata[];
