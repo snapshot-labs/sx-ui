@@ -106,16 +106,6 @@ watchEffect(() => {
     <UiLoading v-if="!proposal" class="ml-4 mt-3" />
     <template v-else>
       <div class="flex-1 md:mr-[340px]">
-        <div class="px-4 flex items-center border-b py-3">
-          <router-link :to="{ name: 'space-overview', params: { id: param } }">
-            <UiButton class="w-[46px] !px-0">
-              <IH-arrow-narrow-left class="inline-block" />
-            </UiButton>
-          </router-link>
-          <h1 class="ml-3 text-[20px]">
-            {{ proposal.title || `Proposal #${proposal.proposal_id}` }}
-          </h1>
-        </div>
         <div class="flex px-4 border-b">
           <router-link
             :to="{

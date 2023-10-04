@@ -84,61 +84,76 @@ async function handleCancelClick() {
 </script>
 
 <template>
-  <div class="flex justify-between items-center mx-4 border-b">
-    <router-link
-      :to="{
-        name: 'user',
-        params: { id: `${proposal.network}:${proposal.author.id}` }
-      }"
-      class="flex items-center py-3"
-    >
-      <Stamp :id="proposal.author.id" :size="32" class="mr-1" />
-      <div class="flex flex-col ml-2 leading-4 gap-1">
-        {{ shortenAddress(proposal.author.id) }}
-        <span class="text-skin-text text-[16px]" v-text="_rt(proposal.created)" />
-      </div>
-    </router-link>
-    <UiDropdown>
-      <template #button>
-        <IH-dots-vertical class="text-skin-link" />
-      </template>
-      <template #items>
-        <UiDropdownItem v-if="editable" v-slot="{ active }">
-          <button
-            class="flex items-center gap-2"
-            :class="{ 'opacity-80': active }"
-            @click="handleEditClick"
-          >
-            <IS-pencil :width="16" />
-            Edit proposal
-          </button>
-        </UiDropdownItem>
-        <UiDropdownItem v-if="cancellable" v-slot="{ active, disabled }" :disabled="cancelling">
-          <button
-            class="flex items-center gap-2"
-            :class="{ 'opacity-80': active, 'opacity-40': disabled }"
-            @click="handleCancelClick"
-          >
-            <IS-x-mark :width="16" />
-            Cancel proposal
-          </button>
-        </UiDropdownItem>
-        <UiDropdownItem v-if="proposalMetadataUrl" v-slot="{ active }">
-          <a
-            :href="proposalMetadataUrl"
-            target="_blank"
-            class="flex items-center gap-2"
-            :class="{ 'opacity-80': active }"
-          >
-            <IH-arrow-sm-right class="-rotate-45" :width="16" />
-            View metadata
-          </a>
-        </UiDropdownItem>
-      </template>
-    </UiDropdown>
-  </div>
   <Container class="pt-5 !max-w-[630px] mx-0 md:mx-auto">
     <div>
+      <h1 class="mb-3 text-[36px]">
+        {{ proposal.title || `Proposal #${proposal.proposal_id}` }}
+      </h1>
+      <div class="flex justify-between items-center mb-3">
+        <router-link
+          :to="{
+            name: 'user',
+            params: { id: `${proposal.network}:${proposal.author.id}` }
+          }"
+          class="flex items-center py-3"
+        >
+          <Stamp :id="proposal.author.id" :size="32" class="mr-1" />
+          <div class="flex flex-col ml-2 leading-4 gap-1">
+            {{ shortenAddress(proposal.author.id) }}
+            <span class="text-skin-text text-[16px]">
+              In
+              <router-link
+                :to="{
+                  name: 'space-overview',
+                  params: { id: `${proposal.network}:${proposal.space.id}` }
+                }"
+                class="text-skin-text"
+              >
+                {{ proposal.space.name }}
+              </router-link>
+              · {{ _rt(proposal.created) }}</span
+            >
+          </div>
+        </router-link>
+        <UiDropdown>
+          <template #button>
+            <IH-dots-vertical class="text-skin-link" />
+          </template>
+          <template #items>
+            <UiDropdownItem v-if="editable" v-slot="{ active }">
+              <button
+                class="flex items-center gap-2"
+                :class="{ 'opacity-80': active }"
+                @click="handleEditClick"
+              >
+                <IS-pencil :width="16" />
+                Edit proposal
+              </button>
+            </UiDropdownItem>
+            <UiDropdownItem v-if="cancellable" v-slot="{ active, disabled }" :disabled="cancelling">
+              <button
+                class="flex items-center gap-2"
+                :class="{ 'opacity-80': active, 'opacity-40': disabled }"
+                @click="handleCancelClick"
+              >
+                <IS-x-mark :width="16" />
+                Cancel proposal
+              </button>
+            </UiDropdownItem>
+            <UiDropdownItem v-if="proposalMetadataUrl" v-slot="{ active }">
+              <a
+                :href="proposalMetadataUrl"
+                target="_blank"
+                class="flex items-center gap-2"
+                :class="{ 'opacity-80': active }"
+              >
+                <IH-arrow-sm-right class="-rotate-45" :width="16" />
+                View metadata
+              </a>
+            </UiDropdownItem>
+          </template>
+        </UiDropdown>
+      </div>
       <Markdown v-if="proposal.body" class="mb-4" :body="proposal.body" />
       <div v-if="discussion">
         <h4 class="mb-3 eyebrow flex items-center">

@@ -61,6 +61,7 @@ function formatProposal(proposal: ApiProposal, networkId: NetworkID, current: nu
     ...proposal,
     space: {
       id: proposal.space.id,
+      name: proposal.space.metadata.name,
       avatar: proposal.space.metadata.avatar,
       controller: proposal.space.controller,
       authenticators: proposal.space.authenticators,
