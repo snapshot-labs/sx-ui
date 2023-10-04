@@ -31,6 +31,7 @@ import type {
   VotingPower
 } from '@/networks/types';
 import type { MetaTransaction } from '@snapshot-labs/sx/dist/utils/encoding/execution-hash';
+import { vote as serviceVote } from '@/helpers/service';
 import type { Space, Proposal, SpaceMetadata, StrategyParsedMetadata, NetworkID } from '@/types';
 
 type Choice = 0 | 1 | 2;
@@ -320,7 +321,7 @@ export function createActions(
 
       const isContract = await getIsContract(account);
 
-      const { relayerType, authenticator, strategies } = pickAuthenticatorAndStrategies({
+      const { authenticator, strategies } = pickAuthenticatorAndStrategies({
         authenticators: proposal.space.authenticators,
         strategies: proposal.strategies,
         connectorType,
@@ -338,25 +339,14 @@ export function createActions(
         strategies,
         proposal: proposal.proposal_id,
         choice: convertedChoice,
-        metadataUri: ''
+        metadataUri: '',
+        chainId
       };
 
-      if (relayerType === 'evm') {
-        return ethSigClient.vote({
-          signer: web3.getSigner(),
-          data
-        });
-      }
-
-      return client.vote(
-        {
-          signer: web3.getSigner(),
-          envelope: {
-            data
-          }
-        },
-        { noWait: isContract }
-      );
+      return serviceVote({
+        signer: web3.getSigner(),
+        data
+      });
     },
     finalizeProposal: () => null,
     receiveProposal: () => null,
