@@ -4,11 +4,6 @@ import { shorten } from '@/helpers/utils';
 import { pinPineapple } from '@/helpers/pin';
 import { StrategyConfig } from '../types';
 
-import IHCode from '~icons/heroicons-outline/code';
-import IHCube from '~icons/heroicons-outline/cube';
-import IHPencil from '~icons/heroicons-outline/pencil';
-import IHLightningBolt from '~icons/heroicons-outline/lightning-bolt';
-
 export const API_URL = 'https://api-1.snapshotx.xyz';
 
 export const SUPPORTED_AUTHENTICATORS = {
@@ -64,14 +59,14 @@ export const EDITOR_AUTHENTICATORS = [
     name: 'Starknet transaction',
     about:
       'Will authenticate a user by checking if the caller address corresponds to the author or voter address.',
-    icon: IHCube,
+    icon: IconHeroiconsOutlineCube,
     paramsDefinition: null
   },
   {
     address: '0xb321c09ee9851c125bd4213de71ebd03c07813556bae5d4700968df42ee476',
     name: 'Starknet signature',
     about: 'Will authenticate a user based on an EIP-712 message signed by a Starknet private key.',
-    icon: IHPencil,
+    icon: IconHeroiconsOutlinePencil,
     paramsDefinition: null
   },
   {
@@ -79,7 +74,7 @@ export const EDITOR_AUTHENTICATORS = [
     name: 'Ethereum transaction',
     about:
       'Will authenticate a user by checking if the caller address of Ethereum transaction corresponds to the author or voter address.',
-    icon: IHCube,
+    icon: IconHeroiconsOutlineCube,
     paramsDefinition: null
   },
   {
@@ -87,7 +82,7 @@ export const EDITOR_AUTHENTICATORS = [
     name: 'Ethereum signature',
     about:
       'Will authenticate a user based on an EIP-712 message signed by an Ethereum private key.',
-    icon: IHPencil,
+    icon: IconHeroiconsOutlinePencil,
     paramsDefinition: null
   }
 ];
@@ -97,7 +92,7 @@ export const EDITOR_PROPOSAL_VALIDATIONS = [
     address: '0x38f034f17941669555fca61c43c67a517263aaaab833b26a1ab877a21c0bb6d',
     type: 'VotingPower',
     name: 'Voting power',
-    icon: IHLightningBolt,
+    icon: IconHeroiconsOutlineLightningBolt,
     validate: (params: Record<string, any>) => {
       return params?.strategies?.length > 0;
     },
@@ -247,7 +242,7 @@ export const EDITOR_VOTING_STRATEGIES = [
     name: 'ERC-20 Votes (EIP-5805)',
     about:
       'A strategy that allows delegated balances of OpenZeppelin style checkpoint tokens to be used as voting power.',
-    icon: IHCode,
+    icon: IconHeroiconsOutlineCode,
     generateSummary: (params: Record<string, any>) =>
       `(${shorten(params.contractAddress)}, ${params.decimals})`,
     generateParams: (params: Record<string, any>) => [params.contractAddress],

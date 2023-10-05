@@ -1,16 +1,6 @@
 <script lang="ts" setup>
 import { compareAddresses } from '@/helpers/utils';
 
-// TODO: need to import all icons https://github.com/antfu/unplugin-icons/issues/5
-// move to this when stable to avoid imports https://www.npmjs.com/package/@iconify/tailwind
-import IHGlobeAlt from '~icons/heroicons-outline/globe-alt';
-import IHNewspaper from '~icons/heroicons-outline/newspaper';
-import IHCash from '~icons/heroicons-outline/cash';
-import IHLightningBolt from '~icons/heroicons-outline/lightning-bolt';
-import IHCog from '~icons/heroicons-outline/cog';
-import IHUsers from '~icons/heroicons-outline/users';
-import IHStop from '~icons/heroicons-outline/stop';
-
 const route = useRoute();
 const uiStore = useUiStore();
 const spacesStore = useSpacesStore();
@@ -35,17 +25,17 @@ const navigationConfig = computed(() => ({
   space: {
     overview: {
       name: 'Overview',
-      icon: IHGlobeAlt
+      icon: IconHeroiconsOutlineGlobeAlt
     },
     proposals: {
       name: 'Proposals',
-      icon: IHNewspaper
+      icon: IconHeroiconsOutlineNewspaper
     },
     ...(space.value?.delegation_api_url
       ? {
           delegates: {
             name: 'Delegates',
-            icon: IHLightningBolt
+            icon: IconHeroiconsOutlineLightningBolt
           }
         }
       : undefined),
@@ -53,7 +43,7 @@ const navigationConfig = computed(() => ({
       ? {
           treasury: {
             name: 'Treasury',
-            icon: IHCash
+            icon: IconHeroiconsOutlineCash
           }
         }
       : undefined),
@@ -61,7 +51,7 @@ const navigationConfig = computed(() => ({
       ? {
           settings: {
             name: 'Settings',
-            icon: IHCog
+            icon: IconHeroiconsOutlineCog
           }
         }
       : undefined)
@@ -69,11 +59,11 @@ const navigationConfig = computed(() => ({
   settings: {
     spaces: {
       name: 'My spaces',
-      icon: IHStop
+      icon: IconHeroiconsOutlineStop
     },
     contacts: {
       name: 'Contacts',
-      icon: IHUsers
+      icon: IconHeroiconsOutlineUsers
     }
   }
 }));

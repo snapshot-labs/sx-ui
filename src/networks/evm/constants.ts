@@ -4,14 +4,6 @@ import { shorten } from '@/helpers/utils';
 import type { Signer } from '@ethersproject/abstract-signer';
 import type { StrategyConfig } from '../types';
 
-import IHCode from '~icons/heroicons-outline/code';
-import IHBeaker from '~icons/heroicons-outline/beaker';
-import IHCube from '~icons/heroicons-outline/cube';
-import IHPencil from '~icons/heroicons-outline/pencil';
-import IHClock from '~icons/heroicons-outline/clock';
-import IHUserCircle from '~icons/heroicons-outline/user-circle';
-import IHLightningBolt from '~icons/heroicons-outline/lightning-bolt';
-
 export const SUPPORTED_AUTHENTICATORS = {
   '0xba06e6ccb877c332181a6867c05c8b746a21aed1': true,
   '0x5f9b7d78c9a37a439d78f801e0e339c6e711e260': true
@@ -64,7 +56,7 @@ export const EDITOR_AUTHENTICATORS = [
     name: 'Ethereum transaction',
     about:
       'Will authenticate a user by checking if the caller address corresponds to the author or voter address.',
-    icon: IHCube,
+    icon: IconHeroiconsOutlineCube,
     paramsDefinition: null
   },
   {
@@ -72,7 +64,7 @@ export const EDITOR_AUTHENTICATORS = [
     name: 'Ethereum signature',
     about:
       'Will authenticate a user based on an EIP-712 message signed by an Ethereum private key.',
-    icon: IHPencil,
+    icon: IconHeroiconsOutlinePencil,
     paramsDefinition: null
   }
 ];
@@ -82,7 +74,7 @@ export const EDITOR_PROPOSAL_VALIDATIONS = [
     address: '0x6d9d6d08ef6b26348bd18f1fc8d953696b7cf311',
     type: 'VotingPower',
     name: 'Voting power',
-    icon: IHLightningBolt,
+    icon: IconHeroiconsOutlineLightningBolt,
     validate: (params: Record<string, any>) => {
       return params?.strategies?.length > 0;
     },
@@ -126,7 +118,7 @@ export const EDITOR_VOTING_STRATEGIES = [
     name: 'Vanilla',
     about:
       'A strategy that gives one voting power to anyone. It should only be used for testing purposes and not in production.',
-    icon: IHBeaker,
+    icon: IconHeroiconsOutlineBeaker,
     generateMetadata: (params: Record<string, any>) => ({
       name: 'Vanilla',
       properties: {
@@ -154,7 +146,7 @@ export const EDITOR_VOTING_STRATEGIES = [
     name: 'ERC-20 Votes (EIP-5805)',
     about:
       'A strategy that allows delegated balances of OpenZeppelin style checkpoint tokens to be used as voting power.',
-    icon: IHCode,
+    icon: IconHeroiconsOutlineCode,
     generateSummary: (params: Record<string, any>) =>
       `(${shorten(params.contractAddress)}, ${params.decimals})`,
     generateParams: (params: Record<string, any>) => [params.contractAddress],
@@ -197,7 +189,7 @@ export const EDITOR_VOTING_STRATEGIES = [
     name: 'ERC-20 Votes Comp (EIP-5805)',
     about:
       'A strategy that allows delegated balances of Compound style checkpoint tokens to be used as voting power.',
-    icon: IHCode,
+    icon: IconHeroiconsOutlineCode,
     generateSummary: (params: Record<string, any>) =>
       `(${shorten(params.contractAddress)}, ${params.decimals})`,
     generateParams: (params: Record<string, any>) => [params.contractAddress],
@@ -244,7 +236,7 @@ export const EDITOR_EXECUTION_STRATEGIES = [
     name: EXECUTORS.SimpleQuorumAvatar,
     about:
       'An execution strategy that allows proposals to execute transactions from a specified target Avatar contract, the most popular one being a Safe.',
-    icon: IHUserCircle,
+    icon: IconHeroiconsOutlineUserCircle,
     generateSummary: (params: Record<string, any>) =>
       `(${params.quorum}, ${shorten(params.contractAddress)})`,
     deploy: async (
@@ -290,7 +282,7 @@ export const EDITOR_EXECUTION_STRATEGIES = [
     name: EXECUTORS.SimpleQuorumTimelock,
     about:
       'Timelock implementation with a specified delay that queues proposal transactions for execution and includes an optional role to veto queued proposals.',
-    icon: IHClock,
+    icon: IconHeroiconsOutlineClock,
     generateSummary: (params: Record<string, any>) => `(${params.quorum}, ${params.timelockDelay})`,
     deploy: async (
       client: clients.EvmEthereumTx,

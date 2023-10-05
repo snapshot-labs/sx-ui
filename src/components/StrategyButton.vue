@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import IHCode from '~icons/heroicons-outline/code';
 import { StrategyTemplate } from '@/networks/types';
 
 defineProps<{
@@ -18,9 +17,11 @@ defineProps<{
   >
     <div class="flex items-center justify-center min-h-[40px] bg-skin-border">
       <component
-        :is="strategy.icon ? strategy.icon : IHCode"
+        :is="strategy.icon"
+        v-if="strategy.icon"
         class="inline-block mx-3 text-skin-link"
       />
+      <IHCode v-else />
     </div>
     <div class="py-3 px-4">
       <h4 class="text-skin-link" v-text="strategy.name" />

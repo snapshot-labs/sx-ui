@@ -25,7 +25,13 @@ export default defineConfig({
       dirs: ['./src/composables', './src/stores'],
       eslintrc: {
         enabled: true
-      }
+      },
+      resolvers: [
+        IconsResolver({
+          componentPrefix: 'icon',
+          enabledCollections: ['heroicons-outline', 'heroicons-solid']
+        })
+      ]
     }),
     Components({
       directoryAsNamespace: true,
