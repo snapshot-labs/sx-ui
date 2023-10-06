@@ -150,10 +150,10 @@ watch([sortBy, choiceFilter], () => {
         <UiLoading class="p-4 block text-center" />
       </td>
       <template v-else>
-        <div v-if="votes.length === 0" class="p-4 text-center col-span-full">
-          There isn't any votes yet!
-        </div>
         <tbody>
+          <td v-if="votes.length === 0" class="p-4 text-center" colspan="5">
+            There isn't any votes yet!
+          </td>
           <tr v-for="(vote, i) in votes" :key="i" class="border-b relative">
             <td class="text-left flex items-center pl-4 py-3">
               <Stamp :id="vote.voter.id" :size="36" class="mr-3" />
