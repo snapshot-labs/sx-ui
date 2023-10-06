@@ -1,6 +1,6 @@
 ### Summary
 
-<!-- _*(Concludes of related issues, a description or list of the changes and the motivation behind them)*_ -->
+<!-- Related issues, a description or list of the changes and the motivation behind them -->
 
 Closes: #
 
