@@ -116,31 +116,35 @@ watch([sortBy, choiceFilter], () => {
       <thead>
         <tr class="border-b">
           <th class="text-left pl-4 eyebrow text-skin-text pb-2">Votes</th>
-          <th class="eyebrow text-skin-text">
-            <div
-              class="flex justify-end items-center"
-              :class="{
-                'text-skin-link': sortBy === 'created-desc' || sortBy === 'created-asc'
-              }"
-              @click="handleSortChange('created')"
-            >
-              <span>Date</span>
-              <IH-arrow-sm-down v-if="sortBy === 'created-desc'" />
-              <IH-arrow-sm-up v-else />
+          <th>
+            <div class="flex justify-end">
+              <button
+                class="flex justify-end items-center min-w-0 eyebrow hover:text-skin-link"
+                :class="{
+                  'text-skin-link': sortBy === 'created-desc' || sortBy === 'created-asc'
+                }"
+                @click="handleSortChange('created')"
+              >
+                <span>Date</span>
+                <IH-arrow-sm-down v-if="sortBy === 'created-desc'" />
+                <IH-arrow-sm-up v-else-if="sortBy === 'created-asc'" />
+              </button>
             </div>
           </th>
           <th class="eyebrow text-skin-text hidden lg:table-cell">Choice</th>
-          <th class="eyebrow text-skin-text">
-            <div
-              class="flex justify-end items-center"
-              :class="{
-                'text-skin-link': sortBy === 'vp-desc' || sortBy === 'vp-asc'
-              }"
-              @click="handleSortChange('vp')"
-            >
-              <span class="truncate pl-2">Voting Power</span>
-              <IH-arrow-sm-down v-if="sortBy === 'vp-desc'" />
-              <IH-arrow-sm-up v-else />
+          <th>
+            <div class="flex justify-end">
+              <button
+                class="flex justify-end items-center min-w-0 eyebrow hover:text-skin-link"
+                :class="{
+                  'text-skin-link': sortBy === 'vp-desc' || sortBy === 'vp-asc'
+                }"
+                @click="handleSortChange('vp')"
+              >
+                <span class="truncate pl-2">Voting Power</span>
+                <IH-arrow-sm-down v-if="sortBy === 'vp-desc'" />
+                <IH-arrow-sm-up v-else-if="sortBy === 'vp-asc'" />
+              </button>
             </div>
           </th>
           <th />
