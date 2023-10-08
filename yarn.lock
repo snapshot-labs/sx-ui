@@ -1493,10 +1493,10 @@
     "@snapshot-labs/eslint-config-base" "^0.1.0-beta.13"
     eslint-plugin-vue "^9.17.0"
 
-"@snapshot-labs/highlight@^0.1.0-beta.0":
-  version "0.1.0-beta.0"
-  resolved "https://registry.yarnpkg.com/@snapshot-labs/highlight/-/highlight-0.1.0-beta.0.tgz#f40d632f97843e45b9516d17b22a86fd23a6ac37"
-  integrity sha512-XPQWl+u0Hq+2hPSGIJ5lOOkhGtdeRsYFBCl8WRarkEqGcNtHjHWNT+2q9dXV2LzFmz6LE5qGP7JjJ8GYl2nWUA==
+"@snapshot-labs/highlight@^0.1.0-beta.1":
+  version "0.1.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@snapshot-labs/highlight/-/highlight-0.1.0-beta.1.tgz#9bcf3036e7c6927d4b3b8631920c3c36b54baaf7"
+  integrity sha512-J5GhDqwuhWzgjcjtIZgXt7e7oGxjPO/NgnPphh4xMwg2GdfPJU2/8Lz1n9VUKtBa+/Hma764bpak0/fCzc1mKQ==
   dependencies:
     "@ethersproject/wallet" "^5.7.0"
     "@snapshot-labs/pineapple" "^0.2.0"

@@ -4,7 +4,7 @@ import { ref } from 'vue';
 
 const route = useRoute();
 
-const id = route.params.topic as string;
+const id = parseInt(route.params.topic as string);
 
 const topic = ref<any>({});
 const replies = ref([]);

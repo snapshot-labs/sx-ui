@@ -83,9 +83,7 @@ onMounted(async () => {
   <div class="p-4 space-x-2 flex">
     <div class="flex-auto">
       <div v-if="category.parent" class="flex items-center space-x-3">
-        <router-link
-          :to="{ name: 'space-discussions', params: { category: category.parent.slice(4) } }"
-        >
+        <router-link :to="{ name: 'space-discussions', params: { category: category.parent } }">
           <UiButton class="!px-0 w-[46px]">
             <IH-arrow-narrow-left class="inline-block" />
           </UiButton>

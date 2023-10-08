@@ -26,7 +26,7 @@ export function useAccount() {
   }
 
   function voted(topic) {
-    return topicVotes.value[topic] && topicVotes.value[topic];
+    return topicVotes.value[topic];
   }
 
   return { account: web3.value.account, loadVotes, votes, topicVotes, voted };

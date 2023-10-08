@@ -23,9 +23,9 @@ async function handleVote(choice: number) {
 
   console.log('Receipt', receipt);
   if (voted(props.topic.id)) {
-    score.value -= voted(props.topic.id);
+    score.value -= voted(props.topic.id) === 0 ? -1 : 1;
   }
-  score.value += choice;
+  score.value += choice === 0 ? -1 : 1;
   topicVotes.value[props.topic.id] = choice;
   loading.value = false;
 }
@@ -37,7 +37,7 @@ async function handleVote(choice: number) {
       <IH-chevron-up
         class="inline-block w-[20px] h-[20px] text-skin-text hover:text-green"
         :class="{
-          'text-green': voted(topic.id) === 1 && !loading
+          '!text-green': voted(topic.id) === 1 && !loading
         }"
       />
     </a>
@@ -45,11 +45,11 @@ async function handleVote(choice: number) {
       <UiLoading v-if="loading" class="absolute -top-[2px] left-[10px]" />
       <div v-else class="text-skin-link font-bold" v-text="_n(score)" />
     </div>
-    <a @click="handleVote(-1)">
+    <a @click="handleVote(0)">
       <IH-chevron-down
         class="inline-block w-[20px] h-[20px] text-skin-text hover:text-red"
         :class="{
-          'text-red': voted(topic.id) === -1 && !loading
+          '!text-red': voted(topic.id) === 0 && !loading
         }"
       />
     </a>
