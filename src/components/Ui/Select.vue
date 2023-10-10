@@ -34,9 +34,7 @@ const items = computed(() => props.items);
           <div
             v-if="currentItem.indicator"
             class="w-[8px] h-[8px] rounded-full"
-            :class="{
-              [currentItem.indicator]: true
-            }"
+            :class="currentItem.indicator"
           />
           {{ currentItem.label }}
         </template>
@@ -49,13 +47,7 @@ const items = computed(() => props.items);
           :class="{ 'opacity-80': active, 'opacity-40': disabled }"
           @click="() => emit('update:modelValue', item.key)"
         >
-          <div
-            v-if="item.indicator"
-            class="w-[8px] h-[8px] rounded-full"
-            :class="{
-              [item.indicator]: true
-            }"
-          />
+          <div v-if="item.indicator" class="w-[8px] h-[8px] rounded-full" :class="item.indicator" />
           {{ item.label }}
         </button>
       </UiDropdownItem>
