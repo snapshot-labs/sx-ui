@@ -3,7 +3,7 @@ import { NotificationType } from '@/types';
 
 defineProps<{
   type: NotificationType;
-  dismissable?: boolean;
+  dismissible?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -25,7 +25,7 @@ const emit = defineEmits<{
   >
     <slot />
     <a
-      v-if="dismissable"
+      v-if="dismissible"
       class="text-skin-link opacity-50 hover:opacity-100"
       @click="emit('close')"
     >
