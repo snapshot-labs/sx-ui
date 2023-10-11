@@ -1,7 +1,7 @@
 import mixpanel from 'mixpanel-browser';
 
 export function useMixpanel() {
-  mixpanel.init('47b43858cf6fe9376f8deddda52cbaaf');
+  mixpanel.init(import.meta.env.VITE_MIXPANEL_TOKEN, { ip: false });
 
   return { mixpanel };
 }
