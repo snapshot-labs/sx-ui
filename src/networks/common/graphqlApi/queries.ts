@@ -31,23 +31,21 @@ const SPACE_FRAGMENT = gql`
     voting_power_validation_strategy_strategies_params
     voting_power_validation_strategies_parsed_metadata {
       data {
-        decimals
-        symbol
-        token
-      }
-    }
-    strategies
-    strategies_params
-    strategies_parsed_metadata {
-      data {
+        name
+        description
         decimals
         symbol
         token
         payload
       }
     }
-    voting_power_validation_strategies_parsed_metadata {
+    strategies_indicies
+    strategies
+    strategies_params
+    strategies_parsed_metadata {
       data {
+        name
+        description
         decimals
         symbol
         token
@@ -79,14 +77,8 @@ const PROPOSAL_FRAGMENT = gql`
       }
       strategies_parsed_metadata {
         data {
-          decimals
-          symbol
-          token
-          payload
-        }
-      }
-      voting_power_validation_strategies_parsed_metadata {
-        data {
+          name
+          description
           decimals
           symbol
           token
@@ -118,6 +110,7 @@ const PROPOSAL_FRAGMENT = gql`
     execution_strategy
     execution_strategy_type
     timelock_veto_guardian
+    strategies_indicies
     strategies
     strategies_params
     created

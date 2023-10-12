@@ -128,7 +128,7 @@ export const EDITOR_VOTING_STRATEGIES = [
     about:
       'A strategy that gives one voting power to anyone. It should only be used for testing purposes and not in production.',
     icon: IHBeaker,
-    generateMetadata: (params: Record<string, any>) => ({
+    generateMetadata: async (params: Record<string, any>) => ({
       name: 'Vanilla',
       properties: {
         symbol: params.symbol,
@@ -159,7 +159,7 @@ export const EDITOR_VOTING_STRATEGIES = [
     generateSummary: (params: Record<string, any>) =>
       `(${shorten(params.contractAddress)}, ${params.decimals})`,
     generateParams: (params: Record<string, any>) => [params.contractAddress],
-    generateMetadata: (params: Record<string, any>) => ({
+    generateMetadata: async (params: Record<string, any>) => ({
       name: 'ERC-20 Votes (EIP-5805)',
       properties: {
         symbol: params.symbol,
@@ -202,7 +202,7 @@ export const EDITOR_VOTING_STRATEGIES = [
     generateSummary: (params: Record<string, any>) =>
       `(${shorten(params.contractAddress)}, ${params.decimals})`,
     generateParams: (params: Record<string, any>) => [params.contractAddress],
-    generateMetadata: (params: Record<string, any>) => ({
+    generateMetadata: async (params: Record<string, any>) => ({
       name: 'ERC-20 Votes Comp (EIP-5805)',
       properties: {
         symbol: params.symbol,

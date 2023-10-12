@@ -44,12 +44,14 @@ export function createStrategyPicker({
   return function pick({
     authenticators,
     strategies,
-    isContract = false,
+    strategiesIndicies,
+    isContract,
     connectorType
   }: {
     authenticators: string[];
     strategies: string[];
-    isContract?: boolean;
+    strategiesIndicies: number[];
+    isContract: boolean;
     connectorType: Connector;
   }) {
     const authenticatorsInfo = [...authenticators]
@@ -106,7 +108,7 @@ export function createStrategyPicker({
     );
 
     const selectedStrategies = strategies
-      .map((strategy, index) => ({ address: strategy, index }) as const)
+      .map((strategy, index) => ({ address: strategy, index: strategiesIndicies[index] }) as const)
       .filter(({ address }) => supportedStrategies[address]);
 
     if (!authenticatorInfo || (strategies.length !== 0 && selectedStrategies.length === 0)) {

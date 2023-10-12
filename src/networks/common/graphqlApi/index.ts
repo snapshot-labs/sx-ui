@@ -24,7 +24,7 @@ import { PaginationOpts, SpacesFilter, NetworkApi } from '@/networks/types';
 import { getNames } from '@/helpers/stamp';
 import { CHOICES } from '@/helpers/constants';
 import { Space, Proposal, Vote, User, Transaction, NetworkID, ProposalState } from '@/types';
-import { ApiSpace, ApiProposal } from './types';
+import { ApiSpace, ApiProposal, ApiStrategyParsedMetadata } from './types';
 
 type ApiOptions = {
   highlightApiUrl?: string;
@@ -54,6 +54,22 @@ function formatExecution(execution: string): Transaction[] {
   }
 }
 
+function processStrategiesMetadata(
+  parsedMetadata: ApiStrategyParsedMetadata[],
+  strategiesIndicies?: number[]
+) {
+  return parsedMetadata
+    .filter((_, i) => (strategiesIndicies ? strategiesIndicies.includes(i) : true))
+    .map(({ data: { name, description, decimals, symbol, token, payload } }) => ({
+      name,
+      description,
+      decimals,
+      symbol,
+      token,
+      payload
+    }));
+}
+
 function formatSpace(space: ApiSpace, networkId: NetworkID): Space {
   return {
     ...space,
@@ -73,22 +89,12 @@ function formatSpace(space: ApiSpace, networkId: NetworkID): Space {
     delegation_contract: space.metadata.delegation_contract,
     executors: space.metadata.executors,
     executors_types: space.metadata.executors_types,
-    voting_power_validation_strategies_parsed_metadata:
-      space.voting_power_validation_strategies_parsed_metadata.map(
-        ({ data: { decimals, symbol, token, payload } }) => ({
-          decimals,
-          symbol,
-          token,
-          payload
-        })
-      ),
-    strategies_parsed_metadata: space.strategies_parsed_metadata.map(
-      ({ data: { decimals, symbol, token, payload } }) => ({
-        decimals,
-        symbol,
-        token,
-        payload
-      })
+    voting_power_validation_strategies_parsed_metadata: processStrategiesMetadata(
+      space.voting_power_validation_strategies_parsed_metadata
+    ),
+    strategies_parsed_metadata: processStrategiesMetadata(
+      space.strategies_parsed_metadata,
+      space.strategies_indicies
     )
   };
 }
@@ -105,22 +111,9 @@ function formatProposal(proposal: ApiProposal, networkId: NetworkID, current: nu
       voting_power_symbol: proposal.space.metadata.voting_power_symbol,
       executors: proposal.space.metadata.executors,
       executors_types: proposal.space.metadata.executors_types,
-      voting_power_validation_strategies_parsed_metadata:
-        proposal.space.voting_power_validation_strategies_parsed_metadata.map(
-          ({ data: { decimals, symbol, token, payload } }) => ({
-            decimals,
-            symbol,
-            token,
-            payload
-          })
-        ),
-      strategies_parsed_metadata: proposal.space.strategies_parsed_metadata.map(
-        ({ data: { decimals, symbol, token, payload } }) => ({
-          decimals,
-          symbol,
-          token,
-          payload
-        })
+      strategies_parsed_metadata: processStrategiesMetadata(
+        proposal.space.strategies_parsed_metadata,
+        proposal.strategies_indicies
       )
     },
     metadata_uri: proposal.metadata.id,

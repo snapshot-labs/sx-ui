@@ -191,6 +191,7 @@ export function createActions(
       const { relayerType, authenticator, strategies } = pickAuthenticatorAndStrategies({
         authenticators: space.authenticators,
         strategies: space.voting_power_validation_strategy_strategies,
+        strategiesIndicies: space.voting_power_validation_strategy_strategies.map((_, i) => i),
         connectorType,
         isContract
       });
@@ -252,6 +253,7 @@ export function createActions(
       const { relayerType, authenticator } = pickAuthenticatorAndStrategies({
         authenticators: space.authenticators,
         strategies: space.voting_power_validation_strategy_strategies,
+        strategiesIndicies: space.voting_power_validation_strategy_strategies.map((_, i) => i),
         connectorType,
         isContract
       });
@@ -325,6 +327,7 @@ export function createActions(
       const { relayerType, authenticator, strategies } = pickAuthenticatorAndStrategies({
         authenticators: proposal.space.authenticators,
         strategies: proposal.strategies,
+        strategiesIndicies: proposal.strategies_indicies,
         connectorType,
         isContract
       });
@@ -475,6 +478,9 @@ export function createActions(
       );
 
       return votesContract.delegate(delegatee);
+    },
+    updateStrategies: () => {
+      throw new Error('Not implemented');
     },
     send: (envelope: any) => ethSigClient.send(envelope),
     getVotingPower: async (

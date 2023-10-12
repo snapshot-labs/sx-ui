@@ -325,7 +325,7 @@ export function createConstants(networkId: NetworkID) {
       }
     },
     {
-      address: '0x619040eb54857252396d0bf337dc7a7f98182fa015c11578201105038106cb7',
+      address: config.Strategies.ERC20Votes,
       name: 'ERC-20 Votes (EIP-5805)',
       about:
         'A strategy that allows delegated balances of OpenZeppelin style checkpoint tokens to be used as voting power.',
