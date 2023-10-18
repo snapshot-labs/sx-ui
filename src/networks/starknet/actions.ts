@@ -6,8 +6,13 @@ import {
   NetworkConfig
 } from '@snapshot-labs/sx';
 import { MANA_URL } from '@/helpers/mana';
-import { createErc1155Metadata, getUrl, verifyNetwork } from '@/helpers/utils';
-import { getExecutionData, createStrategyPicker } from '@/networks/common/helpers';
+import { createErc1155Metadata, verifyNetwork } from '@/helpers/utils';
+import {
+  getExecutionData,
+  buildMetadata,
+  parseStrategyMetadata,
+  createStrategyPicker
+} from '@/networks/common/helpers';
 import { EVM_CONNECTORS, STARKNET_CONNECTORS } from '@/networks/common/constants';
 import type { RpcProvider } from 'starknet';
 import type { MetaTransaction } from '@snapshot-labs/sx/dist/utils/encoding/execution-hash';
@@ -66,26 +71,6 @@ export function createActions(
     return code !== '0x';
   };
 
-  const buildMetadata = async (config: StrategyConfig) => {
-    if (!config.generateMetadata) return '';
-
-    const metadata = await config.generateMetadata(config.params);
-    const pinned = await helpers.pin(metadata);
-
-    return `ipfs://${pinned.cid}`;
-  };
-
-  const parseStrategyMetadata = async (metadata: string | null) => {
-    if (metadata === null) return null;
-    if (!metadata.startsWith('ipfs://')) return JSON.parse(metadata);
-
-    const strategyUrl = getUrl(metadata);
-    if (!strategyUrl) return null;
-
-    const res = await fetch(strategyUrl);
-    return res.json();
-  };
-
   const client = new clients.StarkNetTx(clientConfig);
   const starkSigClient = new clients.StarkNetSig(clientConfig);
   const ethSigClient = new clients.EthereumSig(clientConfig);
@@ -121,10 +106,13 @@ export function createActions(
       );
 
       const metadataUris = await Promise.all(
-        params.votingStrategies.map(config => buildMetadata(config))
+        params.votingStrategies.map(config => buildMetadata(helpers, config))
       );
 
-      const proposalValidationStrategyMetadataUri = await buildMetadata(params.validationStrategy);
+      const proposalValidationStrategyMetadataUri = await buildMetadata(
+        helpers,
+        params.validationStrategy
+      );
 
       return client.deploySpace({
         account: web3.provider.account,
@@ -418,10 +406,13 @@ export function createActions(
       validationStrategy: StrategyConfig
     ) => {
       const metadataUris = await Promise.all(
-        votingStrategiesToAdd.map(config => buildMetadata(config))
+        votingStrategiesToAdd.map(config => buildMetadata(helpers, config))
       );
 
-      const proposalValidationStrategyMetadataUri = await buildMetadata(validationStrategy);
+      const proposalValidationStrategyMetadataUri = await buildMetadata(
+        helpers,
+        validationStrategy
+      );
 
       return client.updateSettings({
         signer: web3.provider.account,

@@ -1,8 +1,9 @@
 import { getExecutionData as _getExecutionData } from '@snapshot-labs/sx';
 import { MetaTransaction } from '@snapshot-labs/sx/dist/utils/encoding/execution-hash';
-import { Connector } from '@/networks/types';
-import { Space } from '@/types';
 import { EVM_CONNECTORS, STARKNET_CONNECTORS } from './constants';
+import { getUrl } from '@/helpers/utils';
+import { Connector, NetworkHelpers, StrategyConfig } from '@/networks/types';
+import { Space } from '@/types';
 
 type SpaceExecutionData = Pick<Space, 'executors' | 'executors_types'>;
 type ExecutorType = Parameters<typeof _getExecutionData>[0];
@@ -24,6 +25,26 @@ export function getExecutionData(
   return _getExecutionData(executorType, executionStrategy, {
     transactions
   });
+}
+
+export async function parseStrategyMetadata(metadata: string | null) {
+  if (metadata === null) return null;
+  if (!metadata.startsWith('ipfs://')) return JSON.parse(metadata);
+
+  const strategyUrl = getUrl(metadata);
+  if (!strategyUrl) return null;
+
+  const res = await fetch(strategyUrl);
+  return res.json();
+}
+
+export async function buildMetadata(helpers: NetworkHelpers, config: StrategyConfig) {
+  if (!config.generateMetadata) return '';
+
+  const metadata = await config.generateMetadata(config.params);
+  const pinned = await helpers.pin(metadata);
+
+  return `ipfs://${pinned.cid}`;
 }
 
 export function createStrategyPicker({

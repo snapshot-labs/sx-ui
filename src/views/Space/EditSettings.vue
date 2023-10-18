@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import objectHash from 'object-hash';
 import { compareAddresses } from '@/helpers/utils';
-import { getNetwork } from '@/networks';
+import { evmNetworks, getNetwork } from '@/networks';
 import { StrategyConfig, StrategyTemplate, GeneratedMetadata } from '@/networks/types';
 import { Space, StrategyParsedMetadata } from '@/types';
 
@@ -102,10 +102,18 @@ async function getInitialValidationStrategy(
 
 async function hasStrategyChanged(
   strategy: StrategyConfig,
-  previousParams: any = [],
+  previousParams: any,
   previousMetadata: any = {}
 ) {
-  const params = strategy.generateParams ? strategy.generateParams(strategy.params) : [];
+  let params;
+  if (evmNetworks.includes(props.space.network)) {
+    params = strategy.generateParams ? strategy.generateParams(strategy.params) : ['0x'];
+    previousParams = previousParams ?? ['0x'];
+  } else {
+    params = strategy.generateParams ? strategy.generateParams(strategy.params) : [];
+    previousParams = previousParams ?? [];
+  }
+
   const metadata = strategy.generateMetadata
     ? await strategy.generateMetadata(strategy.params)
     : {};

@@ -1,7 +1,10 @@
 import { AbiCoder } from '@ethersproject/abi';
 import { clients } from '@snapshot-labs/sx';
-import { shorten } from '@/helpers/utils';
+import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
+import { getUrl, shorten } from '@/helpers/utils';
+import { pinGraph } from '@/helpers/pin';
 import type { Signer } from '@ethersproject/abstract-signer';
+import { StrategyParsedMetadata } from '@/types';
 import type { StrategyConfig } from '../types';
 
 import IHCode from '~icons/heroicons-outline/code';
@@ -26,7 +29,7 @@ export const SUPPORTED_STRATEGIES = {
   '0xc1245c5dca7885c73e32294140f1e5d30688c202': true,
   '0x0c2de612982efd102803161fc7c74cca15db932c': true,
   '0x2c8631584474e750cedf2fb6a904f2e84777aefe': true,
-  '0x3cee21a33751a2722413ff62dec3dec48e7748a4': true
+  '0x34f0afff5a739bbf3e285615f50e40ddaaf2a829': true
 };
 
 export const SUPPORTED_EXECUTORS = {
@@ -51,7 +54,7 @@ export const STRATEGIES = {
   '0xc1245c5dca7885c73e32294140f1e5d30688c202': 'Vanilla',
   '0x2c8631584474e750cedf2fb6a904f2e84777aefe': 'ERC-20 Votes (EIP-5805)',
   '0x0c2de612982efd102803161fc7c74cca15db932c': 'ERC-20 Votes Comp (EIP-5805)',
-  '0x3cee21a33751a2722413ff62dec3dec48e7748a4': 'Whitelist'
+  '0x34f0afff5a739bbf3e285615f50e40ddaaf2a829': 'Merkle whitelist'
 };
 
 export const EXECUTORS = {
@@ -105,6 +108,29 @@ export const EDITOR_PROPOSAL_VALIDATIONS = [
         )
       ];
     },
+    generateMetadata: async (params: Record<string, any>) => {
+      const strategiesMetadata = await Promise.all(
+        params.strategies.map(async (strategy: StrategyConfig) => {
+          if (!strategy.generateMetadata) return;
+
+          const metadata = await strategy.generateMetadata(strategy.params);
+          const pinned = await pinGraph(metadata);
+
+          return `ipfs://${pinned.cid}`;
+        })
+      );
+
+      return {
+        strategies_metadata: strategiesMetadata
+      };
+    },
+    parseParams: async (params: string) => {
+      const abiCoder = new AbiCoder();
+
+      return {
+        threshold: abiCoder.decode(['uint256', 'tuple(address addr, bytes params)[]'], params)[0]
+      };
+    },
     paramsDefinition: {
       type: 'object',
       title: 'Params',
@@ -135,6 +161,13 @@ export const EDITOR_VOTING_STRATEGIES = [
         decimals: 0
       }
     }),
+    parseParams: async (params: string, metadata: StrategyParsedMetadata | null) => {
+      if (!metadata) throw new Error('Missing metadata');
+
+      return {
+        symbol: metadata.symbol
+      };
+    },
     paramsDefinition: {
       type: 'object',
       title: 'Params',
@@ -146,6 +179,88 @@ export const EDITOR_VOTING_STRATEGIES = [
           maxLength: MAX_SYMBOL_LENGTH,
           title: 'Symbol',
           examples: ['e.g. VP']
+        }
+      }
+    }
+  },
+  {
+    address: '0x34f0afff5a739bbf3e285615f50e40ddaaf2a829',
+    name: 'Whitelist',
+    about:
+      'A strategy that defines a list of addresses each with designated voting power, using a Merkle tree for verification.',
+    generateSummary: (params: Record<string, any>) => {
+      const length = params.whitelist.trim().length === 0 ? 0 : params.whitelist.split('\n').length;
+
+      return `(${length} ${length === 1 ? 'address' : 'addresses'})`;
+    },
+    generateParams: (params: Record<string, any>) => {
+      const whitelist = params.whitelist.split('\n').map((item: string) => {
+        const [address, votingPower] = item.split(':');
+
+        return [address, BigInt(votingPower)];
+      });
+
+      const tree = StandardMerkleTree.of(whitelist, ['address', 'uint96']);
+
+      const abiCoder = new AbiCoder();
+      return [abiCoder.encode(['bytes32'], [tree.root])];
+    },
+    generateMetadata: async (params: Record<string, any>) => {
+      const tree = params.whitelist.split('\n').map((item: string) => {
+        const [address, votingPower] = item.split(':');
+
+        return {
+          address,
+          votingPower: votingPower
+        };
+      });
+
+      const pinned = await pinGraph({ tree });
+
+      return {
+        name: 'Whitelist',
+        properties: {
+          symbol: params.symbol,
+          decimals: 0,
+          payload: `ipfs://${pinned.cid}`
+        }
+      };
+    },
+    parseParams: async (params: string, metadata: StrategyParsedMetadata | null) => {
+      if (!metadata) throw new Error('Missing metadata');
+
+      const getWhitelist = async (payload: string) => {
+        const metadataUrl = getUrl(payload);
+
+        if (!metadataUrl) return '';
+
+        const res = await fetch(metadataUrl);
+        const { tree } = await res.json();
+        return tree.map((item: any) => `${item.address}:${item.votingPower}`).join('\n');
+      };
+
+      return {
+        symbol: metadata.symbol,
+        whitelist: metadata.payload ? await getWhitelist(metadata.payload) : ''
+      };
+    },
+    paramsDefinition: {
+      type: 'object',
+      title: 'Params',
+      additionalProperties: false,
+      required: [],
+      properties: {
+        symbol: {
+          type: 'string',
+          maxLength: 6,
+          title: 'Symbol',
+          examples: ['e.g. VP']
+        },
+        whitelist: {
+          type: 'string',
+          format: 'long',
+          title: 'Whitelist',
+          examples: ['0x556B14CbdA79A36dC33FcD461a04A5BCb5dC2A70:40']
         }
       }
     }
@@ -167,6 +282,15 @@ export const EDITOR_VOTING_STRATEGIES = [
         token: params.contractAddress
       }
     }),
+    parseParams: async (params: string, metadata: StrategyParsedMetadata | null) => {
+      if (!metadata) throw new Error('Missing metadata');
+
+      return {
+        contractAddress: metadata.token,
+        decimals: metadata.decimals,
+        symbol: metadata.symbol
+      };
+    },
     paramsDefinition: {
       type: 'object',
       title: 'Params',
@@ -210,6 +334,15 @@ export const EDITOR_VOTING_STRATEGIES = [
         token: params.contractAddress
       }
     }),
+    parseParams: async (params: string, metadata: StrategyParsedMetadata | null) => {
+      if (!metadata) throw new Error('Missing metadata');
+
+      return {
+        contractAddress: metadata.token,
+        decimals: metadata.decimals,
+        symbol: metadata.symbol
+      };
+    },
     paramsDefinition: {
       type: 'object',
       title: 'Params',
