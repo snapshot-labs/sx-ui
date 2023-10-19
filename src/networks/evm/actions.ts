@@ -519,6 +519,8 @@ export function createActions(
       votingStrategiesToRemove: number[],
       validationStrategy: StrategyConfig
     ) => {
+      await verifyNetwork(web3, chainId);
+
       const metadataUris = await Promise.all(
         votingStrategiesToAdd.map(config => buildMetadata(helpers, config))
       );
