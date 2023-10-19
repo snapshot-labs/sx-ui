@@ -212,10 +212,23 @@ export function createActions(
         };
       }
 
+      const strategiesWithMetadata = await Promise.all(
+        strategies.map(async strategy => {
+          const metadata = await parseStrategyMetadata(
+            space.voting_power_validation_strategies_parsed_metadata[strategy.index].payload
+          );
+
+          return {
+            ...strategy,
+            metadata
+          };
+        })
+      );
+
       const data = {
         space: space.id,
         authenticator,
-        strategies,
+        strategies: strategiesWithMetadata,
         executionStrategy: selectedExecutionStrategy,
         metadataUri: `ipfs://${cid}`
       };
@@ -340,10 +353,25 @@ export function createActions(
       if (choice === 2) convertedChoice = 0;
       if (choice === 3) convertedChoice = 2;
 
+      const strategiesWithMetadata = await Promise.all(
+        strategies.map(async strategy => {
+          const metadataIndex = proposal.strategies_indicies.indexOf(strategy.index);
+
+          const metadata = await parseStrategyMetadata(
+            proposal.space.strategies_parsed_metadata[metadataIndex].payload
+          );
+
+          return {
+            ...strategy,
+            metadata
+          };
+        })
+      );
+
       const data = {
         space: proposal.space.id,
         authenticator,
-        strategies,
+        strategies: strategiesWithMetadata,
         proposal: proposal.proposal_id as number,
         choice: convertedChoice,
         metadataUri: ''
