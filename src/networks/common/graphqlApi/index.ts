@@ -58,16 +58,24 @@ function processStrategiesMetadata(
   parsedMetadata: ApiStrategyParsedMetadata[],
   strategiesIndicies?: number[]
 ) {
-  return parsedMetadata
-    .filter((_, i) => (strategiesIndicies ? strategiesIndicies.includes(i) : true))
-    .map(({ data: { name, description, decimals, symbol, token, payload } }) => ({
-      name,
-      description,
-      decimals,
-      symbol,
-      token,
-      payload
-    }));
+  const maxIndex = Math.max(...parsedMetadata.map(metadata => metadata.index));
+
+  const metadataMap = Object.fromEntries(
+    parsedMetadata.map(metadata => [
+      metadata.index,
+      {
+        name: metadata.data.name,
+        description: metadata.data.description,
+        decimals: metadata.data.decimals,
+        symbol: metadata.data.symbol,
+        token: metadata.data.token,
+        payload: metadata.data.payload
+      }
+    ])
+  );
+
+  strategiesIndicies = strategiesIndicies || Array.from(Array(maxIndex + 1).keys());
+  return strategiesIndicies.map(index => metadataMap[index]) || [];
 }
 
 function formatSpace(space: ApiSpace, networkId: NetworkID): Space {

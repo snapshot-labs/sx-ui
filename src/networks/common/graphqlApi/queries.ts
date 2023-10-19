@@ -30,6 +30,7 @@ const SPACE_FRAGMENT = gql`
     voting_power_validation_strategy_strategies
     voting_power_validation_strategy_strategies_params
     voting_power_validation_strategies_parsed_metadata {
+      index
       data {
         name
         description
@@ -43,6 +44,7 @@ const SPACE_FRAGMENT = gql`
     strategies
     strategies_params
     strategies_parsed_metadata {
+      index
       data {
         name
         description
@@ -76,6 +78,7 @@ const PROPOSAL_FRAGMENT = gql`
         executors_types
       }
       strategies_parsed_metadata {
+        index
         data {
           name
           description
