@@ -9,6 +9,8 @@ const props = defineProps<{
   proposal: ProposalType;
 }>();
 
+const { copy, copied } = useClipboard();
+
 const votes: Ref<Vote[]> = ref([]);
 const loaded = ref(false);
 const loadingMore = ref(false);
@@ -218,6 +220,22 @@ watch([sortBy, choiceFilter], () => {
                       >
                         <IH-arrow-sm-right class="-rotate-45" :width="16" />
                         View on block explorer
+                      </a>
+                    </UiDropdownItem>
+                    <UiDropdownItem v-slot="{ active }">
+                      <a
+                        class="flex items-center gap-2"
+                        :class="{ 'opacity-80': active }"
+                        @click.prevent="copy(vote.voter.id)"
+                      >
+                        <template v-if="!copied">
+                          <IH-duplicate :width="16" />
+                          Copy voter address
+                        </template>
+                        <template v-else>
+                          <IH-check :width="16" />
+                          Copied
+                        </template>
                       </a>
                     </UiDropdownItem>
                   </template>
