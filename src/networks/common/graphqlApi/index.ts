@@ -58,6 +58,8 @@ function processStrategiesMetadata(
   parsedMetadata: ApiStrategyParsedMetadata[],
   strategiesIndicies?: number[]
 ) {
+  if (parsedMetadata.length === 0) return [];
+
   const maxIndex = Math.max(...parsedMetadata.map(metadata => metadata.index));
 
   const metadataMap = Object.fromEntries(
