@@ -89,23 +89,8 @@ watch([sortBy, choiceFilter], () => {
 </script>
 
 <template>
-  <div class="flex mx-4 my-4 gap-3 justify-between">
-    <UiSelect
-      v-model="choiceFilter"
-      title="Choice"
-      gap="12px"
-      placement="left"
-      :items="[
-        { key: 'any', label: 'Any' },
-        { key: 'for', label: 'For', indicator: 'bg-choice-for' },
-        { key: 'against', label: 'Against', indicator: 'bg-choice-against' },
-        { key: 'abstain', label: 'Abstain', indicator: 'bg-choice-abstain' }
-      ]"
-    />
-  </div>
-
   <BlockInfiniteScroller :loading-more="loadingMore" @end-reached="handleEndReached">
-    <table class="text-right w-full table-fixed">
+    <table class="text-left w-full table-fixed">
       <colgroup>
         <col class="w-[50%] lg:w-[40%]" />
         <col class="w-[25%] lg:w-[20%]" />
@@ -114,36 +99,48 @@ watch([sortBy, choiceFilter], () => {
         <col class="w-[0px] lg:w-[100px]" />
       </colgroup>
       <thead>
-        <tr class="border-b">
-          <th class="text-left pl-4 eyebrow text-skin-text pb-2">Votes</th>
+        <tr class="border-b bg-skin-border/10">
+          <th class="pl-4 font-medium">Voter</th>
           <th>
-            <div class="flex justify-end">
-              <button
-                class="flex justify-end items-center min-w-0 eyebrow hover:text-skin-link"
-                :class="{
-                  'text-skin-link': sortBy === 'created-desc' || sortBy === 'created-asc'
-                }"
-                @click="handleSortChange('created')"
-              >
-                <span>Date</span>
-                <IH-arrow-sm-down v-if="sortBy === 'created-desc'" />
-                <IH-arrow-sm-up v-else-if="sortBy === 'created-asc'" />
-              </button>
-            </div>
+            <button
+              class="flex justify-end items-center min-w-0 font-medium hover:text-skin-link"
+              @click="handleSortChange('created')"
+            >
+              <span>Date</span>
+              <IH-arrow-sm-down v-if="sortBy === 'created-desc'" class="ml-1" />
+              <IH-arrow-sm-up v-else-if="sortBy === 'created-asc'" class="ml-1" />
+            </button>
           </th>
-          <th class="eyebrow text-skin-text hidden lg:table-cell">Choice</th>
+          <th class="font-medium hidden lg:table-cell">
+            <UiSelect
+              v-model="choiceFilter"
+              title="Choice"
+              gap="12px"
+              placement="left"
+              :items="[
+                { key: 'any', label: 'Any' },
+                { key: 'for', label: 'For', indicator: 'bg-choice-for' },
+                { key: 'against', label: 'Against', indicator: 'bg-choice-against' },
+                { key: 'abstain', label: 'Abstain', indicator: 'bg-choice-abstain' }
+              ]"
+            >
+              <template #button>
+                <div class="flex items-center min-w-0 font-medium hover:text-skin-link">
+                  <span class="truncate">Choice</span>
+                  <IH-adjustments-vertical class="ml-2" />
+                </div>
+              </template>
+            </UiSelect>
+          </th>
           <th>
             <div class="flex justify-end">
               <button
-                class="flex justify-end items-center min-w-0 eyebrow hover:text-skin-link"
-                :class="{
-                  'text-skin-link': sortBy === 'vp-desc' || sortBy === 'vp-asc'
-                }"
+                class="flex justify-end items-center min-w-0 font-medium hover:text-skin-link"
                 @click="handleSortChange('vp')"
               >
-                <span class="truncate pl-2">Voting Power</span>
-                <IH-arrow-sm-down v-if="sortBy === 'vp-desc'" />
-                <IH-arrow-sm-up v-else-if="sortBy === 'vp-asc'" />
+                <span class="truncate">Voting Power</span>
+                <IH-arrow-sm-down v-if="sortBy === 'vp-desc'" class="ml-1" />
+                <IH-arrow-sm-up v-else-if="sortBy === 'vp-asc'" class="ml-1" />
               </button>
             </div>
           </th>
@@ -178,7 +175,7 @@ watch([sortBy, choiceFilter], () => {
             <td class="hidden lg:table-cell">
               <div class="text-skin-link" v-text="CHOICES[vote.choice]" />
             </td>
-            <td class="pr-2">
+            <td class="pr-2 text-right">
               <div class="text-skin-link">
                 {{ _n(vote.vp / 10 ** votingPowerDecimals) }}
                 {{ proposal.space.voting_power_symbol }}

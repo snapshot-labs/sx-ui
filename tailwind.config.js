@@ -1,18 +1,28 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const colors = require('tailwindcss/colors');
 
+const withOpacity = variableName => {
+  return ({ opacityValue }) => {
+    if (opacityValue !== undefined) {
+      return `rgba(var(${variableName}), ${opacityValue})`;
+    }
+
+    return `rgb(var(${variableName}))`;
+  };
+};
+
 module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,vue}'],
   darkMode: 'class',
   theme: {
     extend: {
       borderColor: {
-        DEFAULT: 'var(--border-color)',
+        DEFAULT: 'rgb(var(--border-color))',
         red: '#ff3856'
       },
       colors: {
         primary: 'var(--primary-color)',
-        'skin-border': 'var(--border-color)',
+        'skin-border': withOpacity('--border-color'),
         'skin-text': 'var(--text-color)',
         'skin-link': 'var(--link-color)',
         'skin-bg': 'var(--bg-color)',

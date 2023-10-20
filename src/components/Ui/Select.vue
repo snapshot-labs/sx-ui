@@ -24,21 +24,23 @@ const items = computed(() => props.items);
 <template>
   <UiDropdown :gap="gap" :placement="placement">
     <template #button>
-      <button
-        class="flex items-center gap-2 relative rounded-full leading-[100%] border button px-[16px] min-w-[76px] h-[42px] top-1 outline-0 text-skin-link bg-skin-bg"
-      >
-        <div class="absolute top-[-10px] bg-skin-bg px-1 left-[12px] text-[16px] text-skin-text">
-          {{ title }}
-        </div>
-        <template v-if="currentItem">
-          <div
-            v-if="currentItem.indicator"
-            class="w-[8px] h-[8px] rounded-full"
-            :class="currentItem.indicator"
-          />
-          {{ currentItem.label }}
-        </template>
-      </button>
+      <slot name="button">
+        <button
+          class="flex items-center gap-2 relative rounded-full leading-[100%] border button px-[16px] min-w-[76px] h-[42px] top-1 outline-0 text-skin-link bg-skin-bg"
+        >
+          <div class="absolute top-[-10px] bg-skin-bg px-1 left-[12px] text-[16px] text-skin-text">
+            {{ title }}
+          </div>
+          <template v-if="currentItem">
+            <div
+              v-if="currentItem.indicator"
+              class="w-[8px] h-[8px] rounded-full"
+              :class="currentItem.indicator"
+            />
+            {{ currentItem.label }}
+          </template>
+        </button>
+      </slot>
     </template>
     <template #items>
       <UiDropdownItem v-for="item in items" :key="item.key" v-slot="{ active, disabled }">
