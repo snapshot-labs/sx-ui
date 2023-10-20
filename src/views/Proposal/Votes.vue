@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { getNetwork } from '@/networks';
-import { shortenAddress, _rt, _n } from '@/helpers/utils';
-import { CHOICES } from '@/helpers/constants';
+import { shortenAddress, _t, _rt, _n } from '@/helpers/utils';
 import { Proposal as ProposalType, Vote } from '@/types';
 
 const LIMIT = 20;
@@ -101,7 +100,7 @@ watch([sortBy, choiceFilter], () => {
       <thead>
         <tr class="border-b bg-skin-border/10">
           <th class="pl-4 font-medium">Voter</th>
-          <th>
+          <th class="hidden lg:table-cell">
             <button
               class="flex justify-end items-center min-w-0 font-medium hover:text-skin-link"
               @click="handleSortChange('created')"
@@ -111,7 +110,7 @@ watch([sortBy, choiceFilter], () => {
               <IH-arrow-sm-up v-else-if="sortBy === 'created-asc'" class="ml-1" />
             </button>
           </th>
-          <th class="font-medium hidden lg:table-cell">
+          <th>
             <UiSelect
               v-model="choiceFilter"
               title="Choice"
@@ -125,7 +124,9 @@ watch([sortBy, choiceFilter], () => {
               ]"
             >
               <template #button>
-                <div class="flex items-center min-w-0 font-medium hover:text-skin-link">
+                <div
+                  class="flex justify-center items-center min-w-0 font-medium hover:text-skin-link"
+                >
                   <span class="truncate">Choice</span>
                   <IH-adjustments-vertical class="ml-2" />
                 </div>
@@ -157,7 +158,7 @@ watch([sortBy, choiceFilter], () => {
           </td>
           <tr v-for="(vote, i) in votes" :key="i" class="border-b relative">
             <td class="text-left flex items-center pl-4 py-3">
-              <Stamp :id="vote.voter.id" :size="36" class="mr-3" />
+              <Stamp :id="vote.voter.id" :size="32" class="mr-3" />
               <div class="truncate">
                 <router-link
                   :to="{
@@ -167,18 +168,37 @@ watch([sortBy, choiceFilter], () => {
                     }
                   }"
                 >
-                  {{ vote.voter.name || shortenAddress(vote.voter.id) }}
+                  <div class="leading-[22px]">
+                    <h4 v-text="vote.voter.name || shortenAddress(vote.voter.id)" />
+                    <div class="text-sm text-skin-text" v-text="shortenAddress(vote.voter.id)" />
+                  </div>
                 </router-link>
               </div>
             </td>
-            <td class="pr-2">{{ _rt(vote.created) }}</td>
             <td class="hidden lg:table-cell">
-              <div class="text-skin-link" v-text="CHOICES[vote.choice]" />
+              <div class="leading-[22px]">
+                <h4>{{ _rt(vote.created) }}</h4>
+                <div class="text-sm">{{ _t(vote.created, 'MMM D, YYYY') }}</div>
+              </div>
+            </td>
+            <td class="text-center">
+              <UiButton
+                class="!w-[48px] !h-[48px] !px-0 cursor-default"
+                :class="{
+                  '!text-green !border-green': vote.choice === 1,
+                  '!text-red !border-red': vote.choice === 2,
+                  '!text-gray-500 !border-gray-500': vote.choice === 3
+                }"
+              >
+                <IH-check class="inline-block" />
+              </UiButton>
             </td>
             <td class="pr-2 text-right">
               <div class="text-skin-link">
-                {{ _n(vote.vp / 10 ** votingPowerDecimals) }}
-                {{ proposal.space.voting_power_symbol }}
+                <h4>
+                  {{ _n(vote.vp / 10 ** votingPowerDecimals) }}
+                  {{ proposal.space.voting_power_symbol }}
+                </h4>
               </div>
               <div class="text-sm">{{ _n((vote.vp / proposal.scores_total) * 100) }}%</div>
             </td>
@@ -205,7 +225,7 @@ watch([sortBy, choiceFilter], () => {
               </div>
             </td>
             <div
-              class="absolute choice-bg top-0 bottom-0 right-0 opacity-10 pointer-events-none"
+              class="absolute choice-bg top-0 bottom-0 right-0 opacity-[0.04] pointer-events-none"
               :style="{
                 width: `${((100 / proposal.scores_total) * vote.vp).toFixed(2)}%`
               }"
