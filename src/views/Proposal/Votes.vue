@@ -115,6 +115,7 @@ watch([sortBy, choiceFilter], () => {
           <th>
             <UiSelect
               v-model="choiceFilter"
+              class="font-normal"
               title="Choice"
               gap="12px"
               placement="left"
