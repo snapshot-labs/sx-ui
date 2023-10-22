@@ -126,9 +126,7 @@ watch([sortBy, choiceFilter], () => {
               ]"
             >
               <template #button>
-                <div
-                  class="flex justify-center items-center min-w-0 font-medium hover:text-skin-link"
-                >
+                <div class="flex items-center min-w-0 font-medium hover:text-skin-link">
                   <span class="truncate">Choice</span>
                   <IH-adjustments-vertical class="ml-2" />
                 </div>
@@ -183,16 +181,18 @@ watch([sortBy, choiceFilter], () => {
                 <div class="text-sm">{{ _t(vote.created, 'MMM D, YYYY') }}</div>
               </div>
             </td>
-            <td class="text-center">
+            <td>
               <UiButton
-                class="!w-[48px] !h-[48px] !px-0 cursor-default"
+                class="!w-[40px] !h-[40px] !px-0 cursor-default"
                 :class="{
                   '!text-green !border-green': vote.choice === 1,
                   '!text-red !border-red': vote.choice === 2,
                   '!text-gray-500 !border-gray-500': vote.choice === 3
                 }"
               >
-                <IH-check class="inline-block" />
+                <IH-check v-if="vote.choice === 1" class="inline-block" />
+                <IH-x v-else-if="vote.choice === 2" class="inline-block" />
+                <IH-minus-sm v-else class="inline-block" />
               </UiButton>
             </td>
             <td class="pr-2 text-right">
