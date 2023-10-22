@@ -97,7 +97,7 @@ watch([sortBy, choiceFilter], () => {
         <col class="w-[25%] lg:w-[20%]" />
         <col class="w-[25%] lg:w-[20%]" />
         <col class="w-[60px] lg:w-[20%]" />
-        <col class="w-[0px] lg:w-[100px]" />
+        <col class="w-[0px] lg:w-[60px]" />
       </colgroup>
       <thead class="bg-skin-bg sticky top-[113px] z-50 after:border-b after:absolute after:w-full">
         <tr class="bg-skin-border/10">
@@ -205,7 +205,7 @@ watch([sortBy, choiceFilter], () => {
               <div class="text-sm">{{ _n((vote.vp / proposal.scores_total) * 100) }}%</div>
             </td>
             <td>
-              <div class="flex justify-end pr-4">
+              <div class="flex justify-center">
                 <UiDropdown>
                   <template #button>
                     <IH-dots-vertical class="text-skin-link" />
