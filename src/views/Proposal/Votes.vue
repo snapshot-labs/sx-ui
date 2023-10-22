@@ -141,7 +141,7 @@ watch([sortBy, choiceFilter], () => {
                 class="flex justify-end items-center min-w-0 font-medium hover:text-skin-link"
                 @click="handleSortChange('vp')"
               >
-                <span class="truncate">Voting Power</span>
+                <span class="truncate">Voting power</span>
                 <IH-arrow-sm-down v-if="sortBy === 'vp-desc'" class="ml-1" />
                 <IH-arrow-sm-up v-else-if="sortBy === 'vp-asc'" class="ml-1" />
               </button>
