@@ -104,7 +104,7 @@ watch([sortBy, choiceFilter], () => {
           <th class="pl-4 font-medium">Voter</th>
           <th class="hidden lg:table-cell">
             <button
-              class="flex justify-end items-center min-w-0 font-medium hover:text-skin-link"
+              class="flex items-center min-w-0 w-full font-medium hover:text-skin-link"
               @click="handleSortChange('created')"
             >
               <span>Date</span>
@@ -137,7 +137,7 @@ watch([sortBy, choiceFilter], () => {
           <th>
             <div class="flex justify-end">
               <button
-                class="flex justify-end items-center min-w-0 font-medium hover:text-skin-link"
+                class="flex justify-end items-center min-w-0 w-full font-medium hover:text-skin-link"
                 @click="handleSortChange('vp')"
               >
                 <span class="truncate">Voting power</span>
