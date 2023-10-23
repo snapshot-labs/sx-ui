@@ -25,7 +25,13 @@ const DELEGATES_LIMIT = 40;
 
 const DELEGATES_QUERY = gql`
   query ($first: Int!, $skip: Int!, $orderBy: Delegate_orderBy!, $orderDirection: OrderDirection!) {
-    delegates(first: $first, skip: $skip, orderBy: $orderBy, orderDirection: $orderDirection) {
+    delegates(
+      first: $first
+      skip: $skip
+      orderBy: $orderBy
+      orderDirection: $orderDirection
+      where: { tokenHoldersRepresentedAmount_gte: 0 }
+    ) {
       id
       delegatedVotes
       delegatedVotesRaw
