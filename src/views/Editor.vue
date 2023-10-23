@@ -29,6 +29,7 @@ const { getCurrent } = useMetaStore();
 const spacesStore = useSpacesStore();
 
 const modalOpen = ref(false);
+const previewEnabled = ref(false);
 const sending = ref(false);
 const fetchingVotingPower = ref(true);
 const votingPowerValid = ref(false);
@@ -275,7 +276,21 @@ export default defineComponent({
         :definition="TITLE_DEFINITION"
         :error="formErrors.title"
       />
-      <MarkdownEditor v-model="proposal.body" />
+      <div class="flex">
+        <Link
+          :is-active="!previewEnabled"
+          text="Write"
+          class="pr-3"
+          @click="previewEnabled = false"
+        />
+        <Link :is-active="previewEnabled" text="Preview" @click="previewEnabled = true" />
+      </div>
+      <Markdown
+        v-if="previewEnabled"
+        class="px-3 py-2 border rounded-lg mb-5 min-h-[200px]"
+        :body="proposal.body"
+      />
+      <MarkdownEditor v-else v-model="proposal.body" />
       <div class="s-base mb-4">
         <SIString
           :key="proposalKey || ''"

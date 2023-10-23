@@ -13,22 +13,10 @@ const editorRef = ref<HTMLTextAreaElement | null>(null);
 const editor = useMarkdownEditor(editorRef, editorFileInputRef, editorContainerRef, value => {
   emit('update:modelValue', value);
 });
-
-const previewEnabled = ref(false);
 </script>
 
 <template>
-  <div class="flex">
-    <Link :is-active="!previewEnabled" text="Write" class="pr-3" @click="previewEnabled = false" />
-    <Link :is-active="previewEnabled" text="Preview" @click="previewEnabled = true" />
-  </div>
-  <Markdown
-    v-if="previewEnabled"
-    class="px-3 py-2 border rounded-lg mb-5 min-h-[200px]"
-    :body="modelValue"
-  />
   <div
-    v-else
     ref="editorContainerRef"
     class="rounded-lg mb-3"
     :class="{
