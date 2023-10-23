@@ -75,59 +75,60 @@ watchEffect(() => {
     <div class="space-y-3">
       <div>
         <Label label="Delegates" sticky />
-        <BlockInfiniteScroller :loading-more="loadingMore" @end-reached="handleEndReached">
-          <table class="text-left table-fixed w-full">
-            <colgroup>
-              <col class="w-auto" />
-              <col class="w-auto md:w-[120px]" />
-              <col class="w-0 md:w-[200px]" />
-            </colgroup>
-            <thead
-              class="bg-skin-bg sticky top-[113px] z-50 after:border-b after:absolute after:w-full"
-            >
-              <tr class="bg-skin-border/10">
-                <th class="pl-4 font-medium">Delegatee</th>
-                <th class="hidden md:table-cell">
-                  <button
-                    class="flex items-center min-w-0 w-full font-medium hover:text-skin-link"
-                    @click="handleSortChange('tokenHoldersRepresentedAmount')"
-                  >
-                    <span>Delegators</span>
-                    <IH-arrow-sm-down
-                      v-if="sortBy === 'tokenHoldersRepresentedAmount-desc'"
-                      class="ml-1"
-                    />
-                    <IH-arrow-sm-up
-                      v-else-if="sortBy === 'tokenHoldersRepresentedAmount-asc'"
-                      class="ml-1"
-                    />
-                  </button>
-                </th>
-                <th>
-                  <button
-                    class="flex justify-end items-center min-w-0 w-full font-medium hover:text-skin-link pr-4"
-                    @click="handleSortChange('delegatedVotes')"
-                  >
-                    <span class="truncate">Voting power</span>
-                    <IH-arrow-sm-down v-if="sortBy === 'delegatedVotes-desc'" class="ml-1" />
-                    <IH-arrow-sm-up v-else-if="sortBy === 'delegatedVotes-asc'" class="ml-1" />
-                  </button>
-                </th>
-              </tr>
-            </thead>
-            <td v-if="loading" colspan="3">
-              <UiLoading class="p-4 block text-center" />
-            </td>
-            <template v-else>
-              <tbody>
-                <td v-if="loaded && delegates.length === 0" class="p-4 text-center" colspan="3">
-                  <IH-exclamation-circle class="inline-block mr-2" />
-                  There are no delegates.
-                </td>
-                <td v-else-if="loaded && failed" class="p-4 text-center" colspan="3">
-                  <IH-exclamation-circle class="inline-block mr-2" />
-                  Failed to load delegates.
-                </td>
+
+        <table class="text-left table-fixed w-full">
+          <colgroup>
+            <col class="w-auto" />
+            <col class="w-auto md:w-[120px]" />
+            <col class="w-0 md:w-[200px]" />
+          </colgroup>
+          <thead
+            class="bg-skin-bg sticky top-[113px] z-50 after:border-b after:absolute after:w-full"
+          >
+            <tr class="bg-skin-border/10">
+              <th class="pl-4 font-medium">Delegatee</th>
+              <th class="hidden md:table-cell">
+                <button
+                  class="flex items-center min-w-0 w-full font-medium hover:text-skin-link"
+                  @click="handleSortChange('tokenHoldersRepresentedAmount')"
+                >
+                  <span>Delegators</span>
+                  <IH-arrow-sm-down
+                    v-if="sortBy === 'tokenHoldersRepresentedAmount-desc'"
+                    class="ml-1"
+                  />
+                  <IH-arrow-sm-up
+                    v-else-if="sortBy === 'tokenHoldersRepresentedAmount-asc'"
+                    class="ml-1"
+                  />
+                </button>
+              </th>
+              <th>
+                <button
+                  class="flex justify-end items-center min-w-0 w-full font-medium hover:text-skin-link pr-4"
+                  @click="handleSortChange('delegatedVotes')"
+                >
+                  <span class="truncate">Voting power</span>
+                  <IH-arrow-sm-down v-if="sortBy === 'delegatedVotes-desc'" class="ml-1" />
+                  <IH-arrow-sm-up v-else-if="sortBy === 'delegatedVotes-asc'" class="ml-1" />
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <td v-if="loading" colspan="3">
+            <UiLoading class="p-4 block text-center" />
+          </td>
+          <template v-else>
+            <tbody>
+              <td v-if="loaded && delegates.length === 0" class="p-4 text-center" colspan="3">
+                <IH-exclamation-circle class="inline-block mr-2" />
+                There are no delegates.
+              </td>
+              <td v-else-if="loaded && failed" class="p-4 text-center" colspan="3">
+                <IH-exclamation-circle class="inline-block mr-2" />
+                Failed to load delegates.
+              </td>
+              <BlockInfiniteScroller :loading-more="loadingMore" @end-reached="handleEndReached">
                 <tr v-for="(delegate, i) in delegates" :key="i" class="border-b relative">
                   <td class="text-left flex items-center pl-4 py-3">
                     <Stamp :id="delegate.id" :size="32" class="mr-3" />
@@ -143,22 +144,27 @@ watchEffect(() => {
                       </a>
                     </div>
                   </td>
-                  <td class="hidden md:table-cell">
+                  <td class="hidden md:table-cell align-middle">
                     <h4
                       class="text-skin-link"
                       v-text="_n(delegate.tokenHoldersRepresentedAmount)"
                     />
                     <div class="text-sm" v-text="`${delegate.delegatorsPercentage.toFixed(3)}%`" />
                   </td>
-                  <td class="text-right pr-4">
+                  <td class="text-right pr-4 align-middle">
                     <h4 class="text-skin-link" v-text="_n(delegate.delegatedVotes)" />
                     <div class="text-sm" v-text="`${delegate.votesPercentage.toFixed(3)}%`" />
                   </td>
                 </tr>
-              </tbody>
-            </template>
-          </table>
-        </BlockInfiniteScroller>
+                <template #loading>
+                  <td colspan="3">
+                    <UiLoading class="p-4 block text-center" />
+                  </td>
+                </template>
+              </BlockInfiniteScroller>
+            </tbody>
+          </template>
+        </table>
       </div>
     </div>
     <teleport to="#modal">
