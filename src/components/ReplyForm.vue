@@ -32,12 +32,7 @@ async function handleSubmit() {
   <div class="pt-3 flex">
     <div class="w-[40px] mr-3" />
     <div class="s-base items-center flex-1 s-box max-w-[650px]">
-      <textarea
-        v-model="content"
-        :disabled="loading"
-        class="s-input !py-[12px] h-[108px]"
-        placeholder="Type content here"
-      />
+      <MarkdownEditor v-model="content" :disabled="loading" />
       <UiButton :loading="loading" @click="handleSubmit">Submit</UiButton>
     </div>
   </div>

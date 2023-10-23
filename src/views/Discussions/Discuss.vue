@@ -11,7 +11,7 @@ const category = parseInt(route.params.category as string);
 
 const discussion = ref({
   title: faker.lorem.sentence({ min: 3, max: 8 }).slice(0, -1),
-  content: faker.lorem.paragraphs({ min: 1, max: 4 })
+  content: faker.lorem.paragraphs({ min: 1, max: 3 })
 });
 const loading = ref<boolean>(false);
 
@@ -54,15 +54,7 @@ async function handleSubmit() {
         examples: ['Type title']
       }"
     />
-    <div class="s-base mb-3">
-      <div class="s-label" v-text="'Content'" />
-      <textarea
-        v-model="discussion.content"
-        maxlength="9600"
-        class="s-input mb-3 h-[240px]"
-        placeholder="Type content here"
-      />
-    </div>
+    <MarkdownEditor v-model="discussion.content" />
     <UiButton :loading="loading" class="button-outline" @click="handleSubmit"> Submit </UiButton>
   </div>
 </template>

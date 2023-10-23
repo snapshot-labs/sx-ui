@@ -49,7 +49,10 @@ remarkable.inline.ruler.disable([
 ]);
 
 const parsed = computed(() => {
-  const formattedBody = props.body.replace(/ipfs:\/\/(\w+)/g, value => getUrl(value) || '#');
+  const formattedBody = (props.body || '').replace(
+    /ipfs:\/\/(\w+)/g,
+    value => getUrl(value) || '#'
+  );
 
   return remarkable.render(formattedBody);
 });

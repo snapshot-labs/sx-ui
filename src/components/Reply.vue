@@ -33,7 +33,7 @@ async function loadReplies() {
     }
   });
 
-  replies.value = data.discussions;
+  replies.value = data.topics;
   loading.value = false;
   loaded.value = true;
 }
