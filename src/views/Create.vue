@@ -178,11 +178,6 @@ watch(selectedNetworkId, () => {
 watchEffect(() => {
   setTitle('Create space');
 });
-
-const { mixpanel } = useMixpanel();
-onMounted(() => {
-  mixpanel.track('Create space');
-});
 </script>
 
 <template>
