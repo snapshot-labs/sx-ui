@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { _n, compareAddresses, sanitizeUrl } from '@/helpers/utils';
 import { Space, Proposal as ProposalType } from '@/types';
+import { WHITELABEL } from '@/helpers/constants';
 
 const PROPOSALS_LIMIT = 4;
 
@@ -80,7 +81,10 @@ watchEffect(() => {
             <IH-cog class="inline-block" />
           </UiButton>
         </UiTooltip>
-        <UiTooltip :title="spaceStarred ? 'Remove from favorites' : 'Add to favorites'">
+        <UiTooltip
+          v-if="!WHITELABEL"
+          :title="spaceStarred ? 'Remove from favorites' : 'Add to favorites'"
+        >
           <UiButton class="w-[46px] !px-0" @click="spacesStore.toggleSpaceStar(spaceIdComposite)">
             <IS-star v-if="spaceStarred" class="inline-block" />
             <IH-star v-else class="inline-block" />

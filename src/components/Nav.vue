@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { compareAddresses } from '@/helpers/utils';
+import { WHITELABEL } from '@/helpers/constants';
 
 import IHGlobeAlt from '~icons/heroicons-outline/globe-alt';
 import IHNewspaper from '~icons/heroicons-outline/newspaper';
@@ -8,6 +9,7 @@ import IHLightningBolt from '~icons/heroicons-outline/lightning-bolt';
 import IHCog from '~icons/heroicons-outline/cog';
 import IHUsers from '~icons/heroicons-outline/users';
 import IHStop from '~icons/heroicons-outline/stop';
+import IHAnnotation from '~icons/heroicons-outline/annotation';
 
 const route = useRoute();
 const uiStore = useUiStore();
@@ -34,6 +36,10 @@ const navigationConfig = computed(() => ({
     overview: {
       name: 'Overview',
       icon: IHGlobeAlt
+    },
+    discussions: {
+      name: 'Discussions',
+      icon: IHAnnotation
     },
     proposals: {
       name: 'Proposals',
@@ -81,8 +87,9 @@ const navigationItems = computed(() => navigationConfig.value[currentRouteName.v
 <template>
   <div
     v-if="navigationItems"
-    class="lg:visible fixed w-[240px] border-r left-[72px] top-0 bottom-0 z-10 bg-skin-bg"
+    class="lg:visible fixed w-[240px] border-r top-0 bottom-0 z-10 bg-skin-bg"
     :class="{
+      'left-[72px]': !WHITELABEL,
       invisible: !uiStore.sidebarOpen
     }"
   >

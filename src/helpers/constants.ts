@@ -23,3 +23,5 @@ export const CHOICES = {
   2: 'Against',
   3: 'Abstain'
 };
+
+export const WHITELABEL = true;

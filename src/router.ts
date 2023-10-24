@@ -20,6 +20,7 @@ import SettingsSpaces from '@/views/Settings/Spaces.vue';
 
 const routes: any[] = [
   { path: '/', name: 'home', component: Home },
+  { path: '/', name: 'space-discussions', component: Home },
   {
     path: '/:id',
     name: 'space',

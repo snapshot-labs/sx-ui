@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { WHITELABEL } from '@/helpers/constants';
+
 const el = ref(null);
 
 const route = useRoute();
@@ -54,14 +56,14 @@ watch(isSwiping, () => {
   >
     <UiLoading v-if="app.loading || !app.init" class="overlay big" />
     <div v-else class="pb-6 flex">
-      <Sidebar class="lg:visible" :class="{ invisible: !uiStore.sidebarOpen }" />
+      <Sidebar v-if="!WHITELABEL" class="lg:visible" :class="{ invisible: !uiStore.sidebarOpen }" />
       <Topnav @toggle="uiStore.toggleSidebar" />
       <Nav />
       <div
         v-if="uiStore.sidebarOpen"
         class="backdrop lg:hidden"
         :style="{
-          left: `${72 + (route.matched[0]?.name === 'space' ? 240 : 0)}px`
+          left: `${(WHITELABEL ? 0 : 72) + (route.matched[0]?.name === 'space' ? 240 : 0)}px`
         }"
         @click="uiStore.toggleSidebar"
       />
@@ -71,7 +73,12 @@ watch(isSwiping, () => {
           'translate-x-[72px] lg:translate-x-0': uiStore.sidebarOpen
         }"
       >
-        <router-view class="flex-auto mt-[72px] ml-0 lg:ml-[72px]" />
+        <router-view
+          class="flex-auto mt-[72px] ml-0"
+          :class="{
+            'lg:ml-[72px]': !WHITELABEL
+          }"
+        />
       </div>
     </div>
     <Notifications />

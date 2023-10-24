@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getInstance } from '@snapshot-labs/lock/plugins/vue3';
 import { shorten } from '@/helpers/utils';
+import { WHITELABEL } from '@/helpers/constants';
 
 const emit = defineEmits(['toggle']);
 
@@ -47,8 +48,9 @@ watch(route, to => {
 
 <template>
   <nav
-    class="border-b fixed top-0 right-0 z-50 left-0 lg:left-[72px]"
+    class="border-b fixed top-0 right-0 z-50 left-0"
     :class="{
+      'lg:left-[72px]': !WHITELABEL,
       'translate-x-[72px] lg:translate-x-0': uiStore.sidebarOpen
     }"
   >
@@ -66,6 +68,10 @@ watch(route, to => {
           @click="emit('toggle')"
         />
         <div v-if="currentRouteName === 'space'" class="flex items-center flex-1 px-2 py-3 h-full">
+          <img
+            class="left-[24px] fixed"
+            src="https://assets-global.website-files.com/637359c81e22b715cec245ad/63dc31f8817a4a509d7635a7_Logo.svg"
+          />
           <IH-search class="mr-[12px] flex-shrink-0" :class="{ 'text-skin-link': focused }" />
           <form class="flex flex-grow" @submit="handleSearchSubmit">
             <input
