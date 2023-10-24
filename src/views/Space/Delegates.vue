@@ -86,10 +86,12 @@ watchEffect(() => {
             class="bg-skin-bg sticky top-[113px] z-40 after:border-b after:absolute after:w-full"
           >
             <tr class="bg-skin-border/10">
-              <th class="pl-4 font-medium">Delegatee</th>
+              <th class="pl-4 font-medium">
+                <span class="relative bottom-[1px]">Delegatee</span>
+              </th>
               <th class="hidden md:table-cell">
                 <button
-                  class="flex items-center justify-end min-w-0 w-full font-medium hover:text-skin-link"
+                  class="relative bottom-[1px] flex items-center justify-end min-w-0 w-full font-medium hover:text-skin-link"
                   @click="handleSortChange('tokenHoldersRepresentedAmount')"
                 >
                   <span>Delegators</span>
@@ -105,7 +107,7 @@ watchEffect(() => {
               </th>
               <th>
                 <button
-                  class="flex justify-end items-center min-w-0 w-full font-medium hover:text-skin-link pr-4"
+                  class="relative bottom-[1px] flex justify-end items-center min-w-0 w-full font-medium hover:text-skin-link pr-4"
                   @click="handleSortChange('delegatedVotes')"
                 >
                   <span class="truncate">Voting power</span>
