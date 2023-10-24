@@ -99,7 +99,7 @@ watch([sortBy, choiceFilter], () => {
         <col class="w-[60px] lg:w-[20%]" />
         <col class="w-[0px] lg:w-[60px]" />
       </colgroup>
-      <thead class="bg-skin-bg sticky top-[113px] z-50 after:border-b after:absolute after:w-full">
+      <thead class="bg-skin-bg sticky top-[113px] z-40 after:border-b after:absolute after:w-full">
         <tr class="bg-skin-border/10">
           <th class="pl-4 font-medium">Voter</th>
           <th class="hidden lg:table-cell">
