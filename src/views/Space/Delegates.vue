@@ -89,7 +89,7 @@ watchEffect(() => {
               <th class="pl-4 font-medium">Delegatee</th>
               <th class="hidden md:table-cell">
                 <button
-                  class="flex items-center min-w-0 w-full font-medium hover:text-skin-link"
+                  class="flex items-center justify-end min-w-0 w-full font-medium hover:text-skin-link"
                   @click="handleSortChange('tokenHoldersRepresentedAmount')"
                 >
                   <span>Delegators</span>
@@ -144,7 +144,7 @@ watchEffect(() => {
                       </a>
                     </div>
                   </td>
-                  <td class="hidden md:table-cell align-middle">
+                  <td class="hidden md:table-cell align-middle text-right">
                     <h4
                       class="text-skin-link"
                       v-text="_n(delegate.tokenHoldersRepresentedAmount)"
