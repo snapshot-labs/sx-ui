@@ -12,9 +12,9 @@ const lineaTestnetNetwork = createEvmNetwork('linea-testnet');
 
 export const enabledNetworks: NetworkID[] = process.env.VITE_ENABLED_NETWORKS
   ? (process.env.VITE_ENABLED_NETWORKS.split(',') as NetworkID[])
-  : ['matic', 'arb1', 'eth', 'gor', 'sep', 'sn-tn'];
+  : ['eth', 'matic', 'arb1', 'gor', 'sep', 'sn-tn'];
 
-export const evmNetworks: NetworkID[] = ['matic', 'arb1', 'eth', 'gor', 'sep', 'linea-testnet'];
+export const evmNetworks: NetworkID[] = ['eth', 'matic', 'arb1', 'gor', 'sep', 'linea-testnet'];
 
 export const getNetwork = (id: NetworkID) => {
   if (id === 'matic') return polygonNetwork;
