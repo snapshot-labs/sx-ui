@@ -69,7 +69,7 @@ const router = createRouter({
 
 router.afterEach(to => {
   mixpanel.track_pageview({
-    page_title: to.name,
+    page_name: to.name,
     page_path: to.path
   });
 });
