@@ -17,10 +17,13 @@ import Settings from '@/views/Settings.vue';
 import Contacts from '@/views/Settings/Contacts.vue';
 import Explore from '@/views/Explore.vue';
 import SettingsSpaces from '@/views/Settings/Spaces.vue';
+import Content from '@/views/Space/Content.vue';
 
 const routes: any[] = [
   { path: '/', name: 'home', component: Home },
-  { path: '/', name: 'space-discussions', component: Home },
+  { path: '/', name: 'space-b', component: Home },
+  { path: '/', name: 'space-c', component: Home },
+  { path: '/', name: 'space-d', component: Home },
   {
     path: '/:id',
     name: 'space',
@@ -31,7 +34,8 @@ const routes: any[] = [
       { path: 'search', name: 'space-search', component: SpaceSearch },
       { path: 'settings', name: 'space-settings', component: SpaceSettings },
       { path: 'treasury', name: 'space-treasury', component: SpaceTreasury },
-      { path: 'delegates', name: 'space-delegates', component: SpaceDelegates }
+      { path: 'delegates', name: 'space-delegates', component: SpaceDelegates },
+      { path: 'pips', name: 'space-a', component: Content }
     ]
   },
   {

@@ -69,8 +69,8 @@ watch(route, to => {
         />
         <div v-if="currentRouteName === 'space'" class="flex items-center flex-1 px-2 py-3 h-full">
           <img
-            class="left-[24px] fixed"
-            src="https://assets-global.website-files.com/637359c81e22b715cec245ad/63dc31f8817a4a509d7635a7_Logo.svg"
+            class="left-[24px] fixed max-w-[120px] max-h-[32px]"
+            src="https://faucet.polygon.technology/img/navbar-logo.a193c276.svg"
           />
           <IH-search class="mr-[12px] flex-shrink-0" :class="{ 'text-skin-link': focused }" />
           <form class="flex flex-grow" @submit="handleSearchSubmit">

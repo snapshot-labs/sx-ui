@@ -9,7 +9,9 @@ import IHLightningBolt from '~icons/heroicons-outline/lightning-bolt';
 import IHCog from '~icons/heroicons-outline/cog';
 import IHUsers from '~icons/heroicons-outline/users';
 import IHStop from '~icons/heroicons-outline/stop';
-import IHAnnotation from '~icons/heroicons-outline/annotation';
+import IHChat from '~icons/heroicons-outline/chat';
+import IHHashtag from '~icons/heroicons-outline/hashtag';
+import IHSupport from '~icons/heroicons-outline/support';
 
 const route = useRoute();
 const uiStore = useUiStore();
@@ -37,30 +39,22 @@ const navigationConfig = computed(() => ({
       name: 'Overview',
       icon: IHGlobeAlt
     },
-    discussions: {
-      name: 'Discussions',
-      icon: IHAnnotation
+    a: {
+      name: 'PIPs',
+      icon: IHHashtag
+    },
+    delegates: {
+      name: 'Delegates',
+      icon: IHUsers
     },
     proposals: {
       name: 'Proposals',
       icon: IHNewspaper
     },
-    ...(space.value?.delegation_api_url
-      ? {
-          delegates: {
-            name: 'Delegates',
-            icon: IHLightningBolt
-          }
-        }
-      : undefined),
-    ...(treasury.value
-      ? {
-          treasury: {
-            name: 'Treasury',
-            icon: IHCash
-          }
-        }
-      : undefined),
+  b: {
+    name: 'Discussions',
+    icon: IHChat
+  },
     ...(isController.value
       ? {
           settings: {
@@ -68,7 +62,11 @@ const navigationConfig = computed(() => ({
             icon: IHCog
           }
         }
-      : undefined)
+      : undefined),
+    c: {
+      name: 'Resources',
+      icon: IHSupport
+    }
   },
   settings: {
     spaces: {
@@ -87,7 +85,7 @@ const navigationItems = computed(() => navigationConfig.value[currentRouteName.v
 <template>
   <div
     v-if="navigationItems"
-    class="lg:visible fixed w-[240px] border-r top-0 bottom-0 z-10 bg-skin-bg"
+    class="lg:visible fixed w-[240px] border-r top-0 bottom-0 z-10 bg-[#fafafa]"
     :class="{
       'left-[72px]': !WHITELABEL,
       invisible: !uiStore.sidebarOpen
