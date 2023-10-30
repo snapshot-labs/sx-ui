@@ -55,7 +55,17 @@ export type VotingPower = {
 
 // TODO: make sx.js accept Signer instead of Web3Provider | Wallet
 
-export type NetworkActions = {
+type ReadOnlyNetworkActions = {
+  getVotingPower(
+    strategiesAddresses: string[],
+    strategiesParams: any[],
+    strategiesMetadata: StrategyParsedMetadata[],
+    voterAddress: string,
+    current: number | null
+  ): Promise<VotingPower[]>;
+};
+
+export type NetworkActions = ReadOnlyNetworkActions & {
   predictSpaceAddress(web3: Web3Provider, params: { salt: string }): Promise<string | null>;
   deployDependency(
     web3: Web3Provider,
@@ -118,13 +128,6 @@ export type NetworkActions = {
   setMaxVotingDuration(web3: Web3Provider, space: Space, maxVotingDuration: number);
   transferOwnership(web3: Web3Provider, space: Space, owner: string);
   delegate(web3: Web3Provider, space: Space, networkId: NetworkID, delegatee: string);
-  getVotingPower(
-    strategiesAddresses: string[],
-    strategiesParams: any[],
-    strategiesMetadata: StrategyParsedMetadata[],
-    voterAddress: string,
-    current: number | null
-  ): Promise<VotingPower[]>;
   send(envelope: any): Promise<any>;
 };
 
@@ -157,7 +160,7 @@ export type NetworkHelpers = {
   getExplorerUrl(id: string, type: 'transaction' | 'address' | 'contract' | 'token'): string;
 };
 
-export type Network = {
+type BaseNetwork = {
   name: string;
   avatar: string;
   currentUnit: 'block' | 'second';
@@ -167,7 +170,6 @@ export type Network = {
   hasReceive: boolean;
   supportsSimulation: boolean;
   managerConnectors: Connector[];
-  actions: NetworkActions;
   api: NetworkApi;
   constants: {
     SUPPORTED_AUTHENTICATORS: { [key: string]: boolean };
@@ -186,3 +188,7 @@ export type Network = {
   };
   helpers: NetworkHelpers;
 };
+
+export type ReadOnlyNetwork = BaseNetwork & { readOnly: true; actions: ReadOnlyNetworkActions };
+export type ReadWriteNetwork = BaseNetwork & { readOnly?: false; actions: NetworkActions };
+export type Network = ReadOnlyNetwork | ReadWriteNetwork;

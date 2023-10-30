@@ -1,6 +1,7 @@
 import { createStarknetNetwork } from './starknet';
 import { createEvmNetwork } from './evm';
 import { NetworkID } from '@/types';
+import { ReadWriteNetwork } from './types';
 
 const starknetNetwork = createStarknetNetwork('sn-tn');
 const polygonNetwork = createEvmNetwork('matic');
@@ -26,6 +27,13 @@ export const getNetwork = (id: NetworkID) => {
   if (id === 'sn-tn') return starknetNetwork;
 
   throw new Error(`Unknown network ${id}`);
+};
+
+export const getReadWriteNetwork = (id: NetworkID): ReadWriteNetwork => {
+  const network = getNetwork(id);
+  if (network.readOnly) throw new Error(`Network ${id} is read-only`);
+
+  return network;
 };
 
 /**
