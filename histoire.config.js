@@ -1,5 +1,3 @@
-/// <reference types="histoire" />
-
 import { defineConfig } from 'histoire';
 import { HstVue } from '@histoire/plugin-vue';
 
@@ -8,7 +6,7 @@ export default defineConfig({
   setupFile: './src/histoire-setup.ts',
   theme: {
     defaultColorScheme: 'light',
-    // favicon: './public/favicon.png',
+    favicon: './public/favicon-temp.svg',
     title: 'Tune UI',
     colors: {
       gray: {
