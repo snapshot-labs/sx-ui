@@ -104,7 +104,7 @@ watchEffect(() => {
     <UiLoading v-if="!proposal" class="ml-4 mt-3" />
     <template v-else>
       <div class="flex-1 md:mr-[340px]">
-        <div class="flex px-4 bg-skin-bg border-b sticky top-[72px] z-50">
+        <div class="flex px-4 bg-skin-bg border-b sticky top-[72px] z-40">
           <router-link
             :to="{
               name: 'proposal-overview',
