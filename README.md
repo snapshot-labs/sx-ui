@@ -3,7 +3,7 @@
 
 # Snapshot X
 
-An open source interface for Snapshot X protocol.
+An open source interface for Snapshot X protocol .
 
 **[Website](https://snapshotx.xyz)**
 
