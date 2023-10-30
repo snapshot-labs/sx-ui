@@ -90,7 +90,11 @@ watch([sortBy, choiceFilter], () => {
 </script>
 
 <template>
-  <BlockInfiniteScroller :loading-more="loadingMore" @end-reached="handleEndReached">
+  <BlockInfiniteScroller
+    :subtree="true"
+    :loading-more="loadingMore"
+    @end-reached="handleEndReached"
+  >
     <table class="text-left w-full table-fixed">
       <colgroup>
         <col class="w-[50%] lg:w-[40%]" />
