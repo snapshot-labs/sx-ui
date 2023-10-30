@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getNetwork } from '@/networks';
+import { getNetwork, offchainNetworks } from '@/networks';
 import { shortenAddress, _t, _rt, _n } from '@/helpers/utils';
 import { Proposal as ProposalType, Vote } from '@/types';
 
@@ -120,8 +120,10 @@ watch([sortBy, choiceFilter], () => {
               <IH-arrow-sm-up v-else-if="sortBy === 'created-asc'" class="ml-1" />
             </button>
           </th>
-          <th>
+          <th class="font-medium">
+            <template v-if="offchainNetworks.includes(proposal.network)">Choice</template>
             <UiSelect
+              v-else
               v-model="choiceFilter"
               class="font-normal"
               title="Choice"
@@ -135,9 +137,7 @@ watch([sortBy, choiceFilter], () => {
               ]"
             >
               <template #button>
-                <div
-                  class="relative bottom-[1px] flex items-center min-w-0 font-medium hover:text-skin-link"
-                >
+                <div class="relative bottom-[1px] flex items-center min-w-0 hover:text-skin-link">
                   <span class="truncate">Choice</span>
                   <IH-adjustments-vertical class="ml-2" />
                 </div>

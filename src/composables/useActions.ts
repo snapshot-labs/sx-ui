@@ -242,7 +242,7 @@ export function useActions() {
 
   async function updateProposal(
     space: Space,
-    proposalId: number,
+    proposalId: number | string,
     title: string,
     body: string,
     discussion: string,

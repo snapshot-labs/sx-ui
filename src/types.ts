@@ -2,6 +2,7 @@
 export type NotificationType = 'error' | 'warning' | 'success';
 
 export type NetworkID =
+  | 's'
   | 'eth'
   | 'gor'
   | 'sep'
@@ -86,7 +87,7 @@ export type Space = {
 
 export type Proposal = {
   id: string;
-  proposal_id: number;
+  proposal_id: number | string;
   network: NetworkID;
   quorum: number;
   space: {
@@ -160,7 +161,7 @@ export type Vote = {
   space: {
     id: string;
   };
-  proposal: number;
+  proposal: number | string;
   choice: number;
   vp: number;
   created: number;
@@ -168,7 +169,7 @@ export type Vote = {
 };
 
 export type Draft = {
-  proposalId: number | null;
+  proposalId: number | string | null;
   title: string;
   body: string;
   discussion: string;

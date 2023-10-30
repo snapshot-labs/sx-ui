@@ -1,8 +1,10 @@
 import { createStarknetNetwork } from './starknet';
 import { createEvmNetwork } from './evm';
+import { createOffchainNetwork } from './offchain';
 import { NetworkID } from '@/types';
 import { ReadWriteNetwork } from './types';
 
+const snapshotNetwork = createOffchainNetwork('s');
 const starknetNetwork = createStarknetNetwork('sn-tn');
 const polygonNetwork = createEvmNetwork('matic');
 const arbitrumNetwork = createEvmNetwork('arb1');
@@ -16,8 +18,10 @@ export const enabledNetworks: NetworkID[] = process.env.VITE_ENABLED_NETWORKS
   : ['eth', 'matic', 'arb1', 'gor', 'sep', 'sn-tn'];
 
 export const evmNetworks: NetworkID[] = ['eth', 'matic', 'arb1', 'gor', 'sep', 'linea-testnet'];
+export const offchainNetworks: NetworkID[] = ['s'];
 
 export const getNetwork = (id: NetworkID) => {
+  if (id === 's') return snapshotNetwork;
   if (id === 'matic') return polygonNetwork;
   if (id === 'arb1') return arbitrumNetwork;
   if (id === 'eth') return ethereumNetwork;

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { _n, compareAddresses, sanitizeUrl } from '@/helpers/utils';
+import { offchainNetworks } from '@/networks';
 import { Space, Proposal as ProposalType } from '@/types';
 
 const PROPOSALS_LIMIT = 4;
@@ -94,7 +95,7 @@ watchEffect(() => {
           <SpaceAvatar
             :space="space"
             :size="90"
-            type="space-sx"
+            :type="offchainNetworks.includes(space.network) ? 'space' : 'space-sx'"
             class="relative mb-2 border-[4px] border-skin-bg !bg-skin-border !rounded-lg left-[-4px]"
           />
         </router-link>

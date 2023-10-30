@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getNetwork } from '@/networks';
+import { getNetwork, offchainNetworks } from '@/networks';
 import { getStampUrl, getCacheHash } from '@/helpers/utils';
 import { Choice } from '@/types';
 import { VotingPower } from '@/networks/types';
@@ -17,7 +17,7 @@ const sendingType = ref<null | number>(null);
 const votingPowers = ref([] as VotingPower[]);
 const loadingVotingPower = ref(true);
 
-const id = computed(() => parseInt((route.params.id as string) || '0'));
+const id = computed(() => route.params.id as string);
 const proposal = computed(() => {
   if (!resolved.value || !spaceAddress.value || !networkId.value) {
     return null;
@@ -88,7 +88,7 @@ watchEffect(() => {
   if (!proposal.value) return;
 
   const faviconUrl = getStampUrl(
-    'space-sx',
+    offchainNetworks.includes(proposal.value.network) ? 'space' : 'space-sx',
     proposal.value.space.id,
     16,
     getCacheHash(proposal.value.space.avatar)

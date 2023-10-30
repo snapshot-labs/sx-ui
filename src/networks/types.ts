@@ -105,7 +105,7 @@ export type NetworkActions = ReadOnlyNetworkActions & {
     connectorType: Connector,
     account: string,
     space: Space,
-    proposalId: number,
+    proposalId: number | string,
     cid: string,
     executionStrategy: string | null,
     transactions: MetaTransaction[]
@@ -147,7 +147,11 @@ export type NetworkApi = {
     searchQuery?: string
   ): Promise<Proposal[]>;
   loadProposalsSummary(spaceId: string, current: number, limit: number): Promise<Proposal[]>;
-  loadProposal(spaceId: string, proposalId: number, current: number): Promise<Proposal | null>;
+  loadProposal(
+    spaceId: string,
+    proposalId: number | string,
+    current: number
+  ): Promise<Proposal | null>;
   loadSpaces(paginationOpts: PaginationOpts, filter?: SpacesFilter): Promise<Space[]>;
   loadSpace(spaceId: string): Promise<Space | null>;
   loadUser(userId: string): Promise<User>;
