@@ -103,7 +103,7 @@ export const PROPOSALS_SUMMARY_QUERY = gql`
   query ($first: Int!, $space: String!) {
     active: proposals(
       first: $first
-      where: { space: $space, state: "active" }
+      where: { space: $space, state: "active", flagged: false }
       orderBy: "created"
       orderDirection: desc
     ) {
@@ -112,7 +112,7 @@ export const PROPOSALS_SUMMARY_QUERY = gql`
 
     expired: proposals(
       first: $first
-      where: { space: $space, state: "closed" }
+      where: { space: $space, state: "closed", flagged: false }
       orderBy: "created"
       orderDirection: desc
     ) {

@@ -217,6 +217,7 @@ export function createApi(uri: string, networkId: NetworkID): NetworkApi {
           where: {
             space: spaceId,
             title_contains: searchQuery,
+            flagged: false,
             ...filters
           }
         }
