@@ -23,7 +23,7 @@ async function handleVoteClick(choice: Choice) {
 <template>
   <div>
     <div class="border-b mx-4 py-3 flex">
-      <div class="flex-auto">
+      <div class="flex-auto mr-4">
         <router-link
           :to="{
             name: 'proposal-overview',
