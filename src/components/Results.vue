@@ -27,7 +27,7 @@ const showAlternatives = ref(false);
 const progress = computed(() => Math.min(props.proposal.scores_total / props.proposal.quorum, 1));
 
 const adjustedScores = computed(() =>
-  [props.proposal.scores_1, props.proposal.scores_2, props.proposal.scores_3].map(score => {
+  [props.proposal.scores[0], props.proposal.scores[1], props.proposal.scores[2]].map(score => {
     // TODO: sx-api returns number, sx-subgraph returns string
     const parsedTotal = parseFloat(props.proposal.scores_total as unknown as string);
 
@@ -39,7 +39,7 @@ const results = computed(() =>
   adjustedScores.value
     .map((score, i) => ({
       choice: i + 1,
-      score: props.proposal[`scores_${i + 1}`],
+      score: props.proposal.scores[i],
       progress: score
     }))
     .sort((a, b) => b.progress - a.progress)

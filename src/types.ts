@@ -117,9 +117,7 @@ export type Proposal = {
   min_end: number;
   max_end: number;
   snapshot: number;
-  scores_1: number;
-  scores_2: number;
-  scores_3: number;
+  scores: number[];
   scores_total: number;
   execution_time: number;
   execution_strategy: string;
