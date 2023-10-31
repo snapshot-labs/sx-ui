@@ -127,7 +127,7 @@ function formatVote(vote: ApiVote): Vote {
     choice: Array.isArray(vote.choice) ? vote.choice[0] : vote.choice,
     vp: vote.vp,
     created: vote.created,
-    tx: ''
+    tx: vote.ipfs
   };
 }
 

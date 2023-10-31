@@ -25,7 +25,11 @@ export function createOffchainNetwork(networkId: NetworkID): Network {
     waitForSpace: () => {
       throw new Error('Not implemented');
     },
-    getExplorerUrl: () => {
+    getExplorerUrl: (id: string, type: 'transaction' | 'address' | 'contract' | 'token') => {
+      if (type === 'transaction') {
+        return `https://signator.io/view?ipfs=${id}`;
+      }
+
       throw new Error('Not implemented');
     }
   };

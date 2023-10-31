@@ -147,6 +147,7 @@ export const VOTES_QUERY = gql`
       proposal {
         id
       }
+      ipfs
       choice
       vp
       created

@@ -57,6 +57,7 @@ export type ApiProposal = {
 export type ApiVote = {
   id: string;
   voter: string;
+  ipfs: string;
   space: {
     id: string;
   };
