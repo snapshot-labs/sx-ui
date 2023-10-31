@@ -21,6 +21,8 @@ export const evmNetworks: NetworkID[] = ['eth', 'matic', 'arb1', 'gor', 'sep', '
 export const offchainNetworks: NetworkID[] = ['s'];
 
 export const getNetwork = (id: NetworkID) => {
+  if (!enabledNetworks.includes(id)) throw new Error(`Network ${id} is not enabled`);
+
   if (id === 's') return snapshotNetwork;
   if (id === 'matic') return polygonNetwork;
   if (id === 'arb1') return arbitrumNetwork;
