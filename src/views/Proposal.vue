@@ -17,6 +17,7 @@ const sendingType = ref<null | number>(null);
 const votingPowers = ref([] as VotingPower[]);
 const loadingVotingPower = ref(true);
 
+const network = computed(() => (networkId.value ? getNetwork(networkId.value) : null));
 const id = computed(() => route.params.id as string);
 const proposal = computed(() => {
   if (!resolved.value || !spaceAddress.value || !networkId.value) {
@@ -34,9 +35,7 @@ const votingPowerDecimals = computed(() => {
 });
 
 async function getVotingPower() {
-  if (!networkId.value) return;
-
-  const network = getNetwork(networkId.value);
+  if (!network.value) return;
 
   if (!web3.value.account || !proposal.value) {
     votingPowers.value = [];
@@ -46,7 +45,7 @@ async function getVotingPower() {
 
   loadingVotingPower.value = true;
   try {
-    votingPowers.value = await network.actions.getVotingPower(
+    votingPowers.value = await network.value.actions.getVotingPower(
       proposal.value.strategies,
       proposal.value.strategies_params,
       proposal.value.space.strategies_parsed_metadata,
@@ -127,7 +126,7 @@ watchEffect(() => {
       <div
         class="static md:fixed md:top-[72px] md:right-0 w-full md:h-screen md:max-w-[340px] p-4 border-l"
       >
-        <template v-if="!proposal.cancelled && !proposal.has_ended">
+        <template v-if="!proposal.cancelled && !proposal.has_ended && !network?.readOnly">
           <VotingPowerIndicator
             v-if="web3.account && networkId"
             v-slot="props"

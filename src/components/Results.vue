@@ -50,7 +50,24 @@ const visibleResults = computed(() =>
 </script>
 
 <template>
+  <div v-if="proposal.type !== 'basic'">
+    <div
+      v-for="(choice, id) in proposal.choices"
+      :key="id"
+      class="flex justify-between border rounded-lg p-3 mb-2 last:mb-0 text-skin-link relative overflow-hidden"
+    >
+      <div class="truncate mr-2 z-10">{{ choice }}</div>
+      <div class="z-10">40%</div>
+      <div
+        class="absolute bg-skin-border top-0 bottom-0 left-0 pointer-events-none"
+        :style="{
+          width: `${((proposal.scores[id] / proposal.scores_total) * 100).toFixed(2)}%`
+        }"
+      ></div>
+    </div>
+  </div>
   <div
+    v-else
     class="h-full"
     :class="{
       'flex items-center': !withDetails

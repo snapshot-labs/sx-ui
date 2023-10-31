@@ -193,7 +193,15 @@ watch([sortBy, choiceFilter], () => {
               </div>
             </td>
             <td>
+              <div
+                v-if="proposal.type !== 'basic'"
+                class="truncate"
+                :title="proposal.choices[vote.choice - 1]"
+              >
+                {{ proposal.choices[vote.choice - 1] }}
+              </div>
               <UiButton
+                v-else
                 class="!w-[40px] !h-[40px] !px-0 cursor-default"
                 :class="{
                   '!text-green !border-green': vote.choice === 1,
@@ -254,11 +262,15 @@ watch([sortBy, choiceFilter], () => {
               </div>
             </td>
             <div
-              class="absolute choice-bg top-0 bottom-0 right-0 opacity-[0.04] pointer-events-none"
+              class="absolute top-0 bottom-0 right-0 pointer-events-none"
               :style="{
                 width: `${((100 / proposal.scores_total) * vote.vp).toFixed(2)}%`
               }"
-              :class="`_${vote.choice}`"
+              :class="
+                proposal.type === 'basic'
+                  ? `choice-bg opacity-[0.04] _${vote.choice}`
+                  : 'bg-skin-border opacity-40'
+              "
             />
           </tr>
         </tbody>
