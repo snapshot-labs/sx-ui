@@ -13,14 +13,7 @@ const remarkable = new Remarkable({
   typographer: false,
   linkTarget: '_blank'
 });
-remarkable.core.ruler.disable([
-  'abbr',
-  'abbr2',
-  'footnote_tail',
-  'references',
-  'replacements',
-  'smartquotes'
-]);
+remarkable.core.ruler.disable(['abbr', 'abbr2', 'footnote_tail', 'replacements', 'smartquotes']);
 remarkable.block.ruler.disable([
   'code',
   'deflist',
