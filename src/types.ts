@@ -3,6 +3,7 @@ export type NotificationType = 'error' | 'warning' | 'success';
 
 export type NetworkID =
   | 's'
+  | 's-tn'
   | 'eth'
   | 'gor'
   | 'sep'

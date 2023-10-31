@@ -5,6 +5,7 @@ import { NetworkID } from '@/types';
 import { ReadWriteNetwork } from './types';
 
 const snapshotNetwork = createOffchainNetwork('s');
+const snapshotTestnetNetwork = createOffchainNetwork('s-tn');
 const starknetNetwork = createStarknetNetwork('sn-tn');
 const polygonNetwork = createEvmNetwork('matic');
 const arbitrumNetwork = createEvmNetwork('arb1');
@@ -18,12 +19,13 @@ export const enabledNetworks: NetworkID[] = import.meta.env.VITE_ENABLED_NETWORK
   : ['eth', 'matic', 'arb1', 'gor', 'sep', 'sn-tn'];
 
 export const evmNetworks: NetworkID[] = ['eth', 'matic', 'arb1', 'gor', 'sep', 'linea-testnet'];
-export const offchainNetworks: NetworkID[] = ['s'];
+export const offchainNetworks: NetworkID[] = ['s', 's-tn'];
 
 export const getNetwork = (id: NetworkID) => {
   if (!enabledNetworks.includes(id)) throw new Error(`Network ${id} is not enabled`);
 
   if (id === 's') return snapshotNetwork;
+  if (id === 's-tn') return snapshotTestnetNetwork;
   if (id === 'matic') return polygonNetwork;
   if (id === 'arb1') return arbitrumNetwork;
   if (id === 'eth') return ethereumNetwork;

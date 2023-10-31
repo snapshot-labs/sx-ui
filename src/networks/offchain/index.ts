@@ -4,9 +4,18 @@ import { pinPineapple } from '@/helpers/pin';
 import { Network } from '@/networks/types';
 import { NetworkID } from '@/types';
 
+const HUB_URLS: Partial<Record<NetworkID, string | undefined>> = {
+  s: 'https://hub.snapshot.org/graphql',
+  's-tn': 'https://testnet.snapshot.org/graphql'
+};
+
 export function createOffchainNetwork(networkId: NetworkID): Network {
   const l1ChainId = 1;
-  const api = createApi('https://hub.snapshot.org/graphql', networkId);
+
+  const hubUrl = HUB_URLS[networkId];
+  if (!hubUrl) throw new Error(`Unknown network ${networkId}`);
+
+  const api = createApi(hubUrl, networkId);
 
   const helpers = {
     pin: pinPineapple,
