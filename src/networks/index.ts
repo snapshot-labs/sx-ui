@@ -13,8 +13,8 @@ const goerliNetwork = createEvmNetwork('gor');
 const sepoliaNetwork = createEvmNetwork('sep');
 const lineaTestnetNetwork = createEvmNetwork('linea-testnet');
 
-export const enabledNetworks: NetworkID[] = process.env.VITE_ENABLED_NETWORKS
-  ? (process.env.VITE_ENABLED_NETWORKS.split(',') as NetworkID[])
+export const enabledNetworks: NetworkID[] = import.meta.env.VITE_ENABLED_NETWORKS
+  ? (import.meta.env.VITE_ENABLED_NETWORKS.split(',') as NetworkID[])
   : ['eth', 'matic', 'arb1', 'gor', 'sep', 'sn-tn'];
 
 export const evmNetworks: NetworkID[] = ['eth', 'matic', 'arb1', 'gor', 'sep', 'linea-testnet'];
