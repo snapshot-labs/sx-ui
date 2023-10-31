@@ -64,6 +64,7 @@ function formatProposal(proposal: ApiProposal, networkId: NetworkID): Proposal {
       id: proposal.author
     },
     proposal_id: proposal.id,
+    type: proposal.type,
     title: proposal.title,
     body: proposal.body,
     discussion: proposal.discussion,

@@ -39,6 +39,7 @@ const PROPOSAL_FRAGMENT = gql`
       admins
       symbol
     }
+    type
     title
     body
     discussion

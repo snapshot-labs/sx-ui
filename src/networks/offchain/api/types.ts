@@ -36,6 +36,7 @@ export type ApiProposal = {
     admins: string[];
     symbol: string;
   };
+  type: 'basic' | 'single-choice' | string;
   title: string;
   body: string;
   discussion: string;

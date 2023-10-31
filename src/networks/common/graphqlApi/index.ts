@@ -97,6 +97,7 @@ function formatProposal(proposal: ApiProposal, networkId: NetworkID, current: nu
       )
     },
     metadata_uri: proposal.metadata.id,
+    type: 'basic',
     title: proposal.metadata.title,
     body: proposal.metadata.body,
     discussion: proposal.metadata.discussion,

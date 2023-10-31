@@ -64,10 +64,12 @@ async function handleVoteClick(choice: Choice) {
           <template #cancelled><div /></template>
           <template #voted-pending><div /></template>
           <template #voted>
-            <Results :proposal="proposal" />
+            <Results v-if="proposal.type === 'basic'" :proposal="proposal" />
+            <div v-else />
           </template>
           <template #ended>
-            <Results :proposal="proposal" />
+            <Results v-if="proposal.type === 'basic'" :proposal="proposal" />
+            <div v-else />
           </template>
           <div class="flex space-x-2 py-2">
             <UiTooltip title="For">

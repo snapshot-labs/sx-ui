@@ -90,6 +90,7 @@ export type Proposal = {
   id: string;
   proposal_id: number | string;
   network: NetworkID;
+  type: 'basic' | 'single-choice' | string;
   quorum: number;
   space: {
     id: string;
