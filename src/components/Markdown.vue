@@ -22,8 +22,7 @@ remarkable.block.ruler.disable([
   'hr',
   'htmlblock',
   'lheading',
-  'list',
-  'table'
+  'list'
 ]);
 remarkable.inline.ruler.disable([
   'autolink',
@@ -133,6 +132,36 @@ const parsed = computed(() => {
   h5,
   h6 {
     font-size: 1em;
+  }
+
+  table {
+    display: block;
+    width: 100%;
+    overflow: auto;
+  }
+
+  table th {
+    font-weight: 600;
+  }
+
+  table th,
+  table td {
+    padding: 6px 13px;
+    border: 1px solid rgb(var(--border-color));
+  }
+
+  table thead tr,
+  table tbody tr:nth-child(2n) {
+    background-color: var(--bg-color);
+    border-top: 1px solid #c6cbd1;
+  }
+
+  table tbody tr {
+    background-color: var(--bg-color);
+  }
+
+  table img {
+    background-color: transparent;
   }
 }
 </style>
