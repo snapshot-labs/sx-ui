@@ -14,15 +14,7 @@ const remarkable = new Remarkable({
   linkTarget: '_blank'
 });
 remarkable.core.ruler.disable(['abbr', 'abbr2', 'footnote_tail', 'replacements', 'smartquotes']);
-remarkable.block.ruler.disable([
-  'code',
-  'deflist',
-  'fences',
-  'footnote',
-  'hr',
-  'htmlblock',
-  'lheading'
-]);
+remarkable.block.ruler.disable(['code', 'deflist', 'fences', 'footnote', 'htmlblock', 'lheading']);
 remarkable.inline.ruler.disable([
   'autolink',
   'backticks',
@@ -98,6 +90,14 @@ const parsed = computed(() => {
   p {
     font-size: 1em;
     color: var(--content-color);
+  }
+
+  hr {
+    height: 0.25em;
+    padding: 0;
+    margin: 24px 0;
+    background-color: #e1e4e8;
+    border: 0;
   }
 
   blockquote {
