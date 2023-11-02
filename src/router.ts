@@ -25,6 +25,8 @@ import Contacts from '@/views/Settings/Contacts.vue';
 import Explore from '@/views/Explore.vue';
 import SettingsSpaces from '@/views/Settings/Spaces.vue';
 
+const { mixpanel } = useMixpanel();
+
 const routes: any[] = [
   { path: '/', name: 'home', component: Home },
   {
@@ -91,6 +93,13 @@ const router = createRouter({
     }
     return { top: 0 };
   }
+});
+
+router.afterEach(to => {
+  mixpanel.track_pageview({
+    page_name: to.name,
+    page_path: to.path
+  });
 });
 
 export default router;
