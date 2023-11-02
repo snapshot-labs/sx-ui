@@ -168,7 +168,18 @@ watch([sortBy, choiceFilter], () => {
             There isn't any votes yet!
           </td>
           <tr v-for="(vote, i) in votes" :key="i" class="border-b relative">
-            <td class="text-left flex items-center pl-4 py-3">
+            <div
+              class="absolute top-0 bottom-0 right-0 pointer-events-none"
+              :style="{
+                width: `${((100 / proposal.scores_total) * vote.vp).toFixed(2)}%`
+              }"
+              :class="
+                proposal.type === 'basic'
+                  ? `choice-bg opacity-[0.04] _${vote.choice}`
+                  : 'bg-skin-border opacity-40'
+              "
+            />
+            <td class="relative text-left flex items-center pl-4 py-3">
               <Stamp :id="vote.voter.id" :size="32" class="mr-3" />
               <div class="truncate">
                 <router-link
@@ -186,13 +197,13 @@ watch([sortBy, choiceFilter], () => {
                 </router-link>
               </div>
             </td>
-            <td class="hidden lg:table-cell">
+            <td class="relative hidden lg:table-cell">
               <div class="leading-[22px]">
                 <h4>{{ _rt(vote.created) }}</h4>
                 <div class="text-sm">{{ _t(vote.created, 'MMM D, YYYY') }}</div>
               </div>
             </td>
-            <td>
+            <td class="relative">
               <div
                 v-if="proposal.type !== 'basic'"
                 class="truncate"
@@ -214,7 +225,7 @@ watch([sortBy, choiceFilter], () => {
                 <IH-minus-sm v-else class="inline-block" />
               </UiButton>
             </td>
-            <td class="pr-2 text-right">
+            <td class="relative pr-2 text-right">
               <div class="text-skin-link leading-[22px]">
                 <h4>
                   {{ _n(vote.vp / 10 ** votingPowerDecimals, 'compact') }}
@@ -223,7 +234,7 @@ watch([sortBy, choiceFilter], () => {
               </div>
               <div class="text-sm">{{ _n((vote.vp / proposal.scores_total) * 100) }}%</div>
             </td>
-            <td>
+            <td class="relative">
               <div class="flex justify-center">
                 <UiDropdown>
                   <template #button>
@@ -261,17 +272,6 @@ watch([sortBy, choiceFilter], () => {
                 </UiDropdown>
               </div>
             </td>
-            <div
-              class="absolute top-0 bottom-0 right-0 pointer-events-none"
-              :style="{
-                width: `${((100 / proposal.scores_total) * vote.vp).toFixed(2)}%`
-              }"
-              :class="
-                proposal.type === 'basic'
-                  ? `choice-bg opacity-[0.04] _${vote.choice}`
-                  : 'bg-skin-border opacity-40'
-              "
-            />
           </tr>
         </tbody>
       </template>

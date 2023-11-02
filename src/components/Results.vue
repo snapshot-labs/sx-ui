@@ -65,7 +65,7 @@ const visibleResults = computed(() =>
         :style="{
           width: `${((proposal.scores[id] / proposal.scores_total) * 100).toFixed(2)}%`
         }"
-      ></div>
+      />
     </div>
   </div>
   <div
