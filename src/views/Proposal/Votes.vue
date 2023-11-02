@@ -217,7 +217,7 @@ watch([sortBy, choiceFilter], () => {
             <td class="pr-2 text-right">
               <div class="text-skin-link leading-[22px]">
                 <h4>
-                  {{ _n(vote.vp / 10 ** votingPowerDecimals) }}
+                  {{ _n(vote.vp / 10 ** votingPowerDecimals, 'compact') }}
                   {{ proposal.space.voting_power_symbol }}
                 </h4>
               </div>

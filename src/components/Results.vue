@@ -102,7 +102,9 @@ const visibleResults = computed(() =>
         </div>
         <span
           v-text="
-            `${_n(Number(result.score) / 10 ** decimals)} ${proposal.space.voting_power_symbol}`
+            `${_n(Number(result.score) / 10 ** decimals, 'compact')} ${
+              proposal.space.voting_power_symbol
+            }`
           "
         />
         <span class="text-skin-text" v-text="`${_n(result.progress)}%`" />

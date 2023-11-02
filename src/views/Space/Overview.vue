@@ -103,7 +103,7 @@ watchEffect(() => {
         <h1 v-text="space.name" />
         <div class="mb-3">
           <b class="text-skin-link">{{ _n(space.proposal_count) }}</b> proposals ·
-          <b class="text-skin-link">{{ _n(space.vote_count) }}</b> votes
+          <b class="text-skin-link">{{ _n(space.vote_count, 'compact') }}</b> votes
         </div>
         <div class="max-w-[540px] text-skin-link text-md leading-[26px] mb-3">
           <span v-if="space.about">

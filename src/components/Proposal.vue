@@ -47,7 +47,8 @@ async function handleVoteClick(choice: Choice) {
         </router-link>
         <span>
           <template v-if="proposal.vote_count">
-            · {{ _n(proposal.vote_count) }} {{ proposal.vote_count !== 1 ? 'votes' : 'vote' }}
+            · {{ _n(proposal.vote_count, 'compact') }}
+            {{ proposal.vote_count !== 1 ? 'votes' : 'vote' }}
           </template>
           ·
           <a
