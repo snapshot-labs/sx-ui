@@ -21,8 +21,7 @@ remarkable.block.ruler.disable([
   'footnote',
   'hr',
   'htmlblock',
-  'lheading',
-  'list'
+  'lheading'
 ]);
 remarkable.inline.ruler.disable([
   'autolink',
@@ -86,7 +85,12 @@ const parsed = computed(() => {
   }
 
   p,
-  blockquote {
+  blockquote,
+  ul,
+  ol,
+  dl,
+  table,
+  pre {
     margin-top: 0;
     margin-bottom: 16px;
   }
@@ -132,6 +136,62 @@ const parsed = computed(() => {
   h5,
   h6 {
     font-size: 1em;
+  }
+
+  ul,
+  ol {
+    padding-left: 2em;
+  }
+
+  ul.no-list,
+  ol.no-list {
+    padding: 0;
+    list-style-type: none;
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
+
+  ul ul,
+  ul ol,
+  ol ol,
+  ol ul {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  li {
+    word-wrap: break-all;
+  }
+
+  li > p {
+    margin-top: 16px;
+  }
+
+  li + li {
+    margin-top: 0.25em;
+  }
+
+  dl {
+    padding: 0;
+  }
+
+  dl dt {
+    padding: 0;
+    margin-top: 16px;
+    font-size: 1em;
+    font-style: italic;
+    font-weight: 600;
+  }
+
+  dl dd {
+    padding: 0 16px;
+    margin-bottom: 16px;
   }
 
   table {
