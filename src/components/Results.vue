@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { _n } from '@/helpers/utils';
+import { _n, _p } from '@/helpers/utils';
 import { Proposal as ProposalType } from '@/types';
 
 const props = withDefaults(
@@ -57,9 +57,7 @@ const visibleResults = computed(() =>
       class="flex justify-between border rounded-lg p-3 mb-2 last:mb-0 text-skin-link relative overflow-hidden"
     >
       <div class="truncate mr-2 z-10">{{ choice }}</div>
-      <div class="z-10">
-        {{ ((proposal.scores[id] / proposal.scores_total) * 100).toFixed(2) }}%
-      </div>
+      <div class="z-10">{{ _p(proposal.scores[id] / proposal.scores_total) }}</div>
       <div
         class="absolute bg-skin-border top-0 bottom-0 left-0 pointer-events-none"
         :style="{
