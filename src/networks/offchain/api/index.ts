@@ -9,8 +9,16 @@ import {
 } from './queries';
 import { PaginationOpts, SpacesFilter, NetworkApi } from '@/networks/types';
 import { getNames } from '@/helpers/ens';
-import { Space, Proposal, Vote, User, NetworkID } from '@/types';
+import { Space, Proposal, Vote, User, NetworkID, ProposalState } from '@/types';
 import { ApiSpace, ApiProposal, ApiVote } from './types';
+
+function getProposalState(proposal: ApiProposal): ProposalState {
+  if (proposal.state === 'closed') {
+    return proposal.scores_total > proposal.quorum ? 'passed' : 'rejected';
+  }
+
+  return proposal.state;
+}
 
 function formatSpace(space: ApiSpace, networkId: NetworkID): Space {
   // TODO: convert ChainID to ShortName, we might need external mapping to handle
@@ -79,9 +87,7 @@ function formatProposal(proposal: ApiProposal, networkId: NetworkID): Proposal {
     scores: proposal.scores,
     scores_total: proposal.scores_total,
     vote_count: proposal.votes,
-    has_ended: proposal.state === 'closed',
-    has_started: proposal.state !== 'pending',
-    executed: false,
+    state: getProposalState(proposal),
     cancelled: false,
     vetoed: false,
     completed: proposal.state === 'closed',

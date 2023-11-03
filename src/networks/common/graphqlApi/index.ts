@@ -12,8 +12,18 @@ import {
 import { PaginationOpts, SpacesFilter, NetworkApi } from '@/networks/types';
 import { getNames } from '@/helpers/ens';
 import { CHOICES } from '@/helpers/constants';
-import { Space, Proposal, Vote, User, Transaction, NetworkID } from '@/types';
+import { Space, Proposal, Vote, User, Transaction, NetworkID, ProposalState } from '@/types';
 import { ApiSpace, ApiProposal } from './types';
+
+function getProposalState(proposal: ApiProposal, current: number): ProposalState {
+  if (proposal.executed) return 'executed';
+  if (proposal.max_end <= current) {
+    return proposal.scores_total > proposal.quorum ? 'passed' : 'rejected';
+  }
+  if (proposal.start > current) return 'pending';
+
+  return 'active';
+}
 
 function formatExecution(execution: string): Transaction[] {
   if (execution === '') return [];
@@ -105,9 +115,8 @@ function formatProposal(proposal: ApiProposal, networkId: NetworkID, current: nu
     body: proposal.metadata.body,
     discussion: proposal.metadata.discussion,
     execution: formatExecution(proposal.metadata.execution),
-    has_started: proposal.start <= current,
     has_execution_window_opened: proposal.min_end <= current,
-    has_ended: proposal.max_end <= current,
+    state: getProposalState(proposal, current),
     network: networkId
   };
 }

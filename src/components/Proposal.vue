@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { _rt, _n, shortenAddress } from '@/helpers/utils';
+import { getNetwork } from '@/networks';
 import type { Proposal as ProposalType, Choice } from '@/types';
 
 const props = defineProps<{ proposal: ProposalType }>();
@@ -9,6 +10,8 @@ const route = useRoute();
 const { vote } = useActions();
 const modalOpenTimeline = ref(false);
 const sendingType = ref<null | number>(null);
+
+const network = computed(() => getNetwork(props.proposal.network));
 
 async function handleVoteClick(choice: Choice) {
   sendingType.value = choice;
@@ -22,7 +25,7 @@ async function handleVoteClick(choice: Choice) {
 </script>
 <template>
   <div>
-    <div class="border-b mx-4 py-3 flex">
+    <div class="border-b mx-4 py-2.5 flex">
       <div class="flex-auto mr-4">
         <router-link
           :to="{
@@ -32,19 +35,23 @@ async function handleVoteClick(choice: Choice) {
               space: `${route.params.id}`
             }
           }"
-          class="block max-w-fit"
+          class="max-w-fit flex items-center space-x-2"
         >
+          <IconProposalStatus width="16" height="16" :state="proposal.state" />
           <h3 v-text="proposal.title || `Proposal #${proposal.proposal_id}`" />
         </router-link>
-        <router-link
-          :to="{
-            name: 'user',
-            params: { id: `${proposal.network}:${proposal.author.id}` }
-          }"
-        >
-          <Stamp :id="proposal.author.id" :size="24" class="mr-1" />
-          {{ shortenAddress(proposal.author.id) }}
-        </router-link>
+        <div class="inline">
+          <template v-if="!network.readOnly"> #{{ proposal.proposal_id }} </template>
+          by
+          <router-link
+            :to="{
+              name: 'user',
+              params: { id: `${proposal.network}:${proposal.author.id}` }
+            }"
+          >
+            {{ shortenAddress(proposal.author.id) }}
+          </router-link>
+        </div>
         <span>
           <template v-if="proposal.vote_count">
             · {{ _n(proposal.vote_count, 'compact') }}

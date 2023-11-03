@@ -26,7 +26,7 @@ const editable = computed(() => {
 const cancellable = computed(() => {
   return (
     compareAddresses(props.proposal.space.controller, web3.value.account) &&
-    props.proposal.executed === false &&
+    props.proposal.state !== 'executed' &&
     props.proposal.cancelled === false
   );
 });
