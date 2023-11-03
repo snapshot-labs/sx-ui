@@ -3,7 +3,6 @@ import {
   VOTES_QUERY,
   USER_VOTES_QUERY,
   PROPOSALS_QUERY,
-  PROPOSALS_SUMMARY_QUERY,
   PROPOSAL_QUERY,
   SPACES_QUERY,
   SPACE_QUERY,
@@ -221,20 +220,6 @@ export function createApi(uri: string, networkId: NetworkID): NetworkApi {
       });
 
       return data.proposals.map(proposal => formatProposal(proposal, networkId, current));
-    },
-    loadProposalsSummary: async (spaceId: string, current: number, limit: number) => {
-      const { data } = await apollo.query({
-        query: PROPOSALS_SUMMARY_QUERY,
-        variables: {
-          first: limit,
-          space: spaceId,
-          threshold: current
-        }
-      });
-
-      return [...data.active, ...data.expired].map(proposal =>
-        formatProposal(proposal, networkId, current)
-      );
     },
     loadProposal: async (
       spaceId: string,

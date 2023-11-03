@@ -4,7 +4,6 @@ import {
   SPACE_QUERY,
   PROPOSALS_QUERY,
   PROPOSAL_QUERY,
-  PROPOSALS_SUMMARY_QUERY,
   VOTES_QUERY
 } from './queries';
 import { PaginationOpts, SpacesFilter, NetworkApi } from '@/networks/types';
@@ -230,17 +229,6 @@ export function createApi(uri: string, networkId: NetworkID): NetworkApi {
       });
 
       return data.proposals.map(proposal => formatProposal(proposal, networkId));
-    },
-    loadProposalsSummary: async (spaceId: string, current: number, limit: number) => {
-      const { data } = await apollo.query({
-        query: PROPOSALS_SUMMARY_QUERY,
-        variables: {
-          first: limit,
-          space: spaceId
-        }
-      });
-
-      return [...data.active, ...data.expired].map(proposal => formatProposal(proposal, networkId));
     },
     loadProposal: async (spaceId: string, proposalId: number): Promise<Proposal | null> => {
       const { data } = await apollo.query({
