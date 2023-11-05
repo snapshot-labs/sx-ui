@@ -1,7 +1,7 @@
 const get = () => import(/* webpackChunkName: "argentx" */ '@argent/get-starknet');
-import LockConnector from '@snapshot-labs/lock/src/connector';
 
-export default class Connector extends LockConnector {
+// TODO: Add back agentx connector, possibly as a wagmi custom connector
+export default class Connector {
   async connect() {
     let provider;
     try {

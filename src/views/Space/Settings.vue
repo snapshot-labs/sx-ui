@@ -6,13 +6,13 @@ import { Space } from '@/types';
 const props = defineProps<{ space: Space }>();
 
 const { setTitle } = useTitle();
-const { web3 } = useWeb3();
+const { web3Account } = useWeb3();
 const { getDurationFromCurrent } = useMetaStore();
 const { setVotingDelay, setMinVotingDuration, setMaxVotingDuration, transferOwnership } =
   useActions();
 
 const network = computed(() => getNetwork(props.space.network));
-const isController = computed(() => compareAddresses(props.space.controller, web3.value.account));
+const isController = computed(() => compareAddresses(props.space.controller, web3Account.value));
 
 const settingsLoading = ref({
   votingDelay: false,

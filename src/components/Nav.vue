@@ -15,7 +15,7 @@ const spacesStore = useSpacesStore();
 
 const { param } = useRouteParser('id');
 const { resolved, address, networkId } = useResolve(param);
-const { web3 } = useWeb3();
+const { web3Account } = useWeb3();
 
 const currentRouteName = computed(() => String(route.matched[0]?.name));
 const space = computed(() =>
@@ -27,7 +27,7 @@ const space = computed(() =>
 const { treasury } = useTreasury(space);
 
 const isController = computed(() =>
-  space.value ? compareAddresses(space.value.controller, web3.value.account) : false
+  space.value ? compareAddresses(space.value.controller, web3Account.value) : false
 );
 const navigationConfig = computed(() => ({
   space: {

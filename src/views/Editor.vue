@@ -24,7 +24,7 @@ const { resolved, address, networkId } = useResolve(param);
 const route = useRoute();
 const router = useRouter();
 const { propose, updateProposal } = useActions();
-const { web3 } = useWeb3();
+const { web3Account } = useWeb3();
 const { getCurrent } = useMetaStore();
 const spacesStore = useSpacesStore();
 
@@ -154,7 +154,7 @@ async function handleExecutionStrategySelected(selectedExecutionStrategy: Select
 }
 
 async function getVotingPower() {
-  if (!space.value || !web3.value.account) return;
+  if (!space.value || !web3Account.value) return;
 
   fetchingVotingPower.value = true;
   try {
@@ -164,7 +164,7 @@ async function getVotingPower() {
       space.value.voting_power_validation_strategy_strategies,
       space.value.voting_power_validation_strategy_strategies_params,
       space.value.voting_power_validation_strategies_parsed_metadata,
-      web3.value.account,
+      web3Account.value,
       supportsNullCurrent(space.value.network) ? null : getCurrent(space.value.network) || 0
     );
 
@@ -186,7 +186,7 @@ watch(
   },
   { immediate: true }
 );
-watch([space, () => web3.value.account], () => getVotingPower());
+watch([space, web3Account], () => getVotingPower());
 watch(proposalData, () => {
   if (!proposal.value) return;
 
@@ -253,7 +253,7 @@ export default defineComponent({
           </UiButton>
           <UiButton
             class="rounded-l-none border-l-0 float-left !m-0 !px-3"
-            :loading="sending || (web3.account !== '' && fetchingVotingPower)"
+            :loading="sending || (web3Account !== '' && fetchingVotingPower)"
             :disabled="!canSubmit"
             @click="handleProposeClick"
           >

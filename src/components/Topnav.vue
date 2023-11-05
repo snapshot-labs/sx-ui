@@ -1,18 +1,16 @@
 <script setup lang="ts">
-import { getInstance } from '@snapshot-labs/lock/plugins/vue3';
 import { shorten } from '@/helpers/utils';
+import { Connector } from 'use-wagmi';
 
 const emit = defineEmits(['toggle']);
 
 const route = useRoute();
 const router = useRouter();
-const auth = getInstance();
 const uiStore = useUiStore();
 const { modalAccountOpen } = useModal();
-const { login, web3 } = useWeb3();
+const { connect, ensAddress, web3Account, isConnecting, isConnected } = useWeb3();
 const { toggleSkin, getMode } = useUserSkin();
 
-const loading = ref(false);
 const searchInput = ref();
 const searchValue = ref('');
 
@@ -22,11 +20,9 @@ const currentRouteName = computed(() => {
   return String(route.matched[0]?.name);
 });
 
-async function handleLogin(connector) {
+async function handleLogin(connector: Connector) {
   modalAccountOpen.value = false;
-  loading.value = true;
-  await login(connector);
-  loading.value = false;
+  connect({ connector });
 }
 
 function handleSearchSubmit(e: Event) {
@@ -81,16 +77,16 @@ watch(route, to => {
           snapshot x
         </router-link>
       </div>
-      <div :key="web3.account" class="flex">
-        <UiButton v-if="loading || web3.authLoading" loading class="!px-0 w-[46px]" />
+      <div :key="web3Account" class="flex">
+        <UiButton v-if="isConnecting" loading class="!px-0 w-[46px]" />
         <UiButton
           v-else
           class="float-left !px-0 w-[46px] sm:w-auto sm:!px-3 text-center"
           @click="modalAccountOpen = true"
         >
-          <span v-if="auth.isAuthenticated.value" class="sm:flex items-center space-x-2">
-            <Stamp :id="web3.account" :size="18" />
-            <span class="hidden sm:block" v-text="web3.name || shorten(web3.account)" />
+          <span v-if="isConnected" class="sm:flex items-center space-x-2">
+            <Stamp :id="web3Account" :size="18" />
+            <span class="hidden sm:block" v-text="ensAddress || shorten(web3Account)" />
           </span>
           <template v-else>
             <span class="hidden sm:block" v-text="'Connect wallet'" />
@@ -106,6 +102,10 @@ watch(route, to => {
     </div>
   </nav>
   <teleport to="#modal">
-    <ModalAccount :open="modalAccountOpen" @close="modalAccountOpen = false" @login="handleLogin" />
+    <ModalAccount
+      :open="modalAccountOpen"
+      @close="modalAccountOpen = false"
+      @connect="handleLogin"
+    />
   </teleport>
 </template>

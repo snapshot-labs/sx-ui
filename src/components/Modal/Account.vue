@@ -1,54 +1,69 @@
-<script setup>
-import { getInjected } from '@snapshot-labs/lock/src/utils';
+<script setup lang="ts">
 import { shorten, explorerUrl } from '@/helpers/utils';
-import connectors, { mapConnectorId, getConnectorIconUrl } from '@/helpers/connectors';
+import { useConnect, Connector } from 'use-wagmi';
 
-const injected = getInjected();
-if (injected)
-  connectors['injected'] = {
-    ...connectors['injected'],
-    ...injected,
-    ...{ id: 'injected' },
-    icon: connectors[mapConnectorId(injected.id)]?.icon ?? injected.icon
-  };
+import metamaskIcon from '@/assets/connectors/metamask.png';
+import coinbaseIcon from '@/assets/connectors/coinbase.png';
+import walletconnectIcon from '@/assets/connectors/walletconnect.png';
+import gnosisIcon from '@/assets/connectors/gnosis.png';
+// import starknetIcon from '@/assets/connectors/starknet.png';
 
-const props = defineProps({ open: Boolean });
-const emit = defineEmits(['login', 'close']);
-const win = window;
+const props = defineProps<{
+  open: boolean;
+}>();
 
-const { open } = toRefs(props);
-const { web3, logout } = useWeb3();
-let step = $ref(null);
+const emit = defineEmits<{
+  (e: 'connect', connector: Connector): void;
+  (e: 'close'): void;
+}>();
+
+const { disconnect, web3Account, ensAddress, chain, isConnected } = useWeb3();
+const { connectors } = useConnect();
+
+let step = ref('');
 
 async function handleLogout() {
-  await logout();
+  disconnect();
   emit('close');
 }
 
-watch(open, () => (step = null));
+function getWalletIcons(id: string) {
+  switch (id) {
+    case 'injected':
+      return metamaskIcon;
+    case 'coinbaseWallet':
+      return coinbaseIcon;
+    case 'walletConnect':
+      return walletconnectIcon;
+    case 'safe':
+      return gnosisIcon;
+    default:
+      return metamaskIcon;
+  }
+}
+
+watch(
+  () => props.open,
+  () => (step.value = '')
+);
 </script>
 
 <template>
   <UiModal :open="open" @close="$emit('close')">
     <template #header>
-      <h3 v-if="!web3.account || step === 'connect'" v-text="'Connect wallet'" />
+      <h3 v-if="!web3Account || step === 'connect'" v-text="'Connect wallet'" />
       <h3 v-else v-text="'Account'" />
     </template>
-    <div v-if="!web3.account || step === 'connect'">
+    <div v-if="!web3Account || step === 'connect'">
       <div class="m-4 space-y-2">
-        <a
-          v-for="(connector, id, i) in connectors"
-          :key="i"
-          target="_blank"
-          class="block"
-          @click="$emit('login', connector.id)"
-        >
+        <template v-for="connector in connectors" :key="connector.id">
           <UiButton
-            v-if="(connector.type === 'injected' && win[connector.root]) || !connector.type"
+            v-if="connector.ready"
             class="button-outline w-full flex justify-center items-center"
+            @click="$emit('connect', connector)"
           >
             <img
-              :src="getConnectorIconUrl(connector.icon)"
+              :src="getWalletIcons(connector.id)"
               height="28"
               width="28"
               class="mr-2 -mt-1"
@@ -56,15 +71,15 @@ watch(open, () => (step = null));
             />
             {{ connector.name }}
           </UiButton>
-        </a>
+        </template>
       </div>
     </div>
     <div v-else>
-      <div v-if="$auth.isAuthenticated.value" class="m-4 space-y-2">
-        <a :href="explorerUrl(web3.network.key, web3.account)" target="_blank" class="block">
+      <div v-if="isConnected" class="m-4 space-y-2">
+        <a :href="explorerUrl(chain.id, web3Account)" target="_blank" class="block">
           <UiButton class="button-outline w-full flex justify-center items-center">
-            <Stamp :id="web3.account" :size="18" class="mr-2 -ml-1" />
-            <span v-text="web3.name || shorten(web3.account)" />
+            <Stamp :id="web3Account" :size="18" class="mr-2 -ml-1" />
+            <span v-text="ensAddress || shorten(web3Account)" />
             <IH-arrow-sm-right class="inline-block ml-1 -rotate-45" />
           </UiButton>
         </a>
@@ -79,7 +94,9 @@ watch(open, () => (step = null));
         <UiButton class="button-outline w-full" @click="step = 'connect'">
           Connect wallet
         </UiButton>
-        <UiButton class="button-outline w-full !text-red" @click="handleLogout"> Log out </UiButton>
+        <UiButton class="button-outline w-full !text-red" @click="handleLogout">
+          Disconnect
+        </UiButton>
       </div>
     </div>
   </UiModal>

@@ -43,7 +43,7 @@ type PageID = (typeof PAGES)[number]['id'];
 
 const { setTitle } = useTitle();
 const { predictSpaceAddress } = useActions();
-const { web3 } = useWeb3();
+const { web3Account } = useWeb3();
 
 const pagesRefs = ref([] as HTMLElement[]);
 const showPicker = ref(false);
@@ -91,7 +91,7 @@ const settingsForm: SpaceSettings = reactive(
     maxVotingDuration: 86400
   })
 );
-const controller = ref(web3.value.account);
+const controller = ref(web3Account.value);
 const confirming = ref(false);
 const salt: Ref<string | null> = ref(null);
 const predictedSpaceAddress: Ref<string | null> = ref(null);
@@ -159,14 +159,11 @@ async function handleSubmit() {
   confirming.value = true;
 }
 
-watch(
-  () => web3.value.account,
-  value => {
-    if (!controller.value && value) {
-      controller.value = value;
-    }
+watch(web3Account, value => {
+  if (!controller.value && value) {
+    controller.value = value;
   }
-);
+});
 
 watch(selectedNetworkId, () => {
   authenticators.value = [];
