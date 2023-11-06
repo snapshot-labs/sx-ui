@@ -13,7 +13,10 @@ import { ApiSpace, ApiProposal, ApiVote } from './types';
 
 function getProposalState(proposal: ApiProposal): ProposalState {
   if (proposal.state === 'closed') {
-    return proposal.scores_total > proposal.quorum ? 'passed' : 'rejected';
+    if (proposal.scores_total < proposal.quorum) return 'rejected';
+    return proposal.type !== 'basic' || proposal.scores[0] > proposal.scores[1]
+      ? 'passed'
+      : 'rejected';
   }
 
   return proposal.state;
