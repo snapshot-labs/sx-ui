@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { _rt, _n, shortenAddress } from '@/helpers/utils';
-import { getNetwork } from '@/networks';
 import type { Proposal as ProposalType, Choice } from '@/types';
 
 const props = defineProps<{ proposal: ProposalType }>();
@@ -10,8 +9,6 @@ const route = useRoute();
 const { vote } = useActions();
 const modalOpenTimeline = ref(false);
 const sendingType = ref<null | number>(null);
-
-const network = computed(() => getNetwork(props.proposal.network));
 
 async function handleVoteClick(choice: Choice) {
   sendingType.value = choice;
@@ -41,7 +38,7 @@ async function handleVoteClick(choice: Choice) {
           <h3 v-text="proposal.title || `Proposal #${proposal.proposal_id}`" />
         </router-link>
         <div class="inline">
-          <template v-if="!network.readOnly"> #{{ proposal.proposal_id }} </template>
+          #{{ proposal.proposal_id.toString().slice(0, 7) }}
           by
           <router-link
             :to="{
