@@ -41,6 +41,7 @@ async function handleVoteClick(choice: Choice) {
           #{{ proposal.proposal_id.toString().slice(0, 7) }}
           by
           <router-link
+            class="text-skin-text"
             :to="{
               name: 'user',
               params: { id: `${proposal.network}:${proposal.author.id}` }
