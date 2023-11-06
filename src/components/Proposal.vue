@@ -32,9 +32,9 @@ async function handleVoteClick(choice: Choice) {
               space: `${route.params.id}`
             }
           }"
-          class="max-w-fit flex items-center space-x-2"
+          class="max-w-fit flex space-x-2"
         >
-          <IconProposalStatus width="16" height="16" :state="proposal.state" />
+          <IconProposalStatus width="16" height="16" :state="proposal.state" class="top-[8.5px]" />
           <h3 v-text="proposal.title || `Proposal #${proposal.proposal_id}`" />
         </router-link>
         <div class="inline">
