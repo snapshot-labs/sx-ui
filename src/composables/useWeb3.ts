@@ -28,7 +28,7 @@ export function useWeb3() {
   const connectorId = computed(() => connector.value?.id ?? '');
   const defaultChain = computed(() => (defaultChainId === '1' ? mainnet : goerli));
 
-  const web3WalletClient = computed(() => {
+  const web3WalletClient = computed<any>(() => {
     if (chain?.value && walletClient?.value) {
       const network = {
         chainId: chain.value.id,
