@@ -59,7 +59,7 @@
     "starknet": "5.19.1",
     "stream-browserify": "^3.0.0",
     "unplugin-auto-import": "^0.16.6",
-    "use-wagmi": "^0.4.4",
+    "use-wagmi": "^0.4.5",
     "util": "^0.12.5",
     "viem": "^1.18.4",
     "vue": "^3.3.4",

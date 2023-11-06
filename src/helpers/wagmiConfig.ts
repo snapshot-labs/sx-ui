@@ -6,8 +6,7 @@ import { WalletConnectConnector } from 'use-wagmi/connectors/walletConnect';
 import { SafeConnector } from 'use-wagmi/connectors/safe';
 
 const config = createConfig({
-  // TODO: Enable after onConnect is fixed https://github.com/unicape/use-wagmi/issues/82
-  // autoConnect: true,
+  autoConnect: true,
   publicClient: createPublicClient({
     chain: mainnet,
     transport: http()
