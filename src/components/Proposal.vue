@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { _rt, _n, shortenAddress } from '@/helpers/utils';
+import { _rt, _n, shortenAddress, getProposalId } from '@/helpers/utils';
 import type { Proposal as ProposalType, Choice } from '@/types';
 
 const props = defineProps<{ proposal: ProposalType }>();
@@ -41,7 +41,7 @@ async function handleVoteClick(choice: Choice) {
           />
         </router-link>
         <div class="inline">
-          #{{ proposal.proposal_id.toString().slice(0, 7) }}
+          {{ getProposalId(proposal) }}
           by
           <router-link
             class="text-skin-text"
