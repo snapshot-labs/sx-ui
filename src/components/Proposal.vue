@@ -34,8 +34,11 @@ async function handleVoteClick(choice: Choice) {
           }"
           class="max-w-fit flex space-x-2"
         >
-          <IconProposalStatus width="17" height="17" :state="proposal.state" class="top-[8px]" />
-          <h3 v-text="proposal.title || `Proposal #${proposal.proposal_id}`" />
+          <IconProposalStatus width="17" height="17" :state="proposal.state" class="top-[7.5px]" />
+          <h3
+            class="leading-6 my-1"
+            v-text="proposal.title || `Proposal #${proposal.proposal_id}`"
+          />
         </router-link>
         <div class="inline">
           #{{ proposal.proposal_id.toString().slice(0, 7) }}
