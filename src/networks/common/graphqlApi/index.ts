@@ -309,23 +309,21 @@ export function createApi(uri: string, networkId: NetworkID, opts: ApiOptions = 
       proposalId: number,
       current: number
     ): Promise<Proposal | null> => {
-      const { data } = await apollo.query({
-        query: PROPOSAL_QUERY,
-        variables: { id: `${spaceId}/${proposalId}` }
-      });
-
-      if (data.proposal.metadata === null) return null;
-
-      if (highlightApolloClient) {
-        try {
-          const { data: highlightData } = await highlightApolloClient.query({
+      const [{ data }, highlightResult] = await Promise.all([
+        apollo.query({
+          query: PROPOSAL_QUERY,
+          variables: { id: `${spaceId}/${proposalId}` }
+        }),
+        highlightApolloClient
+          ?.query({
             query: HIGHLIGHT_PROPOSAL_QUERY,
             variables: { id: `${spaceId}/${proposalId}` }
-          });
+          })
+          .catch(() => null)
+      ]);
 
-          data.proposal = joinHighlightProposal(data.proposal, highlightData.sxproposal);
-        } catch (e) {}
-      }
+      if (data.proposal.metadata === null) return null;
+      data.proposal = joinHighlightProposal(data.proposal, highlightResult?.data.sxproposal);
 
       return formatProposal(data.proposal, networkId, current);
     },
@@ -363,29 +361,25 @@ export function createApi(uri: string, networkId: NetworkID, opts: ApiOptions = 
       return data.spaces.map(space => formatSpace(space, networkId));
     },
     loadSpace: async (id: string): Promise<Space | null> => {
-      const { data } = await apollo.query({
-        query: SPACE_QUERY,
-        variables: { id }
-      });
-
-      if (!data.space) return null;
-      if (data.space.metadata === null) return null;
-
-      if (highlightApolloClient) {
-        try {
-          const { data: highlightData } = await highlightApolloClient.query({
+      const [{ data }, highlightResult] = await Promise.all([
+        apollo.query({
+          query: SPACE_QUERY,
+          variables: { id }
+        }),
+        highlightApolloClient
+          ?.query({
             query: HIGHLIGHT_SPACE_QUERY,
             variables: { id }
-          });
+          })
+          .catch(() => null)
+      ]);
 
-          data.space = joinHighlightSpace(data.space, highlightData.sxspace);
-        } catch (e) {}
-      }
+      data.space = joinHighlightSpace(data.space, highlightResult?.data.sxspace);
 
       return formatSpace(data.space, networkId);
     },
     loadUser: async (id: string): Promise<User | null> => {
-      const [result, highlightResult] = await Promise.all([
+      const [{ data }, highlightResult] = await Promise.all([
         apollo.query({
           query: USER_QUERY,
           variables: { id }
@@ -398,7 +392,7 @@ export function createApi(uri: string, networkId: NetworkID, opts: ApiOptions = 
           .catch(() => null)
       ]);
 
-      return joinHighlightUser(result.data.user ?? null, highlightResult?.data?.sxuser ?? null);
+      return joinHighlightUser(data.user ?? null, highlightResult?.data?.sxuser ?? null);
     }
   };
 }
