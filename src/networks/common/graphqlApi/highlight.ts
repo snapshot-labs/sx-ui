@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 import { ApiSpace, ApiProposal } from './types';
-import { Vote } from '@/types';
+import { User, Vote } from '@/types';
 
 type HighlightSpace = {
   id: string;
@@ -88,6 +88,17 @@ export const VOTES_QUERY = gql`
   }
 `;
 
+export const USER_QUERY = gql`
+  query ($id: String!) {
+    sxuser(id: $id) {
+      id
+      proposal_count
+      vote_count
+      created
+    }
+  }
+`;
+
 export function joinHighlightSpace(
   space: ApiSpace,
   highlightSpace: HighlightSpace | null
@@ -113,6 +124,16 @@ export function joinHighlightProposal(
     scores_3: Number(BigInt(proposal.scores_3) + BigInt(highlightProposal.scores_3)),
     scores_total: Number(BigInt(proposal.scores_total) + BigInt(highlightProposal.scores_total)),
     vote_count: proposal.vote_count + highlightProposal.vote_count
+  };
+}
+
+export function joinHighlightUser(user: User | null, highlightUser: User | null): User | null {
+  if (!highlightUser) return user;
+
+  return {
+    ...user,
+    ...highlightUser,
+    vote_count: user ? user.vote_count + highlightUser.vote_count : highlightUser.vote_count
   };
 }
 

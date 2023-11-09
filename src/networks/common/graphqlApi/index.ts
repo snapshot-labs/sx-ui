@@ -14,9 +14,11 @@ import {
   PROPOSALS_QUERY as HIGHLIGHT_PROPOSALS_QUERY,
   PROPOSAL_QUERY as HIGHLIGHT_PROPOSAL_QUERY,
   VOTES_QUERY as HIGHLIGHT_VOTES_QUERY,
+  USER_QUERY as HIGHLIGHT_USER_QUERY,
   joinHighlightSpace,
   joinHighlightProposal,
-  mixinHighlightVotes
+  mixinHighlightVotes,
+  joinHighlightUser
 } from './highlight';
 import { PaginationOpts, SpacesFilter, NetworkApi } from '@/networks/types';
 import { getNames } from '@/helpers/ens';
@@ -382,13 +384,21 @@ export function createApi(uri: string, networkId: NetworkID, opts: ApiOptions = 
 
       return formatSpace(data.space, networkId);
     },
-    loadUser: async (id: string): Promise<User> => {
-      const { data } = await apollo.query({
-        query: USER_QUERY,
-        variables: { id }
-      });
+    loadUser: async (id: string): Promise<User | null> => {
+      const [result, highlightResult] = await Promise.all([
+        apollo.query({
+          query: USER_QUERY,
+          variables: { id }
+        }),
+        highlightApolloClient
+          ?.query({
+            query: HIGHLIGHT_USER_QUERY,
+            variables: { id }
+          })
+          .catch(() => null)
+      ]);
 
-      return data.user;
+      return joinHighlightUser(result.data.user ?? null, highlightResult?.data?.sxuser ?? null);
     }
   };
 }
