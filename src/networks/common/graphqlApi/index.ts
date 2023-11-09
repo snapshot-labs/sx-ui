@@ -13,8 +13,10 @@ import {
   SPACE_QUERY as HIGHLIGHT_SPACE_QUERY,
   PROPOSALS_QUERY as HIGHLIGHT_PROPOSALS_QUERY,
   PROPOSAL_QUERY as HIGHLIGHT_PROPOSAL_QUERY,
+  VOTES_QUERY as HIGHLIGHT_VOTES_QUERY,
   joinHighlightSpace,
-  joinHighlightProposal
+  joinHighlightProposal,
+  mixinHighlightVotes
 } from './highlight';
 import { PaginationOpts, SpacesFilter, NetworkApi } from '@/networks/types';
 import { getNames } from '@/helpers/ens';
@@ -162,6 +164,12 @@ export function createApi(uri: string, networkId: NetworkID, opts: ApiOptions = 
       })
     : null;
 
+  const highlightVotesCache = {
+    key: null as string | null,
+    data: [] as Vote[],
+    remaining: [] as Vote[]
+  };
+
   return {
     loadProposalVotes: async (
       proposal: Proposal,
@@ -178,7 +186,7 @@ export function createApi(uri: string, networkId: NetworkID, opts: ApiOptions = 
         filters.choice = 3;
       }
 
-      const [orderBy, orderDirection] = sortBy.split('-');
+      const [orderBy, orderDirection] = sortBy.split('-') as ['vp' | 'created', 'desc' | 'asc'];
 
       const { data } = await apollo.query({
         query: VOTES_QUERY,
@@ -194,6 +202,37 @@ export function createApi(uri: string, networkId: NetworkID, opts: ApiOptions = 
           }
         }
       });
+
+      if (highlightApolloClient) {
+        const cacheKey = `${proposal.space.id}/${proposal.proposal_id}`;
+        const cacheValid = highlightVotesCache.key === cacheKey;
+
+        if (!cacheValid) {
+          const { data: highlightData } = await highlightApolloClient.query({
+            query: HIGHLIGHT_VOTES_QUERY,
+            variables: { space: proposal.space.id, proposal: proposal.proposal_id }
+          });
+
+          highlightVotesCache.key = cacheKey;
+          highlightVotesCache.data = highlightData.votes;
+          highlightVotesCache.remaining = highlightData.votes;
+        } else if (skip === 0) {
+          highlightVotesCache.remaining = highlightVotesCache.data;
+        }
+
+        const { result, remaining } = mixinHighlightVotes(
+          data.votes,
+          highlightVotesCache.remaining,
+          filter,
+          orderBy,
+          orderDirection,
+          limit
+        );
+
+        highlightVotesCache.remaining = remaining;
+
+        data.votes = result;
+      }
 
       const addresses = data.votes.map(vote => vote.voter.id);
       const names = await getNames(addresses);
