@@ -43,12 +43,7 @@ watch(isSwiping, () => {
 </script>
 
 <template>
-  <div id="modal" />
-  <div
-    ref="el"
-    :class="{ [skin]: true, 'overflow-hidden': scrollDisabled }"
-    class="font-serif text-base min-h-screen bg-skin-bg text-skin-text antialiased"
-  >
+  <div ref="el" :class="{ [skin]: true, 'overflow-hidden': scrollDisabled }" class="min-h-screen">
     <div class="pb-6 flex">
       <Sidebar class="lg:visible" :class="{ invisible: !uiStore.sidebarOpen }" />
       <Topnav @toggle="uiStore.toggleSidebar" />
