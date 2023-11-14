@@ -1,5 +1,5 @@
 import { Connector } from 'use-wagmi';
-import argentx, { ConnectOptions, StarknetWindowObject } from '@argent/get-starknet';
+import { ConnectOptions, StarknetWindowObject, connect } from '@argent/get-starknet';
 import { createWalletClient, custom } from 'viem';
 
 export class ArgentXWalletConnector extends Connector<StarknetWindowObject, ConnectOptions> {
@@ -50,13 +50,13 @@ export class ArgentXWalletConnector extends Connector<StarknetWindowObject, Conn
 
   async getProvider() {
     if (!this.#provider) {
-      const provider = await argentx.connect(this.options);
+      const provider = await connect(this.options);
 
       if (!provider) {
         throw Error('User rejected wallet selection or silent connect found nothing');
       }
 
-      this.#provider = provider ?? undefined;
+      this.#provider = provider;
     }
     return this.#provider;
   }

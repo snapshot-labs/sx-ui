@@ -4,6 +4,7 @@ import { InjectedConnector } from 'use-wagmi/connectors/injected';
 import { CoinbaseWalletConnector } from 'use-wagmi/connectors/coinbaseWallet';
 import { WalletConnectConnector } from 'use-wagmi/connectors/walletConnect';
 import { SafeConnector } from 'use-wagmi/connectors/safe';
+import { ArgentXWalletConnector } from './argentx';
 
 const config = createConfig({
   autoConnect: true,
@@ -33,6 +34,9 @@ const config = createConfig({
       options: {
         debug: false
       }
+    }),
+    new ArgentXWalletConnector({
+      options: {}
     })
   ]
 });
