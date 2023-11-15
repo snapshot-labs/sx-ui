@@ -2,6 +2,7 @@
 import { _c } from '@/helpers/utils';
 import { NetworkID } from '@/types';
 import { VotingPower } from '@/networks/types';
+import { evmNetworks } from '@/networks';
 
 const props = defineProps<{
   networkId: NetworkID;
@@ -10,7 +11,7 @@ const props = defineProps<{
   votingPowers: VotingPower[];
 }>();
 
-const { web3Account } = useWeb3();
+const { web3Account, connectorId } = useWeb3();
 
 const modalOpen = ref(false);
 
@@ -42,7 +43,7 @@ function handleModalOpen() {
     >
       <UiTooltip title="Your voting power">
         <UiButton
-          v-if="web3Account"
+          v-if="web3Account && !(evmNetworks.includes(networkId) && connectorId === 'argentx')"
           :loading="loading"
           :class="{
             '!px-0 w-[46px]': loading
