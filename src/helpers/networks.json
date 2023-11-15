@@ -34,5 +34,15 @@
     "chainId": 59140,
     "multicall": "0x77dca2c955b15e9de4dbbcf1246b4b85b651e50e",
     "explorer": "https://goerli.lineascan.build"
+  },
+  "0x534e5f4d41494e": {
+    "key": "0x534e5f4d41494e",
+    "name": "Starknet",
+    "explorer": "https://starkscan.co"
+  },
+  "0x534e5f474f45524c49": {
+    "key": "0x534e5f474f45524c49",
+    "name": "Starknet (testnet)",
+    "explorer": "https://testnet.starkscan.co"
   }
 }
