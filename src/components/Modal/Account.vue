@@ -6,7 +6,7 @@ import metamaskIcon from '@/assets/connectors/metamask.png';
 import coinbaseIcon from '@/assets/connectors/coinbase.png';
 import walletconnectIcon from '@/assets/connectors/walletconnect.png';
 import gnosisIcon from '@/assets/connectors/gnosis.png';
-// import starknetIcon from '@/assets/connectors/starknet.png';
+import starknetIcon from '@/assets/connectors/starknet.png';
 
 const props = defineProps<{
   open: boolean;
@@ -37,6 +37,8 @@ function getWalletIcons(id: string) {
       return walletconnectIcon;
     case 'safe':
       return gnosisIcon;
+    case 'argentx':
+      return starknetIcon;
     default:
       return metamaskIcon;
   }

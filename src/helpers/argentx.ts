@@ -1,39 +1,39 @@
 import { Connector } from 'use-wagmi';
-import { ConnectOptions, StarknetWindowObject, connect } from '@argent/get-starknet';
+import { ConnectOptions, StarknetWindowObject, connect, disconnect } from '@argent/get-starknet';
 import { createWalletClient, custom } from 'viem';
+import sn from 'get-starknet-core';
 
 export class ArgentXWalletConnector extends Connector<StarknetWindowObject, ConnectOptions> {
   readonly id = 'argentx';
-  readonly name = 'argentx';
+  readonly name = 'Starknet';
   readonly ready = true;
 
   #provider?: StarknetWindowObject;
 
-  constructor(config: { chains?: []; options: ConnectOptions }) {
+  constructor(config: { options: ConnectOptions; chains?: any[] }) {
     super(config);
   }
 
   async connect() {
-    try {
-      const provider = await this.getProvider();
-      provider.on('accountsChanged', this.onAccountsChanged);
-      provider.on('networkChanged', this.onChainChanged);
-
-      this.emit('message', { type: 'connecting' });
-
-      await provider.enable({ starknetVersion: 'v4' });
-
-      if (!provider.isConnected) {
-        throw new Error('Connector was not connected');
-      }
-
-      const account = provider.selectedAddress as `0x${string}`;
-      const id = await this.getChainId();
-
-      return { account, chain: { id, unsupported: false } };
-    } catch (error) {
-      throw error;
+    const provider = await connect(this.options);
+    if (!provider) {
+      throw Error('User rejected wallet selection or silent connect found nothing');
     }
+
+    this.#provider = provider;
+
+    provider.on('accountsChanged', this.onAccountsChanged);
+    provider.on('networkChanged', this.onChainChanged);
+
+    this.emit('message', { type: 'connecting' });
+
+    await provider.enable({ starknetVersion: 'v4' });
+    if (!provider.isConnected) throw Error('Failed to connect to wallet');
+
+    const account = provider.selectedAddress as `0x${string}`;
+    const id = await this.getChainId();
+
+    return { account, chain: { id, unsupported: false } };
   }
 
   async disconnect() {
@@ -50,31 +50,32 @@ export class ArgentXWalletConnector extends Connector<StarknetWindowObject, Conn
 
   async getProvider() {
     if (!this.#provider) {
-      const provider = await connect(this.options);
+      const wallet = await sn.getLastConnectedWallet();
+      if (!wallet) throw Error('No wallet found');
 
-      if (!provider) {
-        throw Error('User rejected wallet selection or silent connect found nothing');
-      }
+      this.#clearPreviousLocalStorage();
 
-      this.#provider = provider;
+      await wallet.enable({ starknetVersion: 'v4' });
+      if (!wallet?.isConnected) throw Error('Failed to connect to wallet');
+
+      this.#provider = wallet;
     }
     return this.#provider;
   }
 
   async getWalletClient(): Promise<any> {
     const [provider, account] = await Promise.all([this.getProvider(), this.getAccount()]);
-    if (!provider) throw new Error('provider is required.');
+    if (!provider) throw new Error('Provider is required.');
     return createWalletClient({
       account,
-      chain: { id: 'starknet', name: 'starknet' } as any,
       transport: custom(provider)
     });
   }
 
   async getAccount() {
-    const provider = await this.getProvider();
+    const { selectedAddress } = await this.getProvider();
 
-    return provider.selectedAddress as `0x${string}`;
+    return selectedAddress as `0x${string}`;
   }
 
   async isAuthorized() {
@@ -84,6 +85,16 @@ export class ArgentXWalletConnector extends Connector<StarknetWindowObject, Conn
     } catch {
       return false;
     }
+  }
+
+  #clearPreviousLocalStorage() {
+    // When reloading the page, the previous wallet was still in localStorage
+    // this would prevent disconnecting from the wallet
+    Object.keys(localStorage)
+      .filter(sk => sk.startsWith('gsw-last'))
+      .forEach(sk => {
+        localStorage.removeItem(sk);
+      });
   }
 
   protected onAccountsChanged = (accounts: string[]) => {
@@ -97,5 +108,6 @@ export class ArgentXWalletConnector extends Connector<StarknetWindowObject, Conn
 
   protected onDisconnect = () => {
     this.emit('disconnect');
+    disconnect({ clearLastWallet: true });
   };
 }

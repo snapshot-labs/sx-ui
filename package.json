@@ -48,6 +48,7 @@
     "dayjs": "^1.11.10",
     "electron": "^26.2.3",
     "events": "^3.3.0",
+    "get-starknet-core": "^3.2.0",
     "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6",
     "ipfs-http-client": "^60.0.1",
