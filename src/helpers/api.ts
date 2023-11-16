@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core';
 
 const httpLink = createHttpLink({
-  uri: import.meta.env.VITE_API_URL || ''
+  uri: import.meta.env.VITE_HIGHLIGHT_URL || ''
 });
 
 export const apollo = new ApolloClient({
