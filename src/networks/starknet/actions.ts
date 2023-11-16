@@ -187,7 +187,7 @@ export function createActions(
       const strategiesWithMetadata = await Promise.all(
         strategies.map(async strategy => {
           const metadata = await parseStrategyMetadata(
-            space.strategies_parsed_metadata[strategy.index].payload
+            space.voting_power_validation_strategies_parsed_metadata[strategy.index].payload
           );
 
           return {
@@ -228,7 +228,7 @@ export function createActions(
       connectorType: Connector,
       account: string,
       space: Space,
-      proposalId: number,
+      proposalId: number | string,
       cid: string,
       executionStrategy: string | null,
       transactions: MetaTransaction[]
@@ -261,7 +261,7 @@ export function createActions(
 
       const data = {
         space: space.id,
-        proposal: proposalId,
+        proposal: proposalId as number,
         authenticator,
         executionStrategy: selectedExecutionStrategy,
         metadataUri: `ipfs://${cid}`
@@ -289,7 +289,7 @@ export function createActions(
       return client.cancelProposal({
         signer: web3.provider.account,
         space: proposal.space.id,
-        proposal: proposal.proposal_id
+        proposal: proposal.proposal_id as number
       });
     },
     vote: async (
@@ -329,7 +329,7 @@ export function createActions(
         space: proposal.space.id,
         authenticator,
         strategies: strategiesWithMetadata,
-        proposal: proposal.proposal_id,
+        proposal: proposal.proposal_id as number,
         choice
       };
 

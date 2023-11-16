@@ -9,7 +9,7 @@ import networks from '@/helpers/networks.json';
 import pkg from '@/../package.json';
 import type { Web3Provider } from '@ethersproject/providers';
 import { upload as pin } from '@snapshot-labs/pineapple';
-import type { SpaceMetadata } from '@/types';
+import type { Proposal, SpaceMetadata } from '@/types';
 
 const IPFS_GATEWAY: string = import.meta.env.VITE_IPFS_GATEWAY || 'https://cloudflare-ipfs.com';
 const ADDABLE_NETWORKS = {
@@ -98,6 +98,13 @@ export function explorerUrl(network, str: string, type = 'address'): string {
   return `${networks[network].explorer}/${type}/${str}`;
 }
 
+export function getProposalId(proposal: Proposal) {
+  const proposalId = proposal.proposal_id.toString();
+
+  if (proposalId.startsWith('0x')) return `#${proposalId.slice(2, 7)}`;
+  return `#${proposalId}`;
+}
+
 export function _n(
   value: any,
   notation: 'standard' | 'compact' = 'standard',
@@ -119,6 +126,11 @@ export function _c(value: string | bigint, decimals = 18) {
 
   const formatter = new Intl.NumberFormat('en', { maximumFractionDigits: 3 });
   return formatter.format(parsed);
+}
+
+export function _p(value: number) {
+  const formatter = new Intl.NumberFormat('en', { style: 'percent', maximumFractionDigits: 2 });
+  return formatter.format(value);
 }
 
 export function jsonParse(input, fallback?) {

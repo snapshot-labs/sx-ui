@@ -1,7 +1,11 @@
 // UI
 export type NotificationType = 'error' | 'warning' | 'success';
 
+export type ProposalState = 'pending' | 'active' | 'passed' | 'rejected' | 'executed';
+
 export type NetworkID =
+  | 's'
+  | 's-tn'
   | 'eth'
   | 'gor'
   | 'sep'
@@ -86,8 +90,9 @@ export type Space = {
 
 export type Proposal = {
   id: string;
-  proposal_id: number;
+  proposal_id: number | string;
   network: NetworkID;
+  type: 'basic' | 'single-choice' | string;
   quorum: number;
   space: {
     id: string;
@@ -114,9 +119,8 @@ export type Proposal = {
   min_end: number;
   max_end: number;
   snapshot: number;
-  scores_1: number;
-  scores_2: number;
-  scores_3: number;
+  choices: string[];
+  scores: number[];
   scores_total: number;
   execution_time: number;
   execution_strategy: string;
@@ -130,13 +134,11 @@ export type Proposal = {
   execution_tx: string | null;
   veto_tx: string | null;
   vote_count: number;
-  has_started: boolean;
   has_execution_window_opened: boolean;
-  has_ended: boolean;
-  executed: boolean;
   vetoed: boolean;
   completed: boolean;
   cancelled: boolean;
+  state: ProposalState;
 };
 
 export type User = {
@@ -160,7 +162,7 @@ export type Vote = {
   space: {
     id: string;
   };
-  proposal: number;
+  proposal: number | string;
   choice: number;
   vp: number;
   created: number;
@@ -168,7 +170,7 @@ export type Vote = {
 };
 
 export type Draft = {
-  proposalId: number | null;
+  proposalId: number | string | null;
   title: string;
   body: string;
   discussion: string;

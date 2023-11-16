@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { _rt, _n, shortenAddress } from '@/helpers/utils';
+import { _rt, _n, shortenAddress, getProposalId } from '@/helpers/utils';
 import type { Proposal as ProposalType, Choice } from '@/types';
 
 const props = defineProps<{ proposal: ProposalType }>();
@@ -22,8 +22,8 @@ async function handleVoteClick(choice: Choice) {
 </script>
 <template>
   <div>
-    <div class="border-b mx-4 py-3 flex">
-      <div class="flex-auto">
+    <div class="border-b mx-4 py-2.5 flex">
+      <div class="flex-auto mr-4">
         <router-link
           :to="{
             name: 'proposal-overview',
@@ -32,22 +32,31 @@ async function handleVoteClick(choice: Choice) {
               space: `${route.params.id}`
             }
           }"
-          class="block max-w-fit"
+          class="max-w-fit flex space-x-2"
         >
-          <h3 v-text="proposal.title || `Proposal #${proposal.proposal_id}`" />
+          <ProposalStatusIcon width="17" height="17" :state="proposal.state" class="top-[7.5px]" />
+          <h3
+            class="leading-6 my-1"
+            v-text="proposal.title || `Proposal #${proposal.proposal_id}`"
+          />
         </router-link>
-        <router-link
-          :to="{
-            name: 'user',
-            params: { id: `${proposal.network}:${proposal.author.id}` }
-          }"
-        >
-          <Stamp :id="proposal.author.id" :size="24" class="mr-1" />
-          {{ shortenAddress(proposal.author.id) }}
-        </router-link>
+        <div class="inline">
+          {{ getProposalId(proposal) }}
+          by
+          <router-link
+            class="text-skin-text"
+            :to="{
+              name: 'user',
+              params: { id: `${proposal.network}:${proposal.author.id}` }
+            }"
+          >
+            {{ shortenAddress(proposal.author.id) }}
+          </router-link>
+        </div>
         <span>
           <template v-if="proposal.vote_count">
-            · {{ _n(proposal.vote_count) }} {{ proposal.vote_count !== 1 ? 'votes' : 'vote' }}
+            · {{ _n(proposal.vote_count, 'compact') }}
+            {{ proposal.vote_count !== 1 ? 'votes' : 'vote' }}
           </template>
           ·
           <a
@@ -64,10 +73,12 @@ async function handleVoteClick(choice: Choice) {
           <template #cancelled><div /></template>
           <template #voted-pending><div /></template>
           <template #voted>
-            <Results :proposal="proposal" />
+            <Results v-if="proposal.type === 'basic'" :proposal="proposal" />
+            <div v-else />
           </template>
           <template #ended>
-            <Results :proposal="proposal" />
+            <Results v-if="proposal.type === 'basic'" :proposal="proposal" />
+            <div v-else />
           </template>
           <div class="flex space-x-2 py-2">
             <UiTooltip title="For">

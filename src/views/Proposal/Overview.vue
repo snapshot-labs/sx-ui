@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { _rt, _n, shortenAddress, compareAddresses, sanitizeUrl, getUrl } from '@/helpers/utils';
+import {
+  _rt,
+  _n,
+  shortenAddress,
+  compareAddresses,
+  sanitizeUrl,
+  getUrl,
+  getProposalId
+} from '@/helpers/utils';
 import { Proposal } from '@/types';
 
 const props = defineProps<{
@@ -26,7 +34,7 @@ const editable = computed(() => {
 const cancellable = computed(() => {
   return (
     compareAddresses(props.proposal.space.controller, web3.value.account) &&
-    props.proposal.executed === false &&
+    props.proposal.state !== 'executed' &&
     props.proposal.cancelled === false
   );
 });
@@ -87,7 +95,11 @@ async function handleCancelClick() {
     <div>
       <h1 class="mb-3 text-[36px]">
         {{ proposal.title || `Proposal #${proposal.proposal_id}` }}
+        <span class="text-skin-text">{{ getProposalId(proposal) }}</span>
       </h1>
+
+      <ProposalStatus :state="proposal.state" class="top-[7.5px]" />
+
       <div class="flex justify-between items-center mb-3">
         <router-link
           :to="{
@@ -177,7 +189,7 @@ async function handleCancelClick() {
           proposal.execution &&
           proposal.execution.length > 0 &&
           BigInt(proposal.scores_total) >= BigInt(proposal.quorum) &&
-          BigInt(proposal.scores_1) > BigInt(proposal.scores_2) &&
+          BigInt(proposal.scores[0]) > BigInt(proposal.scores[1]) &&
           proposal.has_execution_window_opened
         "
       >
