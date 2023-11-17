@@ -1,5 +1,5 @@
 import { Connector } from 'use-wagmi';
-import { ConnectOptions, StarknetWindowObject, connect, disconnect } from '@argent/get-starknet';
+import type { ConnectOptions, StarknetWindowObject } from '@argent/get-starknet';
 import { createWalletClient, custom } from 'viem';
 import sn from 'get-starknet-core';
 
@@ -15,6 +15,7 @@ export class ArgentXWalletConnector extends Connector<StarknetWindowObject, Conn
   }
 
   async connect() {
+    const { connect } = await import('@argent/get-starknet');
     const provider = await connect(this.options);
     if (!provider) {
       throw Error('User rejected wallet selection or silent connect found nothing');
@@ -106,8 +107,10 @@ export class ArgentXWalletConnector extends Connector<StarknetWindowObject, Conn
     this.emit('change', { chain: { id: chainId, unsupported: false } });
   };
 
-  protected onDisconnect = () => {
+  protected onDisconnect = async () => {
     this.emit('disconnect');
+    const { disconnect } = await import('@argent/get-starknet');
+
     disconnect({ clearLastWallet: true });
   };
 }
