@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { shorten } from '@/helpers/utils';
 import { Connector } from 'use-wagmi';
+import { getNames } from '@/helpers/ens';
 
 const emit = defineEmits(['toggle']);
 
@@ -39,6 +40,16 @@ watch(route, to => {
   if (to.name === 'space-search') return;
   searchValue.value = '';
 });
+
+watch(
+  web3Account,
+  async value => {
+    if (!value) return;
+    const names = await getNames([value]);
+    ensName.value = names?.[value] || '';
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
