@@ -8,7 +8,7 @@ const route = useRoute();
 const router = useRouter();
 const uiStore = useUiStore();
 const { modalAccountOpen } = useModal();
-const { connect, ensAddress, web3Account, isConnecting, isConnected } = useWeb3();
+const { connect, ensName, web3Account, isConnecting, isConnected } = useWeb3();
 const { toggleSkin, getMode } = useUserSkin();
 
 const searchInput = ref();
@@ -86,7 +86,7 @@ watch(route, to => {
         >
           <span v-if="isConnected" class="sm:flex items-center space-x-2">
             <Stamp :id="web3Account" :size="18" />
-            <span class="hidden sm:block" v-text="ensAddress || shorten(web3Account)" />
+            <span class="hidden sm:block" v-text="ensName || shorten(web3Account)" />
           </span>
           <template v-else>
             <span class="hidden sm:block" v-text="'Connect wallet'" />

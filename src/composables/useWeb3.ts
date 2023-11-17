@@ -1,17 +1,13 @@
-import {
-  useAccount,
-  useConnect,
-  useDisconnect,
-  useNetwork,
-  useEnsAddress,
-  useWalletClient
-} from 'use-wagmi';
+import { useAccount, useConnect, useDisconnect, useNetwork, useWalletClient } from 'use-wagmi';
 import { Web3Provider } from '@ethersproject/providers';
 import { mainnet, goerli } from 'viem/chains';
+import { getNames } from '@/helpers/ens';
 
 const defaultChainId: any = import.meta.env.VITE_DEFAULT_NETWORK;
 
 export function useWeb3() {
+  const ensName = ref('');
+
   const uiStore = useUiStore();
 
   const { connect } = useConnect({
@@ -20,9 +16,8 @@ export function useWeb3() {
     }
   });
   const { disconnect } = useDisconnect();
-  const { address, isConnected, isConnecting, connector } = useAccount();
+  const { address, isConnected, isConnecting, connector, isReconnecting } = useAccount();
   const { chain } = useNetwork();
-  const { data: ensAddress } = useEnsAddress();
   const { data: walletClient } = useWalletClient();
 
   const connectorId = computed(() => connector.value?.id ?? '');
@@ -42,14 +37,25 @@ export function useWeb3() {
     return null;
   });
 
+  watch(
+    address,
+    async value => {
+      if (!value) return;
+      const names = await getNames([value]);
+      ensName.value = names?.[value];
+    },
+    { immediate: true }
+  );
+
   return {
     connect,
     disconnect,
     chain: computed(() => chain?.value ?? defaultChain.value),
     web3Account: computed(() => address.value ?? ''),
-    ensAddress: computed(() => ensAddress.value ?? ''),
+    ensName: computed(() => ensName.value ?? ''),
     isConnected,
     isConnecting,
+    isReconnecting,
     web3WalletClient,
     connectorId
   };

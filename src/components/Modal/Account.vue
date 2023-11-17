@@ -17,7 +17,7 @@ const emit = defineEmits<{
   (e: 'close'): void;
 }>();
 
-const { disconnect, web3Account, ensAddress, chain, isConnected } = useWeb3();
+const { disconnect, web3Account, ensName, chain, isConnected } = useWeb3();
 const { connectors } = useConnect();
 
 let step = ref('');
@@ -81,7 +81,7 @@ watch(
         <a :href="explorerUrl(chain.id, web3Account)" target="_blank" class="block">
           <UiButton class="button-outline w-full flex justify-center items-center">
             <Stamp :id="web3Account" :size="18" class="mr-2 -ml-1" />
-            <span v-text="ensAddress || shorten(web3Account)" />
+            <span v-text="ensName || shorten(web3Account)" />
             <IH-arrow-sm-right class="inline-block ml-1 -rotate-45" />
           </UiButton>
         </a>
