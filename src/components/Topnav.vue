@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { shorten } from '@/helpers/utils';
 import { Connector } from 'use-wagmi';
+import { shorten } from '@/helpers/utils';
 import { getNames } from '@/helpers/ens';
 
 const emit = defineEmits(['toggle']);
