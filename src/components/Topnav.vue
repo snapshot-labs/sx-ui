@@ -9,11 +9,12 @@ const route = useRoute();
 const router = useRouter();
 const uiStore = useUiStore();
 const { modalAccountOpen } = useModal();
-const { connect, ensName, web3Account, isConnecting, isConnected } = useWeb3();
+const { connect, web3Account, isConnecting, isConnected } = useWeb3();
 const { toggleSkin, getMode } = useUserSkin();
 
 const searchInput = ref();
 const searchValue = ref('');
+const ensName = ref('');
 
 const { focused } = useFocus(searchInput);
 
@@ -115,6 +116,7 @@ watch(
   <teleport to="#modal">
     <ModalAccount
       :open="modalAccountOpen"
+      :ens-name="ensName"
       @close="modalAccountOpen = false"
       @connect="handleLogin"
     />

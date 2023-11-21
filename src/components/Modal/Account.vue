@@ -10,6 +10,7 @@ import starknetIcon from '@/assets/connectors/starknet.png';
 
 const props = defineProps<{
   open: boolean;
+  ensName: string;
 }>();
 
 const emit = defineEmits<{
@@ -17,7 +18,7 @@ const emit = defineEmits<{
   (e: 'close'): void;
 }>();
 
-const { disconnect, web3Account, ensName, chain, isConnected } = useWeb3();
+const { disconnect, web3Account, chain, isConnected } = useWeb3();
 const { connectors } = useConnect();
 
 let step = ref('');

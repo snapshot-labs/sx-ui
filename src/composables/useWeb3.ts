@@ -5,8 +5,6 @@ import { mainnet, goerli } from 'viem/chains';
 const defaultChainId: any = import.meta.env.VITE_DEFAULT_NETWORK;
 
 export function useWeb3() {
-  const ensName = ref('');
-
   const uiStore = useUiStore();
 
   const { connect } = useConnect({
@@ -41,7 +39,6 @@ export function useWeb3() {
     disconnect,
     chain: computed(() => chain?.value ?? defaultChain.value),
     web3Account: computed(() => address.value ?? ''),
-    ensName,
     isConnected,
     isConnecting,
     isReconnecting,
