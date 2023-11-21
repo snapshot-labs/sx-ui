@@ -5,13 +5,7 @@ import { mainnet, goerli } from 'viem/chains';
 const defaultChainId: any = import.meta.env.VITE_DEFAULT_NETWORK;
 
 export function useWeb3() {
-  const uiStore = useUiStore();
-
-  const { connect } = useConnect({
-    onError(e) {
-      uiStore.addNotification('error', e.message);
-    }
-  });
+  const { connect } = useConnect();
   const { disconnect } = useDisconnect();
   const { address, isConnected, isConnecting, connector, isReconnecting } = useAccount();
   const { chain } = useNetwork();
