@@ -1,8 +1,8 @@
-import App from '@/App.vue';
-import router from '@/router';
 import { createPinia } from 'pinia';
 import { UseWagmiPlugin } from 'use-wagmi';
 import wagmiConfig from '@/helpers/wagmiConfig';
+import App from '@/App.vue';
+import router from '@/router';
 import '@/style.scss';
 
 const knownHosts = ['app.safe.global', 'pilot.gnosisguild.org'];
