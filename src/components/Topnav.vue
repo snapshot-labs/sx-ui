@@ -9,7 +9,7 @@ const route = useRoute();
 const router = useRouter();
 const uiStore = useUiStore();
 const { modalAccountOpen } = useModal();
-const { connect, web3Account, isConnecting, isConnected, web3WalletClient } = useWeb3();
+const { connect, web3Account, isConnecting, isConnected } = useWeb3();
 const { toggleSkin, getMode } = useUserSkin();
 
 const searchInput = ref();
@@ -68,7 +68,6 @@ watch(
           uiStore.sidebarOpen && route.matched[0]?.name === 'space'
       }"
     >
-      {{ web3WalletClient }}
       <div class="flex flex-grow items-center h-full">
         <IH-menu-alt-2
           class="inline-block text-skin-link mr-4 cursor-pointer lg:hidden"
