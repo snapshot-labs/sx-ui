@@ -66,7 +66,6 @@ export class ArgentXWalletConnector extends Connector<StarknetWindowObject, Conn
   }
 
   async getWalletClient(): Promise<WalletClient> {
-  async getWalletClient(): Promise<any> {
     const [provider, account] = await Promise.all([this.getProvider(), this.getAccount()]);
     if (!provider) throw new Error('Provider is required.');
     return createWalletClient({
