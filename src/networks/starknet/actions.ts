@@ -1,4 +1,4 @@
-import { defaultNetwork, clients, getStarknetStrategy } from '@snapshot-labs/sx';
+import { starknetGoerli1, clients, getStarknetStrategy } from '@snapshot-labs/sx';
 import { MANA_URL } from '@/helpers/mana';
 import { createErc1155Metadata, getUrl, verifyNetwork } from '@/helpers/utils';
 import { getExecutionData, createStrategyPicker } from '@/networks/common/helpers';
@@ -33,7 +33,8 @@ export function createActions(
   const clientConfig = {
     starkProvider,
     manaUrl: MANA_URL,
-    ethUrl
+    ethUrl,
+    networkConfig: starknetGoerli1
   };
 
   const pickAuthenticatorAndStrategies = createStrategyPicker({
@@ -70,7 +71,7 @@ export function createActions(
 
   return {
     async predictSpaceAddress(web3: any, { salt }) {
-      return client.predictSpaceAddress({ salt });
+      return client.predictSpaceAddress({ account: web3.provider.account, saltNonce: salt });
     },
     async deployDependency() {
       throw new Error('Not implemented');
@@ -114,6 +115,7 @@ export function createActions(
 
       return client.deploySpace({
         account: web3.provider.account,
+        saltNonce: salt,
         params: {
           ...params,
           proposalValidationStrategy: {
@@ -131,8 +133,7 @@ export function createActions(
             params: config.generateParams ? config.generateParams(config.params) : []
           })),
           votingStrategiesMetadata: metadataUris
-        },
-        salt
+        }
       });
     },
     setMetadata: async (web3: any, space: Space, metadata: SpaceMetadata) => {
@@ -396,7 +397,7 @@ export function createActions(
     ): Promise<VotingPower[]> => {
       return Promise.all(
         strategiesAddresses.map(async (address, i) => {
-          const strategy = getStarknetStrategy(address, defaultNetwork);
+          const strategy = getStarknetStrategy(address, starknetGoerli1);
           if (!strategy) return { address, value: 0n, decimals: 0, token: null, symbol: '' };
 
           const strategyMetadata = await parseStrategyMetadata(strategiesMetadata[i].payload);
@@ -409,7 +410,7 @@ export function createActions(
             strategiesParams[i].split(','),
             {
               ...clientConfig,
-              networkConfig: defaultNetwork
+              networkConfig: starknetGoerli1
             }
           );
 
