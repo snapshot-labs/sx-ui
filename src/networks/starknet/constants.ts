@@ -12,7 +12,7 @@ import IHLightningBolt from '~icons/heroicons-outline/lightning-bolt';
 export const API_URL = 'https://api-1.snapshotx.xyz';
 
 export const SUPPORTED_AUTHENTICATORS = {
-  '0x048b33fe56e9b9354d4278ffdd5f6d546b13aa3d8c33149db2e2e2fdb48a369e': true,
+  '0x48b33fe56e9b9354d4278ffdd5f6d546b13aa3d8c33149db2e2e2fdb48a369e': true,
   '0xd6f14d3df9ea2db12ed9572ab41d527f18dd24192e1744d3c100b2cd470812': true,
   '0x5280813396bf63dd47531ccdbfa5887099d44421d3f62db3de8f7bed68794f5': true,
   '0x573a7fc4d8dd3a860b376741c251772cd4d15508dd94564ff23a645d28042d': true
