@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { Remarkable } from 'remarkable';
+import { linkify } from 'remarkable/linkify';
 import { getUrl } from '@/helpers/utils';
 
 const props = defineProps<{
@@ -12,7 +13,7 @@ const remarkable = new Remarkable({
   breaks: true,
   typographer: false,
   linkTarget: '_blank'
-});
+}).use(linkify);
 remarkable.core.ruler.disable(['abbr', 'abbr2', 'footnote_tail', 'replacements', 'smartquotes']);
 remarkable.block.ruler.disable(['code', 'deflist', 'fences', 'footnote', 'htmlblock', 'lheading']);
 remarkable.inline.ruler.disable([
