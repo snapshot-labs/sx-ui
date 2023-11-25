@@ -18,7 +18,6 @@ remarkable.core.ruler.disable(['abbr', 'abbr2', 'footnote_tail', 'replacements',
 remarkable.block.ruler.disable(['code', 'deflist', 'fences', 'footnote', 'htmlblock', 'lheading']);
 remarkable.inline.ruler.disable([
   'autolink',
-  'backticks',
   'del',
   'entity',
   'escape',
@@ -164,6 +163,10 @@ const parsed = computed(() => {
   ol ul {
     margin-top: 0;
     margin-bottom: 0;
+  }
+
+  code {
+    @apply bg-skin-border text-[16px] rounded-md px-[6px] py-[2px];
   }
 
   li {
