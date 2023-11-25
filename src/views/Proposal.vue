@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getNetwork, offchainNetworks } from '@/networks';
-import { getStampUrl, getCacheHash } from '@/helpers/utils';
+import { getStampUrl, getCacheHash, _n, sanitizeUrl } from '@/helpers/utils';
 import { Choice } from '@/types';
 import { VotingPower } from '@/networks/types';
 
@@ -26,6 +26,11 @@ const proposal = computed(() => {
 
   return proposalsStore.getProposal(spaceAddress.value, id.value, networkId.value);
 });
+
+const discussion = computed(() => {
+  return sanitizeUrl(proposal.value.discussion);
+});
+
 const votingPowerDecimals = computed(() => {
   if (!proposal.value) return 0;
   return Math.max(
@@ -103,23 +108,34 @@ watchEffect(() => {
     <UiLoading v-if="!proposal" class="ml-4 mt-3" />
     <template v-else>
       <div class="flex-1 md:mr-[340px]">
-        <div class="flex px-4 bg-skin-bg border-b sticky top-[72px] z-40">
+        <div class="flex px-4 bg-skin-bg border-b sticky top-[72px] z-40 space-x-3">
           <router-link
             :to="{
               name: 'proposal-overview',
               params: { id: proposal.proposal_id }
             }"
           >
-            <Link :is-active="route.name === 'proposal-overview'" text="Overview" class="pr-3" />
+            <Link :is-active="route.name === 'proposal-overview'" text="Overview" />
           </router-link>
           <router-link
             :to="{
               name: 'proposal-votes',
               params: { id: proposal.proposal_id }
             }"
+            class="flex items-center"
           >
-            <Link :is-active="route.name === 'proposal-votes'" text="Votes" />
+            <Link :is-active="route.name === 'proposal-votes'" text="Votes" class="inline-block" />
+            <span
+              v-if="proposal.vote_count"
+              class="inline-block bg-skin-border text-skin-link text-xs rounded-full px-[6px] ml-2"
+            >
+              {{ _n(proposal.vote_count, 'compact') }}
+            </span>
           </router-link>
+          <a v-if="discussion" :href="discussion" target="_blank" class="flex items-center">
+            <h4 class="eyebrow text-skin-text" v-text="'Discussion'" />
+            <IH-arrow-sm-right class="-rotate-45 text-skin-text" />
+          </a>
         </div>
         <router-view :proposal="proposal" />
       </div>
