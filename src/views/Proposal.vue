@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getNetwork, offchainNetworks } from '@/networks';
-import { getStampUrl, getCacheHash, _n, sanitizeUrl } from '@/helpers/utils';
+import { getStampUrl, getCacheHash, sanitizeUrl } from '@/helpers/utils';
 import { Choice } from '@/types';
 import { VotingPower } from '@/networks/types';
 
@@ -124,13 +124,12 @@ watchEffect(() => {
             }"
             class="flex items-center"
           >
-            <Link :is-active="route.name === 'proposal-votes'" text="Votes" class="inline-block" />
-            <span
-              v-if="proposal.vote_count"
-              class="inline-block bg-skin-border text-skin-link text-xs rounded-full px-[6px] ml-2"
-            >
-              {{ _n(proposal.vote_count, 'compact') }}
-            </span>
+            <Link
+              :is-active="route.name === 'proposal-votes'"
+              :count="proposal.vote_count"
+              text="Votes"
+              class="inline-block"
+            />
           </router-link>
           <a v-if="discussion" :href="discussion" target="_blank" class="flex items-center">
             <h4 class="eyebrow text-skin-text" v-text="'Discussion'" />
