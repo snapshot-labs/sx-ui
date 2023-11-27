@@ -9,7 +9,8 @@ const route = useRoute();
 const router = useRouter();
 const uiStore = useUiStore();
 const { modalAccountOpen } = useModal();
-const { connect, web3Account, isConnecting, isConnected } = useWeb3();
+const { connect, web3Account, isConnecting, isConnected, initWeb3WalletClient, connectorId } =
+  useWeb3();
 const { toggleSkin, getMode } = useUserSkin();
 
 const searchInput = ref();
@@ -48,6 +49,14 @@ watch(
     if (!value) return;
     const names = await getNames([value]);
     ensName.value = names?.[value] || '';
+  },
+  { immediate: true }
+);
+
+watch(
+  connectorId,
+  async () => {
+    initWeb3WalletClient();
   },
   { immediate: true }
 );
