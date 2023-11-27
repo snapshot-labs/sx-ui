@@ -2,6 +2,7 @@ import { useAccount, useConnect, useDisconnect, useNetwork } from 'use-wagmi';
 import { getWalletClient } from '@wagmi/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { mainnet, goerli } from 'viem/chains';
+import { computedAsync } from '@vueuse/core';
 
 const defaultChainId: any = import.meta.env.VITE_DEFAULT_NETWORK;
 
@@ -11,19 +12,14 @@ export function useWeb3() {
   const { address, isConnected, isConnecting, connector, isReconnecting } = useAccount();
   const { chain } = useNetwork();
 
-  const walletClient = ref();
-
   const connectorId = computed(() => connector.value?.id ?? '');
   const defaultChain = computed(() => (defaultChainId === '1' ? mainnet : goerli));
 
-  watch(connector, async () => {
-    walletClient.value = await getWalletClient();
-  });
-
-  const web3WalletClient = computed<any>(() => {
-    if (chain?.value && walletClient?.value) {
+  const web3WalletClient = computedAsync<any>(async () => {
+    const walletClient = await getWalletClient();
+    if (walletClient) {
       const network =
-        connectorId.value !== 'argentx'
+        connectorId.value !== 'argentx' && chain?.value
           ? {
               chainId: chain.value.id,
               name: chain.value.name,
@@ -31,7 +27,8 @@ export function useWeb3() {
             }
           : undefined;
 
-      const web3Client = new Web3Provider(walletClient.value?.transport, network);
+      const web3Client = new Web3Provider(walletClient?.transport, network);
+
       if (web3Client) return web3Client;
     }
     return null;
