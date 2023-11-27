@@ -53,7 +53,7 @@ export function createStarknetNetwork(networkId: NetworkID): Network {
             clearInterval(timer);
             reject(tx);
           }
-        }, 5000);
+        }, 2000);
       });
     },
     waitForSpace: (spaceAddress: string, interval = 5000): Promise<Space> =>
