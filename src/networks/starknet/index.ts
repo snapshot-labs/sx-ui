@@ -1,4 +1,8 @@
-import { constants as starknetConstants, TransactionFinalityStatus } from 'starknet';
+import {
+  constants as starknetConstants,
+  TransactionExecutionStatus,
+  TransactionFinalityStatus
+} from 'starknet';
 import { createApi } from '../common/graphqlApi';
 import { STARKNET_CONNECTORS } from '../common/constants';
 import { createActions } from './actions';
@@ -16,13 +20,42 @@ export function createStarknetNetwork(networkId: NetworkID): Network {
 
   const helpers = {
     pin: pinPineapple,
-    waitForTransaction: txId =>
-      provider.waitForTransaction(txId, {
-        successStates: [
-          TransactionFinalityStatus.ACCEPTED_ON_L1,
-          TransactionFinalityStatus.ACCEPTED_ON_L2
-        ]
-      }),
+    waitForTransaction: txId => {
+      let retries = 0;
+
+      return new Promise((resolve, reject) => {
+        const timer = setInterval(async () => {
+          let tx: Awaited<ReturnType<typeof provider.getTransactionReceipt>>;
+          try {
+            tx = await provider.getTransactionReceipt(txId);
+          } catch (e) {
+            if (retries > 20) {
+              clearInterval(timer);
+              reject();
+            }
+
+            retries++;
+
+            return;
+          }
+
+          const successStates = [
+            TransactionFinalityStatus.ACCEPTED_ON_L1,
+            TransactionFinalityStatus.ACCEPTED_ON_L2
+          ];
+
+          if (successStates.includes(tx.finality_status as any)) {
+            clearInterval(timer);
+            resolve(tx);
+          }
+
+          if (tx.execution_status === TransactionExecutionStatus.REVERTED) {
+            clearInterval(timer);
+            reject(tx);
+          }
+        }, 5000);
+      });
+    },
     waitForSpace: (spaceAddress: string, interval = 5000): Promise<Space> =>
       new Promise(resolve => {
         const timer = setInterval(async () => {
