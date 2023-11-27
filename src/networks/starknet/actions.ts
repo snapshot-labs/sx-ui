@@ -9,7 +9,7 @@ import {
   SUPPORTED_AUTHENTICATORS,
   SUPPORTED_STRATEGIES
 } from './constants';
-import type { Provider } from 'starknet';
+import type { RpcProvider } from 'starknet';
 import type { MetaTransaction } from '@snapshot-labs/sx/dist/utils/encoding/execution-hash';
 import type {
   Connector,
@@ -22,7 +22,7 @@ import type { Space, SpaceMetadata, StrategyParsedMetadata, Proposal } from '@/t
 import { getProvider } from '@/helpers/provider';
 
 export function createActions(
-  starkProvider: Provider,
+  starkProvider: RpcProvider,
   helpers: NetworkHelpers,
   { l1ChainId }: { l1ChainId: number }
 ): NetworkActions {

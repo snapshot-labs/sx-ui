@@ -50,7 +50,7 @@ export function createStarknetNetwork(networkId: NetworkID): Network {
     chainId:
       networkId === 'sn-tn'
         ? starknetConstants.StarknetChainId.SN_GOERLI
-        : starknetConstants.StarknetChainId.SN_GOERLI2,
+        : starknetConstants.StarknetChainId.SN_MAIN,
     baseChainId: l1ChainId,
     baseNetworkId: 'gor',
     hasReceive: true,
