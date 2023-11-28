@@ -19,9 +19,9 @@ export function useWeb3() {
   async function initWeb3WalletClient() {
     const walletClient = await getWalletClient();
 
-    if (chain?.value && walletClient) {
+    if (walletClient) {
       const network =
-        connectorId.value !== 'argentx'
+        connectorId.value !== 'argentx' && chain?.value
           ? {
               chainId: chain.value.id,
               name: chain.value.name,
