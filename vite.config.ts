@@ -52,7 +52,6 @@ export default defineConfig({
     })
   ],
   optimizeDeps: {
-    include: ['@snapshot-labs/sx'],
     esbuildOptions: {
       target,
       plugins: [
@@ -65,7 +64,7 @@ export default defineConfig({
   build: {
     target,
     commonjsOptions: {
-      include: [/sx.js/, /node_modules/],
+      include: [/node_modules/],
       transformMixedEsModules: true
     },
     rollupOptions: {
