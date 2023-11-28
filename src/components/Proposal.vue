@@ -32,7 +32,7 @@ async function handleVoteClick(choice: Choice) {
               space: `${route.params.id}`
             }
           }"
-          class="space-x-2 flex max-w-[700px]"
+          class="space-x-2 flex"
         >
           <ProposalStatusIcon width="17" height="17" :state="proposal.state" class="top-[7.5px]" />
           <h3
