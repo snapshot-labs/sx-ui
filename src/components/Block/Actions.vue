@@ -6,7 +6,7 @@ import { Proposal as ProposalType } from '@/types';
 
 const props = defineProps<{ proposal: ProposalType }>();
 
-const { web3 } = useWeb3();
+const { web3Account } = useWeb3();
 const {
   finalizeProposal,
   receiveProposal,
@@ -162,7 +162,7 @@ async function handleVetoProposalClick() {
           !proposal.completed &&
           !proposal.vetoed &&
           proposal.timelock_veto_guardian &&
-          compareAddresses(proposal.timelock_veto_guardian, web3.account)
+          compareAddresses(proposal.timelock_veto_guardian, web3Account)
         "
         :disabled="countdown === 0"
         class="mb-2 w-full flex justify-center items-center"

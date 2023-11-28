@@ -5,19 +5,17 @@ const route = useRoute();
 const uiStore = useUiStore();
 const { modalOpen } = useModal();
 const { userSkin } = useUserSkin();
-const { init, app } = useApp();
-const { web3, web3Account } = useWeb3();
+const { web3Account } = useWeb3();
 const { loadVotes, votes } = useAccount();
 const { isSwiping, direction } = useSwipe(el);
-
-provide('web3', web3);
+const { init, initializedApp } = useApp();
 
 const skin = computed(() => userSkin.value);
 const scrollDisabled = computed(() => modalOpen.value || uiStore.sidebarOpen);
 
 onMounted(async () => {
   uiStore.restorePendingTransactions();
-  await init();
+  init();
 });
 
 watch(scrollDisabled, val => {
@@ -52,7 +50,7 @@ watch(isSwiping, () => {
     :class="{ [skin]: true, 'overflow-hidden': scrollDisabled }"
     class="font-serif text-base min-h-screen bg-skin-bg text-skin-text antialiased"
   >
-    <UiLoading v-if="app.loading || !app.init" class="overlay big" />
+    <UiLoading v-if="!initializedApp" class="overlay big" />
     <div v-else class="pb-6 flex">
       <Sidebar class="lg:visible" :class="{ invisible: !uiStore.sidebarOpen }" />
       <Topnav @toggle="uiStore.toggleSidebar" />

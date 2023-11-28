@@ -1,6 +1,7 @@
 import path from 'path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import GlobalPolyFill from '@esbuild-plugins/node-globals-polyfill';
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import Icons from 'unplugin-icons/vite';
@@ -52,7 +53,12 @@ export default defineConfig({
   ],
   optimizeDeps: {
     esbuildOptions: {
-      target
+      target,
+      plugins: [
+        GlobalPolyFill({
+          buffer: true
+        })
+      ]
     }
   },
   build: {

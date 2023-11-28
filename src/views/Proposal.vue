@@ -10,7 +10,7 @@ const { param } = useRouteParser('space');
 const { resolved, address: spaceAddress, networkId } = useResolve(param);
 const { setTitle } = useTitle();
 const proposalsStore = useProposalsStore();
-const { web3 } = useWeb3();
+const { web3Account } = useWeb3();
 const { vote } = useActions();
 
 const sendingType = ref<null | number>(null);
@@ -42,7 +42,7 @@ const votingPowerDecimals = computed(() => {
 async function getVotingPower() {
   if (!network.value) return;
 
-  if (!web3.value.account || !proposal.value) {
+  if (!web3Account.value || !proposal.value) {
     votingPowers.value = [];
     loadingVotingPower.value = false;
     return;
@@ -54,7 +54,7 @@ async function getVotingPower() {
       proposal.value.strategies,
       proposal.value.strategies_params,
       proposal.value.space.strategies_parsed_metadata,
-      web3.value.account,
+      web3Account.value,
       proposal.value.snapshot
     );
   } catch (e) {
@@ -77,7 +77,7 @@ async function handleVoteClick(choice: Choice) {
   }
 }
 
-watch([() => web3.value.account, proposal], () => getVotingPower());
+watch([web3Account, proposal], () => getVotingPower());
 watch(
   [networkId, spaceAddress, id],
   async ([networkId, spaceAddress, id]) => {
@@ -149,7 +149,7 @@ watchEffect(() => {
           "
         >
           <VotingPowerIndicator
-            v-if="web3.account && networkId"
+            v-if="web3Account && networkId"
             v-slot="props"
             :network-id="networkId"
             :loading="loadingVotingPower"

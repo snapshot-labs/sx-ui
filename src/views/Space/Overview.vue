@@ -8,7 +8,7 @@ const PROPOSALS_LIMIT = 4;
 const props = defineProps<{ space: Space }>();
 
 const { setTitle } = useTitle();
-const { web3 } = useWeb3();
+const { web3Account } = useWeb3();
 const spacesStore = useSpacesStore();
 const proposalsStore = useProposalsStore();
 
@@ -22,7 +22,7 @@ const spaceIdComposite = `${props.space.network}:${props.space.id}`;
 
 const network = computed(() => getNetwork(props.space.network));
 const spaceStarred = computed(() => spacesStore.starredSpacesIds.includes(spaceIdComposite));
-const isController = computed(() => compareAddresses(props.space.controller, web3.value.account));
+const isController = computed(() => compareAddresses(props.space.controller, web3Account.value));
 
 const externalUrl = computed(() => sanitizeUrl(props.space.external_url));
 const twitterUrl = computed(() =>

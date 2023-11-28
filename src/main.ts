@@ -1,9 +1,8 @@
 import { createPinia } from 'pinia';
-import { LockPlugin } from '@snapshot-labs/lock/plugins/vue3';
-import options from '@/helpers/auth';
+import { UseWagmiPlugin } from 'use-wagmi';
+import wagmiConfig from '@/helpers/wagmiConfig';
 import App from '@/App.vue';
 import router from '@/router';
-import '@/helpers/auth';
 import '@/style.scss';
 
 const knownHosts = ['app.safe.global', 'pilot.gnosisguild.org'];
@@ -21,9 +20,8 @@ if (window !== window.parent && !knownHosts.includes(parentHost)) {
 const pinia = createPinia();
 const app = createApp({ render: () => h(App) })
   .use(router)
-  .use(LockPlugin, options);
-
-app.use(pinia);
+  .use(pinia)
+  .use(UseWagmiPlugin, wagmiConfig);
 
 app.mount('#app');
 

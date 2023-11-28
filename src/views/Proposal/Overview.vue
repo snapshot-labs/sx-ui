@@ -16,7 +16,7 @@ const props = defineProps<{
 
 const router = useRouter();
 const { getCurrent, getTsFromCurrent } = useMetaStore();
-const { web3 } = useWeb3();
+const { web3Account } = useWeb3();
 const { cancelProposal } = useActions();
 const { createDraft } = useEditor();
 
@@ -26,14 +26,14 @@ const cancelling = ref(false);
 
 const editable = computed(() => {
   return (
-    compareAddresses(props.proposal.author.id, web3.value.account) &&
+    compareAddresses(props.proposal.author.id, web3Account.value) &&
     props.proposal.start > (getCurrent(props.proposal.network) || Number.POSITIVE_INFINITY)
   );
 });
 
 const cancellable = computed(() => {
   return (
-    compareAddresses(props.proposal.space.controller, web3.value.account) &&
+    compareAddresses(props.proposal.space.controller, web3Account.value) &&
     props.proposal.state !== 'executed' &&
     props.proposal.cancelled === false
   );

@@ -4,10 +4,10 @@ import type { Vote } from '@/types';
 const votes: Ref<Record<string, Vote>> = ref({});
 
 export function useAccount() {
-  const { web3 } = useWeb3();
+  const { web3Account } = useWeb3();
 
   async function loadVotes() {
-    const account = web3.value.account;
+    const account = web3Account.value;
 
     const allNetworkVotes = await Promise.all(
       enabledNetworks.map(networkId => {
@@ -19,5 +19,5 @@ export function useAccount() {
     votes.value = allNetworkVotes.reduce((acc, b) => ({ ...acc, ...b }));
   }
 
-  return { account: web3.value.account, loadVotes, votes };
+  return { account: web3Account.value, loadVotes, votes };
 }

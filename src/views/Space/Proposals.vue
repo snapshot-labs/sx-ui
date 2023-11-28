@@ -6,7 +6,7 @@ import { VotingPower } from '@/networks/types';
 const props = defineProps<{ space: Space }>();
 
 const { setTitle } = useTitle();
-const { web3 } = useWeb3();
+const { web3Account } = useWeb3();
 const { getCurrent } = useMetaStore();
 const proposalsStore = useProposalsStore();
 
@@ -26,7 +26,7 @@ async function handleEndReached() {
 }
 
 async function getVotingPower() {
-  if (!web3.value.account) {
+  if (!web3Account.value) {
     votingPowers.value = [];
     loadingVotingPower.value = false;
     return;
@@ -38,7 +38,7 @@ async function getVotingPower() {
       props.space.strategies,
       props.space.strategies_params,
       props.space.strategies_parsed_metadata,
-      web3.value.account,
+      web3Account.value,
       supportsNullCurrent(props.space.network) ? null : getCurrent(props.space.network) || 0
     );
   } catch (e) {
@@ -64,10 +64,7 @@ watch(
   { immediate: true }
 );
 
-watch(
-  () => web3.value.account,
-  () => getVotingPower()
-);
+watch(web3Account, () => getVotingPower());
 
 watchEffect(() => {
   setTitle(`Proposals - ${props.space.name}`);

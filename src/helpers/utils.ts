@@ -93,8 +93,8 @@ export function shorten(str: string, key?: any): string {
   return shortenAddress(str);
 }
 
-export function explorerUrl(network, str: string, type = 'address'): string {
-  if (network === 'starknet') type = 'contract';
+export function explorerUrl(network: string | number, str: string, type = 'address'): string {
+  if (network === '0x534e5f4d41494e' || network === '0x534e5f474f45524c49') type = 'contract';
   return `${networks[network].explorer}/${type}/${str}`;
 }
 
