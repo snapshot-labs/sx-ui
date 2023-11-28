@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { shorten, explorerUrl } from '@/helpers/utils';
-import { useConnect, Connector } from 'use-wagmi';
+
+import { useConnect, useDisconnect } from 'use-wagmi';
 
 import metamaskIcon from '@/assets/connectors/metamask.png';
 import coinbaseIcon from '@/assets/connectors/coinbase.png';
@@ -14,19 +15,22 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'connect', connector: Connector): void;
   (e: 'close'): void;
 }>();
 
-const { disconnect, web3Account, chain, isConnected } = useWeb3();
-const { connectors } = useConnect();
+const { web3Account, chain } = useWeb3();
+const { connect, connectors, isLoading, pendingConnector } = useConnect({
+  onSuccess: () => {
+    emit('close');
+  }
+});
+const { disconnect } = useDisconnect({
+  onSuccess: () => {
+    emit('close');
+  }
+});
 
 let step = ref('');
-
-async function handleLogout() {
-  disconnect();
-  emit('close');
-}
 
 function getWalletIcons(id: string) {
   switch (id) {
@@ -47,7 +51,9 @@ function getWalletIcons(id: string) {
 
 watch(
   () => props.open,
-  () => (step.value = '')
+  () => {
+    step.value = '';
+  }
 );
 </script>
 
@@ -63,22 +69,26 @@ watch(
           <UiButton
             v-if="connector.ready"
             class="button-outline w-full flex justify-center items-center"
-            @click="$emit('connect', connector)"
+            @click="connect({ connector })"
           >
-            <img
-              :src="getWalletIcons(connector.id)"
-              height="28"
-              width="28"
-              class="mr-2 -mt-1"
-              :alt="connector.name"
-            />
-            {{ connector.name }}
+            <UiLoading v-if="isLoading && connector.id === pendingConnector?.id" />
+
+            <template v-else>
+              <img
+                :src="getWalletIcons(connector.id)"
+                height="28"
+                width="28"
+                class="mr-2 -mt-1"
+                :alt="connector.name"
+              />
+              {{ connector.name }}
+            </template>
           </UiButton>
         </template>
       </div>
     </div>
     <div v-else>
-      <div v-if="isConnected" class="m-4 space-y-2">
+      <div v-if="web3Account" class="m-4 space-y-2">
         <a :href="explorerUrl(chain.id, web3Account)" target="_blank" class="block">
           <UiButton class="button-outline w-full flex justify-center items-center">
             <Stamp :id="web3Account" :size="18" class="mr-2 -ml-1" />
@@ -97,7 +107,7 @@ watch(
         <UiButton class="button-outline w-full" @click="step = 'connect'">
           Connect wallet
         </UiButton>
-        <UiButton class="button-outline w-full !text-red" @click="handleLogout">
+        <UiButton class="button-outline w-full !text-red" @click="disconnect()">
           Disconnect
         </UiButton>
       </div>

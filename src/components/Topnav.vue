@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Connector } from 'use-wagmi';
 import { shorten } from '@/helpers/utils';
 import { getNames } from '@/helpers/ens';
 
@@ -9,8 +8,7 @@ const route = useRoute();
 const router = useRouter();
 const uiStore = useUiStore();
 const { modalAccountOpen } = useModal();
-const { connect, web3Account, isConnecting, isConnected, initWeb3WalletClient, connectorId } =
-  useWeb3();
+const { web3Account, initWeb3WalletClient, connectorId } = useWeb3();
 const { toggleSkin, getMode } = useUserSkin();
 
 const searchInput = ref();
@@ -22,11 +20,6 @@ const { focused } = useFocus(searchInput);
 const currentRouteName = computed(() => {
   return String(route.matched[0]?.name);
 });
-
-async function handleLogin(connector: Connector) {
-  modalAccountOpen.value = false;
-  connect({ connector });
-}
 
 function handleSearchSubmit(e: Event) {
   e.preventDefault();
@@ -99,13 +92,11 @@ watch(
         </router-link>
       </div>
       <div :key="web3Account" class="flex">
-        <UiButton v-if="isConnecting" loading class="!px-0 w-[46px]" />
         <UiButton
-          v-else
           class="float-left !px-0 w-[46px] sm:w-auto sm:!px-3 text-center"
           @click="modalAccountOpen = true"
         >
-          <span v-if="isConnected" class="sm:flex items-center space-x-2">
+          <span v-if="web3Account" class="sm:flex items-center space-x-2">
             <Stamp :id="web3Account" :size="18" />
             <span class="hidden sm:block" v-text="ensName || shorten(web3Account)" />
           </span>
@@ -123,11 +114,6 @@ watch(
     </div>
   </nav>
   <teleport to="#modal">
-    <ModalAccount
-      :open="modalAccountOpen"
-      :ens-name="ensName"
-      @close="modalAccountOpen = false"
-      @connect="handleLogin"
-    />
+    <ModalAccount :open="modalAccountOpen" :ens-name="ensName" @close="modalAccountOpen = false" />
   </teleport>
 </template>

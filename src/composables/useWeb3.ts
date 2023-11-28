@@ -1,4 +1,4 @@
-import { useAccount, useConnect, useDisconnect, useNetwork } from 'use-wagmi';
+import { useAccount, useNetwork } from 'use-wagmi';
 import { getWalletClient } from '@wagmi/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { mainnet, goerli } from 'viem/chains';
@@ -6,9 +6,7 @@ import { mainnet, goerli } from 'viem/chains';
 const defaultChainId: any = import.meta.env.VITE_DEFAULT_NETWORK;
 
 export function useWeb3() {
-  const { connect } = useConnect();
-  const { disconnect } = useDisconnect();
-  const { address, isConnected, isConnecting, connector, isReconnecting } = useAccount();
+  const { address, connector } = useAccount();
   const { chain } = useNetwork();
 
   const web3WalletClient = ref();
@@ -37,15 +35,10 @@ export function useWeb3() {
   }
 
   return {
-    connect,
-    disconnect,
     initWeb3WalletClient,
     chain: computed(() => chain?.value ?? defaultChain.value),
     web3Account: computed(() => address.value ?? ''),
-    isConnected,
-    isConnecting,
-    isReconnecting,
-    web3WalletClient,
-    connectorId
+    connectorId: computed(() => connectorId.value),
+    web3WalletClient: computed(() => web3WalletClient.value)
   };
 }
