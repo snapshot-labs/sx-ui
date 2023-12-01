@@ -82,7 +82,7 @@ export function shortenAddress(str = '') {
   return `${str.slice(0, 6)}...${str.slice(str.length - 4)}`;
 }
 
-export function shorten(str: string, key?: any): string {
+export function shorten(str: string, key?: number | 'symbol' | 'name' | 'choice'): string {
   if (!str) return str;
   let limit;
   if (typeof key === 'number') limit = key;
