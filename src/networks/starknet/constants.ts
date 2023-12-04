@@ -247,6 +247,24 @@ export function createConstants(networkId: NetworkID) {
           }
         };
       },
+      parseParams: async (params: string, metadata: StrategyParsedMetadata | null) => {
+        if (!metadata) throw new Error('Missing metadata');
+
+        const getWhitelist = async (payload: string) => {
+          const metadataUrl = getUrl(payload);
+
+          if (!metadataUrl) return '';
+
+          const res = await fetch(metadataUrl);
+          const { tree } = await res.json();
+          return tree.map((item: any) => `${item.address}:${item.votingPower}`).join('\n');
+        };
+
+        return {
+          symbol: metadata.symbol,
+          whitelist: metadata.payload ? await getWhitelist(metadata.payload) : ''
+        };
+      },
       paramsDefinition: {
         type: 'object',
         title: 'Params',
@@ -277,7 +295,7 @@ export function createConstants(networkId: NetworkID) {
       generateSummary: (params: Record<string, any>) =>
         `(${shorten(params.contractAddress)}, ${params.decimals})`,
       generateParams: (params: Record<string, any>) => [params.contractAddress],
-      generateMetadata: (params: Record<string, any>) => ({
+      generateMetadata: async (params: Record<string, any>) => ({
         name: 'ERC-20 Votes (EIP-5805)',
         properties: {
           symbol: params.symbol,
@@ -333,7 +351,7 @@ export function createConstants(networkId: NetworkID) {
       generateSummary: (params: Record<string, any>) =>
         `(${shorten(params.contractAddress)}, ${params.decimals})`,
       generateParams: (params: Record<string, any>) => [params.contractAddress],
-      generateMetadata: (params: Record<string, any>) => ({
+      generateMetadata: async (params: Record<string, any>) => ({
         name: 'ERC-20 Votes (EIP-5805)',
         properties: {
           symbol: params.symbol,
