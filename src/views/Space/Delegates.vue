@@ -118,15 +118,19 @@ watchEffect(() => {
             </tr>
           </thead>
           <td v-if="loading" colspan="3">
-            <UiLoading class="p-4 block" />
+            <UiLoading class="px-4 py-3 block" />
           </td>
           <template v-else>
             <tbody>
-              <td v-if="loaded && delegates.length === 0" class="p-4 flex items-center" colspan="3">
+              <td
+                v-if="loaded && delegates.length === 0"
+                class="px-4 py-3 flex items-center"
+                colspan="3"
+              >
                 <IH-exclamation-circle class="inline-block mr-2" />
                 There are no delegates.
               </td>
-              <td v-else-if="loaded && failed" class="p-4 flex items-center" colspan="3">
+              <td v-else-if="loaded && failed" class="px-4 py-3 flex items-center" colspan="3">
                 <IH-exclamation-circle class="inline-block mr-2" />
                 Failed to load delegates.
               </td>
