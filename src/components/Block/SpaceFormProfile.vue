@@ -200,7 +200,7 @@ onMounted(() => {
         </a>
       </div>
     </div>
-    <UiButton class="w-full rounded-lg" @click="addDelegation">Add new delegation API</UiButton>
+    <UiButton class="w-full" @click="addDelegation">Add delegation</UiButton>
   </div>
   <teleport to="#modal">
     <ModalDelegationConfig
