@@ -562,6 +562,7 @@ export function createActions(
     },
     send: (envelope: any) => ethSigClient.send(envelope),
     getVotingPower: async (
+      spaceAddress: string,
       strategiesAddresses: string[],
       strategiesParams: any[],
       strategiesMetadata: StrategyParsedMetadata[],
@@ -578,6 +579,7 @@ export function createActions(
           const strategyMetadata = await parseStrategyMetadata(strategiesMetadata[i].payload);
 
           const value = await strategy.getVotingPower(
+            spaceAddress,
             address,
             voterAddress,
             strategyMetadata,

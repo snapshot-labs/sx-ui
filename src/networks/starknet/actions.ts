@@ -71,8 +71,8 @@ export function createActions(
     return code !== '0x';
   };
 
-  const client = new clients.StarkNetTx(clientConfig);
-  const starkSigClient = new clients.StarkNetSig(clientConfig);
+  const client = new clients.StarknetTx(clientConfig);
+  const starkSigClient = new clients.StarknetSig(clientConfig);
   const ethSigClient = new clients.EthereumSig(clientConfig);
   const ethTxClient = new clients.EthereumTx(clientConfig);
 
@@ -444,6 +444,7 @@ export function createActions(
       throw new Error('Not implemented');
     },
     getVotingPower: async (
+      spaceAddress: string,
       strategiesAddresses: string[],
       strategiesParams: any[],
       strategiesMetadata: StrategyParsedMetadata[],
@@ -458,6 +459,7 @@ export function createActions(
           const strategyMetadata = await parseStrategyMetadata(strategiesMetadata[i].payload);
 
           const value = await strategy.getVotingPower(
+            spaceAddress,
             address,
             voterAddress,
             strategyMetadata,
