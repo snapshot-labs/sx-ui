@@ -365,7 +365,6 @@ export function createConstants(networkId: NetworkID) {
                 decimals: parseInt(params.decimals),
                 token: params.contractAddress,
                 payload: JSON.stringify({
-                  chainId: params.chainId,
                   contractAddress: params.contractAddress,
                   slotIndex: params.slotIndex
                 })
@@ -375,27 +374,31 @@ export function createConstants(networkId: NetworkID) {
               if (!metadata || !metadata.payload) throw new Error('Missing metadata');
 
               const [contractAddress] = params.split(',');
-              const { chainId, slotIndex } = JSON.parse(metadata.payload);
+              const { slotIndex } = JSON.parse(metadata.payload);
 
               return {
                 contractAddress,
                 decimals: metadata.decimals,
                 symbol: metadata.symbol,
-                slotIndex,
-                chainId
+                slotIndex
               };
             },
             paramsDefinition: {
               type: 'object',
               title: 'Params',
               additionalProperties: false,
-              required: ['contractAddress', 'slotIndex', 'chainId'],
+              required: ['contractAddress', 'slotIndex'],
               properties: {
                 contractAddress: {
                   type: 'string',
                   format: 'address',
-                  title: 'Token address',
+                  title: 'Contract address',
                   examples: ['0x0000…']
+                },
+                slotIndex: {
+                  type: 'integer',
+                  title: 'Slot index',
+                  examples: ['0']
                 },
                 decimals: {
                   type: 'integer',
@@ -407,17 +410,6 @@ export function createConstants(networkId: NetworkID) {
                   maxLength: MAX_SYMBOL_LENGTH,
                   title: 'Symbol',
                   examples: ['e.g. COMP']
-                },
-                slotIndex: {
-                  type: 'integer',
-                  title: 'Slot Index',
-                  examples: ['0']
-                },
-                chainId: {
-                  type: 'integer',
-                  title: 'Chain ID',
-                  examples: ['5'],
-                  enum: [5]
                 }
               }
             }
