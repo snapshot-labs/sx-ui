@@ -60,7 +60,7 @@ const votingTime = computed(() => {
 
   const hasEnded = props.proposal.max_end <= current;
 
-  return hasEnded ? `Voting ended ${time}` : time;
+  return hasEnded ? `Ended ${time}` : time;
 });
 
 async function handleEditClick() {
