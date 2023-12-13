@@ -418,6 +418,10 @@ export function createConstants(networkId: NetworkID) {
       : [])
   ];
 
+  const EDITOR_PROPOSAL_VALIDATION_VOTING_STRATEGIES = EDITOR_VOTING_STRATEGIES.filter(
+    strategy => strategy.address !== config.Strategies.EVMSlotValue
+  );
+
   const EDITOR_EXECUTION_STRATEGIES = [
     {
       address: config.ExecutionStrategies.NoExecutionSimpleMajority,
@@ -440,6 +444,7 @@ export function createConstants(networkId: NetworkID) {
     EDITOR_AUTHENTICATORS,
     EDITOR_PROPOSAL_VALIDATIONS,
     EDITOR_VOTING_STRATEGIES,
+    EDITOR_PROPOSAL_VALIDATION_VOTING_STRATEGIES,
     EDITOR_EXECUTION_STRATEGIES
   };
 }
