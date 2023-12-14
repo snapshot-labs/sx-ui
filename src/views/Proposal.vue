@@ -51,7 +51,6 @@ async function getVotingPower() {
   loadingVotingPower.value = true;
   try {
     votingPowers.value = await network.value.actions.getVotingPower(
-      proposal.value.space.id,
       proposal.value.strategies,
       proposal.value.strategies_params,
       proposal.value.space.strategies_parsed_metadata,

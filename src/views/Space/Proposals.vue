@@ -41,7 +41,6 @@ async function getVotingPower() {
   loadingVotingPower.value = true;
   try {
     votingPowers.value = await network.value.actions.getVotingPower(
-      props.space.id,
       props.space.strategies,
       props.space.strategies_params,
       props.space.strategies_parsed_metadata,

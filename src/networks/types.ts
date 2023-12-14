@@ -75,7 +75,6 @@ export type VotingPower = {
 
 type ReadOnlyNetworkActions = {
   getVotingPower(
-    spaceAddress: string,
     strategiesAddresses: string[],
     strategiesParams: any[],
     strategiesMetadata: StrategyParsedMetadata[],
