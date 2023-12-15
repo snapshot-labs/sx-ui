@@ -271,73 +271,17 @@ export function createConstants(networkId: NetworkID) {
         additionalProperties: false,
         required: [],
         properties: {
+          whitelist: {
+            type: 'string',
+            format: 'long',
+            title: 'Whitelist',
+            examples: ['0x556B14CbdA79A36dC33FcD461a04A5BCb5dC2A70:40']
+          },
           symbol: {
             type: 'string',
             maxLength: MAX_SYMBOL_LENGTH,
             title: 'Symbol',
             examples: ['e.g. VP']
-          },
-          whitelist: {
-            type: 'string',
-            format: 'long',
-            title: 'Whitelist',
-            examples: ['0x556B14CbdA79A36dC33FcD461a04A5BCb5dC2A70:40']
-          }
-        }
-      }
-    },
-    {
-      address: config.Strategies.ERC20Votes,
-      name: 'ERC-20 Votes (EIP-5805)',
-      about:
-        'A strategy that allows delegated balances of OpenZeppelin style checkpoint tokens to be used as voting power.',
-      icon: IHCode,
-      generateSummary: (params: Record<string, any>) =>
-        `(${shorten(params.contractAddress)}, ${params.decimals})`,
-      generateParams: (params: Record<string, any>) => [params.contractAddress],
-      generateMetadata: async (params: Record<string, any>) => ({
-        name: 'ERC-20 Votes (EIP-5805)',
-        properties: {
-          symbol: params.symbol,
-          decimals: parseInt(params.decimals),
-          token: params.contractAddress
-        }
-      }),
-      parseParams: async (params: string, metadata: StrategyParsedMetadata | null) => {
-        if (!metadata) throw new Error('Missing metadata');
-
-        const getWhitelist = async (payload: string) => {
-          const metadataUrl = getUrl(payload);
-
-          if (!metadataUrl) return '';
-
-          const res = await fetch(metadataUrl);
-          const { tree } = await res.json();
-          return tree.map((item: any) => `${item.address}:${item.votingPower}`).join('\n');
-        };
-
-        return {
-          symbol: metadata.symbol,
-          whitelist: metadata.payload ? await getWhitelist(metadata.payload) : ''
-        };
-      },
-      paramsDefinition: {
-        type: 'object',
-        title: 'Params',
-        additionalProperties: false,
-        required: [],
-        properties: {
-          symbol: {
-            type: 'string',
-            maxLength: 6,
-            title: 'Symbol',
-            examples: ['e.g. VP']
-          },
-          whitelist: {
-            type: 'string',
-            format: 'long',
-            title: 'Whitelist',
-            examples: ['0x556B14CbdA79A36dC33FcD461a04A5BCb5dC2A70:40']
           }
         }
       }
@@ -389,7 +333,7 @@ export function createConstants(networkId: NetworkID) {
             type: 'string',
             maxLength: MAX_SYMBOL_LENGTH,
             title: 'Symbol',
-            examples: ['e.g. COMP']
+            examples: ['e.g. UNI']
           }
         }
       }
