@@ -71,7 +71,7 @@ watch(isSwiping, () => {
           'translate-x-[72px] lg:translate-x-0': uiStore.sidebarOpen
         }"
       >
-        <router-view class="flex-auto mt-[72px] ml-0 lg:ml-[72px]" />
+        <router-view :key="$route.path" class="flex-auto mt-[72px] ml-0 lg:ml-[72px]" />
       </div>
     </div>
     <Notifications />
