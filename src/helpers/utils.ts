@@ -9,7 +9,8 @@ import networks from '@/helpers/networks.json';
 import pkg from '@/../package.json';
 import type { Web3Provider } from '@ethersproject/providers';
 import { upload as pin } from '@snapshot-labs/pineapple';
-import type { SpaceMetadata } from '@/types';
+import type { Proposal, SpaceMetadata } from '@/types';
+import { MAX_SYMBOL_LENGTH } from './constants';
 
 const IPFS_GATEWAY: string = import.meta.env.VITE_IPFS_GATEWAY || 'https://cloudflare-ipfs.com';
 const ADDABLE_NETWORKS = {
@@ -82,11 +83,11 @@ export function shortenAddress(str = '') {
   return `${str.slice(0, 6)}...${str.slice(str.length - 4)}`;
 }
 
-export function shorten(str: string, key?: any): string {
+export function shorten(str: string, key?: number | 'symbol' | 'name' | 'choice'): string {
   if (!str) return str;
   let limit;
   if (typeof key === 'number') limit = key;
-  if (key === 'symbol') limit = 6;
+  if (key === 'symbol') limit = MAX_SYMBOL_LENGTH;
   if (key === 'name') limit = 64;
   if (key === 'choice') limit = 12;
   if (limit) return str.length > limit ? `${str.slice(0, limit).trim()}...` : str;
@@ -98,13 +99,20 @@ export function explorerUrl(network, str: string, type = 'address'): string {
   return `${networks[network].explorer}/${type}/${str}`;
 }
 
+export function getProposalId(proposal: Proposal) {
+  const proposalId = proposal.proposal_id.toString();
+
+  if (proposalId.startsWith('0x')) return `#${proposalId.slice(2, 7)}`;
+  return `#${proposalId}`;
+}
+
 export function _n(
   value: any,
   notation: 'standard' | 'compact' = 'standard',
   { maximumFractionDigits }: { maximumFractionDigits?: number } = {}
 ) {
   const formatter = new Intl.NumberFormat('en', { notation, maximumFractionDigits });
-  return formatter.format(value);
+  return formatter.format(value).toLowerCase();
 }
 
 export function getCurrentName(currentUnit: 'block' | 'second') {
@@ -119,6 +127,11 @@ export function _c(value: string | bigint, decimals = 18) {
 
   const formatter = new Intl.NumberFormat('en', { maximumFractionDigits: 3 });
   return formatter.format(parsed);
+}
+
+export function _p(value: number) {
+  const formatter = new Intl.NumberFormat('en', { style: 'percent', maximumFractionDigits: 2 });
+  return formatter.format(value);
 }
 
 export function jsonParse(input, fallback?) {
@@ -295,15 +308,18 @@ export function createErc1155Metadata(
     description: metadata.description,
     external_url: metadata.externalUrl,
     properties: {
-      delegation_api_type: metadata.delegationApiType,
-      delegation_api_url: metadata.delegationApiUrl,
-      delegation_contract: `${metadata.delegationContractNetwork}:${metadata.delegationContractAddress}`,
       voting_power_symbol: metadata.votingPowerSymbol,
       cover: metadata.cover,
       github: metadata.github,
       twitter: metadata.twitter,
       discord: metadata.discord,
       wallets,
+      delegations: metadata.delegations.map(delegation => ({
+        name: delegation.name,
+        api_type: delegation.apiType,
+        api_url: delegation.apiUrl,
+        contract: `${delegation.contractNetwork}:${delegation.contractAddress}`
+      })),
       ...extraProperties
     }
   };

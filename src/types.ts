@@ -1,13 +1,17 @@
 // UI
 export type NotificationType = 'error' | 'warning' | 'success';
 
+export type ProposalState = 'pending' | 'active' | 'passed' | 'rejected' | 'executed';
+
 export type NetworkID =
+  | 's'
+  | 's-tn'
   | 'eth'
   | 'gor'
   | 'sep'
   | 'linea-testnet'
+  | 'sn'
   | 'sn-tn'
-  | 'sn-tn2'
   | 'matic'
   | 'arb1';
 export type Choice = 1 | 2 | 3;
@@ -15,6 +19,14 @@ export type Choice = 1 | 2 | 3;
 export type SelectedStrategy = {
   address: string;
   type: string;
+};
+
+export type SpaceMetadataDelegation = {
+  name: string | null;
+  apiType: string | null;
+  apiUrl: string | null;
+  contractNetwork: NetworkID | null;
+  contractAddress: string | null;
 };
 
 export type SpaceMetadata = {
@@ -29,10 +41,7 @@ export type SpaceMetadata = {
   votingPowerSymbol: string;
   walletNetwork: NetworkID | null;
   walletAddress: string | null;
-  delegationApiType: string | null;
-  delegationApiUrl: string | null;
-  delegationContractNetwork: NetworkID | null;
-  delegationContractAddress: string | null;
+  delegations: SpaceMetadataDelegation[];
 };
 
 export type SpaceSettings = {
@@ -42,6 +51,8 @@ export type SpaceSettings = {
 };
 
 export type StrategyParsedMetadata = {
+  name: string;
+  description: string;
   decimals: number;
   symbol: string;
   token: string | null;
@@ -56,9 +67,7 @@ export type Space = {
   cover: string;
   about?: string;
   external_url: string;
-  delegation_api_type: string | null;
-  delegation_api_url: string | null;
-  delegation_contract: string | null;
+  delegations: SpaceMetadataDelegation[];
   twitter: string;
   github: string;
   discord: string;
@@ -70,9 +79,11 @@ export type Space = {
   max_voting_period: number;
   proposal_threshold: string;
   validation_strategy: string;
+  validation_strategy_params: string;
   voting_power_validation_strategy_strategies: string[];
   voting_power_validation_strategy_strategies_params: string[];
   voting_power_validation_strategies_parsed_metadata: StrategyParsedMetadata[];
+  strategies_indicies: number[];
   strategies: string[];
   strategies_params: any[];
   strategies_parsed_metadata: StrategyParsedMetadata[];
@@ -86,8 +97,9 @@ export type Space = {
 
 export type Proposal = {
   id: string;
-  proposal_id: number;
+  proposal_id: number | string;
   network: NetworkID;
+  type: 'basic' | 'single-choice' | string;
   quorum: number;
   space: {
     id: string;
@@ -98,7 +110,6 @@ export type Proposal = {
     authenticators: string[];
     executors: string[];
     executors_types: string[];
-    voting_power_validation_strategies_parsed_metadata: StrategyParsedMetadata[];
     strategies_parsed_metadata: StrategyParsedMetadata[];
   };
   author: {
@@ -114,14 +125,14 @@ export type Proposal = {
   min_end: number;
   max_end: number;
   snapshot: number;
-  scores_1: number;
-  scores_2: number;
-  scores_3: number;
+  choices: string[];
+  scores: number[];
   scores_total: number;
   execution_time: number;
   execution_strategy: string;
   execution_strategy_type: string;
   timelock_veto_guardian: string | null;
+  strategies_indicies: number[];
   strategies: string[];
   strategies_params: any[];
   created: number;
@@ -130,13 +141,11 @@ export type Proposal = {
   execution_tx: string | null;
   veto_tx: string | null;
   vote_count: number;
-  has_started: boolean;
   has_execution_window_opened: boolean;
-  has_ended: boolean;
-  executed: boolean;
   vetoed: boolean;
   completed: boolean;
   cancelled: boolean;
+  state: ProposalState;
 };
 
 export type User = {
@@ -160,7 +169,7 @@ export type Vote = {
   space: {
     id: string;
   };
-  proposal: number;
+  proposal: number | string;
   choice: number;
   vp: number;
   created: number;
@@ -168,7 +177,7 @@ export type Vote = {
 };
 
 export type Draft = {
-  proposalId: number | null;
+  proposalId: number | string | null;
   title: string;
   body: string;
   discussion: string;

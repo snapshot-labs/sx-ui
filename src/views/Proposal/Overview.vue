@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { _rt, _n, shortenAddress, compareAddresses, sanitizeUrl, getUrl } from '@/helpers/utils';
+import {
+  _rt,
+  _n,
+  shortenAddress,
+  compareAddresses,
+  sanitizeUrl,
+  getUrl,
+  getProposalId
+} from '@/helpers/utils';
 import { Proposal } from '@/types';
 
 const props = defineProps<{
@@ -26,7 +34,7 @@ const editable = computed(() => {
 const cancellable = computed(() => {
   return (
     compareAddresses(props.proposal.space.controller, web3.value.account) &&
-    props.proposal.executed === false &&
+    props.proposal.state !== 'executed' &&
     props.proposal.cancelled === false
   );
 });
@@ -40,6 +48,19 @@ const proposalMetadataUrl = computed(() => {
   if (!url) return null;
 
   return sanitizeUrl(url);
+});
+
+const votingTime = computed(() => {
+  if (!props.proposal) return null;
+
+  const current = getCurrent(props.proposal.network);
+  if (!current) return null;
+
+  const time = _rt(getTsFromCurrent(props.proposal.network, props.proposal.max_end));
+
+  const hasEnded = props.proposal.max_end <= current;
+
+  return hasEnded ? `Ended ${time}` : time;
 });
 
 async function handleEditClick() {
@@ -83,11 +104,15 @@ async function handleCancelClick() {
 </script>
 
 <template>
-  <Container class="pt-5 !max-w-[630px] mx-0 md:mx-auto">
+  <Container class="pt-5 !max-w-[660px] mx-0 md:mx-auto">
     <div>
-      <h1 class="mb-3 text-[36px]">
+      <h1 class="mb-3 text-[36px] leading-10">
         {{ proposal.title || `Proposal #${proposal.proposal_id}` }}
+        <span class="text-skin-text">{{ getProposalId(proposal) }}</span>
       </h1>
+
+      <ProposalStatus :state="proposal.state" class="top-[7.5px]" />
+
       <div class="flex justify-between items-center mb-3">
         <router-link
           :to="{
@@ -177,7 +202,7 @@ async function handleCancelClick() {
           proposal.execution &&
           proposal.execution.length > 0 &&
           BigInt(proposal.scores_total) >= BigInt(proposal.quorum) &&
-          BigInt(proposal.scores_1) > BigInt(proposal.scores_2) &&
+          BigInt(proposal.scores[0]) > BigInt(proposal.scores[1]) &&
           proposal.has_execution_window_opened
         "
       >
@@ -194,11 +219,7 @@ async function handleCancelClick() {
           {{ _n(proposal.vote_count) }} {{ proposal.vote_count !== 1 ? 'votes' : 'vote' }}
         </a>
         ·
-        <a
-          class="text-skin-text"
-          @click="modalOpenTimeline = true"
-          v-text="_rt(getTsFromCurrent(proposal.network, proposal.max_end))"
-        />
+        <a class="text-skin-text" @click="modalOpenTimeline = true" v-text="votingTime" />
         <template v-if="proposal.edited"> · (edited)</template>
       </div>
     </div>

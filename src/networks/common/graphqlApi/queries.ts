@@ -14,9 +14,7 @@ const SPACE_FRAGMENT = gql`
       discord
       voting_power_symbol
       wallet
-      delegation_api_type
-      delegation_api_url
-      delegation_contract
+      delegations
       executors
       executors_types
     }
@@ -26,20 +24,28 @@ const SPACE_FRAGMENT = gql`
     max_voting_period
     proposal_threshold
     validation_strategy
+    validation_strategy_params
     voting_power_validation_strategy_strategies
     voting_power_validation_strategy_strategies_params
-    strategies
-    strategies_params
-    strategies_parsed_metadata {
+    voting_power_validation_strategies_parsed_metadata {
+      index
       data {
+        name
+        description
         decimals
         symbol
         token
         payload
       }
     }
-    voting_power_validation_strategies_parsed_metadata {
+    strategies_indicies
+    strategies
+    strategies_params
+    strategies_parsed_metadata {
+      index
       data {
+        name
+        description
         decimals
         symbol
         token
@@ -70,15 +76,10 @@ const PROPOSAL_FRAGMENT = gql`
         executors_types
       }
       strategies_parsed_metadata {
+        index
         data {
-          decimals
-          symbol
-          token
-          payload
-        }
-      }
-      voting_power_validation_strategies_parsed_metadata {
-        data {
+          name
+          description
           decimals
           symbol
           token
@@ -110,6 +111,7 @@ const PROPOSAL_FRAGMENT = gql`
     execution_strategy
     execution_strategy_type
     timelock_veto_guardian
+    strategies_indicies
     strategies
     strategies_params
     created
@@ -140,30 +142,6 @@ export const PROPOSALS_QUERY = gql`
       ...proposalFragment
     }
   }
-  ${PROPOSAL_FRAGMENT}
-`;
-
-export const PROPOSALS_SUMMARY_QUERY = gql`
-  query ($first: Int!, $space: String!, $threshold: Int) {
-    active: proposals(
-      first: $first
-      where: { space: $space, metadata_: {}, cancelled: false, max_end_gte: $threshold }
-      orderBy: created
-      orderDirection: desc
-    ) {
-      ...proposalFragment
-    }
-
-    expired: proposals(
-      first: $first
-      where: { space: $space, metadata_: {}, cancelled: false, max_end_lt: $threshold }
-      orderBy: created
-      orderDirection: desc
-    ) {
-      ...proposalFragment
-    }
-  }
-
   ${PROPOSAL_FRAGMENT}
 `;
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getNetwork } from '@/networks';
+import { getNetwork, offchainNetworks } from '@/networks';
 import { shortenAddress, _t, _rt, _n } from '@/helpers/utils';
 import { Proposal as ProposalType, Vote } from '@/types';
 
@@ -40,7 +40,7 @@ async function loadVotes() {
     choiceFilter.value,
     sortBy.value
   );
-  hasMore.value = votes.value.length === LIMIT;
+  hasMore.value = votes.value.length >= LIMIT;
   loaded.value = true;
 }
 
@@ -65,7 +65,7 @@ async function handleEndReached() {
     choiceFilter.value,
     sortBy.value
   );
-  hasMore.value = newVotes.length === LIMIT;
+  hasMore.value = newVotes.length >= LIMIT;
   votes.value = [...votes.value, ...newVotes];
   loadingMore.value = false;
 }
@@ -90,81 +90,98 @@ watch([sortBy, choiceFilter], () => {
 </script>
 
 <template>
-  <BlockInfiniteScroller :loading-more="loadingMore" @end-reached="handleEndReached">
-    <table class="text-left w-full table-fixed">
-      <colgroup>
-        <col class="w-[50%] lg:w-[40%]" />
-        <col class="w-[25%] lg:w-[20%]" />
-        <col class="w-[25%] lg:w-[20%]" />
-        <col class="w-[60px] lg:w-[20%]" />
-        <col class="w-[0px] lg:w-[60px]" />
-      </colgroup>
-      <thead
-        class="bg-skin-bg sticky top-[112px] lg:top-[113px] z-40 after:border-b after:absolute after:w-full"
-      >
-        <tr class="bg-skin-border/10">
-          <th class="pl-4 font-medium">
-            <span class="relative bottom-[1px]">Voter</span>
-          </th>
-          <th class="hidden lg:table-cell">
+  <table class="text-left w-full table-fixed">
+    <colgroup>
+      <col class="w-[50%] lg:w-[40%]" />
+      <col class="w-[25%] lg:w-[20%]" />
+      <col class="w-[25%] lg:w-[20%]" />
+      <col class="w-[60px] lg:w-[20%]" />
+      <col class="w-[0px] lg:w-[60px]" />
+    </colgroup>
+    <thead
+      class="bg-skin-bg sticky top-[112px] lg:top-[113px] z-40 after:border-b after:absolute after:w-full"
+    >
+      <tr>
+        <th class="pl-4 font-medium">
+          <span class="relative bottom-[1px]">Voter</span>
+        </th>
+        <th class="hidden lg:table-cell">
+          <button
+            class="relative bottom-[1px] flex items-center min-w-0 w-full font-medium hover:text-skin-link"
+            @click="handleSortChange('created')"
+          >
+            <span>Date</span>
+            <IH-arrow-sm-down v-if="sortBy === 'created-desc'" class="ml-1" />
+            <IH-arrow-sm-up v-else-if="sortBy === 'created-asc'" class="ml-1" />
+          </button>
+        </th>
+        <th class="font-medium">
+          <template v-if="offchainNetworks.includes(proposal.network)">Choice</template>
+          <UiSelect
+            v-else
+            v-model="choiceFilter"
+            class="font-normal"
+            title="Choice"
+            gap="12px"
+            placement="left"
+            :items="[
+              { key: 'any', label: 'Any' },
+              { key: 'for', label: 'For', indicator: 'bg-choice-for' },
+              { key: 'against', label: 'Against', indicator: 'bg-choice-against' },
+              { key: 'abstain', label: 'Abstain', indicator: 'bg-choice-abstain' }
+            ]"
+          >
+            <template #button>
+              <div class="relative bottom-[1px] flex items-center min-w-0 hover:text-skin-link">
+                <span class="truncate">Choice</span>
+                <IH-adjustments-vertical class="ml-2" />
+              </div>
+            </template>
+          </UiSelect>
+        </th>
+        <th>
+          <div class="relative bottom-[1px] flex justify-end">
             <button
-              class="relative bottom-[1px] flex items-center min-w-0 w-full font-medium hover:text-skin-link"
-              @click="handleSortChange('created')"
+              class="flex justify-end items-center min-w-0 w-full font-medium hover:text-skin-link"
+              @click="handleSortChange('vp')"
             >
-              <span>Date</span>
-              <IH-arrow-sm-down v-if="sortBy === 'created-desc'" class="ml-1" />
-              <IH-arrow-sm-up v-else-if="sortBy === 'created-asc'" class="ml-1" />
+              <span class="truncate">Voting power</span>
+              <IH-arrow-sm-down v-if="sortBy === 'vp-desc'" class="ml-1" />
+              <IH-arrow-sm-up v-else-if="sortBy === 'vp-asc'" class="ml-1" />
             </button>
-          </th>
-          <th>
-            <UiSelect
-              v-model="choiceFilter"
-              class="font-normal"
-              title="Choice"
-              gap="12px"
-              placement="left"
-              :items="[
-                { key: 'any', label: 'Any' },
-                { key: 'for', label: 'For', indicator: 'bg-choice-for' },
-                { key: 'against', label: 'Against', indicator: 'bg-choice-against' },
-                { key: 'abstain', label: 'Abstain', indicator: 'bg-choice-abstain' }
-              ]"
-            >
-              <template #button>
-                <div
-                  class="relative bottom-[1px] flex items-center min-w-0 font-medium hover:text-skin-link"
-                >
-                  <span class="truncate">Choice</span>
-                  <IH-adjustments-vertical class="ml-2" />
-                </div>
-              </template>
-            </UiSelect>
-          </th>
-          <th>
-            <div class="relative bottom-[1px] flex justify-end">
-              <button
-                class="flex justify-end items-center min-w-0 w-full font-medium hover:text-skin-link"
-                @click="handleSortChange('vp')"
-              >
-                <span class="truncate">Voting power</span>
-                <IH-arrow-sm-down v-if="sortBy === 'vp-desc'" class="ml-1" />
-                <IH-arrow-sm-up v-else-if="sortBy === 'vp-asc'" class="ml-1" />
-              </button>
-            </div>
-          </th>
-          <th />
-        </tr>
-      </thead>
-      <td v-if="!loaded" colspan="5">
-        <UiLoading class="p-4 block text-center" />
-      </td>
-      <template v-else>
-        <tbody>
-          <td v-if="votes.length === 0" class="p-4 text-center" colspan="5">
-            There isn't any votes yet!
-          </td>
-          <tr v-for="(vote, i) in votes" :key="i" class="border-b relative">
-            <td class="text-left flex items-center pl-4 py-3">
+          </div>
+        </th>
+        <th />
+      </tr>
+    </thead>
+    <td v-if="!loaded" colspan="5">
+      <UiLoading class="px-4 py-3 block" />
+    </td>
+    <template v-else>
+      <tbody>
+        <td v-if="votes.length === 0" class="px-4 py-3 flex items-center" colspan="5">
+          <IH-exclamation-circle class="inline-block mr-2" />
+          <span v-text="'There are no votes here.'" />
+        </td>
+        <BlockInfiniteScroller :loading-more="loadingMore" @end-reached="handleEndReached">
+          <template #loading>
+            <td colspan="5">
+              <UiLoading class="px-4 py-3 block" />
+            </td>
+          </template>
+          <tr v-for="(vote, i) in votes" :key="i" class="border-b relative align-middle">
+            <div
+              class="absolute top-0 -bottom-[1px] right-0 pointer-events-none"
+              :style="{
+                width: `${((100 / proposal.scores_total) * vote.vp).toFixed(2)}%`
+              }"
+              :class="
+                proposal.type === 'basic'
+                  ? `choice-bg opacity-[0.1] _${vote.choice}`
+                  : 'bg-skin-border opacity-40'
+              "
+            />
+            <td class="relative text-left flex items-center pl-4 py-3">
               <Stamp :id="vote.voter.id" :size="32" class="mr-3" />
               <div class="truncate">
                 <router-link
@@ -182,15 +199,23 @@ watch([sortBy, choiceFilter], () => {
                 </router-link>
               </div>
             </td>
-            <td class="hidden lg:table-cell">
+            <td class="relative hidden lg:table-cell">
               <div class="leading-[22px]">
                 <h4>{{ _rt(vote.created) }}</h4>
                 <div class="text-sm">{{ _t(vote.created, 'MMM D, YYYY') }}</div>
               </div>
             </td>
-            <td>
+            <td class="relative">
+              <div
+                v-if="proposal.type !== 'basic'"
+                class="truncate"
+                :title="proposal.choices[vote.choice - 1]"
+              >
+                {{ proposal.choices[vote.choice - 1] }}
+              </div>
               <UiButton
-                class="!w-[40px] !h-[40px] !px-0 cursor-default"
+                v-else
+                class="!w-[40px] !h-[40px] !px-0 cursor-default bg-transparent"
                 :class="{
                   '!text-green !border-green': vote.choice === 1,
                   '!text-red !border-red': vote.choice === 2,
@@ -202,16 +227,16 @@ watch([sortBy, choiceFilter], () => {
                 <IH-minus-sm v-else class="inline-block" />
               </UiButton>
             </td>
-            <td class="pr-2 text-right">
+            <td class="relative pr-2 text-right">
               <div class="text-skin-link leading-[22px]">
                 <h4>
-                  {{ _n(vote.vp / 10 ** votingPowerDecimals) }}
+                  {{ _n(vote.vp / 10 ** votingPowerDecimals, 'compact') }}
                   {{ proposal.space.voting_power_symbol }}
                 </h4>
               </div>
               <div class="text-sm">{{ _n((vote.vp / proposal.scores_total) * 100) }}%</div>
             </td>
-            <td>
+            <td class="relative">
               <div class="flex justify-center">
                 <UiDropdown>
                   <template #button>
@@ -249,16 +274,9 @@ watch([sortBy, choiceFilter], () => {
                 </UiDropdown>
               </div>
             </td>
-            <div
-              class="absolute choice-bg top-0 bottom-0 right-0 opacity-[0.04] pointer-events-none"
-              :style="{
-                width: `${((100 / proposal.scores_total) * vote.vp).toFixed(2)}%`
-              }"
-              :class="`_${vote.choice}`"
-            />
           </tr>
-        </tbody>
-      </template>
-    </table>
-  </BlockInfiniteScroller>
+        </BlockInfiniteScroller>
+      </tbody>
+    </template>
+  </table>
 </template>

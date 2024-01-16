@@ -1,7 +1,7 @@
 import { Web3Provider } from '@ethersproject/providers';
 import { getInstance } from '@snapshot-labs/lock/plugins/vue3';
 import { formatUnits } from '@ethersproject/units';
-import { getNames } from '@/helpers/ens';
+import { getNames } from '@/helpers/stamp';
 import networks from '@/helpers/networks.json';
 
 networks['starknet'] = {
@@ -23,11 +23,15 @@ const state = reactive({
 });
 
 export function useWeb3() {
+  const { mixpanel } = useMixpanel();
+
   async function login(connector = 'injected') {
     auth = getInstance();
     state.authLoading = true;
     await auth.login(connector);
     if (auth.provider.value) {
+      mixpanel.track('Connect', { connector });
+
       auth.web3 = new Web3Provider(auth.provider.value, 'any');
       await loadProvider();
     }

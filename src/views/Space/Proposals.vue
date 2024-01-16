@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ProposalStatusIcon from '@/components/ProposalStatusIcon.vue';
 import { getNetwork, supportsNullCurrent } from '@/networks';
 import { Space } from '@/types';
 import { VotingPower } from '@/networks/types';
@@ -14,6 +15,12 @@ const votingPowers = ref([] as VotingPower[]);
 const loadingVotingPower = ref(true);
 const filter = ref('any' as 'any' | 'active' | 'pending' | 'closed');
 
+const selectIconBaseProps = {
+  width: 16,
+  height: 16
+};
+
+const network = computed(() => getNetwork(props.space.network));
 const proposalsRecord = computed(
   () => proposalsStore.proposals[`${props.space.network}:${props.space.id}`]
 );
@@ -25,8 +32,6 @@ async function handleEndReached() {
 }
 
 async function getVotingPower() {
-  const network = getNetwork(props.space.network);
-
   if (!web3.value.account) {
     votingPowers.value = [];
     loadingVotingPower.value = false;
@@ -35,7 +40,7 @@ async function getVotingPower() {
 
   loadingVotingPower.value = true;
   try {
-    votingPowers.value = await network.actions.getVotingPower(
+    votingPowers.value = await network.value.actions.getVotingPower(
       props.space.strategies,
       props.space.strategies_params,
       props.space.strategies_parsed_metadata,
@@ -70,9 +75,7 @@ watch(
   () => getVotingPower()
 );
 
-watchEffect(() => {
-  setTitle(`Proposals - ${props.space.name}`);
-});
+watchEffect(() => setTitle(`Proposals - ${props.space.name}`));
 </script>
 
 <template>
@@ -85,14 +88,32 @@ watchEffect(() => {
           gap="12px"
           placement="left"
           :items="[
-            { key: 'any', label: 'Any' },
-            { key: 'pending', label: 'Pending', indicator: 'bg-yellow-500' },
-            { key: 'active', label: 'Active', indicator: 'bg-green' },
-            { key: 'closed', label: 'Closed', indicator: 'bg-red' }
+            {
+              key: 'any',
+              label: 'Any'
+            },
+            {
+              key: 'pending',
+              label: 'Pending',
+              component: ProposalStatusIcon,
+              componentProps: { ...selectIconBaseProps, state: 'pending' }
+            },
+            {
+              key: 'active',
+              label: 'Active',
+              component: ProposalStatusIcon,
+              componentProps: { ...selectIconBaseProps, state: 'active' }
+            },
+            {
+              key: 'closed',
+              label: 'Closed',
+              component: ProposalStatusIcon,
+              componentProps: { ...selectIconBaseProps, state: 'passed' }
+            }
           ]"
         />
       </div>
-      <div class="flex flex-row p-4 space-x-2">
+      <div v-if="!network.readOnly" class="flex flex-row p-4 space-x-2">
         <VotingPowerIndicator
           :network-id="space.network"
           :loading="loadingVotingPower"

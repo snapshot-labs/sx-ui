@@ -1,28 +1,96 @@
-import { constants as starknetConstants, TransactionFinalityStatus } from 'starknet';
+import {
+  constants as starknetConstants,
+  TransactionExecutionStatus,
+  TransactionFinalityStatus
+} from 'starknet';
 import { createApi } from '../common/graphqlApi';
 import { STARKNET_CONNECTORS } from '../common/constants';
 import { createActions } from './actions';
 import { createProvider } from './provider';
-import * as constants from './constants';
+import { createConstants } from './constants';
 import { pinPineapple } from '@/helpers/pin';
 import { Network } from '@/networks/types';
 import { NetworkID, Space } from '@/types';
 
-export function createStarknetNetwork(networkId: NetworkID): Network {
-  const l1ChainId = 5;
+type Metadata = {
+  name: string;
+  chainId: string;
+  baseChainId: number;
+  baseNetworkId: NetworkID;
+  rpcUrl: string;
+  explorerUrl: string;
+  apiUrl: string;
+};
 
-  const provider = createProvider(networkId);
-  const api = createApi(constants.API_URL, networkId);
+export const METADATA: Partial<Record<NetworkID, Metadata>> = {
+  sn: {
+    name: 'Starknet',
+    chainId: starknetConstants.StarknetChainId.SN_MAIN,
+    baseChainId: 1,
+    baseNetworkId: 'eth',
+    rpcUrl: `https://starknet-mainnet.infura.io/v3/${import.meta.env.VITE_INFURA_API_KEY}`,
+    apiUrl: 'https://api-1.snapshotx.xyz',
+    explorerUrl: 'https://starkscan.co'
+  },
+  'sn-tn': {
+    name: 'Starknet (testnet)',
+    chainId: starknetConstants.StarknetChainId.SN_GOERLI,
+    baseChainId: 5,
+    baseNetworkId: 'gor',
+    rpcUrl: `https://starknet-goerli.infura.io/v3/${import.meta.env.VITE_INFURA_API_KEY}`,
+    apiUrl: 'https://testnet-api-1.snapshotx.xyz',
+    explorerUrl: 'https://testnet.starkscan.co'
+  }
+};
+
+export function createStarknetNetwork(networkId: NetworkID): Network {
+  const metadata = METADATA[networkId];
+  if (!metadata) throw new Error(`Unsupported network ${networkId}`);
+
+  const { name, chainId, baseChainId, baseNetworkId, rpcUrl, apiUrl, explorerUrl } = metadata;
+
+  const provider = createProvider(rpcUrl);
+  const api = createApi(apiUrl, networkId);
+  const constants = createConstants(networkId);
 
   const helpers = {
     pin: pinPineapple,
-    waitForTransaction: txId =>
-      provider.waitForTransaction(txId, {
-        successStates: [
-          TransactionFinalityStatus.ACCEPTED_ON_L1,
-          TransactionFinalityStatus.ACCEPTED_ON_L2
-        ]
-      }),
+    waitForTransaction: txId => {
+      let retries = 0;
+
+      return new Promise((resolve, reject) => {
+        const timer = setInterval(async () => {
+          let tx: Awaited<ReturnType<typeof provider.getTransactionReceipt>>;
+          try {
+            tx = await provider.getTransactionReceipt(txId);
+          } catch (e) {
+            if (retries > 20) {
+              clearInterval(timer);
+              reject();
+            }
+
+            retries++;
+
+            return;
+          }
+
+          const successStates = [
+            TransactionFinalityStatus.ACCEPTED_ON_L1,
+            TransactionFinalityStatus.ACCEPTED_ON_L2
+          ];
+
+          if (successStates.includes(tx.finality_status as any)) {
+            clearInterval(timer);
+            resolve(tx);
+          }
+
+          if (tx.execution_status === TransactionExecutionStatus.REVERTED) {
+            clearInterval(timer);
+            reject(tx);
+          }
+        }, 2000);
+      });
+    },
     waitForSpace: (spaceAddress: string, interval = 5000): Promise<Space> =>
       new Promise(resolve => {
         const timer = setInterval(async () => {
@@ -38,25 +106,22 @@ export function createStarknetNetwork(networkId: NetworkID): Network {
       if (type === 'token') dataType = 'token';
       else if (['address', 'contract'].includes(type)) dataType = 'contract';
 
-      const subdomain = networkId === 'sn-tn' ? 'testnet' : 'testnet-2';
-      return `https://${subdomain}.starkscan.co/${dataType}/${id}`;
+      return `${explorerUrl}/${dataType}/${id}`;
     }
   };
 
   return {
-    name: 'Starknet (testnet)',
+    name,
     avatar: 'ipfs://bafkreihbjafyh7eud7r6e5743esaamifcttsvbspfwcrfoc5ykodjdi67m',
     currentUnit: 'second',
-    chainId:
-      networkId === 'sn-tn'
-        ? starknetConstants.StarknetChainId.SN_GOERLI
-        : starknetConstants.StarknetChainId.SN_GOERLI2,
-    baseChainId: l1ChainId,
-    baseNetworkId: 'gor',
+    chainId,
+    baseChainId,
+    currentChainId: baseChainId,
+    baseNetworkId,
     hasReceive: true,
     supportsSimulation: true,
     managerConnectors: STARKNET_CONNECTORS,
-    actions: createActions(provider, helpers, { l1ChainId }),
+    actions: createActions(networkId, provider, constants, helpers, { l1ChainId: baseChainId }),
     api,
     constants,
     helpers

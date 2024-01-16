@@ -1,5 +1,8 @@
-type StrategyParsedMetadata = {
+export type ApiStrategyParsedMetadata = {
+  index: number;
   data: {
+    name: string;
+    description: string;
     decimals: number;
     symbol: string;
     token: string | null;
@@ -22,9 +25,7 @@ export type ApiSpace = {
     wallet: string;
     executors: string[];
     executors_types: string[];
-    delegation_api_type: string | null;
-    delegation_api_url: string | null;
-    delegation_contract: string | null;
+    delegations: string[];
   };
   controller: string;
   voting_delay: number;
@@ -32,12 +33,14 @@ export type ApiSpace = {
   max_voting_period: number;
   proposal_threshold: string;
   validation_strategy: string;
+  validation_strategy_params: string;
   voting_power_validation_strategy_strategies: string[];
   voting_power_validation_strategy_strategies_params: string[];
-  voting_power_validation_strategies_parsed_metadata: StrategyParsedMetadata[];
+  voting_power_validation_strategies_parsed_metadata: ApiStrategyParsedMetadata[];
+  strategies_indicies: number[];
   strategies: string[];
   strategies_params: any[];
-  strategies_parsed_metadata: StrategyParsedMetadata[];
+  strategies_parsed_metadata: ApiStrategyParsedMetadata[];
   authenticators: string[];
   proposal_count: number;
   vote_count: number;
@@ -65,8 +68,7 @@ export type ApiProposal = {
       executors_types: string[];
     };
     authenticators: string[];
-    voting_power_validation_strategies_parsed_metadata: StrategyParsedMetadata[];
-    strategies_parsed_metadata: StrategyParsedMetadata[];
+    strategies_parsed_metadata: ApiStrategyParsedMetadata[];
   };
   author: {
     id: string;
@@ -77,6 +79,7 @@ export type ApiProposal = {
   min_end: number;
   max_end: number;
   snapshot: number;
+  // TODO: those are actually numbers, we need to adjust it across the app at some point
   scores_1: number;
   scores_2: number;
   scores_3: number;
@@ -85,6 +88,7 @@ export type ApiProposal = {
   execution_strategy: string;
   execution_strategy_type: string;
   timelock_veto_guardian: string | null;
+  strategies_indicies: number[];
   strategies: string[];
   strategies_params: any[];
   created: number;
@@ -93,9 +97,6 @@ export type ApiProposal = {
   execution_tx: string | null;
   veto_tx: string | null;
   vote_count: number;
-  has_started: boolean;
-  has_execution_window_opened: boolean;
-  has_ended: boolean;
   executed: boolean;
   vetoed: boolean;
   completed: boolean;

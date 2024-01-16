@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { getNetwork } from '@/networks';
-import { getStampUrl, getCacheHash } from '@/helpers/utils';
+import { getNetwork, offchainNetworks } from '@/networks';
+import { getStampUrl, getCacheHash, sanitizeUrl } from '@/helpers/utils';
 import { Choice } from '@/types';
 import { VotingPower } from '@/networks/types';
 
@@ -17,7 +17,8 @@ const sendingType = ref<null | number>(null);
 const votingPowers = ref([] as VotingPower[]);
 const loadingVotingPower = ref(true);
 
-const id = computed(() => parseInt((route.params.id as string) || '0'));
+const network = computed(() => (networkId.value ? getNetwork(networkId.value) : null));
+const id = computed(() => route.params.id as string);
 const proposal = computed(() => {
   if (!resolved.value || !spaceAddress.value || !networkId.value) {
     return null;
@@ -25,6 +26,11 @@ const proposal = computed(() => {
 
   return proposalsStore.getProposal(spaceAddress.value, id.value, networkId.value);
 });
+
+const discussion = computed(() => {
+  return sanitizeUrl(proposal.value.discussion);
+});
+
 const votingPowerDecimals = computed(() => {
   if (!proposal.value) return 0;
   return Math.max(
@@ -34,9 +40,7 @@ const votingPowerDecimals = computed(() => {
 });
 
 async function getVotingPower() {
-  if (!networkId.value) return;
-
-  const network = getNetwork(networkId.value);
+  if (!network.value) return;
 
   if (!web3.value.account || !proposal.value) {
     votingPowers.value = [];
@@ -46,7 +50,7 @@ async function getVotingPower() {
 
   loadingVotingPower.value = true;
   try {
-    votingPowers.value = await network.actions.getVotingPower(
+    votingPowers.value = await network.value.actions.getVotingPower(
       proposal.value.strategies,
       proposal.value.strategies_params,
       proposal.value.space.strategies_parsed_metadata,
@@ -88,7 +92,7 @@ watchEffect(() => {
   if (!proposal.value) return;
 
   const faviconUrl = getStampUrl(
-    'space-sx',
+    offchainNetworks.includes(proposal.value.network) ? 'space' : 'space-sx',
     proposal.value.space.id,
     16,
     getCacheHash(proposal.value.space.avatar)
@@ -104,30 +108,46 @@ watchEffect(() => {
     <UiLoading v-if="!proposal" class="ml-4 mt-3" />
     <template v-else>
       <div class="flex-1 md:mr-[340px]">
-        <div class="flex px-4 bg-skin-bg border-b sticky top-[72px] z-50">
+        <div class="flex px-4 bg-skin-bg border-b sticky top-[71px] lg:top-[72px] z-40 space-x-3">
           <router-link
             :to="{
               name: 'proposal-overview',
               params: { id: proposal.proposal_id }
             }"
           >
-            <Link :is-active="route.name === 'proposal-overview'" text="Overview" class="pr-3" />
+            <Link :is-active="route.name === 'proposal-overview'" text="Overview" />
           </router-link>
           <router-link
             :to="{
               name: 'proposal-votes',
               params: { id: proposal.proposal_id }
             }"
+            class="flex items-center"
           >
-            <Link :is-active="route.name === 'proposal-votes'" text="Votes" />
+            <Link
+              :is-active="route.name === 'proposal-votes'"
+              :count="proposal.vote_count"
+              text="Votes"
+              class="inline-block"
+            />
           </router-link>
+          <a v-if="discussion" :href="discussion" target="_blank" class="flex items-center">
+            <h4 class="eyebrow text-skin-text" v-text="'Discussion'" />
+            <IH-arrow-sm-right class="-rotate-45 text-skin-text" />
+          </a>
         </div>
         <router-view :proposal="proposal" />
       </div>
       <div
         class="static md:fixed md:top-[72px] md:right-0 w-full md:h-screen md:max-w-[340px] p-4 border-l"
       >
-        <template v-if="!proposal.cancelled && !proposal.has_ended">
+        <template
+          v-if="
+            !proposal.cancelled &&
+            ['pending', 'active'].includes(proposal.state) &&
+            !network?.readOnly
+          "
+        >
           <VotingPowerIndicator
             v-if="web3.account && networkId"
             v-slot="props"
@@ -179,7 +199,7 @@ watchEffect(() => {
           </Vote>
         </template>
 
-        <template v-if="!proposal.cancelled && proposal.has_started">
+        <template v-if="!proposal.cancelled && proposal.state !== 'pending' && proposal.vote_count">
           <h4 class="block eyebrow mb-2 mt-4 first:mt-1">Results</h4>
           <Results with-details :proposal="proposal" :decimals="votingPowerDecimals" />
         </template>

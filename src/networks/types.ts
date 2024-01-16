@@ -19,6 +19,20 @@ export type SpacesFilter = {
   id_in?: string[];
 };
 export type Connector = 'argentx' | 'injected' | 'walletconnect' | 'walletlink' | 'gnosis';
+export type GeneratedMetadata =
+  | {
+      name: string;
+      description?: string;
+      properties: {
+        symbol?: string;
+        decimals: number;
+        token?: string;
+        payload?: string;
+      };
+    }
+  | {
+      strategies_metadata: string[];
+    };
 
 export type StrategyTemplate = {
   address: string;
@@ -30,7 +44,11 @@ export type StrategyTemplate = {
   validate?: (params: Record<string, any>) => boolean;
   generateSummary?: (params: Record<string, any>) => string;
   generateParams?: (params: Record<string, any>) => any[];
-  generateMetadata?: (params: Record<string, any>) => any;
+  generateMetadata?: (params: Record<string, any>) => Promise<GeneratedMetadata>;
+  parseParams?: (
+    params: string,
+    metadata: StrategyParsedMetadata | null
+  ) => Promise<Record<string, any>>;
   deploy?: (
     client: any,
     signer: Signer,
@@ -55,7 +73,17 @@ export type VotingPower = {
 
 // TODO: make sx.js accept Signer instead of Web3Provider | Wallet
 
-export type NetworkActions = {
+type ReadOnlyNetworkActions = {
+  getVotingPower(
+    strategiesAddresses: string[],
+    strategiesParams: any[],
+    strategiesMetadata: StrategyParsedMetadata[],
+    voterAddress: string,
+    current: number | null
+  ): Promise<VotingPower[]>;
+};
+
+export type NetworkActions = ReadOnlyNetworkActions & {
   predictSpaceAddress(web3: Web3Provider, params: { salt: string }): Promise<string | null>;
   deployDependency(
     web3: Web3Provider,
@@ -95,7 +123,7 @@ export type NetworkActions = {
     connectorType: Connector,
     account: string,
     space: Space,
-    proposalId: number,
+    proposalId: number | string,
     cid: string,
     executionStrategy: string | null,
     transactions: MetaTransaction[]
@@ -117,14 +145,22 @@ export type NetworkActions = {
   setMinVotingDuration(web3: Web3Provider, space: Space, minVotingDuration: number);
   setMaxVotingDuration(web3: Web3Provider, space: Space, maxVotingDuration: number);
   transferOwnership(web3: Web3Provider, space: Space, owner: string);
-  delegate(web3: Web3Provider, space: Space, networkId: NetworkID, delegatee: string);
-  getVotingPower(
-    strategiesAddresses: string[],
-    strategiesParams: any[],
-    strategiesMetadata: StrategyParsedMetadata[],
-    voterAddress: string,
-    current: number | null
-  ): Promise<VotingPower[]>;
+  updateStrategies(
+    web3: Web3Provider,
+    space: Space,
+    authenticatorsToAdd: StrategyConfig[],
+    authenticatorsToRemove: number[],
+    votingStrategiesToAdd: StrategyConfig[],
+    votingStrategiesToRemove: number[],
+    validationStrategy: StrategyConfig
+  );
+  delegate(
+    web3: Web3Provider,
+    space: Space,
+    networkId: NetworkID,
+    delegatee: string,
+    delegationContract: string
+  );
   send(envelope: any): Promise<any>;
 };
 
@@ -143,11 +179,31 @@ export type NetworkApi = {
     filter?: 'any' | 'active' | 'pending' | 'closed',
     searchQuery?: string
   ): Promise<Proposal[]>;
-  loadProposalsSummary(spaceId: string, current: number, limit: number): Promise<Proposal[]>;
-  loadProposal(spaceId: string, proposalId: number, current: number): Promise<Proposal | null>;
+  loadProposal(
+    spaceId: string,
+    proposalId: number | string,
+    current: number
+  ): Promise<Proposal | null>;
   loadSpaces(paginationOpts: PaginationOpts, filter?: SpacesFilter): Promise<Space[]>;
   loadSpace(spaceId: string): Promise<Space | null>;
-  loadUser(userId: string): Promise<User>;
+  loadUser(userId: string): Promise<User | null>;
+};
+
+export type NetworkConstants = {
+  SUPPORTED_AUTHENTICATORS: { [key: string]: boolean };
+  CONTRACT_SUPPORTED_AUTHENTICATORS: { [key: string]: boolean };
+  SUPPORTED_STRATEGIES: { [key: string]: boolean };
+  SUPPORTED_EXECUTORS: { [key: string]: boolean };
+  RELAYER_AUTHENTICATORS: { [key: string]: 'evm' | 'evm-tx' | 'starknet' | undefined };
+  AUTHS: { [key: string]: string };
+  PROPOSAL_VALIDATIONS: { [key: string]: string };
+  STRATEGIES: { [key: string]: string };
+  EXECUTORS: { [key: string]: string };
+  EDITOR_AUTHENTICATORS: StrategyTemplate[];
+  EDITOR_PROPOSAL_VALIDATIONS: StrategyTemplate[];
+  EDITOR_VOTING_STRATEGIES: StrategyTemplate[];
+  EDITOR_PROPOSAL_VALIDATION_VOTING_STRATEGIES: StrategyTemplate[];
+  EDITOR_EXECUTION_STRATEGIES: StrategyTemplate[];
 };
 
 export type NetworkHelpers = {
@@ -157,32 +213,22 @@ export type NetworkHelpers = {
   getExplorerUrl(id: string, type: 'transaction' | 'address' | 'contract' | 'token'): string;
 };
 
-export type Network = {
+type BaseNetwork = {
   name: string;
   avatar: string;
   currentUnit: 'block' | 'second';
   chainId: number | string;
   baseChainId: number;
+  currentChainId: number;
   baseNetworkId?: NetworkID;
   hasReceive: boolean;
   supportsSimulation: boolean;
   managerConnectors: Connector[];
-  actions: NetworkActions;
   api: NetworkApi;
-  constants: {
-    SUPPORTED_AUTHENTICATORS: { [key: string]: boolean };
-    CONTRACT_SUPPORTED_AUTHENTICATORS: { [key: string]: boolean };
-    SUPPORTED_STRATEGIES: { [key: string]: boolean };
-    SUPPORTED_EXECUTORS: { [key: string]: boolean };
-    RELAYER_AUTHENTICATORS: { [key: string]: 'evm' | 'evm-tx' | 'starknet' | undefined };
-    AUTHS: { [key: string]: string };
-    PROPOSAL_VALIDATIONS: { [key: string]: string };
-    STRATEGIES: { [key: string]: string };
-    EXECUTORS: { [key: string]: string };
-    EDITOR_AUTHENTICATORS: StrategyTemplate[];
-    EDITOR_PROPOSAL_VALIDATIONS: StrategyTemplate[];
-    EDITOR_VOTING_STRATEGIES: StrategyTemplate[];
-    EDITOR_EXECUTION_STRATEGIES: StrategyTemplate[];
-  };
+  constants: NetworkConstants;
   helpers: NetworkHelpers;
 };
+
+export type ReadOnlyNetwork = BaseNetwork & { readOnly: true; actions: ReadOnlyNetworkActions };
+export type ReadWriteNetwork = BaseNetwork & { readOnly?: false; actions: NetworkActions };
+export type Network = ReadOnlyNetwork | ReadWriteNetwork;
