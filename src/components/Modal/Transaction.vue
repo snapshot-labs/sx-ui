@@ -38,21 +38,20 @@ const argsErrors = ref({} as Record<string, any>);
 
 const form = reactive(clone(DEFAULT_FORM_STATE));
 
-const methods = computed(() => {
-  const methods = form.abi
-    .filter(i => ['function'].includes(i.type) && i.stateMutability !== 'view')
-    .map(i => i.name);
+const iface = computed(() => {
+  return new Interface(form.abi);
+});
 
-  return methods;
+const methods = computed(() => {
+  return Object.entries(iface.value.functions)
+    .filter(([, value]) => value.type === 'function' && value.stateMutability !== 'view')
+    .map(([name]) => name);
 });
 
 const currentMethod = computed(() => {
   if (!form.method) return null;
 
-  const method = form.abi.find(item => item.name === form.method);
-  if (!method) return null;
-
-  return method as Fragment & JsonFragment;
+  return iface.value.getFunction(form.method);
 });
 
 const definition = computed(() => {

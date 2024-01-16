@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { _n, _c, shorten, sanitizeUrl } from '@/helpers/utils';
-import { getNetwork } from '@/networks';
+import { getNetwork, evmNetworks } from '@/networks';
 import { ETH_CONTRACT } from '@/helpers/constants';
 import { NetworkID, Space, Transaction, SelectedStrategy } from '@/types';
 import type { Token } from '@/helpers/alchemy';
@@ -18,17 +18,24 @@ const { createDraft } = useEditor();
 const page: Ref<'tokens' | 'nfts'> = ref('tokens');
 const modalOpen = ref({
   tokens: false,
-  nfts: false
+  nfts: false,
+  walletConnectLink: false
 });
 
-const currentNetwork = computed(() => {
+const currentNetworkId = computed(() => {
   if (!props.space.wallet) return null;
 
   try {
-    return getNetwork(props.space.wallet.split(':')[0] as NetworkID);
+    return props.space.wallet.split(':')[0] as NetworkID;
   } catch (e) {
     return null;
   }
+});
+
+const currentNetwork = computed(() => {
+  if (!currentNetworkId.value) return null;
+
+  return getNetwork(currentNetworkId.value);
 });
 
 const totalQuote = computed(() =>
@@ -108,6 +115,14 @@ watchEffect(() => setTitle(`Treasury - ${props.space.name}`));
   <template v-else>
     <div class="p-4 space-x-2 flex">
       <div class="flex-auto" />
+      <UiTooltip
+        v-if="currentNetworkId && evmNetworks.includes(currentNetworkId)"
+        title="Connect to WalletConnect"
+      >
+        <UiButton class="!px-0 w-[46px]" @click="modalOpen.walletConnectLink = true">
+          <IH-link class="inline-block" />
+        </UiButton>
+      </UiTooltip>
       <UiTooltip title="Copy address">
         <UiButton class="!px-0 w-[46px]" @click="copy(treasury.wallet)">
           <IH-duplicate v-if="!copied" class="inline-block" />
@@ -254,6 +269,14 @@ watchEffect(() => setTitle(`Treasury - ${props.space.name}`));
         :open="modalOpen.nfts"
         :address="treasury.wallet"
         @close="modalOpen.nfts = false"
+        @add="addTx"
+      />
+      <ModalLinkWalletConnect
+        :open="modalOpen.walletConnectLink"
+        :address="treasury.wallet"
+        :network="treasury.network"
+        :network-id="treasury.networkId"
+        @close="modalOpen.walletConnectLink = false"
         @add="addTx"
       />
     </teleport>
