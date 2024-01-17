@@ -22,7 +22,7 @@ withDefaults(
     :class="primary && 'primary'"
     class="rounded-full leading-[100%] border button px-[20px] h-[46px] outline-0 text-skin-link focus-within:border-skin-link bg-skin-bg"
   >
-    <UiLoading v-if="loading" :fill-white="primary" />
+    <UiLoading v-if="loading" :inverse="primary" />
     <slot v-else />
   </button>
 </template>
