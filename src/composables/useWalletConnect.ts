@@ -79,6 +79,26 @@ export function useWalletConnect() {
     logged.value = false;
   }
 
+  function getApprovedNamespaces(proposal: ProposalTypes.Struct, chainId: number, account: string) {
+    const requiredChains = proposal.requiredNamespaces.eip155?.chains || [];
+    const optionalChains = proposal.optionalNamespaces.eip155?.chains || [];
+
+    const chains = [...new Set([`eip155:${chainId}`, ...requiredChains, ...optionalChains])];
+    const accounts = chains.map(chain => `${chain}:${account}`);
+
+    return buildApprovedNamespaces({
+      proposal,
+      supportedNamespaces: {
+        eip155: {
+          chains,
+          accounts,
+          methods: ['eth_sendTransaction', 'personal_sign'],
+          events: ['accountsChanged', 'chainChanged']
+        }
+      }
+    });
+  }
+
   async function connect(
     chainId: number,
     account: string,
@@ -102,26 +122,25 @@ export function useWalletConnect() {
         });
       }
 
-      const approvedNamespaces = buildApprovedNamespaces({
-        proposal: params,
-        supportedNamespaces: {
-          eip155: {
-            chains: [`eip155:${chainId}`],
-            methods: ['eth_sendTransaction', 'personal_sign'],
-            events: ['accountsChanged', 'chainChanged'],
-            accounts: [`eip155:${chainId}:${account}`]
-          }
-        }
+      session.value = await connector.approveSession({
+        id,
+        namespaces: getApprovedNamespaces(params, chainId, account)
       });
 
-      session.value = await connector.approveSession({ id, namespaces: approvedNamespaces });
+      await connector.emitSessionEvent({
+        topic: session.value.topic,
+        event: {
+          name: 'chainChanged',
+          data: chainId
+        },
+        chainId: `eip155:${chainId}`
+      });
+
       logged.value = true;
       loading.value = false;
     });
 
     connector.on('session_request', async payload => {
-      console.log('payload', payload);
-
       const { request } = payload.params;
       if (request.method !== 'eth_sendTransaction') return;
 
