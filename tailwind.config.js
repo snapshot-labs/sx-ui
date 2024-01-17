@@ -64,8 +64,7 @@ module.exports = {
       8: '64px'
     },
     fontFamily: {
-      serif: ['"Calibre", Helvetica, Arial, sans-serif'],
-      mono: ['"Space Mono", monospace']
+      serif: ['"Calibre", Helvetica, Arial, sans-serif']
     },
     fontSize: {
       '2xl': ['34px'],
