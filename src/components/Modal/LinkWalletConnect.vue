@@ -103,7 +103,7 @@ watch(loading, () => {
 <template>
   <UiModal :open="open" @close="emit('close')">
     <template #header>
-      <h3>Connect to WalletConnect</h3>
+      <h3>Connect to apps</h3>
     </template>
     <div class="s-box p-4">
       <template v-if="logged && proposal">
