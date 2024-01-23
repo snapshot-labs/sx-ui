@@ -16,10 +16,11 @@ const DEFAULT_FORM_STATE = {
   amount: ''
 };
 
-const props = defineProps({
-  open: Boolean,
-  initialState: Object
-});
+const props = defineProps<{
+  open: boolean;
+  network: number;
+  initialState?: any;
+}>();
 
 const emit = defineEmits(['add', 'close']);
 
@@ -150,7 +151,7 @@ async function handleToChange(to: string) {
   }
 
   loading.value = true;
-  const provider = getProvider(5);
+  const provider = getProvider(props.network);
 
   try {
     const code = await provider.getCode(contractAddress);
@@ -159,7 +160,7 @@ async function handleToChange(to: string) {
       return;
     }
 
-    form.abi = await getABI(contractAddress);
+    form.abi = await getABI(props.network, contractAddress);
   } catch (e) {
     console.log(e);
     showAbiInput.value = true;

@@ -29,10 +29,10 @@ const connector = await Web3Wallet.init({
 const logged = ref(false);
 const loading = ref(false);
 
-async function parseCall(call) {
+async function parseCall(chainId: number, call) {
   const params = call.params[0];
 
-  const abi = await getABI(params.to);
+  const abi = await getABI(chainId, params.to);
   const iface = new Interface(abi);
   const tx = iface.parseTransaction(params);
 
@@ -145,7 +145,7 @@ export function useWalletConnect() {
       if (request.method !== 'eth_sendTransaction') return;
 
       try {
-        const transaction = await parseCall(request);
+        const transaction = await parseCall(chainId, request);
         incomingTransactionCallback(transaction);
         logout();
       } catch (e) {
