@@ -146,8 +146,17 @@ export function useWalletConnect() {
 
       try {
         const transaction = await parseCall(chainId, request);
-        incomingTransactionCallback(transaction);
-        logout();
+        await incomingTransactionCallback(transaction);
+
+        // always ignoring because we can't actually sign
+        await connector.respondSessionRequest({
+          topic: payload.topic,
+          response: {
+            id: payload.id,
+            jsonrpc: '2.0',
+            error: getSdkError('USER_REJECTED')
+          }
+        });
       } catch (e) {
         console.error(e);
       }

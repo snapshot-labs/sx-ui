@@ -37,9 +37,11 @@ const emit = defineEmits<{
 
 const { loading, logged, connect, logout } = useWalletConnect();
 
-const step: Ref<'INIT' | 'APPROVE'> = ref('INIT');
+const step: Ref<'INIT' | 'APPROVE' | 'ACCEPT'> = ref('INIT');
 const proposal: Ref<ProposalTypes.Struct | null> = ref(null);
+const transaction = ref<Transaction | null>(null);
 const approveFn: Ref<((value: boolean) => void) | null> = ref(null);
+const acceptFn: Ref<((value: boolean) => void) | null> = ref(null);
 const approving: Ref<boolean> = ref(false);
 
 const form: {
@@ -60,9 +62,13 @@ async function approveCallback(newProposal: ProposalTypes.Struct) {
   });
 }
 
-async function incomingTransactionCallback(transaction: Transaction) {
-  emit('add', transaction);
-  emit('close');
+async function incomingTransactionCallback(incomingTransaction: Transaction) {
+  step.value = 'ACCEPT';
+  transaction.value = incomingTransaction;
+
+  return new Promise<boolean>(resolve => {
+    acceptFn.value = resolve;
+  });
 }
 
 async function handleSubmit() {
@@ -86,6 +92,22 @@ function handleApprove(approved: boolean) {
   }
 }
 
+function handleAccept() {
+  if (!transaction.value) return;
+
+  acceptFn.value?.(true);
+
+  emit('add', transaction.value);
+  emit('close');
+}
+
+function handleReject() {
+  transaction.value = null;
+  step.value = 'APPROVE';
+
+  acceptFn.value?.(false);
+}
+
 watch(logged, () => {
   if (logged.value) {
     form.pairingCode = '';
@@ -106,7 +128,11 @@ watch(loading, () => {
       <h3>Connect to apps</h3>
     </template>
     <div class="s-box p-4">
-      <template v-if="logged && proposal">
+      <template v-if="step === 'ACCEPT' && transaction">
+        <div class="text-center">New transaction has been detected</div>
+        <BlockExecution :txs="[transaction]" class="mt-3" />
+      </template>
+      <template v-else-if="logged && proposal">
         <div class="flex flex-col items-center">
           <img :src="proposal.proposer.metadata.icons[0]" class="w-[48px] mb-3" />
           <span class="text-center mb-2">
@@ -132,8 +158,12 @@ watch(loading, () => {
       </div>
     </div>
     <template #footer>
+      <div v-if="step === 'ACCEPT' && transaction" class="flex space-x-3">
+        <UiButton class="w-full" @click="handleReject()">Reject</UiButton>
+        <UiButton :primary="true" class="w-full" @click="handleAccept()">Approve</UiButton>
+      </div>
       <UiButton
-        v-if="logged"
+        v-else-if="logged"
         class="w-full"
         @click="
           logout();
