@@ -486,14 +486,14 @@ export const EDITOR_EXECUTION_STRATEGIES = [
     deploy: async (
       client: clients.EvmEthereumTx,
       signer: Signer,
-      controller: string,
+      _controller: string,
       spaceAddress: string,
       params: Record<string, any>
     ): Promise<{ address: string; txId: string }> => {
       return client.deployAxiomExecution({
         signer,
         params: {
-          controller,
+          controller: params.controller || '0x0000000000000000000000000000000000000000',
           quorum: BigInt(params.quorum),
           contractAddress: params.contractAddress || '0x0000000000000000000000000000000000000000',
           slotIndex: BigInt(params.slotIndex),
@@ -506,8 +506,14 @@ export const EDITOR_EXECUTION_STRATEGIES = [
       type: 'object',
       title: 'Params',
       additionalProperties: false,
-      required: ['quorum', 'contractAddress', 'slotIndex'],
+      required: ['controller', 'quorum', 'contractAddress', 'slotIndex'],
       properties: {
+        controller: {
+          type: 'string',
+          format: 'address',
+          title: 'Controller address',
+          examples: ['0x0000…']
+        },
         quorum: {
           type: 'integer',
           title: 'Quorum',
