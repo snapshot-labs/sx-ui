@@ -7,6 +7,8 @@
   "scripts": {
     "dev": "vite --port=8080",
     "build": "vite build",
+    "story:dev": "histoire dev",
+    "story:build": "histoire build",
     "lint:nofix": "eslint \"./src/**/*.{ts,vue,json}\"",
     "lint": "yarn lint:nofix --fix",
     "typecheck": "vue-tsc --noEmit",
@@ -62,7 +64,7 @@
     "pinia": "^2.1.6",
     "remarkable": "^2.0.1",
     "scrollmonitor": "^1.2.11",
-    "starknet": "5.24.3",
+    "starknet": "5.25.0",
     "stream-browserify": "^3.0.0",
     "unplugin-auto-import": "^0.16.6",
     "util": "^0.12.5",
@@ -71,6 +73,7 @@
     "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
+    "@histoire/plugin-vue": "^0.17.4",
     "@iconify-json/heroicons-outline": "^1.1.7",
     "@iconify-json/heroicons-solid": "^1.1.8",
     "@rollup/plugin-inject": "^5.0.3",
@@ -80,6 +83,7 @@
     "@vitejs/plugin-vue": "^4.3.4",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.50.0",
+    "histoire": "^0.17.4",
     "husky": "^8.0.3",
     "postcss": "^8.4.30",
     "prettier": "^3.0.3",
@@ -89,7 +93,7 @@
     "typescript": "^5.2.2",
     "unplugin-icons": "^0.17.0",
     "unplugin-vue-components": "^0.25.2",
-    "vite": "^4.4.9",
+    "vite": "^4.5.0",
     "vitest": "^0.34.5",
     "vue-tsc": "^1.8.15"
   }
