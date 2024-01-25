@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { ProposalTypes } from '@walletconnect/types';
 import { clone } from '@/helpers/utils';
 import { validateForm } from '@/helpers/validation';
-import { Transaction } from '@/types';
+import { SelectedStrategy } from '@/types';
 
 const DEFAULT_FORM_STATE = {
   pairingCode: ''
@@ -28,20 +27,24 @@ const props = defineProps<{
   address: string;
   network: number;
   networkId: string;
+  spaceKey: string;
+  executionStrategy: SelectedStrategy | null;
 }>();
 
 const emit = defineEmits<{
-  (e: 'add', transaction: Transaction);
   (e: 'close');
 }>();
 
-const { loading, logged, connect, logout } = useWalletConnect();
+const { transaction } = useWalletConnectTransaction();
+const { loading, logged, proposal, connect, logout } = useWalletConnect(
+  props.network,
+  props.address,
+  props.spaceKey,
+  props.executionStrategy
+);
 
-const step: Ref<'INIT' | 'APPROVE' | 'ACCEPT'> = ref('INIT');
-const proposal: Ref<ProposalTypes.Struct | null> = ref(null);
-const transaction = ref<Transaction | null>(null);
+const step: Ref<'INIT' | 'APPROVE'> = ref('INIT');
 const approveFn: Ref<((value: boolean) => void) | null> = ref(null);
-const acceptFn: Ref<((value: boolean) => void) | null> = ref(null);
 const approving: Ref<boolean> = ref(false);
 
 const form: {
@@ -53,32 +56,16 @@ const formErrors = computed(() => {
   return errors;
 });
 
-async function approveCallback(newProposal: ProposalTypes.Struct) {
+async function approveCallback() {
   step.value = 'APPROVE';
-  proposal.value = newProposal;
 
   return new Promise<boolean>(resolve => {
     approveFn.value = resolve;
   });
 }
 
-async function incomingTransactionCallback(incomingTransaction: Transaction) {
-  step.value = 'ACCEPT';
-  transaction.value = incomingTransaction;
-
-  return new Promise<boolean>(resolve => {
-    acceptFn.value = resolve;
-  });
-}
-
 async function handleSubmit() {
-  await connect(
-    props.network,
-    props.address,
-    form.pairingCode,
-    approveCallback,
-    incomingTransactionCallback
-  );
+  await connect(form.pairingCode, approveCallback);
 }
 
 function handleApprove(approved: boolean) {
@@ -88,24 +75,7 @@ function handleApprove(approved: boolean) {
   else {
     form.pairingCode = '';
     step.value = 'INIT';
-    proposal.value = null;
   }
-}
-
-function handleAccept() {
-  if (!transaction.value) return;
-
-  acceptFn.value?.(true);
-
-  emit('add', transaction.value);
-  emit('close');
-}
-
-function handleReject() {
-  transaction.value = null;
-  step.value = 'APPROVE';
-
-  acceptFn.value?.(false);
 }
 
 watch(logged, () => {
@@ -123,16 +93,12 @@ watch(loading, () => {
 </script>
 
 <template>
-  <UiModal :open="open" @close="emit('close')">
+  <UiModal :open="open && !transaction" @close="emit('close')">
     <template #header>
       <h3>Connect to apps</h3>
     </template>
     <div class="s-box p-4">
-      <template v-if="step === 'ACCEPT' && transaction">
-        <div class="text-center">New transaction has been detected</div>
-        <BlockExecution :txs="[transaction]" class="mt-3" />
-      </template>
-      <template v-else-if="logged && proposal">
+      <template v-if="logged && proposal">
         <div class="flex flex-col items-center">
           <img :src="proposal.proposer.metadata.icons[0]" class="w-[48px] mb-3" />
           <span class="text-center mb-2">
@@ -158,12 +124,8 @@ watch(loading, () => {
       </div>
     </div>
     <template #footer>
-      <div v-if="step === 'ACCEPT' && transaction" class="flex space-x-3">
-        <UiButton class="w-full" @click="handleReject()">Reject</UiButton>
-        <UiButton :primary="true" class="w-full" @click="handleAccept()">Approve</UiButton>
-      </div>
       <UiButton
-        v-else-if="logged"
+        v-if="logged"
         class="w-full"
         @click="
           logout();

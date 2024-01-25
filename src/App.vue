@@ -2,16 +2,35 @@
 const el = ref(null);
 
 const route = useRoute();
+const router = useRouter();
 const uiStore = useUiStore();
 const { modalOpen } = useModal();
 const { init, app } = useApp();
 const { web3, web3Account } = useWeb3();
 const { loadVotes, votes } = useAccount();
 const { isSwiping, direction } = useSwipe(el);
+const { createDraft } = useEditor();
+const { spaceKey, executionStrategy, transaction, reset } = useWalletConnectTransaction();
 
 provide('web3', web3);
 
 const scrollDisabled = computed(() => modalOpen.value || uiStore.sidebarOpen);
+
+function handleTransactionAccept() {
+  if (!spaceKey.value || !executionStrategy.value || !transaction.value) return;
+
+  const draftId = createDraft(spaceKey.value, {
+    execution: [transaction.value],
+    executionStrategy: executionStrategy.value
+  });
+  router.push(`/${spaceKey.value}/create/${draftId}`);
+
+  reset();
+}
+
+function handleTransactionReject() {
+  reset();
+}
 
 onMounted(async () => {
   uiStore.restorePendingTransactions();
@@ -73,6 +92,12 @@ watch(isSwiping, () => {
       </div>
     </div>
     <Notifications />
+    <ModalWalletConnectTransaction
+      :open="!!transaction"
+      :transaction="transaction"
+      @accept="handleTransactionAccept"
+      @reject="handleTransactionReject"
+    />
     <div id="modal" />
   </div>
 </template>

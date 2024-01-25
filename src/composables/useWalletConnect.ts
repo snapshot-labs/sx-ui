@@ -7,10 +7,9 @@ import { formatUnits } from '@ethersproject/units';
 import { BigNumber } from '@ethersproject/bignumber';
 import { createContractCallTransaction } from '@/helpers/transactions';
 import { getABI } from '@/helpers/etherscan';
-import { Transaction } from '@/types';
+import { SelectedStrategy } from '@/types';
 
-type ApproveCallback = (proposal: ProposalTypes.Struct) => Promise<boolean>;
-type IncomingTransactionCallback = (transaction: Transaction) => any;
+type ApproveCallback = () => Promise<boolean>;
 
 const projectId = import.meta.env.VITE_WC_PROJECT_ID;
 const core = new Core({
@@ -26,8 +25,14 @@ const connector = await Web3Wallet.init({
   }
 });
 
-const logged = ref(false);
-const loading = ref(false);
+type ConnectionData = {
+  logged: boolean;
+  loading: boolean;
+  session: SessionTypes.Struct | null;
+  proposal: ProposalTypes.Struct | null;
+};
+
+const connections: Ref<Record<string, ConnectionData | undefined>> = ref({});
 
 async function parseCall(chainId: number, call) {
   const params = call.params[0];
@@ -63,9 +68,64 @@ async function parseCall(chainId: number, call) {
   });
 }
 
-export function useWalletConnect() {
-  const session: Ref<SessionTypes.Struct | null> = ref(null);
-  const requests = ref([]) as Ref<any[]>;
+export function useWalletConnect(
+  chainId: number,
+  account: string,
+  spaceKey: string,
+  executionStrategy: SelectedStrategy | null
+) {
+  const { setTransaction } = useWalletConnectTransaction();
+
+  const key = computed(() => `${chainId}:${account}`);
+  const connection = computed(
+    () =>
+      connections.value[key.value] || {
+        loading: false,
+        logged: false,
+        session: null,
+        proposal: null
+      }
+  );
+
+  const logged = computed({
+    get: () => connection.value.logged,
+    set: value => {
+      connections.value[key.value] = {
+        ...connection.value,
+        logged: value
+      };
+    }
+  });
+
+  const loading = computed({
+    get: () => connection.value.loading,
+    set: value => {
+      connections.value[key.value] = {
+        ...connection.value,
+        loading: value
+      };
+    }
+  });
+
+  const session = computed({
+    get: () => connection.value.session,
+    set: value => {
+      connections.value[key.value] = {
+        ...connection.value,
+        session: value
+      };
+    }
+  });
+
+  const proposal = computed({
+    get: () => connection.value.proposal,
+    set: value => {
+      connections.value[key.value] = {
+        ...connection.value,
+        proposal: value
+      };
+    }
+  });
 
   async function logout() {
     if (!session.value) return;
@@ -75,6 +135,7 @@ export function useWalletConnect() {
       reason: getSdkError('USER_DISCONNECTED')
     });
 
+    proposal.value = null;
     session.value = null;
     logged.value = false;
   }
@@ -99,22 +160,20 @@ export function useWalletConnect() {
     });
   }
 
-  async function connect(
-    chainId: number,
-    account: string,
-    uri: string,
-    approveCallback: ApproveCallback,
-    incomingTransactionCallback: IncomingTransactionCallback
-  ) {
+  async function connect(uri: string, approveCallback: ApproveCallback) {
     loading.value = true;
 
     if (logged.value) await logout();
     await connector.core.pairing.pair({ uri });
 
     connector.on('session_proposal', async ({ id, params }) => {
-      const approved = await approveCallback(params);
+      proposal.value = params;
+
+      const approved = await approveCallback();
+
       if (!approved) {
         loading.value = false;
+        proposal.value = null;
 
         return connector.rejectSession({
           id,
@@ -146,9 +205,8 @@ export function useWalletConnect() {
 
       try {
         const transaction = await parseCall(chainId, request);
-        await incomingTransactionCallback(transaction);
+        setTransaction(spaceKey, executionStrategy, transaction);
 
-        // always ignoring because we can't actually sign
         await connector.respondSessionRequest({
           topic: payload.topic,
           response: {
@@ -174,6 +232,6 @@ export function useWalletConnect() {
     logout,
     loading,
     logged,
-    requests
+    proposal
   };
 }

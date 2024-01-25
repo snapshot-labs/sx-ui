@@ -38,6 +38,8 @@ const currentNetwork = computed(() => {
   return getNetwork(currentNetworkId.value);
 });
 
+const spaceKey = computed(() => `${props.space.network}:${props.space.id}`);
+
 const totalQuote = computed(() =>
   assets.value.reduce((acc, asset) => {
     return acc + asset.value;
@@ -60,7 +62,7 @@ const treasuryExplorerUrl = computed(() => {
   return sanitizeUrl(url);
 });
 
-function getExecutionStrategy(): SelectedStrategy | null {
+const executionStrategy = computed(() => {
   let executorIndex = props.space.executors.findIndex(
     executorAddress => executorAddress === treasury.value?.wallet
   );
@@ -76,23 +78,16 @@ function getExecutionStrategy(): SelectedStrategy | null {
     address: props.space.executors[executorIndex],
     type: props.space.executors_types[executorIndex]
   };
-}
+});
 
 function openModal(type: 'tokens' | 'nfts') {
   modalOpen.value[type] = true;
 }
 
 function addTx(tx: Transaction) {
-  let executor = props.space.executors.find(e => e === treasury.value?.wallet);
-  if (!executor) {
-    // If the treasury is not an executor, use the first avatar executor
-    const executorIndex = props.space.executors_types.findIndex(e => e === 'SimpleQuorumAvatar');
-    executor = props.space.executors[executorIndex];
-  }
-
-  const draftId = createDraft(`${props.space.network}:${props.space.id}`, {
+  const draftId = createDraft(spaceKey.value, {
     execution: [tx],
-    executionStrategy: getExecutionStrategy()
+    executionStrategy: executionStrategy.value
   });
   router.push(`create/${draftId}`);
 }
@@ -287,8 +282,9 @@ watchEffect(() => setTitle(`Treasury - ${props.space.name}`));
         :address="treasury.wallet"
         :network="treasury.network"
         :network-id="treasury.networkId"
+        :space-key="spaceKey"
+        :execution-strategy="executionStrategy"
         @close="modalOpen.walletConnectLink = false"
-        @add="addTx"
       />
     </teleport>
   </template>
