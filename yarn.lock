@@ -1631,14 +1631,6 @@
     "@noble/curves" "~1.3.0"
     "@noble/hashes" "~1.3.3"
 
-"@scure/starknet@~1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@scure/starknet/-/starknet-1.0.0.tgz#4419bc2fdf70f3dd6cb461d36c878c9ef4419f8c"
-  integrity sha512-o5J57zY0f+2IL/mq8+AYJJ4Xpc1fOtDhr+mFQKbHnYFmm3WQrC+8zj2HEgxak1a+x86mhmBC1Kq305KUpVf0wg==
-  dependencies:
-    "@noble/curves" "~1.3.0"
-    "@noble/hashes" "~1.3.3"
-
 "@sinclair/typebox@^0.27.8":
   version "0.27.8"
   resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.27.8.tgz#6667fac16c436b5434a387a34dedb013198f6e6e"
@@ -1694,10 +1686,10 @@
   resolved "https://registry.yarnpkg.com/@snapshot-labs/prettier-config/-/prettier-config-0.1.0-beta.7.tgz#c8e07e7e9baabee245020a72ac05835b65139823"
   integrity sha512-k/FUf4VWhwLFUmKuWs2mNvmPe691hqhvCJuujD4TfbIivWysmL1TqthwfdQUrQEAQUqVQ2ZKEiGkbufp5J27eQ==
 
-"@snapshot-labs/sx@^0.1.0-beta.55":
-  version "0.1.0-beta.55"
-  resolved "https://registry.yarnpkg.com/@snapshot-labs/sx/-/sx-0.1.0-beta.55.tgz#fa79e46b283fc28a3bd9647362234794686642de"
-  integrity sha512-w4RV4ccBVmV05aJA3Di+DaRr76zKGcsn2RMYIv4rGRE8R43xPQHmzlsl4oufDQhYcBe56MpOqwfdcXWXX+nzTg==
+"@snapshot-labs/sx@^0.1.0-beta.56":
+  version "0.1.0-beta.56"
+  resolved "https://registry.yarnpkg.com/@snapshot-labs/sx/-/sx-0.1.0-beta.56.tgz#459b0b027ee9f6871764877fdbabdfe115b4bc07"
+  integrity sha512-okysnaXm1EgInkfGaBGRxBFedRz2EvMdF0xsE2CskirMRs62NjzjU61Vstsjchpu53cbe/iEGabFtBrMiksLlg==
   dependencies:
     "@ethersproject/abi" "^5.7.0"
     "@ethersproject/abstract-signer" "^5.7.0"
@@ -8801,18 +8793,10 @@ starknet@5.25.0:
     pako "^2.0.4"
     url-join "^4.0.1"
 
-starknet@5.25.0:
-  version "5.25.0"
-  resolved "https://registry.yarnpkg.com/starknet/-/starknet-5.25.0.tgz#b8cc6992477899385d754ff0b46c8b9dca190826"
-  integrity sha512-ja5pV610voxTCw/MzXhZoZcwe+XZ5RVWkpa/Fhxsy0OP635DxKDbnPQSKCLWXmSi/BkfkpeefXXv4IUvYJo4kw==
-  dependencies:
-    "@noble/curves" "~1.3.0"
-    "@scure/base" "~1.1.3"
-    "@scure/starknet" "~1.0.0"
-    isomorphic-fetch "^3.0.0"
-    lossless-json "^2.0.8"
-    pako "^2.0.4"
-    url-join "^4.0.1"
+statuses@~1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.5.0.tgz#161c7dac177659fd9811f43771fa99381478628c"
+  integrity sha512-OpZ3zP+jT1PI7I8nemJX4AKmAX070ZkYPVWV/AaKTJl+tXCTGyVdC1a4SL8RUQYEwk/f34ZX8UTykN68FwrqAA==
 
 std-env@^3.3.3:
   version "3.4.3"
