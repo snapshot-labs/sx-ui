@@ -26,10 +26,10 @@ function handleReject() {
 <template>
   <UiModal :open="open" @close="emit('close')">
     <template #header>
-      <h3>Connect to apps</h3>
+      <h3>Add transaction</h3>
     </template>
     <div class="s-box p-4">
-      <div class="text-center">New transaction has been detected</div>
+      <div class="text-center">Add transaction to execution</div>
       <BlockExecution v-if="transaction" :txs="[transaction]" class="mt-3" />
     </div>
     <template #footer>

@@ -93,6 +93,7 @@ watch(isSwiping, () => {
     </div>
     <Notifications />
     <ModalWalletConnectTransaction
+      v-if="route.name !== 'editor'"
       :open="!!transaction"
       :transaction="transaction"
       @accept="handleTransactionAccept"

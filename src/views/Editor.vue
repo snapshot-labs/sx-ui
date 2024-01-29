@@ -25,6 +25,7 @@ const route = useRoute();
 const router = useRouter();
 const { propose, updateProposal } = useActions();
 const { web3 } = useWeb3();
+const { spaceKey, transaction, reset } = useWalletConnectTransaction();
 const { getCurrent } = useMetaStore();
 const spacesStore = useSpacesStore();
 
@@ -151,6 +152,14 @@ async function handleExecutionStrategySelected(selectedExecutionStrategy: Select
   } else {
     executionStrategy.value = selectedExecutionStrategy;
   }
+}
+
+function handleTransactionAccept() {
+  if (!spaceKey.value || !executionStrategy.value || !transaction.value || !proposal.value) return;
+
+  proposal.value.execution.push(transaction.value);
+
+  reset();
 }
 
 async function getVotingPower() {
@@ -354,6 +363,12 @@ export default defineComponent({
         :network-id="networkId"
         :space="address"
         @close="modalOpen = false"
+      />
+      <ModalWalletConnectTransaction
+        :open="!!transaction"
+        :transaction="transaction"
+        @accept="handleTransactionAccept"
+        @reject="reset"
       />
     </teleport>
   </div>
