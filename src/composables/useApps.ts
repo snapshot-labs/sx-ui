@@ -48,7 +48,7 @@ export function useApps() {
 
   function search(q: string) {
     return apps.value.filter(app => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { overview, ...appWithoutOverview } = app;
       return JSON.stringify(appWithoutOverview).toLowerCase().includes(q.toLowerCase());
     });

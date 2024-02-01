@@ -11,7 +11,7 @@ onMounted(() => load());
 
 watch(
   () => q.value,
-  () => router.push(!q.value ? {} : { query: { q: q.value } })
+  () => router.replace(!q.value ? {} : { query: { q: q.value } })
 );
 </script>
 
@@ -56,8 +56,8 @@ watch(
           />
           <div class="flex grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
             <App
-              v-for="(app, i2) in apps.filter(app => category === app.category)"
-              :key="i2"
+              v-for="(app, j) in apps.filter(app => category === app.category)"
+              :key="j"
               :app="app"
             />
           </div>
