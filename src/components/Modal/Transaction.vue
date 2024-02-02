@@ -202,9 +202,11 @@ watch(abiStr, value => {
   }
 });
 
-watch(
+watchImmediate(
   () => props.open,
-  () => {
+  open => {
+    if (!open) return;
+
     showPicker.value = false;
 
     if (props.initialState) {

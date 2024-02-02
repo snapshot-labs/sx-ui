@@ -205,7 +205,7 @@ export function useWalletConnect(
 
       try {
         const transaction = await parseCall(chainId, request);
-        setTransaction(spaceKey, executionStrategy, transaction);
+        setTransaction(spaceKey, chainId, executionStrategy, transaction);
 
         await connector.respondSessionRequest({
           topic: payload.topic,

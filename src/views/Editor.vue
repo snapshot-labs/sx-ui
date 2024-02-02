@@ -25,7 +25,12 @@ const route = useRoute();
 const router = useRouter();
 const { propose, updateProposal } = useActions();
 const { web3 } = useWeb3();
-const { spaceKey, transaction, reset } = useWalletConnectTransaction();
+const {
+  spaceKey,
+  network: walletConnectNetwork,
+  transaction,
+  reset
+} = useWalletConnectTransaction();
 const { getCurrent } = useMetaStore();
 const spacesStore = useSpacesStore();
 
@@ -364,11 +369,13 @@ export default defineComponent({
         :space="address"
         @close="modalOpen = false"
       />
-      <ModalWalletConnectTransaction
+      <ModalTransaction
+        v-if="transaction && walletConnectNetwork"
         :open="!!transaction"
-        :transaction="transaction"
-        @accept="handleTransactionAccept"
-        @reject="reset"
+        :network="walletConnectNetwork"
+        :initial-state="transaction._form"
+        @add="handleTransactionAccept"
+        @close="reset"
       />
     </teleport>
   </div>

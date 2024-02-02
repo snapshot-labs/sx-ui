@@ -10,7 +10,7 @@ const { web3, web3Account } = useWeb3();
 const { loadVotes, votes } = useAccount();
 const { isSwiping, direction } = useSwipe(el);
 const { createDraft } = useEditor();
-const { spaceKey, executionStrategy, transaction, reset } = useWalletConnectTransaction();
+const { spaceKey, network, executionStrategy, transaction, reset } = useWalletConnectTransaction();
 
 provide('web3', web3);
 
@@ -92,12 +92,13 @@ watch(isSwiping, () => {
       </div>
     </div>
     <Notifications />
-    <ModalWalletConnectTransaction
-      v-if="route.name !== 'editor'"
+    <ModalTransaction
+      v-if="route.name !== 'editor' && transaction && network"
       :open="!!transaction"
-      :transaction="transaction"
-      @accept="handleTransactionAccept"
-      @reject="handleTransactionReject"
+      :network="network"
+      :initial-state="transaction._form"
+      @add="handleTransactionAccept"
+      @close="handleTransactionReject"
     />
     <div id="modal" />
   </div>
