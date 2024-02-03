@@ -2,6 +2,10 @@
 import { _n, compareAddresses, sanitizeUrl } from '@/helpers/utils';
 import { getNetwork, offchainNetworks } from '@/networks';
 import { Space } from '@/types';
+import ICX from '~icons/c/x';
+import ICDiscord from '~icons/c/discord';
+import ICGithub from '~icons/c/github';
+import IHGlobeAlt from '~icons/heroicons-outline/globe-alt';
 
 const PROPOSALS_LIMIT = 4;
 
@@ -24,7 +28,9 @@ const network = computed(() => getNetwork(props.space.network));
 const spaceStarred = computed(() => spacesStore.starredSpacesIds.includes(spaceIdComposite));
 const isController = computed(() => compareAddresses(props.space.controller, web3.value.account));
 
-const externalUrl = computed(() => sanitizeUrl(props.space.external_url));
+const externalUrl = computed(() =>
+  props.space.external_url ? sanitizeUrl(props.space.external_url) : null
+);
 const twitterUrl = computed(() =>
   props.space.twitter ? sanitizeUrl(`https://twitter.com/${props.space.twitter}`) : null
 );
@@ -34,6 +40,13 @@ const discordUrl = computed(() =>
 const githubUrl = computed(() =>
   props.space.github ? sanitizeUrl(`https://github.com/${props.space.github}`) : null
 );
+
+const socials = computed(() => [
+  { href: externalUrl.value, icon: IHGlobeAlt },
+  { href: twitterUrl.value, icon: ICX },
+  { href: discordUrl.value, icon: ICDiscord },
+  { href: githubUrl.value, icon: ICGithub }
+]);
 
 const proposalsRecord = computed(() => proposalsStore.proposals[spaceIdComposite]);
 
@@ -92,19 +105,15 @@ watchEffect(() => setTitle(props.space.name));
             {{ space.about }}
           </span>
         </div>
-        <div class="space-x-2">
-          <a v-if="externalUrl" :href="externalUrl" target="_blank">
-            <IH-globe-alt class="w-[26px] h-[26px] inline-block text-[#606060]" />
-          </a>
-          <a v-if="twitterUrl" :href="twitterUrl" target="_blank">
-            <img src="~@/assets/x.svg" class="w-[26px] h-[26px] inline-block" />
-          </a>
-          <a v-if="discordUrl" :href="discordUrl" target="_blank">
-            <img src="~@/assets/discord.svg" class="w-[26px] h-[26px] inline-block" />
-          </a>
-          <a v-if="githubUrl" :href="githubUrl" target="_blank">
-            <img src="~@/assets/github.svg" class="w-[26px] h-[26px] inline-block" />
-          </a>
+        <div class="space-x-2 flex">
+          <span v-for="(social, i) in socials" :key="i">
+            <a v-if="social.href" :href="social.href" target="_blank">
+              <component
+                :is="social.icon"
+                class="!text-[22px] text-[#606060] hover:text-skin-text"
+              />
+            </a>
+          </span>
         </div>
       </div>
     </div>

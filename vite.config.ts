@@ -5,6 +5,7 @@ import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import Icons from 'unplugin-icons/vite';
 import IconsResolver from 'unplugin-icons/resolver';
+import { FileSystemIconLoader } from 'unplugin-icons/loaders';
 import visualizer from 'rollup-plugin-visualizer';
 import inject from '@rollup/plugin-inject';
 
@@ -30,6 +31,7 @@ export default defineConfig({
       directoryAsNamespace: true,
       resolvers: [
         IconsResolver({
+          customCollections: ['c'],
           alias: {
             h: 'heroicons-outline',
             s: 'heroicons-solid'
@@ -45,8 +47,12 @@ export default defineConfig({
     Icons({
       compiler: 'vue3',
       iconCustomizer(collection, icon, props) {
-        props.width = '20px';
-        props.height = '20px';
+        props.class = 'text-sm';
+      },
+      customCollections: {
+        c: FileSystemIconLoader('./src/assets/icons', svg =>
+          svg.replace(/^<svg /, '<svg fill="currentColor" ')
+        )
       }
     })
   ],
