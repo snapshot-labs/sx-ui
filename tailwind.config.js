@@ -42,6 +42,10 @@ module.exports = {
       },
       animation: {
         'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+      },
+      backgroundImage: {
+        'hero-dark': "url('@/assets/grid-dark.svg')",
+        'hero-light': "url('@/assets/grid-light.svg')"
       }
     },
     screens: {
