@@ -112,6 +112,10 @@ a,
   }
 }
 
+input {
+  @apply outline-none;
+}
+
 .choice-bg {
   &._1 {
     @apply bg-choice-for;
