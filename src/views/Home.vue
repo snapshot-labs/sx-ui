@@ -6,7 +6,7 @@ import ICGithub from '~icons/c/github';
 
 const COMMIT_SHA = import.meta.env.VITE_COMMIT_SHA || '';
 
-const socials = [
+const SOCIALS = [
   {
     href: 'https://twitter.com/SnapshotLabs',
     icon: ICX
