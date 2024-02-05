@@ -6,7 +6,7 @@ const COMMIT_SHA = import.meta.env.VITE_COMMIT_SHA || '';
 
 <template>
   <div>
-    <div class="py-8 mb-6 border-b dark:bg-hero-dark bg-hero-light bg-repeat bg-top">
+    <div class="py-8 mb-6 border-b hero">
       <Container class="!max-w-screen-md my-1">
         <h1 class="mb-4 mono max-w-[580px]">The governance stack for your organization.</h1>
         <a href="https://tally.so/r/wA2D2o" target="_blank">
