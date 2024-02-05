@@ -28,9 +28,7 @@ const network = computed(() => getNetwork(props.space.network));
 const spaceStarred = computed(() => spacesStore.starredSpacesIds.includes(spaceIdComposite));
 const isController = computed(() => compareAddresses(props.space.controller, web3.value.account));
 
-const externalUrl = computed(() =>
-  props.space.external_url ? sanitizeUrl(props.space.external_url) : null
-);
+const externalUrl = computed(() => sanitizeUrl(props.space.external_url));
 const twitterUrl = computed(() =>
   props.space.twitter ? sanitizeUrl(`https://twitter.com/${props.space.twitter}`) : null
 );
