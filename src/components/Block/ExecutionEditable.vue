@@ -156,7 +156,7 @@ watch(model.value, () => {
           v-if="simulationState === 'SIMULATION_SUCCEDED'"
           title="Execution simulation succeeded"
         >
-          <IH-shield-check class="text-skin-positive" />
+          <IH-shield-check class="text-skin-success" />
         </UiTooltip>
         <UiTooltip
           v-if="simulationState === 'SIMULATION_FAILED'"

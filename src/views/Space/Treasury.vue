@@ -210,7 +210,7 @@ watchEffect(() => setTitle(`Treasury - ${props.space.name}`));
               <div v-if="asset.change" class="text-sm">
                 <div
                   v-if="asset.change > 0"
-                  class="text-skin-positive"
+                  class="text-skin-success"
                   v-text="`+${_n(asset.change, 'standard', { maximumFractionDigits: 2 })}%`"
                 />
                 <div

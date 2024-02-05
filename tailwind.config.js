@@ -35,16 +35,16 @@ module.exports = {
         'skin-primary': 'rgba(var(--primary), <alpha-value>)',
         'skin-accent-foreground': 'rgba(var(--accent-foreground), <alpha-value>)',
         'skin-danger': 'rgba(var(--danger), <alpha-value>)',
-        'skin-positive': 'rgba(var(--positive), <alpha-value>)',
+        'skin-success': 'rgba(var(--success), <alpha-value>)',
 
         'skin-accent-hover': 'var(--accent-hover)',
         'skin-accent-active': 'var(--accent-active)',
         'skin-danger-border': 'var(--danger-border)',
         'skin-danger-hover': 'var(--danger-hover)',
         'skin-danger-active': 'var(--danger-active)',
-        'skin-positive-border': 'var(--positive-border)',
-        'skin-positive-hover': 'var(--positive-hover)',
-        'skin-positive-active': 'var(--positive-active)'
+        'skin-success-border': 'var(--success-border)',
+        'skin-success-hover': 'var(--success-hover)',
+        'skin-success-active': 'var(--success-active)'
       },
       animation: {
         'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite'

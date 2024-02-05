@@ -170,7 +170,7 @@ watchEffect(() => {
             <div class="flex space-x-2 py-2">
               <UiTooltip title="For">
                 <UiButton
-                  class="!text-skin-positive !border-skin-positive !w-[48px] !h-[48px] !px-0"
+                  class="!text-skin-success !border-skin-success !w-[48px] !h-[48px] !px-0"
                   :loading="sendingType === 'for'"
                   @click="handleVoteClick('for')"
                 >

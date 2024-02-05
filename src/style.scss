@@ -22,16 +22,16 @@
   --primary: 17, 17, 17;
   --accent-foreground: 251, 251, 251;
   --danger: 235, 76, 91;
-  --positive: 87, 179, 117;
+  --success: 87, 179, 117;
 
   --accent-hover: rgba(250, 249, 252, 0.12);
   --accent-active: rgba(250, 249, 252, 0.32);
   --danger-border: rgba(235, 76, 91, 0.4);
   --danger-hover: rgba(235, 76, 91, 0.04);
   --danger-active: rgba(235, 76, 91, 0.12);
-  --positive-border: rgba(87, 179, 117, 0.4);
-  --positive-hover: rgba(87, 179, 117, 0.04);
-  --positive-active: rgba(87, 179, 117, 0.12);
+  --success-border: rgba(87, 179, 117, 0.4);
+  --success-hover: rgba(87, 179, 117, 0.04);
+  --success-active: rgba(87, 179, 117, 0.12);
 }
 
 .dark {
@@ -55,16 +55,16 @@
   --primary: 251, 251, 251;
   --accent-foreground: 17, 17, 17;
   --danger: 235, 76, 91;
-  --positive: 87, 179, 117;
+  --success: 87, 179, 117;
 
   --accent-hover: rgba(28, 27, 32, 0.12);
   --accent-active: rgba(28, 27, 32, 0.32);
   --danger-border: rgba(235, 76, 91, 0.4);
   --danger-hover: rgba(235, 76, 91, 0.04);
   --danger-active: rgba(235, 76, 91, 0.12);
-  --positive-border: rgba(87, 179, 117, 0.4);
-  --positive-hover: rgba(87, 179, 117, 0.04);
-  --positive-active: rgba(87, 179, 117, 0.12);
+  --success-border: rgba(87, 179, 117, 0.4);
+  --success-hover: rgba(87, 179, 117, 0.04);
+  --success-active: rgba(87, 179, 117, 0.12);
 }
 
 @font-face {
@@ -156,7 +156,7 @@ a,
 
 .choice-bg {
   &._1 {
-    @apply bg-skin-positive;
+    @apply bg-skin-success;
   }
   &._2 {
     @apply bg-skin-danger;
@@ -171,7 +171,7 @@ a,
 
 .choice-text {
   &._1 {
-    @apply text-skin-positive;
+    @apply text-skin-success;
   }
   &._2 {
     @apply text-skin-danger;

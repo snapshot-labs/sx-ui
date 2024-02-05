@@ -126,7 +126,7 @@ watch([sortBy, choiceFilter], () => {
             placement="left"
             :items="[
               { key: 'any', label: 'Any' },
-              { key: 'for', label: 'For', indicator: 'bg-skin-positive' },
+              { key: 'for', label: 'For', indicator: 'bg-skin-success' },
               { key: 'against', label: 'Against', indicator: 'bg-skin-danger' },
               { key: 'abstain', label: 'Abstain', indicator: 'bg-skin-text' }
             ]"
@@ -217,7 +217,7 @@ watch([sortBy, choiceFilter], () => {
                 v-else
                 class="!w-[40px] !h-[40px] !px-0 cursor-default bg-transparent"
                 :class="{
-                  '!text-skin-positive !border-skin-positive': vote.choice === 1,
+                  '!text-skin-success !border-skin-success': vote.choice === 1,
                   '!text-skin-danger !border-skin-danger': vote.choice === 2,
                   '!text-gray-500 !border-gray-500': vote.choice === 3
                 }"

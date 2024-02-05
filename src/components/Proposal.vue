@@ -83,7 +83,7 @@ async function handleVoteClick(choice: Choice) {
           <div class="flex space-x-2 py-2">
             <UiTooltip title="For">
               <UiButton
-                class="w-[40px] !text-skin-positive !border-skin-positive !h-[40px] !px-0"
+                class="w-[40px] !text-skin-success !border-skin-success !h-[40px] !px-0"
                 :loading="sendingType === 'for'"
                 @click="handleVoteClick('for')"
               >
