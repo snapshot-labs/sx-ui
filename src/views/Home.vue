@@ -6,7 +6,7 @@ import ICGithub from '~icons/c/github';
 
 const COMMIT_SHA = import.meta.env.VITE_COMMIT_SHA || '';
 
-const socials = [
+const SOCIALS = [
   {
     href: 'https://twitter.com/SnapshotLabs',
     icon: ICX
@@ -73,7 +73,7 @@ const socials = [
       <div class="space-y-2">
         <div class="eyebrow">Join the community</div>
         <div class="flex space-x-2">
-          <a v-for="social in socials" :key="social.href" :href="social.href" target="_blank">
+          <a v-for="social in SOCIALS" :key="social.href" :href="social.href" target="_blank">
             <component :is="social.icon" class="!text-[27px] text-[#606060] hover:text-skin-link" />
           </a>
         </div>
