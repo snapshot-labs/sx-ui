@@ -12,9 +12,11 @@ export type NetworkID =
   | 'linea-testnet'
   | 'sn'
   | 'sn-tn'
+  | 'sn-sep'
   | 'matic'
   | 'arb1';
-export type Choice = 1 | 2 | 3;
+
+export type Choice = 'for' | 'against' | 'abstain';
 
 export type SelectedStrategy = {
   address: string;
