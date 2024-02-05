@@ -1,6 +1,6 @@
 [![Test CI](https://github.com/snapshot-labs/sx-ui/actions/workflows/test.yml/badge.svg)](https://github.com/snapshot-labs/sx-ui/actions/workflows/test.yml)
 [![Discord](https://img.shields.io/discord/707079246388133940.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.snapshot.org/)
-
+ 
 # Snapshot X
 
 An open source interface for Snapshot X protocol.
