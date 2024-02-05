@@ -74,7 +74,7 @@ const socials = [
         <div class="eyebrow">Join the community</div>
         <div class="flex space-x-2">
           <a v-for="social in socials" :key="social.href" :href="social.href" target="_blank">
-            <component :is="social.icon" class="!text-[27px] text-[#606060] hover:text-skin-text" />
+            <component :is="social.icon" class="!text-[27px] text-[#606060] hover:text-skin-link" />
           </a>
         </div>
       </div>
