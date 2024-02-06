@@ -78,9 +78,9 @@ const SOCIALS = [
             :key="social.href"
             :href="social.href"
             target="_blank"
-            class="text-[28.8px] text-[#606060] hover:text-skin-link"
+            class="text-[#606060] hover:text-skin-link"
           >
-            <component :is="social.icon" />
+            <component :is="social.icon" class="w-[32px] h-[32px]" />
           </a>
         </div>
       </div>

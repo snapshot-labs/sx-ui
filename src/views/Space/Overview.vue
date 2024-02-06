@@ -109,9 +109,9 @@ watchEffect(() => setTitle(props.space.name));
               v-if="social.href"
               :href="social.href"
               target="_blank"
-              class="text-[23.4px] text-[#606060] hover:text-skin-link"
+              class="text-[#606060] hover:text-skin-link"
             >
-              <component :is="social.icon" />
+              <component :is="social.icon" class="w-[26px] h-[26px]" />
             </a>
           </span>
         </div>
