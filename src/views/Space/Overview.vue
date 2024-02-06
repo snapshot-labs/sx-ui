@@ -105,11 +105,13 @@ watchEffect(() => setTitle(props.space.name));
         </div>
         <div class="space-x-2 flex">
           <span v-for="(social, i) in socials" :key="i">
-            <a v-if="social.href" :href="social.href" target="_blank">
-              <component
-                :is="social.icon"
-                class="!text-[22px] text-[#606060] hover:text-skin-text"
-              />
+            <a
+              v-if="social.href"
+              :href="social.href"
+              target="_blank"
+              class="text-[26px] text-[#606060] hover:text-skin-text"
+            >
+              <component :is="social.icon" />
             </a>
           </span>
         </div>
