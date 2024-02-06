@@ -47,8 +47,8 @@ export default defineConfig({
     Icons({
       compiler: 'vue3',
       iconCustomizer(collection, icon, props) {
-        props.width = '1em';
-        props.height = '1em';
+        props.width = '1.11em';
+        props.height = '1.11em';
       },
       customCollections: {
         c: FileSystemIconLoader('./src/assets/icons', svg =>
